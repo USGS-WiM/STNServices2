@@ -1,0 +1,911 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="STNModel2.Store" Alias="Self" Provider="Oracle.DataAccess.Client" ProviderManifestToken="11.2" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="STNModel2StoreContainer">
+    <EntitySet Name="AGENCIES" EntityType="STNModel2.Store.AGENCIES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="APPROVAL" EntityType="STNModel2.Store.APPROVAL" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="COLLECT_TEAM" EntityType="STNModel2.Store.COLLECT_TEAM" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="CONTACT" EntityType="STNModel2.Store.CONTACT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="CONTACT_TYPE" EntityType="STNModel2.Store.CONTACT_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="COUNTIES" EntityType="STNModel2.Store.COUNTIES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="DATA_FILE" EntityType="STNModel2.Store.DATA_FILE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="DEPLOYMENT_PRIORITY" EntityType="STNModel2.Store.DEPLOYMENT_PRIORITY" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="DEPLOYMENT_TYPE" EntityType="STNModel2.Store.DEPLOYMENT_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="EVENT_STATUS" EntityType="STNModel2.Store.EVENT_STATUS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="EVENT_TYPE" EntityType="STNModel2.Store.EVENT_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="EVENTS" EntityType="STNModel2.Store.EVENTS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="FILE_KEYWORD" EntityType="STNModel2.Store.FILE_KEYWORD" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="FILE_TYPE" EntityType="STNModel2.Store.FILE_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="FILES" EntityType="STNModel2.Store.FILES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HORIZONTAL_COLLECT_METHODS" EntityType="STNModel2.Store.HORIZONTAL_COLLECT_METHODS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HORIZONTAL_DATUMS" EntityType="STNModel2.Store.HORIZONTAL_DATUMS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HOUSING_TYPE" EntityType="STNModel2.Store.HOUSING_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HWM" EntityType="STNModel2.Store.HWM" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HWM_QUALITIES" EntityType="STNModel2.Store.HWM_QUALITIES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="HWM_TYPES" EntityType="STNModel2.Store.HWM_TYPES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="INSTR_COLLECTION_CONDITIONS" EntityType="STNModel2.Store.INSTR_COLLECTION_CONDITIONS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="INSTRUMENT" EntityType="STNModel2.Store.INSTRUMENT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="INSTRUMENT_STATUS" EntityType="STNModel2.Store.INSTRUMENT_STATUS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="KEYWORD" EntityType="STNModel2.Store.KEYWORD" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="LANDOWNERCONTACT" EntityType="STNModel2.Store.LANDOWNERCONTACT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="LOCATORTYPE" EntityType="STNModel2.Store.LOCATORTYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="MARKERS" EntityType="STNModel2.Store.MARKERS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="MEMBERS" EntityType="STNModel2.Store.MEMBERS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="MEMBERS_TEAM" EntityType="STNModel2.Store.MEMBERS_TEAM" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="NETWORK_NAME" EntityType="STNModel2.Store.NETWORK_NAME" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="NETWORK_NAME_SITE" EntityType="STNModel2.Store.NETWORK_NAME_SITE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="NETWORK_TYPE" EntityType="STNModel2.Store.NETWORK_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="NETWORK_TYPE_SITE" EntityType="STNModel2.Store.NETWORK_TYPE_SITE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="OBJECTIVE_POINT" EntityType="STNModel2.Store.OBJECTIVE_POINT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="OBJECTIVE_POINT_TYPE" EntityType="STNModel2.Store.OBJECTIVE_POINT_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="OP_CONTROL_IDENTIFIER" EntityType="STNModel2.Store.OP_CONTROL_IDENTIFIER" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="OP_MEASUREMENTS" EntityType="STNModel2.Store.OP_MEASUREMENTS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="OP_QUALITY" EntityType="STNModel2.Store.OP_QUALITY" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="PEAK_SUMMARY" EntityType="STNModel2.Store.PEAK_SUMMARY" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="REPORTING_METRICS" EntityType="STNModel2.Store.REPORTING_METRICS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="REPORTMETRIC_CONTACT" EntityType="STNModel2.Store.REPORTMETRIC_CONTACT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="ROLES" EntityType="STNModel2.Store.ROLES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SENSOR_BRAND" EntityType="STNModel2.Store.SENSOR_BRAND" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SENSOR_DEPLOYMENT" EntityType="STNModel2.Store.SENSOR_DEPLOYMENT" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SENSOR_TYPE" EntityType="STNModel2.Store.SENSOR_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SITE_HOUSING" EntityType="STNModel2.Store.SITE_HOUSING" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SITES" EntityType="STNModel2.Store.SITES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="SOURCES" EntityType="STNModel2.Store.SOURCES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="STATES" EntityType="STNModel2.Store.STATES" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="STATUS_TYPE" EntityType="STNModel2.Store.STATUS_TYPE" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="VERTICAL_COLLECT_METHODS" EntityType="STNModel2.Store.VERTICAL_COLLECT_METHODS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="VERTICAL_DATUMS" EntityType="STNModel2.Store.VERTICAL_DATUMS" store:Type="Tables" Schema="FRADMIN" />
+    <EntitySet Name="BAROMETRIC_VIEW" EntityType="STNModel2.Store.BAROMETRIC_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="BAROMETRIC_VIEW">
+      <DefiningQuery>SELECT 
+      "BAROMETRIC_VIEW"."SITE_ID" AS "SITE_ID", 
+      "BAROMETRIC_VIEW"."SITE_NO" AS "SITE_NO", 
+      "BAROMETRIC_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "BAROMETRIC_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "BAROMETRIC_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "BAROMETRIC_VIEW"."COUNTY" AS "COUNTY", 
+      "BAROMETRIC_VIEW"."STATE" AS "STATE", 
+      "BAROMETRIC_VIEW"."CITY" AS "CITY", 
+      "BAROMETRIC_VIEW"."INSTRUMENT_ID" AS "INSTRUMENT_ID", 
+      "BAROMETRIC_VIEW"."EVENT_ID" AS "EVENT_ID", 
+      "BAROMETRIC_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "BAROMETRIC_VIEW"."STATUS" AS "STATUS", 
+      "BAROMETRIC_VIEW"."TIME_STAMP" AS "TIME_STAMP"
+      FROM "FRADMIN"."BAROMETRIC_VIEW" "BAROMETRIC_VIEW"</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="METEOROLOGICAL_VIEW" EntityType="STNModel2.Store.METEOROLOGICAL_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="METEOROLOGICAL_VIEW">
+      <DefiningQuery>SELECT 
+      "METEOROLOGICAL_VIEW"."SITE_ID" AS "SITE_ID", 
+      "METEOROLOGICAL_VIEW"."SITE_NO" AS "SITE_NO", 
+      "METEOROLOGICAL_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "METEOROLOGICAL_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "METEOROLOGICAL_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "METEOROLOGICAL_VIEW"."COUNTY" AS "COUNTY", 
+      "METEOROLOGICAL_VIEW"."STATE" AS "STATE", 
+      "METEOROLOGICAL_VIEW"."CITY" AS "CITY", 
+      "METEOROLOGICAL_VIEW"."INSTRUMENT_ID" AS "INSTRUMENT_ID", 
+      "METEOROLOGICAL_VIEW"."EVENT_ID" AS "EVENT_ID", 
+      "METEOROLOGICAL_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "METEOROLOGICAL_VIEW"."STATUS" AS "STATUS", 
+      "METEOROLOGICAL_VIEW"."TIME_STAMP" AS "TIME_STAMP"
+      FROM "FRADMIN"."METEOROLOGICAL_VIEW" "METEOROLOGICAL_VIEW"</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="RAPID_DEPLOYMENT_VIEW" EntityType="STNModel2.Store.RAPID_DEPLOYMENT_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="RAPID_DEPLOYMENT_VIEW">
+      <DefiningQuery>SELECT 
+      "RAPID_DEPLOYMENT_VIEW"."SITE_ID" AS "SITE_ID", 
+      "RAPID_DEPLOYMENT_VIEW"."SITE_NO" AS "SITE_NO", 
+      "RAPID_DEPLOYMENT_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "RAPID_DEPLOYMENT_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "RAPID_DEPLOYMENT_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "RAPID_DEPLOYMENT_VIEW"."COUNTY" AS "COUNTY", 
+      "RAPID_DEPLOYMENT_VIEW"."STATE" AS "STATE", 
+      "RAPID_DEPLOYMENT_VIEW"."CITY" AS "CITY", 
+      "RAPID_DEPLOYMENT_VIEW"."INSTRUMENT_ID" AS "INSTRUMENT_ID", 
+      "RAPID_DEPLOYMENT_VIEW"."EVENT_ID" AS "EVENT_ID", 
+      "RAPID_DEPLOYMENT_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "RAPID_DEPLOYMENT_VIEW"."STATUS" AS "STATUS", 
+      "RAPID_DEPLOYMENT_VIEW"."TIME_STAMP" AS "TIME_STAMP"
+      FROM "FRADMIN"."RAPID_DEPLOYMENT_VIEW" "RAPID_DEPLOYMENT_VIEW"</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="STORM_TIDE_VIEW" EntityType="STNModel2.Store.STORM_TIDE_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="STORM_TIDE_VIEW">
+      <DefiningQuery>SELECT 
+      "STORM_TIDE_VIEW"."SITE_ID" AS "SITE_ID", 
+      "STORM_TIDE_VIEW"."SITE_NO" AS "SITE_NO", 
+      "STORM_TIDE_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "STORM_TIDE_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "STORM_TIDE_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "STORM_TIDE_VIEW"."COUNTY" AS "COUNTY", 
+      "STORM_TIDE_VIEW"."STATE" AS "STATE", 
+      "STORM_TIDE_VIEW"."CITY" AS "CITY", 
+      "STORM_TIDE_VIEW"."INSTRUMENT_ID" AS "INSTRUMENT_ID", 
+      "STORM_TIDE_VIEW"."EVENT_ID" AS "EVENT_ID", 
+      "STORM_TIDE_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "STORM_TIDE_VIEW"."STATUS" AS "STATUS", 
+      "STORM_TIDE_VIEW"."TIME_STAMP" AS "TIME_STAMP"
+      FROM "FRADMIN"."STORM_TIDE_VIEW" "STORM_TIDE_VIEW"</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="WAVE_HEIGHT_VIEW" EntityType="STNModel2.Store.WAVE_HEIGHT_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="WAVE_HEIGHT_VIEW">
+      <DefiningQuery>SELECT 
+      "WAVE_HEIGHT_VIEW"."SITE_ID" AS "SITE_ID", 
+      "WAVE_HEIGHT_VIEW"."SITE_NO" AS "SITE_NO", 
+      "WAVE_HEIGHT_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "WAVE_HEIGHT_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "WAVE_HEIGHT_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "WAVE_HEIGHT_VIEW"."COUNTY" AS "COUNTY", 
+      "WAVE_HEIGHT_VIEW"."STATE" AS "STATE", 
+      "WAVE_HEIGHT_VIEW"."CITY" AS "CITY", 
+      "WAVE_HEIGHT_VIEW"."INSTRUMENT_ID" AS "INSTRUMENT_ID", 
+      "WAVE_HEIGHT_VIEW"."EVENT_ID" AS "EVENT_ID", 
+      "WAVE_HEIGHT_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "WAVE_HEIGHT_VIEW"."STATUS" AS "STATUS", 
+      "WAVE_HEIGHT_VIEW"."TIME_STAMP" AS "TIME_STAMP"
+      FROM "FRADMIN"."WAVE_HEIGHT_VIEW" "WAVE_HEIGHT_VIEW"</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+  <EntityType Name="AGENCIES">
+    <Key>
+      <PropertyRef Name="AGENCY_ID" />
+    </Key>
+    <Property Name="AGENCY_ID" Type="number" Nullable="false" />
+    <Property Name="AGENCY_NAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="ADDRESS" Type="nvarchar2" MaxLength="150" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="2" />
+    <Property Name="ZIP" Type="nvarchar2" MaxLength="10" />
+    <Property Name="PHONE" Type="nvarchar2" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="APPROVAL">
+    <Key>
+      <PropertyRef Name="APPROVAL_ID" />
+    </Key>
+    <Property Name="APPROVAL_ID" Type="number" Nullable="false" />
+    <Property Name="MEMBER_ID" Type="number" />
+    <Property Name="APPROVAL_DATE" Type="timestamp" />
+  </EntityType>
+  <EntityType Name="COLLECT_TEAM">
+    <Key>
+      <PropertyRef Name="COLLECT_TEAM_ID" />
+    </Key>
+    <Property Name="COLLECT_TEAM_ID" Type="number" Nullable="false" />
+    <Property Name="DESCRIPTION" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="CONTACT">
+    <Key>
+      <PropertyRef Name="CONTACT_ID" />
+    </Key>
+    <Property Name="CONTACT_ID" Type="number" Nullable="false" />
+    <Property Name="FNAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="LNAME" Type="nvarchar2" MaxLength="200" />
+    <Property Name="PHONE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="ALT_PHONE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="EMAIL" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CONTACT_TYPE">
+    <Key>
+      <PropertyRef Name="CONTACT_TYPE_ID" />
+    </Key>
+    <Property Name="CONTACT_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="TYPE" Type="nvarchar2" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="COUNTIES">
+    <Key>
+      <PropertyRef Name="COUNTY_ID" />
+    </Key>
+    <Property Name="COUNTY_ID" Type="number" Nullable="false" />
+    <Property Name="COUNTY_NAME" Type="nvarchar2" MaxLength="200" />
+    <Property Name="STATE_ID" Type="number" Nullable="false" />
+    <Property Name="STATE_FIP" Type="number" />
+    <Property Name="COUNTY_FIP" Type="number" />
+  </EntityType>
+  <EntityType Name="DATA_FILE">
+    <Key>
+      <PropertyRef Name="DATA_FILE_ID" />
+    </Key>
+    <Property Name="DATA_FILE_ID" Type="number" Nullable="false" />
+    <Property Name="START" Type="timestamp" />
+    <Property Name="END" Type="timestamp" />
+    <Property Name="GOOD_START" Type="timestamp" />
+    <Property Name="GOOD_END" Type="timestamp" />
+    <Property Name="PROCESSOR_ID" Type="number" />
+    <Property Name="INSTRUMENT_ID" Type="number" />
+    <Property Name="APPROVAL_ID" Type="number" />
+    <Property Name="COLLECT_DATE" Type="timestamp" />
+    <Property Name="PEAK_SUMMARY_ID" Type="number" />
+    <Property Name="ELEVATION_STATUS" Type="nvarchar2" MaxLength="20" />
+    <Property Name="TIME_ZONE" Type="nvarchar2" MaxLength="8" />
+  </EntityType>
+  <EntityType Name="DEPLOYMENT_PRIORITY">
+    <Key>
+      <PropertyRef Name="PRIORITY_ID" />
+    </Key>
+    <Property Name="PRIORITY_ID" Type="number" Nullable="false" />
+    <Property Name="PRIORITY_NAME" Type="varchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="DEPLOYMENT_TYPE">
+    <Key>
+      <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+    </Key>
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="METHOD" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="EVENT_STATUS">
+    <Key>
+      <PropertyRef Name="EVENT_STATUS_ID" />
+    </Key>
+    <Property Name="EVENT_STATUS_ID" Type="number" Nullable="false" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="EVENT_TYPE">
+    <Key>
+      <PropertyRef Name="EVENT_TYPE_ID" />
+    </Key>
+    <Property Name="EVENT_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="TYPE" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="EVENTS">
+    <Key>
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="EVENT_START_DATE" Type="timestamp" />
+    <Property Name="EVENT_END_DATE" Type="timestamp" />
+    <Property Name="EVENT_DESCRIPTION" Type="nvarchar2" MaxLength="255" />
+    <Property Name="EVENT_TYPE_ID" Type="number" />
+    <Property Name="EVENT_STATUS_ID" Type="number" />
+    <Property Name="EVENT_COORDINATOR" Type="number" />
+  </EntityType>
+  <EntityType Name="FILE_KEYWORD">
+    <Key>
+      <PropertyRef Name="FILE_KEYWORD_ID" />
+    </Key>
+    <Property Name="FILE_KEYWORD_ID" Type="number" Nullable="false" />
+    <Property Name="FILE_ID" Type="number" Nullable="false" />
+    <Property Name="KEYWORD_ID" Type="number" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FILE_TYPE">
+    <Key>
+      <PropertyRef Name="FILETYPE_ID" />
+    </Key>
+    <Property Name="FILETYPE_ID" Type="number" Nullable="false" />
+    <Property Name="FILETYPE" Type="varchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="FILES">
+    <Key>
+      <PropertyRef Name="FILE_ID" />
+    </Key>
+    <Property Name="FILE_ID" Type="number" Nullable="false" />
+    <Property Name="PATH" Type="nvarchar2" MaxLength="200" />
+    <Property Name="DESCRIPTION" Type="nclob" />
+    <Property Name="PHOTO_DIRECTION" Type="nvarchar2" MaxLength="200" />
+    <Property Name="LATITUDE_DD" Type="float" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Precision="126" />
+    <Property Name="FILE_DATE" Type="timestamp" />
+    <Property Name="HWM_ID" Type="number" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="FILETYPE_ID" Type="number" />
+    <Property Name="SOURCE_ID" Type="number" />
+    <Property Name="FILE_URL" Type="nvarchar2" MaxLength="200" />
+    <Property Name="DATA_FILE_ID" Type="number" />
+    <Property Name="INSTRUMENT_ID" Type="number" />
+    <Property Name="VALIDATOR_USERID" Type="nvarchar2" MaxLength="20" />
+    <Property Name="LOCATOR_TYPE_ID" Type="number" />
+    <Property Name="DATE_VALIDATED" Type="date" />
+    <Property Name="VALIDATED" Type="number" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="HORIZONTAL_COLLECT_METHODS">
+    <Key>
+      <PropertyRef Name="HCOLLECT_METHOD_ID" />
+    </Key>
+    <Property Name="HCOLLECT_METHOD_ID" Type="number" Nullable="false" />
+    <Property Name="HCOLLECT_METHOD" Type="nvarchar2" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="HORIZONTAL_DATUMS">
+    <Key>
+      <PropertyRef Name="DATUM_ID" />
+    </Key>
+    <Property Name="DATUM_ID" Type="number" Nullable="false" />
+    <Property Name="DATUM_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="DATUM_ABBREVIATION" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="HOUSING_TYPE">
+    <Key>
+      <PropertyRef Name="HOUSING_TYPE_ID" />
+    </Key>
+    <Property Name="HOUSING_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="TYPE_NAME" Type="nvarchar2" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="HWM">
+    <Key>
+      <PropertyRef Name="HWM_ID" />
+    </Key>
+    <Property Name="HWM_ID" Type="number" Nullable="false" />
+    <Property Name="WATERBODY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="EVENT_ID" Type="number" />
+    <Property Name="HWM_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="HWM_QUALITY_ID" Type="number" Nullable="false" />
+    <Property Name="HWM_LOCATIONDESCRIPTION" Type="nvarchar2" MaxLength="1000" />
+    <Property Name="LATITUDE_DD" Type="float" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Precision="126" />
+    <Property Name="SURVEY_DATE" Type="timestamp" />
+    <Property Name="ELEV_FT" Type="float" Precision="126" />
+    <Property Name="VDATUM_ID" Type="number" />
+    <Property Name="VCOLLECT_METHOD_ID" Type="number" />
+    <Property Name="BANK" Type="nvarchar2" MaxLength="10" />
+    <Property Name="APPROVAL_ID" Type="number" />
+    <Property Name="MARKER_ID" Type="number" />
+    <Property Name="HEIGHT_ABOVE_GND" Type="number" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="number" />
+    <Property Name="PEAK_SUMMARY_ID" Type="number" />
+    <Property Name="HWM_NOTES" Type="nvarchar2" MaxLength="1000" />
+    <Property Name="HWM_ENVIRONMENT" Type="nvarchar2" MaxLength="20" />
+    <Property Name="FLAG_DATE" Type="timestamp" />
+    <Property Name="STILLWATER" Type="number" />
+    <Property Name="HDATUM_ID" Type="number" />
+    <Property Name="FLAG_TEAM_ID" Type="number" />
+    <Property Name="SURVEY_TEAM_ID" Type="number" />
+    <Property Name="FLAG_MEMBER_ID" Type="number" />
+    <Property Name="SURVEY_MEMBER_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="HWM_QUALITIES">
+    <Key>
+      <PropertyRef Name="HWM_QUALITY_ID" />
+    </Key>
+    <Property Name="HWM_QUALITY_ID" Type="number" Nullable="false" />
+    <Property Name="HWM_QUALITY" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="HWM_TYPES">
+    <Key>
+      <PropertyRef Name="HWM_TYPE_ID" />
+    </Key>
+    <Property Name="HWM_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="HWM_TYPE" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="INSTR_COLLECTION_CONDITIONS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="number" Nullable="false" />
+    <Property Name="CONDITION" Type="nvarchar2" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="INSTRUMENT">
+    <Key>
+      <PropertyRef Name="INSTRUMENT_ID" />
+    </Key>
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="SENSOR_TYPE_ID" Type="number" />
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="number" />
+    <Property Name="LOCATION_DESCRIPTION" Type="nvarchar2" MaxLength="255" />
+    <Property Name="SERIAL_NUMBER" Type="nvarchar2" MaxLength="255" />
+    <Property Name="HOUSING_SERIAL_NUMBER" Type="nvarchar2" MaxLength="255" />
+    <Property Name="INTERVAL" Type="float" Precision="126" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="EVENT_ID" Type="number" />
+    <Property Name="INST_COLLECTION_ID" Type="number" />
+    <Property Name="HOUSING_TYPE_ID" Type="number" />
+    <Property Name="SENSOR_BRAND_ID" Type="number" />
+    <Property Name="VENTED" Type="nvarchar2" MaxLength="5" />
+  </EntityType>
+  <EntityType Name="INSTRUMENT_STATUS">
+    <Key>
+      <PropertyRef Name="INSTRUMENT_STATUS_ID" />
+    </Key>
+    <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" />
+    <Property Name="STATUS_TYPE_ID" Type="number" />
+    <Property Name="INSTRUMENT_ID" Type="number" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+    <Property Name="NOTES" Type="nvarchar2" MaxLength="255" />
+    <Property Name="COLLECTION_TEAM_ID" Type="number" />
+    <Property Name="TIME_ZONE" Type="varchar2" MaxLength="8" />
+    <Property Name="MEMBER_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="KEYWORD">
+    <Key>
+      <PropertyRef Name="KEYWORD_ID" />
+    </Key>
+    <Property Name="KEYWORD_ID" Type="number" Nullable="false" />
+    <Property Name="WORD" Type="nvarchar2" Nullable="false" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="LANDOWNERCONTACT">
+    <Key>
+      <PropertyRef Name="LANDOWNERCONTACTID" />
+    </Key>
+    <Property Name="LANDOWNERCONTACTID" Type="number" Nullable="false" />
+    <Property Name="FNAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LNAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="ADDRESS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="30" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="255" />
+    <Property Name="ZIP" Type="nvarchar2" MaxLength="10" />
+    <Property Name="PRIMARYPHONE" Type="nvarchar2" MaxLength="25" />
+    <Property Name="SECONDARYPHONE" Type="nvarchar2" MaxLength="25" />
+    <Property Name="EMAIL" Type="nvarchar2" MaxLength="100" />
+    <Property Name="TITLE" Type="nvarchar2" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="LOCATORTYPE">
+    <Key>
+      <PropertyRef Name="LOCATOR_TYPE_ID" />
+    </Key>
+    <Property Name="LOCATOR_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="LOCATOR" Type="nvarchar2" Nullable="false" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="MARKERS">
+    <Key>
+      <PropertyRef Name="MARKER_ID" />
+    </Key>
+    <Property Name="MARKER_ID" Type="number" Nullable="false" />
+    <Property Name="MARKER" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="MEMBERS">
+    <Key>
+      <PropertyRef Name="MEMBER_ID" />
+    </Key>
+    <Property Name="MEMBER_ID" Type="number" Nullable="false" />
+    <Property Name="FNAME" Type="nvarchar2" Nullable="false" MaxLength="100" />
+    <Property Name="LNAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="AGENCY_ID" Type="number" />
+    <Property Name="PHONE" Type="nvarchar2" MaxLength="15" />
+    <Property Name="EMAIL" Type="nvarchar2" MaxLength="50" />
+    <Property Name="RSSFEED" Type="nvarchar2" MaxLength="100" />
+    <Property Name="EMERGENCY_CONTACT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="EMERGENCY_CONTACT_PHONE" Type="nvarchar2" MaxLength="15" />
+    <Property Name="ROLE_ID" Type="number" />
+    <Property Name="USERNAME" Type="nvarchar2" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="MEMBERS_TEAM">
+    <Key>
+      <PropertyRef Name="MEMBERS_TEAM_ID" />
+    </Key>
+    <Property Name="MEMBERS_TEAM_ID" Type="number" Nullable="false" />
+    <Property Name="COLLECT_TEAM_ID" Type="number" />
+    <Property Name="MEMBER_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="NETWORK_NAME">
+    <Key>
+      <PropertyRef Name="NETWORK_NAME_ID" />
+    </Key>
+    <Property Name="NETWORK_NAME_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="NAME" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="NETWORK_NAME_SITE">
+    <Key>
+      <PropertyRef Name="NETWORKNAME_SITE_ID" />
+    </Key>
+    <Property Name="NETWORKNAME_SITE_ID" Type="number" Nullable="false" />
+    <Property Name="NETWORK_NAME_ID" Type="number" />
+    <Property Name="SITE_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="NETWORK_TYPE">
+    <Key>
+      <PropertyRef Name="NETWORK_TYPE_ID" />
+    </Key>
+    <Property Name="NETWORK_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="NETWORK_TYPE_NAME" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="NETWORK_TYPE_SITE">
+    <Key>
+      <PropertyRef Name="NETWORKTYPE_SITE_ID" />
+    </Key>
+    <Property Name="NETWORKTYPE_SITE_ID" Type="number" Nullable="false" />
+    <Property Name="NETWORK_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OBJECTIVE_POINT">
+    <Key>
+      <PropertyRef Name="OBJECTIVE_POINT_ID" />
+    </Key>
+    <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" />
+    <Property Name="NAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="DESCRIPTION" Type="nvarchar2" MaxLength="1000" />
+    <Property Name="ELEV_FT" Type="number" />
+    <Property Name="DATE_ESTABLISHED" Type="timestamp" />
+    <Property Name="OP_IS_DESTROYED" Type="number" />
+    <Property Name="OP_NOTES" Type="nvarchar2" MaxLength="200" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="VDATUM_ID" Type="number" />
+    <Property Name="LATITUDE_DD" Type="float" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Precision="126" />
+    <Property Name="HDATUM_ID" Type="number" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="number" />
+    <Property Name="VCOLLECT_METHOD_ID" Type="number" />
+    <Property Name="OP_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="DATE_RECOVERED" Type="timestamp" />
+    <Property Name="UNCERTAINTY" Type="number" />
+    <Property Name="UNQUANTIFIED" Type="nvarchar2" MaxLength="5" />
+    <Property Name="OP_QUALITY_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="OBJECTIVE_POINT_TYPE">
+    <Key>
+      <PropertyRef Name="OBJECTIVE_POINT_TYPE_ID" />
+    </Key>
+    <Property Name="OBJECTIVE_POINT_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="OP_TYPE" Type="varchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="OP_CONTROL_IDENTIFIER">
+    <Key>
+      <PropertyRef Name="OP_CONTROL_IDENTIFIER_ID" />
+    </Key>
+    <Property Name="OP_CONTROL_IDENTIFIER_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="number" />
+    <Property Name="IDENTIFIER" Type="nvarchar2" MaxLength="100" />
+    <Property Name="IDENTIFIER_TYPE" Type="nvarchar2" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="OP_MEASUREMENTS">
+    <Key>
+      <PropertyRef Name="OP_MEASUREMENTS_ID" />
+    </Key>
+    <Property Name="OP_MEASUREMENTS_ID" Type="number" Nullable="false" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" />
+    <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" />
+    <Property Name="FROM_RP" Type="number" />
+    <Property Name="HANGING_LENGTH" Type="number" />
+    <Property Name="WATER_SURFACE" Type="number" />
+    <Property Name="GROUND_SURFACE" Type="number" />
+    <Property Name="TYPE" Type="nvarchar2" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="OP_QUALITY">
+    <Key>
+      <PropertyRef Name="OP_QUALITY_ID" />
+    </Key>
+    <Property Name="OP_QUALITY_ID" Type="number" Nullable="false" />
+    <Property Name="QUALITY" Type="nvarchar2" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="PEAK_SUMMARY">
+    <Key>
+      <PropertyRef Name="PEAK_SUMMARY_ID" />
+    </Key>
+    <Property Name="PEAK_SUMMARY_ID" Type="number" Nullable="false" />
+    <Property Name="MEMBER_ID" Type="number" />
+    <Property Name="PEAK_DATE" Type="timestamp" />
+    <Property Name="IS_PEAK_ESTIMATED" Type="number" Nullable="false" />
+    <Property Name="IS_PEAK_TIME_ESTIMATED" Type="number" Nullable="false" />
+    <Property Name="PEAK_STAGE" Type="number" />
+    <Property Name="IS_PEAK_STAGE_ESTIMATED" Type="number" Nullable="false" />
+    <Property Name="PEAK_DISCHARGE" Type="number" />
+    <Property Name="IS_PEAK_DISCHARGE_ESTIMATED" Type="number" Nullable="false" />
+    <Property Name="VDATUM_ID" Type="number" />
+    <Property Name="HEIGHT_ABOVE_GND" Type="number" />
+    <Property Name="IS_HAG_ESTIMATED" Type="number" />
+    <Property Name="TIME_ZONE" Type="nvarchar2" MaxLength="8" />
+    <Property Name="AEP" Type="number" />
+    <Property Name="AEP_LOWCI" Type="number" />
+    <Property Name="AEP_UPPERCI" Type="number" />
+    <Property Name="AEP_RANGE" Type="number" />
+    <Property Name="CALC_NOTES" Type="nvarchar2" />
+  </EntityType>
+  <EntityType Name="REPORTING_METRICS">
+    <Key>
+      <PropertyRef Name="REPORTING_METRICS_ID" />
+    </Key>
+    <Property Name="REPORTING_METRICS_ID" Type="number" Nullable="false" />
+    <Property Name="REPORT_DATE" Type="timestamp" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="STATE" Type="nvarchar2" Nullable="false" MaxLength="20" />
+    <Property Name="SW_FIELDPERS_NOTACCT" Type="number" Nullable="false" />
+    <Property Name="WQ_FIELDPERS_NOTACCT" Type="number" Nullable="false" />
+    <Property Name="SW_YEST_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_YEST_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="SW_TOD_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_TOD_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="SW_TMW_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_TMW_FIELDPERS" Type="number" Nullable="false" />
+    <Property Name="SW_YEST_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_YEST_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="SW_TOD_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_TOD_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="SW_TMW_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="WQ_TMW_OFFICEPERS" Type="number" Nullable="false" />
+    <Property Name="SW_AUTOS_DEPL" Type="number" Nullable="false" />
+    <Property Name="WQ_AUTOS_DEPL" Type="number" Nullable="false" />
+    <Property Name="SW_BOATS_DEPL" Type="number" Nullable="false" />
+    <Property Name="WQ_BOATS_DEPL" Type="number" Nullable="false" />
+    <Property Name="SW_OTHER_DEPL" Type="number" Nullable="false" />
+    <Property Name="WQ_OTHER_DEPL" Type="number" Nullable="false" />
+    <Property Name="GAGE_VISIT" Type="number" Nullable="false" />
+    <Property Name="GAGE_DOWN" Type="number" Nullable="false" />
+    <Property Name="TOT_DISCHARGE_MEAS" Type="number" Nullable="false" />
+    <Property Name="PLAN_DISCHARGE_MEAS" Type="number" Nullable="false" />
+    <Property Name="TOT_CHECK_MEAS" Type="number" Nullable="false" />
+    <Property Name="PLAN_CHECK_MEAS" Type="number" Nullable="false" />
+    <Property Name="PLAN_INDIRECT_MEAS" Type="number" Nullable="false" />
+    <Property Name="RATING_EXTENS" Type="number" Nullable="false" />
+    <Property Name="GAGE_PEAK_RECORD" Type="number" Nullable="false" />
+    <Property Name="PLAN_RAPDEPL_GAGE" Type="number" Nullable="false" />
+    <Property Name="DEP_RAPDEPL_GAGE" Type="number" Nullable="false" />
+    <Property Name="REC_RAPDEPL_GAGE" Type="number" Nullable="false" />
+    <Property Name="LOST_RAPDEPL_GAGE" Type="number" Nullable="false" />
+    <Property Name="PLAN_WTRLEV_SENSOR" Type="number" Nullable="false" />
+    <Property Name="DEP_WTRLEV_SENSOR" Type="number" Nullable="false" />
+    <Property Name="REC_WTRLEV_SENSOR" Type="number" Nullable="false" />
+    <Property Name="LOST_WTRLEV_SENSOR" Type="number" Nullable="false" />
+    <Property Name="PLAN_WV_SENS" Type="number" Nullable="false" />
+    <Property Name="DEP_WV_SENS" Type="number" Nullable="false" />
+    <Property Name="REC_WV_SENS" Type="number" Nullable="false" />
+    <Property Name="LOST_WV_SENS" Type="number" Nullable="false" />
+    <Property Name="PLAN_BAROMETRIC" Type="number" Nullable="false" />
+    <Property Name="DEP_BAROMETRIC" Type="number" Nullable="false" />
+    <Property Name="REC_BAROMETRIC" Type="number" Nullable="false" />
+    <Property Name="LOST_BAROMETRIC" Type="number" Nullable="false" />
+    <Property Name="PLAN_METEOROLOGICAL" Type="number" Nullable="false" />
+    <Property Name="DEP_METEOROLOGICAL" Type="number" Nullable="false" />
+    <Property Name="REC_METEOROLOGICAL" Type="number" Nullable="false" />
+    <Property Name="LOST_METEOROLOGICAL" Type="number" Nullable="false" />
+    <Property Name="HWM_FLAGGED" Type="number" Nullable="false" />
+    <Property Name="HWM_COLLECTED" Type="number" Nullable="false" />
+    <Property Name="QW_GAGE_VISIT" Type="number" Nullable="false" />
+    <Property Name="QW_CONT_GAGEVISIT" Type="number" Nullable="false" />
+    <Property Name="QW_GAGE_DOWN" Type="number" Nullable="false" />
+    <Property Name="QW_DISCR_SAMPLES" Type="number" Nullable="false" />
+    <Property Name="COLL_SEDSAMPLES" Type="number" Nullable="false" />
+    <Property Name="NOTES" Type="nvarchar2" />
+    <Property Name="MEMBER_ID" Type="number" Nullable="false" />
+    <Property Name="COMPLETE" Type="number" />
+  </EntityType>
+  <EntityType Name="REPORTMETRIC_CONTACT">
+    <Key>
+      <PropertyRef Name="REPORTMETRIC_CONTACT_ID" />
+    </Key>
+    <Property Name="REPORTMETRIC_CONTACT_ID" Type="number" Nullable="false" />
+    <Property Name="REPORTING_METRICS_ID" Type="number" Nullable="false" />
+    <Property Name="CONTACT_ID" Type="number" Nullable="false" />
+    <Property Name="CONTACT_TYPE_ID" Type="number" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ROLES">
+    <Key>
+      <PropertyRef Name="ROLE_ID" />
+    </Key>
+    <Property Name="ROLE_ID" Type="number" Nullable="false" />
+    <Property Name="ROLE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="ROLE_DESCRIPTION" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="SENSOR_BRAND">
+    <Key>
+      <PropertyRef Name="SENSOR_BRAND_ID" />
+    </Key>
+    <Property Name="SENSOR_BRAND_ID" Type="number" Nullable="false" />
+    <Property Name="BRAND_NAME" Type="nvarchar2" MaxLength="400" />
+  </EntityType>
+  <EntityType Name="SENSOR_DEPLOYMENT">
+    <Key>
+      <PropertyRef Name="SENSOR_DEPLOYMENT_ID" />
+    </Key>
+    <Property Name="SENSOR_DEPLOYMENT_ID" Type="number" Nullable="false" />
+    <Property Name="SENSOR_TYPE_ID" Type="number" />
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="number" />
+  </EntityType>
+  <EntityType Name="SENSOR_TYPE">
+    <Key>
+      <PropertyRef Name="SENSOR_TYPE_ID" />
+    </Key>
+    <Property Name="SENSOR_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="SENSOR" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="SITE_HOUSING">
+    <Key>
+      <PropertyRef Name="SITE_HOUSING_ID" />
+    </Key>
+    <Property Name="SITE_HOUSING_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="HOUSING_TYPE_ID" Type="number" />
+    <Property Name="LENGTH" Type="number" />
+    <Property Name="MATERIAL" Type="nvarchar2" MaxLength="100" />
+    <Property Name="NOTES" Type="nvarchar2" MaxLength="200" />
+    <Property Name="AMOUNT" Type="number" />
+  </EntityType>
+  <EntityType Name="SITES">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="SITE_DESCRIPTION" Type="nvarchar2" MaxLength="255" />
+    <Property Name="ADDRESS" Type="nvarchar2" MaxLength="100" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="ZIP" Type="nvarchar2" MaxLength="5" />
+    <Property Name="OTHER_SID" Type="nvarchar2" MaxLength="50" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="WATERBODY" Type="nvarchar2" Nullable="false" MaxLength="100" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="HDATUM_ID" Type="number" Nullable="false" />
+    <Property Name="DRAINAGE_AREA_SQMI" Type="float" Precision="126" />
+    <Property Name="LANDOWNERCONTACT_ID" Type="number" />
+    <Property Name="PRIORITY_ID" Type="number" />
+    <Property Name="ZONE" Type="varchar2" MaxLength="75" />
+    <Property Name="IS_PERMANENT_HOUSING_INSTALLED" Type="nvarchar2" MaxLength="3" />
+    <Property Name="USGS_SID" Type="nvarchar2" MaxLength="50" />
+    <Property Name="NOAA_SID" Type="nvarchar2" MaxLength="50" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="number" />
+    <Property Name="SITE_NOTES" Type="nvarchar2" MaxLength="500" />
+    <Property Name="SAFETY_NOTES" Type="nvarchar2" MaxLength="500" />
+    <Property Name="ACCESS_GRANTED" Type="nvarchar2" MaxLength="20" />
+    <Property Name="MEMBER_ID" Type="number" />
+    <Property Name="SENSOR_NOT_APPROPRIATE" Type="number" />
+  </EntityType>
+  <EntityType Name="SOURCES">
+    <Key>
+      <PropertyRef Name="SOURCE_ID" />
+    </Key>
+    <Property Name="SOURCE_ID" Type="number" Nullable="false" />
+    <Property Name="SOURCE_NAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="AGENCY_ID" Type="number" />
+    <Property Name="SOURCE_DATE" Type="timestamp" />
+    <Property Name="SOURCE_ACCURACY" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="STATES">
+    <Key>
+      <PropertyRef Name="STATE_ID" />
+    </Key>
+    <Property Name="STATE_ID" Type="number" Nullable="false" />
+    <Property Name="STATE_NAME" Type="nvarchar2" MaxLength="100" />
+    <Property Name="STATE_ABBREV" Type="nvarchar2" MaxLength="5" />
+  </EntityType>
+  <EntityType Name="STATUS_TYPE">
+    <Key>
+      <PropertyRef Name="STATUS_TYPE_ID" />
+    </Key>
+    <Property Name="STATUS_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="VERTICAL_COLLECT_METHODS">
+    <Key>
+      <PropertyRef Name="VCOLLECT_METHOD_ID" />
+    </Key>
+    <Property Name="VCOLLECT_METHOD_ID" Type="number" Nullable="false" />
+    <Property Name="VCOLLECT_METHOD" Type="nvarchar2" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="VERTICAL_DATUMS">
+    <Key>
+      <PropertyRef Name="DATUM_ID" />
+    </Key>
+    <Property Name="DATUM_ID" Type="number" Nullable="false" />
+    <Property Name="DATUM_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="DATUM_ABBREVIATION" Type="nvarchar2" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.BAROMETRIC_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="BAROMETRIC_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.METEOROLOGICAL_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="METEOROLOGICAL_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.RAPID_DEPLOYMENT_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="RAPID_DEPLOYMENT_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.STORM_TIDE_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="STORM_TIDE_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.WAVE_HEIGHT_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="WAVE_HEIGHT_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Nullable="false" Precision="126" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_ID" Type="number" Nullable="false" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
+    <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <Function Name="USERPROFILE_ADD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="USERPROFILE.ADD" Schema="FRADMIN">
+    <Parameter Name="USERNAME" Type="varchar2" Mode="In" />
+    <Parameter Name="PASSWORD" Type="varchar2" Mode="In" />
+  </Function>
+  <Function Name="USERPROFILE_ADDROLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="USERPROFILE.ADDROLE" Schema="FRADMIN">
+    <Parameter Name="USERNAME" Type="varchar2" Mode="In" />
+    <Parameter Name="ROLEID" Type="number" Mode="In" />
+  </Function>
+  <Function Name="USERPROFILE_ALTER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="USERPROFILE.ALTER" Schema="FRADMIN">
+    <Parameter Name="USERNAME" Type="varchar2" Mode="In" />
+    <Parameter Name="ALTERSTATEMENT" Type="varchar2" Mode="In" />
+  </Function>
+  <Function Name="USERPROFILE_EDITPASSWORD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="USERPROFILE.EDITPASSWORD" Schema="FRADMIN">
+    <Parameter Name="USERNAME" Type="varchar2" Mode="In" />
+    <Parameter Name="NEWPASSWORD" Type="varchar2" Mode="In" />
+  </Function>
+  <Function Name="USERPROFILE_REMOVE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="USERPROFILE.REMOVE" Schema="FRADMIN">
+    <Parameter Name="USERNAME" Type="varchar2" Mode="In" />
+  </Function>
+</Schema>
