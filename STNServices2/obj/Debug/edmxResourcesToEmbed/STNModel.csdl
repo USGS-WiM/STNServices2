@@ -1,0 +1,2148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="STNModel2" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="STNEntities2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AGENCIES" EntityType="STNModel2.AGENCY" />
+    <EntitySet Name="APPROVALs" EntityType="STNModel2.APPROVAL" />
+    <EntitySet Name="COLLECT_TEAM" EntityType="STNModel2.COLLECT_TEAM" />
+    <EntitySet Name="CONTACTs" EntityType="STNModel2.CONTACT" />
+    <EntitySet Name="CONTACT_TYPE" EntityType="STNModel2.CONTACT_TYPE" />
+    <EntitySet Name="COUNTIES" EntityType="STNModel2.COUNTIES" />
+    <EntitySet Name="DATA_FILE" EntityType="STNModel2.DATA_FILE" />
+    <EntitySet Name="DEPLOYMENT_PRIORITY" EntityType="STNModel2.DEPLOYMENT_PRIORITY" />
+    <EntitySet Name="DEPLOYMENT_TYPE" EntityType="STNModel2.DEPLOYMENT_TYPE" />
+    <EntitySet Name="EVENT_STATUS" EntityType="STNModel2.EVENT_STATUS" />
+    <EntitySet Name="EVENT_TYPE" EntityType="STNModel2.EVENT_TYPE" />
+    <EntitySet Name="EVENTS" EntityType="STNModel2.EVENT" />
+    <EntitySet Name="FILE_KEYWORD" EntityType="STNModel2.FILE_KEYWORD" />
+    <EntitySet Name="FILE_TYPE" EntityType="STNModel2.FILE_TYPE" />
+    <EntitySet Name="FILES" EntityType="STNModel2.FILE" />
+    <EntitySet Name="HORIZONTAL_COLLECT_METHODS" EntityType="STNModel2.HORIZONTAL_COLLECT_METHODS" />
+    <EntitySet Name="HORIZONTAL_DATUMS" EntityType="STNModel2.HORIZONTAL_DATUMS" />
+    <EntitySet Name="HOUSING_TYPE" EntityType="STNModel2.HOUSING_TYPE" />
+    <EntitySet Name="HWMs" EntityType="STNModel2.HWM" />
+    <EntitySet Name="HWM_QUALITIES" EntityType="STNModel2.HWM_QUALITIES" />
+    <EntitySet Name="HWM_TYPES" EntityType="STNModel2.HWM_TYPES" />
+    <EntitySet Name="INSTR_COLLECTION_CONDITIONS" EntityType="STNModel2.INSTR_COLLECTION_CONDITIONS" />
+    <EntitySet Name="INSTRUMENTs" EntityType="STNModel2.INSTRUMENT" />
+    <EntitySet Name="INSTRUMENT_STATUS" EntityType="STNModel2.INSTRUMENT_STATUS" />
+    <EntitySet Name="KEYWORDs" EntityType="STNModel2.KEYWORD" />
+    <EntitySet Name="LANDOWNERCONTACTs" EntityType="STNModel2.LANDOWNERCONTACT" />
+    <EntitySet Name="LOCATORTYPEs" EntityType="STNModel2.LOCATORTYPE" />
+    <EntitySet Name="MARKERS" EntityType="STNModel2.MARKER" />
+    <EntitySet Name="MEMBERS" EntityType="STNModel2.MEMBER" />
+    <EntitySet Name="MEMBERS_TEAM" EntityType="STNModel2.MEMBERS_TEAM" />
+    <EntitySet Name="NETWORK_NAME" EntityType="STNModel2.NETWORK_NAME" />
+    <EntitySet Name="NETWORK_NAME_SITE" EntityType="STNModel2.NETWORK_NAME_SITE" />
+    <EntitySet Name="NETWORK_TYPE" EntityType="STNModel2.NETWORK_TYPE" />
+    <EntitySet Name="NETWORK_TYPE_SITE" EntityType="STNModel2.NETWORK_TYPE_SITE" />
+    <EntitySet Name="OBJECTIVE_POINT" EntityType="STNModel2.OBJECTIVE_POINT" />
+    <EntitySet Name="OBJECTIVE_POINT_TYPE" EntityType="STNModel2.OBJECTIVE_POINT_TYPE" />
+    <EntitySet Name="OP_CONTROL_IDENTIFIER" EntityType="STNModel2.OP_CONTROL_IDENTIFIER" />
+    <EntitySet Name="OP_MEASUREMENTS" EntityType="STNModel2.OP_MEASUREMENTS" />
+    <EntitySet Name="OP_QUALITY" EntityType="STNModel2.OP_QUALITY" />
+    <EntitySet Name="PEAK_SUMMARY" EntityType="STNModel2.PEAK_SUMMARY" />
+    <EntitySet Name="REPORTING_METRICS" EntityType="STNModel2.REPORTING_METRICS" />
+    <EntitySet Name="REPORTMETRIC_CONTACT" EntityType="STNModel2.REPORTMETRIC_CONTACT" />
+    <EntitySet Name="ROLES" EntityType="STNModel2.ROLE" />
+    <EntitySet Name="SENSOR_BRAND" EntityType="STNModel2.SENSOR_BRAND" />
+    <EntitySet Name="SENSOR_DEPLOYMENT" EntityType="STNModel2.SENSOR_DEPLOYMENT" />
+    <EntitySet Name="SENSOR_TYPE" EntityType="STNModel2.SENSOR_TYPE" />
+    <EntitySet Name="SITE_HOUSING" EntityType="STNModel2.SITE_HOUSING" />
+    <EntitySet Name="SITES" EntityType="STNModel2.SITE" />
+    <EntitySet Name="SOURCES" EntityType="STNModel2.SOURCE" />
+    <EntitySet Name="STATES" EntityType="STNModel2.STATES" />
+    <EntitySet Name="STATUS_TYPE" EntityType="STNModel2.STATUS_TYPE" />
+    <EntitySet Name="VERTICAL_COLLECT_METHODS" EntityType="STNModel2.VERTICAL_COLLECT_METHODS" />
+    <EntitySet Name="VERTICAL_DATUMS" EntityType="STNModel2.VERTICAL_DATUMS" />
+    <EntitySet Name="BAROMETRIC_VIEW" EntityType="STNModel2.BAROMETRIC_VIEW" />
+    <EntitySet Name="METEOROLOGICAL_VIEW" EntityType="STNModel2.METEOROLOGICAL_VIEW" />
+    <EntitySet Name="RAPID_DEPLOYMENT_VIEW" EntityType="STNModel2.RAPID_DEPLOYMENT_VIEW" />
+    <EntitySet Name="STORM_TIDE_VIEW" EntityType="STNModel2.STORM_TIDE_VIEW" />
+    <EntitySet Name="WAVE_HEIGHT_VIEW" EntityType="STNModel2.WAVE_HEIGHT_VIEW" />
+    <AssociationSet Name="SITEOBJECTIVE_POINT" Association="STNModel2.SITEOBJECTIVE_POINT">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="OBJECTIVE_POINT_TYPEOBJECTIVE_POINT" Association="STNModel2.OBJECTIVE_POINT_TYPEOBJECTIVE_POINT">
+      <End Role="OBJECTIVE_POINT_TYPE" EntitySet="OBJECTIVE_POINT_TYPE" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="OBJECTIVE_POINTOP_CONTROL_IDENTIFIER" Association="STNModel2.OBJECTIVE_POINTOP_CONTROL_IDENTIFIER">
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+      <End Role="OP_CONTROL_IDENTIFIER" EntitySet="OP_CONTROL_IDENTIFIER" />
+    </AssociationSet>
+    <AssociationSet Name="OBJECTIVE_POINTFILE" Association="STNModel2.OBJECTIVE_POINTFILE">
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="VERTICAL_DATUMSOBJECTIVE_POINT" Association="STNModel2.VERTICAL_DATUMSOBJECTIVE_POINT">
+      <End Role="VERTICAL_DATUMS" EntitySet="VERTICAL_DATUMS" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="OBJECTIVE_POINTOP_MEASUREMENTS" Association="STNModel2.OBJECTIVE_POINTOP_MEASUREMENTS">
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+      <End Role="OP_MEASUREMENTS" EntitySet="OP_MEASUREMENTS" />
+    </AssociationSet>
+    <AssociationSet Name="HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT" Association="STNModel2.HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT">
+      <End Role="HORIZONTAL_COLLECT_METHODS" EntitySet="HORIZONTAL_COLLECT_METHODS" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="VERTICAL_COLLECT_METHODSOBJECTIVE_POINT" Association="STNModel2.VERTICAL_COLLECT_METHODSOBJECTIVE_POINT">
+      <End Role="VERTICAL_COLLECT_METHODS" EntitySet="VERTICAL_COLLECT_METHODS" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="FILE_TYPEFILE" Association="STNModel2.FILE_TYPEFILE">
+      <End Role="FILE_TYPE" EntitySet="FILE_TYPE" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="VERTICAL_DATUMSHWM" Association="STNModel2.VERTICAL_DATUMSHWM">
+      <End Role="VERTICAL_DATUMS" EntitySet="VERTICAL_DATUMS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="SITEFILE" Association="STNModel2.SITEFILE">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="HWMFILE" Association="STNModel2.HWMFILE">
+      <End Role="HWM" EntitySet="HWMs" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="INSTRUMENTFILE" Association="STNModel2.INSTRUMENTFILE">
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="DATA_FILEFILE" Association="STNModel2.DATA_FILEFILE">
+      <End Role="DATA_FILE" EntitySet="DATA_FILE" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="LOCATORTYPEFILE" Association="STNModel2.LOCATORTYPEFILE">
+      <End Role="LOCATORTYPE" EntitySet="LOCATORTYPEs" />
+      <End Role="FILE" EntitySet="FILES" />
+    </AssociationSet>
+    <AssociationSet Name="KEYWORDFILE_KEYWORD" Association="STNModel2.KEYWORDFILE_KEYWORD">
+      <End Role="KEYWORD" EntitySet="KEYWORDs" />
+      <End Role="FILE_KEYWORD" EntitySet="FILE_KEYWORD" />
+    </AssociationSet>
+    <AssociationSet Name="AGENCYSOURCE" Association="STNModel2.AGENCYSOURCE">
+      <End Role="AGENCY" EntitySet="AGENCIES" />
+      <End Role="SOURCE" EntitySet="SOURCES" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERAGENCY" Association="STNModel2.MEMBERAGENCY">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="AGENCY" EntitySet="AGENCIES" />
+    </AssociationSet>
+    <AssociationSet Name="DEPLOYMENT_PRIORITYSITE" Association="STNModel2.DEPLOYMENT_PRIORITYSITE">
+      <End Role="DEPLOYMENT_PRIORITY" EntitySet="DEPLOYMENT_PRIORITY" />
+      <End Role="SITE" EntitySet="SITES" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERSITE" Association="STNModel2.MEMBERSITE">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="SITE" EntitySet="SITES" />
+    </AssociationSet>
+    <AssociationSet Name="SITEINSTRUMENT" Association="STNModel2.SITEINSTRUMENT">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="SITEHWM" Association="STNModel2.SITEHWM">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="SITESITE_HOUSING" Association="STNModel2.SITESITE_HOUSING">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="SITE_HOUSING" EntitySet="SITE_HOUSING" />
+    </AssociationSet>
+    <AssociationSet Name="HORIZONTAL_COLLECT_METHODSSITE" Association="STNModel2.HORIZONTAL_COLLECT_METHODSSITE">
+      <End Role="HORIZONTAL_COLLECT_METHODS" EntitySet="HORIZONTAL_COLLECT_METHODS" />
+      <End Role="SITE" EntitySet="SITES" />
+    </AssociationSet>
+    <AssociationSet Name="SITENETWORK_NAME_SITE" Association="STNModel2.SITENETWORK_NAME_SITE">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="NETWORK_NAME_SITE" EntitySet="NETWORK_NAME_SITE" />
+    </AssociationSet>
+    <AssociationSet Name="LANDOWNERCONTACTSITE" Association="STNModel2.LANDOWNERCONTACTSITE">
+      <End Role="LANDOWNERCONTACT" EntitySet="LANDOWNERCONTACTs" />
+      <End Role="SITE" EntitySet="SITES" />
+    </AssociationSet>
+    <AssociationSet Name="SITENETWORK_TYPE_SITE" Association="STNModel2.SITENETWORK_TYPE_SITE">
+      <End Role="SITE" EntitySet="SITES" />
+      <End Role="NETWORK_TYPE_SITE" EntitySet="NETWORK_TYPE_SITE" />
+    </AssociationSet>
+    <AssociationSet Name="NETWORK_TYPENETWORK_TYPE_SITE" Association="STNModel2.NETWORK_TYPENETWORK_TYPE_SITE">
+      <End Role="NETWORK_TYPE" EntitySet="NETWORK_TYPE" />
+      <End Role="NETWORK_TYPE_SITE" EntitySet="NETWORK_TYPE_SITE" />
+    </AssociationSet>
+    <AssociationSet Name="HORIZONTAL_DATUMSSITE" Association="STNModel2.HORIZONTAL_DATUMSSITE">
+      <End Role="HORIZONTAL_DATUMS" EntitySet="HORIZONTAL_DATUMS" />
+      <End Role="SITE" EntitySet="SITES" />
+    </AssociationSet>
+    <AssociationSet Name="NETWORK_NAMENETWORK_NAME_SITE" Association="STNModel2.NETWORK_NAMENETWORK_NAME_SITE">
+      <End Role="NETWORK_NAME" EntitySet="NETWORK_NAME" />
+      <End Role="NETWORK_NAME_SITE" EntitySet="NETWORK_NAME_SITE" />
+    </AssociationSet>
+    <AssociationSet Name="HOUSING_TYPEINSTRUMENT" Association="STNModel2.HOUSING_TYPEINSTRUMENT">
+      <End Role="HOUSING_TYPE" EntitySet="HOUSING_TYPE" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="INSTRUMENT_STATUSOP_MEASUREMENTS" Association="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS">
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+      <End Role="OP_MEASUREMENTS" EntitySet="OP_MEASUREMENTS" />
+    </AssociationSet>
+    <AssociationSet Name="DEPLOYMENT_TYPESENSOR_DEPLOYMENT" Association="STNModel2.DEPLOYMENT_TYPESENSOR_DEPLOYMENT">
+      <End Role="DEPLOYMENT_TYPE" EntitySet="DEPLOYMENT_TYPE" />
+      <End Role="SENSOR_DEPLOYMENT" EntitySet="SENSOR_DEPLOYMENT" />
+    </AssociationSet>
+    <AssociationSet Name="SENSOR_TYPESENSOR_DEPLOYMENT" Association="STNModel2.SENSOR_TYPESENSOR_DEPLOYMENT">
+      <End Role="SENSOR_TYPE" EntitySet="SENSOR_TYPE" />
+      <End Role="SENSOR_DEPLOYMENT" EntitySet="SENSOR_DEPLOYMENT" />
+    </AssociationSet>
+    <AssociationSet Name="SENSOR_TYPEINSTRUMENT" Association="STNModel2.SENSOR_TYPEINSTRUMENT">
+      <End Role="SENSOR_TYPE" EntitySet="SENSOR_TYPE" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="STATUS_TYPEINSTRUMENT_STATUS" Association="STNModel2.STATUS_TYPEINSTRUMENT_STATUS">
+      <End Role="STATUS_TYPE" EntitySet="STATUS_TYPE" />
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+    </AssociationSet>
+    <AssociationSet Name="OP_QUALITYOBJECTIVE_POINT" Association="STNModel2.OP_QUALITYOBJECTIVE_POINT">
+      <End Role="OP_QUALITY" EntitySet="OP_QUALITY" />
+      <End Role="OBJECTIVE_POINT" EntitySet="OBJECTIVE_POINT" />
+    </AssociationSet>
+    <AssociationSet Name="SENSOR_BRANDINSTRUMENT" Association="STNModel2.SENSOR_BRANDINSTRUMENT">
+      <End Role="SENSOR_BRAND" EntitySet="SENSOR_BRAND" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="INSTRUMENTINSTRUMENT_STATUS" Association="STNModel2.INSTRUMENTINSTRUMENT_STATUS">
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+    </AssociationSet>
+    <AssociationSet Name="CONTACT_TYPEREPORTMETRIC_CONTACT" Association="STNModel2.CONTACT_TYPEREPORTMETRIC_CONTACT">
+      <End Role="CONTACT_TYPE" EntitySet="CONTACT_TYPE" />
+      <End Role="REPORTMETRIC_CONTACT" EntitySet="REPORTMETRIC_CONTACT" />
+    </AssociationSet>
+    <AssociationSet Name="EVENT_TYPEEVENT" Association="STNModel2.EVENT_TYPEEVENT">
+      <End Role="EVENT_TYPE" EntitySet="EVENT_TYPE" />
+      <End Role="EVENT" EntitySet="EVENTS" />
+    </AssociationSet>
+    <AssociationSet Name="EVENT_STATUSEVENT" Association="STNModel2.EVENT_STATUSEVENT">
+      <End Role="EVENT_STATUS" EntitySet="EVENT_STATUS" />
+      <End Role="EVENT" EntitySet="EVENTS" />
+    </AssociationSet>
+    <AssociationSet Name="DEPLOYMENT_TYPEINSTRUMENT" Association="STNModel2.DEPLOYMENT_TYPEINSTRUMENT">
+      <End Role="DEPLOYMENT_TYPE" EntitySet="DEPLOYMENT_TYPE" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="CONTACTREPORTMETRIC_CONTACT" Association="STNModel2.CONTACTREPORTMETRIC_CONTACT">
+      <End Role="CONTACT" EntitySet="CONTACTs" />
+      <End Role="REPORTMETRIC_CONTACT" EntitySet="REPORTMETRIC_CONTACT" />
+    </AssociationSet>
+    <AssociationSet Name="REPORTING_METRICSREPORTMETRIC_CONTACT" Association="STNModel2.REPORTING_METRICSREPORTMETRIC_CONTACT">
+      <End Role="REPORTING_METRICS" EntitySet="REPORTING_METRICS" />
+      <End Role="REPORTMETRIC_CONTACT" EntitySet="REPORTMETRIC_CONTACT" />
+    </AssociationSet>
+    <AssociationSet Name="INSTR_COLLECTION_CONDITIONSINSTRUMENT" Association="STNModel2.INSTR_COLLECTION_CONDITIONSINSTRUMENT">
+      <End Role="INSTR_COLLECTION_CONDITIONS" EntitySet="INSTR_COLLECTION_CONDITIONS" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="EVENTINSTRUMENT" Association="STNModel2.EVENTINSTRUMENT">
+      <End Role="EVENT" EntitySet="EVENTS" />
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+    </AssociationSet>
+    <AssociationSet Name="EVENTHWM" Association="STNModel2.EVENTHWM">
+      <End Role="EVENT" EntitySet="EVENTS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBEREVENT" Association="STNModel2.MEMBEREVENT">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="EVENT" EntitySet="EVENTS" />
+    </AssociationSet>
+    <AssociationSet Name="EVENTREPORTING_METRICS" Association="STNModel2.EVENTREPORTING_METRICS">
+      <End Role="EVENT" EntitySet="EVENTS" />
+      <End Role="REPORTING_METRICS" EntitySet="REPORTING_METRICS" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERREPORTING_METRICS" Association="STNModel2.MEMBERREPORTING_METRICS">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="REPORTING_METRICS" EntitySet="REPORTING_METRICS" />
+    </AssociationSet>
+    <AssociationSet Name="INSTRUMENTDATA_FILE" Association="STNModel2.INSTRUMENTDATA_FILE">
+      <End Role="INSTRUMENT" EntitySet="INSTRUMENTs" />
+      <End Role="DATA_FILE" EntitySet="DATA_FILE" />
+    </AssociationSet>
+    <AssociationSet Name="PEAK_SUMMARYDATA_FILE" Association="STNModel2.PEAK_SUMMARYDATA_FILE">
+      <End Role="PEAK_SUMMARY" EntitySet="PEAK_SUMMARY" />
+      <End Role="DATA_FILE" EntitySet="DATA_FILE" />
+    </AssociationSet>
+    <AssociationSet Name="APPROVALDATA_FILE" Association="STNModel2.APPROVALDATA_FILE">
+      <End Role="APPROVAL" EntitySet="APPROVALs" />
+      <End Role="DATA_FILE" EntitySet="DATA_FILE" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERDATA_FILE" Association="STNModel2.MEMBERDATA_FILE">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="DATA_FILE" EntitySet="DATA_FILE" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERAPPROVAL" Association="STNModel2.MEMBERAPPROVAL">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="APPROVAL" EntitySet="APPROVALs" />
+    </AssociationSet>
+    <AssociationSet Name="APPROVALHWM" Association="STNModel2.APPROVALHWM">
+      <End Role="APPROVAL" EntitySet="APPROVALs" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="FILESOURCE" Association="STNModel2.FILESOURCE">
+      <End Role="FILE" EntitySet="FILES" />
+      <End Role="SOURCE" EntitySet="SOURCES" />
+    </AssociationSet>
+    <AssociationSet Name="PEAK_SUMMARYHWM" Association="STNModel2.PEAK_SUMMARYHWM">
+      <End Role="PEAK_SUMMARY" EntitySet="PEAK_SUMMARY" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERPEAK_SUMMARY" Association="STNModel2.MEMBERPEAK_SUMMARY">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="PEAK_SUMMARY" EntitySet="PEAK_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="HORIZONTAL_DATUMSHWM" Association="STNModel2.HORIZONTAL_DATUMSHWM">
+      <End Role="HORIZONTAL_DATUMS" EntitySet="HORIZONTAL_DATUMS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="HWM_TYPESHWM" Association="STNModel2.HWM_TYPESHWM">
+      <End Role="HWM_TYPES" EntitySet="HWM_TYPES" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="HWM_QUALITIESHWM" Association="STNModel2.HWM_QUALITIESHWM">
+      <End Role="HWM_QUALITIES" EntitySet="HWM_QUALITIES" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="MARKERHWM" Association="STNModel2.MARKERHWM">
+      <End Role="MARKER" EntitySet="MARKERS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="HORIZONTAL_COLLECT_METHODSHWM" Association="STNModel2.HORIZONTAL_COLLECT_METHODSHWM">
+      <End Role="HORIZONTAL_COLLECT_METHODS" EntitySet="HORIZONTAL_COLLECT_METHODS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="VERTICAL_COLLECT_METHODSHWM" Association="STNModel2.VERTICAL_COLLECT_METHODSHWM">
+      <End Role="VERTICAL_COLLECT_METHODS" EntitySet="VERTICAL_COLLECT_METHODS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="COLLECT_TEAMHWM" Association="STNModel2.COLLECT_TEAMHWM">
+      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="COLLECT_TEAMHWM1" Association="STNModel2.COLLECT_TEAMHWM1">
+      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="COLLECT_TEAMINSTRUMENT_STATUS" Association="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS">
+      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+    </AssociationSet>
+    <AssociationSet Name="COLLECT_TEAMMEMBERS_TEAM" Association="STNModel2.COLLECT_TEAMMEMBERS_TEAM">
+      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
+      <End Role="MEMBERS_TEAM" EntitySet="MEMBERS_TEAM" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERMEMBERS_TEAM" Association="STNModel2.MEMBERMEMBERS_TEAM">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="MEMBERS_TEAM" EntitySet="MEMBERS_TEAM" />
+    </AssociationSet>
+    <AssociationSet Name="ROLEMEMBER" Association="STNModel2.ROLEMEMBER">
+      <End Role="ROLE" EntitySet="ROLES" />
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+    </AssociationSet>
+    <AssociationSet Name="HOUSING_TYPESITE_HOUSING" Association="STNModel2.HOUSING_TYPESITE_HOUSING">
+      <End Role="HOUSING_TYPE" EntitySet="HOUSING_TYPE" />
+      <End Role="SITE_HOUSING" EntitySet="SITE_HOUSING" />
+    </AssociationSet>
+    <AssociationSet Name="STATESCOUNTIES" Association="STNModel2.STATESCOUNTIES">
+      <End Role="STATES" EntitySet="STATES" />
+      <End Role="COUNTIES" EntitySet="COUNTIES" />
+    </AssociationSet>
+    <FunctionImport Name="USERPROFILE_ADD">
+      <Parameter Name="USERNAME" Mode="In" Type="String" />
+      <Parameter Name="PASSWORD" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="USERPROFILE_ADDROLE">
+      <Parameter Name="USERNAME" Mode="In" Type="String" />
+      <Parameter Name="ROLEID" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="USERPROFILE_ALTER">
+      <Parameter Name="USERNAME" Mode="In" Type="String" />
+      <Parameter Name="ALTERSTATEMENT" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="USERPROFILE_EDITPASSWORD">
+      <Parameter Name="USERNAME" Mode="In" Type="String" />
+      <Parameter Name="NEWPASSWORD" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="USERPROFILE_REMOVE">
+      <Parameter Name="USERNAME" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="AGENCY">
+    <Key>
+      <PropertyRef Name="AGENCY_ID" />
+    </Key>
+    <Property Name="AGENCY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="AGENCY_NAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="ADDRESS" Type="String" MaxLength="150" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="2" Unicode="true" FixedLength="false" />
+    <Property Name="ZIP" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="PHONE" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="SOURCEs" Relationship="STNModel2.AGENCYSOURCE" FromRole="AGENCY" ToRole="SOURCE" />
+    <NavigationProperty Name="MEMBERs" Relationship="STNModel2.MEMBERAGENCY" FromRole="AGENCY" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="APPROVAL">
+    <Key>
+      <PropertyRef Name="APPROVAL_ID" />
+    </Key>
+    <Property Name="APPROVAL_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="APPROVAL_DATE" Type="DateTime" Precision="6" />
+    <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.APPROVALDATA_FILE" FromRole="APPROVAL" ToRole="DATA_FILE" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERAPPROVAL" FromRole="APPROVAL" ToRole="MEMBER" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.APPROVALHWM" FromRole="APPROVAL" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="COLLECT_TEAM">
+    <Key>
+      <PropertyRef Name="COLLECT_TEAM_ID" />
+    </Key>
+    <Property Name="COLLECT_TEAM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.COLLECT_TEAMHWM" FromRole="COLLECT_TEAM" ToRole="HWM" />
+    <NavigationProperty Name="HWMs_1" Relationship="STNModel2.COLLECT_TEAMHWM1" FromRole="COLLECT_TEAM" ToRole="HWM" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS" FromRole="COLLECT_TEAM" ToRole="INSTRUMENT_STATUS" />
+    <NavigationProperty Name="MEMBERS_TEAM" Relationship="STNModel2.COLLECT_TEAMMEMBERS_TEAM" FromRole="COLLECT_TEAM" ToRole="MEMBERS_TEAM" />
+  </EntityType>
+  <EntityType Name="CONTACT">
+    <Key>
+      <PropertyRef Name="CONTACT_ID" />
+    </Key>
+    <Property Name="CONTACT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FNAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="LNAME" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="PHONE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="ALT_PHONE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="REPORTMETRIC_CONTACT" Relationship="STNModel2.CONTACTREPORTMETRIC_CONTACT" FromRole="CONTACT" ToRole="REPORTMETRIC_CONTACT" />
+  </EntityType>
+  <EntityType Name="CONTACT_TYPE">
+    <Key>
+      <PropertyRef Name="CONTACT_TYPE_ID" />
+    </Key>
+    <Property Name="CONTACT_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="TYPE" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="REPORTMETRIC_CONTACT" Relationship="STNModel2.CONTACT_TYPEREPORTMETRIC_CONTACT" FromRole="CONTACT_TYPE" ToRole="REPORTMETRIC_CONTACT" />
+  </EntityType>
+  <EntityType Name="COUNTIES">
+    <Key>
+      <PropertyRef Name="COUNTY_ID" />
+    </Key>
+    <Property Name="COUNTY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY_NAME" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="STATE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATE_FIP" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="COUNTY_FIP" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="STATE" Relationship="STNModel2.STATESCOUNTIES" FromRole="COUNTIES" ToRole="STATES" />
+  </EntityType>
+  <EntityType Name="DATA_FILE">
+    <Key>
+      <PropertyRef Name="DATA_FILE_ID" />
+    </Key>
+    <Property Name="DATA_FILE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="START" Type="DateTime" Precision="6" />
+    <Property Name="END" Type="DateTime" Precision="6" />
+    <Property Name="GOOD_START" Type="DateTime" Precision="6" />
+    <Property Name="GOOD_END" Type="DateTime" Precision="6" />
+    <Property Name="PROCESSOR_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="APPROVAL_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="COLLECT_DATE" Type="DateTime" Precision="6" />
+    <Property Name="PEAK_SUMMARY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="ELEVATION_STATUS" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_ZONE" Type="String" MaxLength="8" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.DATA_FILEFILE" FromRole="DATA_FILE" ToRole="FILE" />
+    <NavigationProperty Name="INSTRUMENT" Relationship="STNModel2.INSTRUMENTDATA_FILE" FromRole="DATA_FILE" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="PEAK_SUMMARY" Relationship="STNModel2.PEAK_SUMMARYDATA_FILE" FromRole="DATA_FILE" ToRole="PEAK_SUMMARY" />
+    <NavigationProperty Name="APPROVAL" Relationship="STNModel2.APPROVALDATA_FILE" FromRole="DATA_FILE" ToRole="APPROVAL" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERDATA_FILE" FromRole="DATA_FILE" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="DEPLOYMENT_PRIORITY">
+    <Key>
+      <PropertyRef Name="PRIORITY_ID" />
+    </Key>
+    <Property Name="PRIORITY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PRIORITY_NAME" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="SITEs" Relationship="STNModel2.DEPLOYMENT_PRIORITYSITE" FromRole="DEPLOYMENT_PRIORITY" ToRole="SITE" />
+  </EntityType>
+  <EntityType Name="DEPLOYMENT_TYPE">
+    <Key>
+      <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+    </Key>
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="METHOD" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="SENSOR_DEPLOYMENT" Relationship="STNModel2.DEPLOYMENT_TYPESENSOR_DEPLOYMENT" FromRole="DEPLOYMENT_TYPE" ToRole="SENSOR_DEPLOYMENT" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.DEPLOYMENT_TYPEINSTRUMENT" FromRole="DEPLOYMENT_TYPE" ToRole="INSTRUMENT" />
+  </EntityType>
+  <EntityType Name="EVENT_STATUS">
+    <Key>
+      <PropertyRef Name="EVENT_STATUS_ID" />
+    </Key>
+    <Property Name="EVENT_STATUS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="EVENTs" Relationship="STNModel2.EVENT_STATUSEVENT" FromRole="EVENT_STATUS" ToRole="EVENT" />
+  </EntityType>
+  <EntityType Name="EVENT_TYPE">
+    <Key>
+      <PropertyRef Name="EVENT_TYPE_ID" />
+    </Key>
+    <Property Name="EVENT_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="TYPE" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="EVENTs" Relationship="STNModel2.EVENT_TYPEEVENT" FromRole="EVENT_TYPE" ToRole="EVENT" />
+  </EntityType>
+  <EntityType Name="EVENT">
+    <Key>
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="EVENT_START_DATE" Type="DateTime" Precision="6" />
+    <Property Name="EVENT_END_DATE" Type="DateTime" Precision="6" />
+    <Property Name="EVENT_DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="EVENT_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="EVENT_STATUS_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="EVENT_COORDINATOR" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="EVENT_TYPE" Relationship="STNModel2.EVENT_TYPEEVENT" FromRole="EVENT" ToRole="EVENT_TYPE" />
+    <NavigationProperty Name="EVENT_STATUS" Relationship="STNModel2.EVENT_STATUSEVENT" FromRole="EVENT" ToRole="EVENT_STATUS" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.EVENTINSTRUMENT" FromRole="EVENT" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.EVENTHWM" FromRole="EVENT" ToRole="HWM" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBEREVENT" FromRole="EVENT" ToRole="MEMBER" />
+    <NavigationProperty Name="REPORTING_METRICS" Relationship="STNModel2.EVENTREPORTING_METRICS" FromRole="EVENT" ToRole="REPORTING_METRICS" />
+  </EntityType>
+  <EntityType Name="FILE_KEYWORD">
+    <Key>
+      <PropertyRef Name="FILE_KEYWORD_ID" />
+    </Key>
+    <Property Name="FILE_KEYWORD_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FILE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="KEYWORD_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <NavigationProperty Name="KEYWORD" Relationship="STNModel2.KEYWORDFILE_KEYWORD" FromRole="FILE_KEYWORD" ToRole="KEYWORD" />
+  </EntityType>
+  <EntityType Name="FILE_TYPE">
+    <Key>
+      <PropertyRef Name="FILETYPE_ID" />
+    </Key>
+    <Property Name="FILETYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FILETYPE" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.FILE_TYPEFILE" FromRole="FILE_TYPE" ToRole="FILE" />
+  </EntityType>
+  <EntityType Name="FILE">
+    <Key>
+      <PropertyRef Name="FILE_ID" />
+    </Key>
+    <Property Name="FILE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PATH" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="PHOTO_DIRECTION" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="FILE_DATE" Type="DateTime" Precision="6" />
+    <Property Name="HWM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="FILETYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SOURCE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="FILE_URL" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="DATA_FILE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VALIDATOR_USERID" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="LOCATOR_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="DATE_VALIDATED" Type="DateTime" />
+    <Property Name="VALIDATED" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTFILE" FromRole="FILE" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="FILE_TYPE" Relationship="STNModel2.FILE_TYPEFILE" FromRole="FILE" ToRole="FILE_TYPE" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITEFILE" FromRole="FILE" ToRole="SITE" />
+    <NavigationProperty Name="HWM" Relationship="STNModel2.HWMFILE" FromRole="FILE" ToRole="HWM" />
+    <NavigationProperty Name="INSTRUMENT" Relationship="STNModel2.INSTRUMENTFILE" FromRole="FILE" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.DATA_FILEFILE" FromRole="FILE" ToRole="DATA_FILE" />
+    <NavigationProperty Name="LOCATORTYPE" Relationship="STNModel2.LOCATORTYPEFILE" FromRole="FILE" ToRole="LOCATORTYPE" />
+    <NavigationProperty Name="SOURCE" Relationship="STNModel2.FILESOURCE" FromRole="FILE" ToRole="SOURCE" />
+  </EntityType>
+  <EntityType Name="HORIZONTAL_COLLECT_METHODS">
+    <Key>
+      <PropertyRef Name="HCOLLECT_METHOD_ID" />
+    </Key>
+    <Property Name="HCOLLECT_METHOD_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HCOLLECT_METHOD" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT" FromRole="HORIZONTAL_COLLECT_METHODS" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="SITEs" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSSITE" FromRole="HORIZONTAL_COLLECT_METHODS" ToRole="SITE" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSHWM" FromRole="HORIZONTAL_COLLECT_METHODS" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="HORIZONTAL_DATUMS">
+    <Key>
+      <PropertyRef Name="DATUM_ID" />
+    </Key>
+    <Property Name="DATUM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DATUM_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="DATUM_ABBREVIATION" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="SITEs" Relationship="STNModel2.HORIZONTAL_DATUMSSITE" FromRole="HORIZONTAL_DATUMS" ToRole="SITE" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.HORIZONTAL_DATUMSHWM" FromRole="HORIZONTAL_DATUMS" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="HOUSING_TYPE">
+    <Key>
+      <PropertyRef Name="HOUSING_TYPE_ID" />
+    </Key>
+    <Property Name="HOUSING_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="TYPE_NAME" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.HOUSING_TYPEINSTRUMENT" FromRole="HOUSING_TYPE" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="SITE_HOUSING" Relationship="STNModel2.HOUSING_TYPESITE_HOUSING" FromRole="HOUSING_TYPE" ToRole="SITE_HOUSING" />
+  </EntityType>
+  <EntityType Name="HWM">
+    <Key>
+      <PropertyRef Name="HWM_ID" />
+    </Key>
+    <Property Name="HWM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WATERBODY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HWM_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_QUALITY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_LOCATIONDESCRIPTION" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SURVEY_DATE" Type="DateTime" Precision="6" />
+    <Property Name="ELEV_FT" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VCOLLECT_METHOD_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="BANK" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="APPROVAL_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="MARKER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HEIGHT_ABOVE_GND" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="PEAK_SUMMARY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HWM_NOTES" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+    <Property Name="HWM_ENVIRONMENT" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="FLAG_DATE" Type="DateTime" Precision="6" />
+    <Property Name="STILLWATER" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="FLAG_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SURVEY_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="FLAG_MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SURVEY_MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="VERTICAL_DATUMS" Relationship="STNModel2.VERTICAL_DATUMSHWM" FromRole="HWM" ToRole="VERTICAL_DATUMS" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.HWMFILE" FromRole="HWM" ToRole="FILE" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITEHWM" FromRole="HWM" ToRole="SITE" />
+    <NavigationProperty Name="EVENT" Relationship="STNModel2.EVENTHWM" FromRole="HWM" ToRole="EVENT" />
+    <NavigationProperty Name="APPROVAL" Relationship="STNModel2.APPROVALHWM" FromRole="HWM" ToRole="APPROVAL" />
+    <NavigationProperty Name="PEAK_SUMMARY" Relationship="STNModel2.PEAK_SUMMARYHWM" FromRole="HWM" ToRole="PEAK_SUMMARY" />
+    <NavigationProperty Name="HORIZONTAL_DATUMS" Relationship="STNModel2.HORIZONTAL_DATUMSHWM" FromRole="HWM" ToRole="HORIZONTAL_DATUMS" />
+    <NavigationProperty Name="HWM_TYPES" Relationship="STNModel2.HWM_TYPESHWM" FromRole="HWM" ToRole="HWM_TYPES" />
+    <NavigationProperty Name="HWM_QUALITIES" Relationship="STNModel2.HWM_QUALITIESHWM" FromRole="HWM" ToRole="HWM_QUALITIES" />
+    <NavigationProperty Name="MARKER" Relationship="STNModel2.MARKERHWM" FromRole="HWM" ToRole="MARKER" />
+    <NavigationProperty Name="HORIZONTAL_COLLECT_METHODS" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSHWM" FromRole="HWM" ToRole="HORIZONTAL_COLLECT_METHODS" />
+    <NavigationProperty Name="VERTICAL_COLLECT_METHODS" Relationship="STNModel2.VERTICAL_COLLECT_METHODSHWM" FromRole="HWM" ToRole="VERTICAL_COLLECT_METHODS" />
+    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMHWM" FromRole="HWM" ToRole="COLLECT_TEAM" />
+    <NavigationProperty Name="COLLECT_TEAM_1" Relationship="STNModel2.COLLECT_TEAMHWM1" FromRole="HWM" ToRole="COLLECT_TEAM" />
+  </EntityType>
+  <EntityType Name="HWM_QUALITIES">
+    <Key>
+      <PropertyRef Name="HWM_QUALITY_ID" />
+    </Key>
+    <Property Name="HWM_QUALITY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_QUALITY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.HWM_QUALITIESHWM" FromRole="HWM_QUALITIES" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="HWM_TYPES">
+    <Key>
+      <PropertyRef Name="HWM_TYPE_ID" />
+    </Key>
+    <Property Name="HWM_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_TYPE" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.HWM_TYPESHWM" FromRole="HWM_TYPES" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="INSTR_COLLECTION_CONDITIONS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="CONDITION" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.INSTR_COLLECTION_CONDITIONSINSTRUMENT" FromRole="INSTR_COLLECTION_CONDITIONS" ToRole="INSTRUMENT" />
+  </EntityType>
+  <EntityType Name="INSTRUMENT">
+    <Key>
+      <PropertyRef Name="INSTRUMENT_ID" />
+    </Key>
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SENSOR_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LOCATION_DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="SERIAL_NUMBER" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="HOUSING_SERIAL_NUMBER" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="INTERVAL" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="INST_COLLECTION_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HOUSING_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SENSOR_BRAND_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VENTED" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.INSTRUMENTFILE" FromRole="INSTRUMENT" ToRole="FILE" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITEINSTRUMENT" FromRole="INSTRUMENT" ToRole="SITE" />
+    <NavigationProperty Name="HOUSING_TYPE" Relationship="STNModel2.HOUSING_TYPEINSTRUMENT" FromRole="INSTRUMENT" ToRole="HOUSING_TYPE" />
+    <NavigationProperty Name="SENSOR_TYPE" Relationship="STNModel2.SENSOR_TYPEINSTRUMENT" FromRole="INSTRUMENT" ToRole="SENSOR_TYPE" />
+    <NavigationProperty Name="SENSOR_BRAND" Relationship="STNModel2.SENSOR_BRANDINSTRUMENT" FromRole="INSTRUMENT" ToRole="SENSOR_BRAND" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.INSTRUMENTINSTRUMENT_STATUS" FromRole="INSTRUMENT" ToRole="INSTRUMENT_STATUS" />
+    <NavigationProperty Name="DEPLOYMENT_TYPE" Relationship="STNModel2.DEPLOYMENT_TYPEINSTRUMENT" FromRole="INSTRUMENT" ToRole="DEPLOYMENT_TYPE" />
+    <NavigationProperty Name="INSTR_COLLECTION_CONDITIONS" Relationship="STNModel2.INSTR_COLLECTION_CONDITIONSINSTRUMENT" FromRole="INSTRUMENT" ToRole="INSTR_COLLECTION_CONDITIONS" />
+    <NavigationProperty Name="EVENT" Relationship="STNModel2.EVENTINSTRUMENT" FromRole="INSTRUMENT" ToRole="EVENT" />
+    <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.INSTRUMENTDATA_FILE" FromRole="INSTRUMENT" ToRole="DATA_FILE" />
+  </EntityType>
+  <EntityType Name="INSTRUMENT_STATUS">
+    <Key>
+      <PropertyRef Name="INSTRUMENT_STATUS_ID" />
+    </Key>
+    <Property Name="INSTRUMENT_STATUS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATUS_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+    <Property Name="NOTES" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="COLLECTION_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="TIME_ZONE" Type="String" MaxLength="8" Unicode="false" FixedLength="false" />
+    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="OP_MEASUREMENTS" Relationship="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS" FromRole="INSTRUMENT_STATUS" ToRole="OP_MEASUREMENTS" />
+    <NavigationProperty Name="STATUS_TYPE" Relationship="STNModel2.STATUS_TYPEINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="STATUS_TYPE" />
+    <NavigationProperty Name="INSTRUMENT" Relationship="STNModel2.INSTRUMENTINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="COLLECT_TEAM" />
+  </EntityType>
+  <EntityType Name="KEYWORD">
+    <Key>
+      <PropertyRef Name="KEYWORD_ID" />
+    </Key>
+    <Property Name="KEYWORD_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WORD" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="FILE_KEYWORD" Relationship="STNModel2.KEYWORDFILE_KEYWORD" FromRole="KEYWORD" ToRole="FILE_KEYWORD" />
+  </EntityType>
+  <EntityType Name="LANDOWNERCONTACT">
+    <Key>
+      <PropertyRef Name="LANDOWNERCONTACTID" />
+    </Key>
+    <Property Name="LANDOWNERCONTACTID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FNAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LNAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="ADDRESS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="ZIP" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="PRIMARYPHONE" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+    <Property Name="SECONDARYPHONE" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="TITLE" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="SITEs" Relationship="STNModel2.LANDOWNERCONTACTSITE" FromRole="LANDOWNERCONTACT" ToRole="SITE" />
+  </EntityType>
+  <EntityType Name="LOCATORTYPE">
+    <Key>
+      <PropertyRef Name="LOCATOR_TYPE_ID" />
+    </Key>
+    <Property Name="LOCATOR_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOCATOR" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.LOCATORTYPEFILE" FromRole="LOCATORTYPE" ToRole="FILE" />
+  </EntityType>
+  <EntityType Name="MARKER">
+    <Key>
+      <PropertyRef Name="MARKER_ID" />
+    </Key>
+    <Property Name="MARKER_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="MARKER1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.MARKERHWM" FromRole="MARKER" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="MEMBER">
+    <Key>
+      <PropertyRef Name="MEMBER_ID" />
+    </Key>
+    <Property Name="MEMBER_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FNAME" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="LNAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="AGENCY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="PHONE" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="RSSFEED" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="EMERGENCY_CONTACT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="EMERGENCY_CONTACT_PHONE" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="ROLE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="USERNAME" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="AGENCY" Relationship="STNModel2.MEMBERAGENCY" FromRole="MEMBER" ToRole="AGENCY" />
+    <NavigationProperty Name="SITEs" Relationship="STNModel2.MEMBERSITE" FromRole="MEMBER" ToRole="SITE" />
+    <NavigationProperty Name="EVENTs" Relationship="STNModel2.MEMBEREVENT" FromRole="MEMBER" ToRole="EVENT" />
+    <NavigationProperty Name="REPORTING_METRICS" Relationship="STNModel2.MEMBERREPORTING_METRICS" FromRole="MEMBER" ToRole="REPORTING_METRICS" />
+    <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.MEMBERDATA_FILE" FromRole="MEMBER" ToRole="DATA_FILE" />
+    <NavigationProperty Name="APPROVALs" Relationship="STNModel2.MEMBERAPPROVAL" FromRole="MEMBER" ToRole="APPROVAL" />
+    <NavigationProperty Name="PEAK_SUMMARY" Relationship="STNModel2.MEMBERPEAK_SUMMARY" FromRole="MEMBER" ToRole="PEAK_SUMMARY" />
+    <NavigationProperty Name="MEMBERS_TEAM" Relationship="STNModel2.MEMBERMEMBERS_TEAM" FromRole="MEMBER" ToRole="MEMBERS_TEAM" />
+    <NavigationProperty Name="ROLE" Relationship="STNModel2.ROLEMEMBER" FromRole="MEMBER" ToRole="ROLE" />
+  </EntityType>
+  <EntityType Name="MEMBERS_TEAM">
+    <Key>
+      <PropertyRef Name="MEMBERS_TEAM_ID" />
+    </Key>
+    <Property Name="MEMBERS_TEAM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COLLECT_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMMEMBERS_TEAM" FromRole="MEMBERS_TEAM" ToRole="COLLECT_TEAM" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERMEMBERS_TEAM" FromRole="MEMBERS_TEAM" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="NETWORK_NAME">
+    <Key>
+      <PropertyRef Name="NETWORK_NAME_ID" />
+    </Key>
+    <Property Name="NETWORK_NAME_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NAME" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="NETWORK_NAME_SITE" Relationship="STNModel2.NETWORK_NAMENETWORK_NAME_SITE" FromRole="NETWORK_NAME" ToRole="NETWORK_NAME_SITE" />
+  </EntityType>
+  <EntityType Name="NETWORK_NAME_SITE">
+    <Key>
+      <PropertyRef Name="NETWORKNAME_SITE_ID" />
+    </Key>
+    <Property Name="NETWORKNAME_SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="NETWORK_NAME_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITENETWORK_NAME_SITE" FromRole="NETWORK_NAME_SITE" ToRole="SITE" />
+    <NavigationProperty Name="NETWORK_NAME" Relationship="STNModel2.NETWORK_NAMENETWORK_NAME_SITE" FromRole="NETWORK_NAME_SITE" ToRole="NETWORK_NAME" />
+  </EntityType>
+  <EntityType Name="NETWORK_TYPE">
+    <Key>
+      <PropertyRef Name="NETWORK_TYPE_ID" />
+    </Key>
+    <Property Name="NETWORK_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="NETWORK_TYPE_NAME" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="NETWORK_TYPE_SITE" Relationship="STNModel2.NETWORK_TYPENETWORK_TYPE_SITE" FromRole="NETWORK_TYPE" ToRole="NETWORK_TYPE_SITE" />
+  </EntityType>
+  <EntityType Name="NETWORK_TYPE_SITE">
+    <Key>
+      <PropertyRef Name="NETWORKTYPE_SITE_ID" />
+    </Key>
+    <Property Name="NETWORKTYPE_SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="NETWORK_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITENETWORK_TYPE_SITE" FromRole="NETWORK_TYPE_SITE" ToRole="SITE" />
+    <NavigationProperty Name="NETWORK_TYPE" Relationship="STNModel2.NETWORK_TYPENETWORK_TYPE_SITE" FromRole="NETWORK_TYPE_SITE" ToRole="NETWORK_TYPE" />
+  </EntityType>
+  <EntityType Name="OBJECTIVE_POINT">
+    <Key>
+      <PropertyRef Name="OBJECTIVE_POINT_ID" />
+    </Key>
+    <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="NAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+    <Property Name="ELEV_FT" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="DATE_ESTABLISHED" Type="DateTime" Precision="6" />
+    <Property Name="OP_IS_DESTROYED" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="OP_NOTES" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="VCOLLECT_METHOD_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="OP_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DATE_RECOVERED" Type="DateTime" Precision="6" />
+    <Property Name="UNCERTAINTY" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="UNQUANTIFIED" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+    <Property Name="OP_QUALITY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITEOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="SITE" />
+    <NavigationProperty Name="OBJECTIVE_POINT_TYPE" Relationship="STNModel2.OBJECTIVE_POINT_TYPEOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="OBJECTIVE_POINT_TYPE" />
+    <NavigationProperty Name="OP_CONTROL_IDENTIFIER" Relationship="STNModel2.OBJECTIVE_POINTOP_CONTROL_IDENTIFIER" FromRole="OBJECTIVE_POINT" ToRole="OP_CONTROL_IDENTIFIER" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.OBJECTIVE_POINTFILE" FromRole="OBJECTIVE_POINT" ToRole="FILE" />
+    <NavigationProperty Name="VERTICAL_DATUMS" Relationship="STNModel2.VERTICAL_DATUMSOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="VERTICAL_DATUMS" />
+    <NavigationProperty Name="OP_MEASUREMENTS" Relationship="STNModel2.OBJECTIVE_POINTOP_MEASUREMENTS" FromRole="OBJECTIVE_POINT" ToRole="OP_MEASUREMENTS" />
+    <NavigationProperty Name="HORIZONTAL_COLLECT_METHODS" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="HORIZONTAL_COLLECT_METHODS" />
+    <NavigationProperty Name="VERTICAL_COLLECT_METHODS" Relationship="STNModel2.VERTICAL_COLLECT_METHODSOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="VERTICAL_COLLECT_METHODS" />
+    <NavigationProperty Name="OP_QUALITY" Relationship="STNModel2.OP_QUALITYOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT" ToRole="OP_QUALITY" />
+  </EntityType>
+  <EntityType Name="OBJECTIVE_POINT_TYPE">
+    <Key>
+      <PropertyRef Name="OBJECTIVE_POINT_TYPE_ID" />
+    </Key>
+    <Property Name="OBJECTIVE_POINT_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="OP_TYPE" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINT_TYPEOBJECTIVE_POINT" FromRole="OBJECTIVE_POINT_TYPE" ToRole="OBJECTIVE_POINT" />
+  </EntityType>
+  <EntityType Name="OP_CONTROL_IDENTIFIER">
+    <Key>
+      <PropertyRef Name="OP_CONTROL_IDENTIFIER_ID" />
+    </Key>
+    <Property Name="OP_CONTROL_IDENTIFIER_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" />
+    <Property Name="IDENTIFIER" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="IDENTIFIER_TYPE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTOP_CONTROL_IDENTIFIER" FromRole="OP_CONTROL_IDENTIFIER" ToRole="OBJECTIVE_POINT" />
+  </EntityType>
+  <EntityType Name="OP_MEASUREMENTS">
+    <Key>
+      <PropertyRef Name="OP_MEASUREMENTS_ID" />
+    </Key>
+    <Property Name="OP_MEASUREMENTS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="INSTRUMENT_STATUS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="FROM_RP" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HANGING_LENGTH" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="WATER_SURFACE" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="GROUND_SURFACE" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="TYPE" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="INSTRUMENT_STATUS" />
+  </EntityType>
+  <EntityType Name="OP_QUALITY">
+    <Key>
+      <PropertyRef Name="OP_QUALITY_ID" />
+    </Key>
+    <Property Name="OP_QUALITY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="QUALITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OP_QUALITYOBJECTIVE_POINT" FromRole="OP_QUALITY" ToRole="OBJECTIVE_POINT" />
+  </EntityType>
+  <EntityType Name="PEAK_SUMMARY">
+    <Key>
+      <PropertyRef Name="PEAK_SUMMARY_ID" />
+    </Key>
+    <Property Name="PEAK_SUMMARY_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="PEAK_DATE" Type="DateTime" Precision="6" />
+    <Property Name="IS_PEAK_ESTIMATED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="IS_PEAK_TIME_ESTIMATED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PEAK_STAGE" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="IS_PEAK_STAGE_ESTIMATED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PEAK_DISCHARGE" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="IS_PEAK_DISCHARGE_ESTIMATED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="VDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HEIGHT_ABOVE_GND" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="IS_HAG_ESTIMATED" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="TIME_ZONE" Type="String" MaxLength="8" Unicode="true" FixedLength="false" />
+    <Property Name="AEP" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="AEP_LOWCI" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="AEP_UPPERCI" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="AEP_RANGE" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="CALC_NOTES" Type="String" MaxLength="2000" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.PEAK_SUMMARYDATA_FILE" FromRole="PEAK_SUMMARY" ToRole="DATA_FILE" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.PEAK_SUMMARYHWM" FromRole="PEAK_SUMMARY" ToRole="HWM" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERPEAK_SUMMARY" FromRole="PEAK_SUMMARY" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="REPORTING_METRICS">
+    <Key>
+      <PropertyRef Name="REPORTING_METRICS_ID" />
+    </Key>
+    <Property Name="REPORTING_METRICS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REPORT_DATE" Type="DateTime" Nullable="false" Precision="6" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATE" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="SW_FIELDPERS_NOTACCT" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_FIELDPERS_NOTACCT" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_YEST_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_YEST_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_TOD_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_TOD_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_TMW_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_TMW_FIELDPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_YEST_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_YEST_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_TOD_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_TOD_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_TMW_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_TMW_OFFICEPERS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_AUTOS_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_AUTOS_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_BOATS_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_BOATS_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SW_OTHER_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="WQ_OTHER_DEPL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="GAGE_VISIT" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="GAGE_DOWN" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="TOT_DISCHARGE_MEAS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_DISCHARGE_MEAS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="TOT_CHECK_MEAS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_CHECK_MEAS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_INDIRECT_MEAS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="RATING_EXTENS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="GAGE_PEAK_RECORD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_RAPDEPL_GAGE" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DEP_RAPDEPL_GAGE" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REC_RAPDEPL_GAGE" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOST_RAPDEPL_GAGE" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_WTRLEV_SENSOR" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DEP_WTRLEV_SENSOR" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REC_WTRLEV_SENSOR" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOST_WTRLEV_SENSOR" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_WV_SENS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DEP_WV_SENS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REC_WV_SENS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOST_WV_SENS" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_BAROMETRIC" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DEP_BAROMETRIC" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REC_BAROMETRIC" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOST_BAROMETRIC" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="PLAN_METEOROLOGICAL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DEP_METEOROLOGICAL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REC_METEOROLOGICAL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LOST_METEOROLOGICAL" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_FLAGGED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HWM_COLLECTED" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="QW_GAGE_VISIT" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="QW_CONT_GAGEVISIT" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="QW_GAGE_DOWN" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="QW_DISCR_SAMPLES" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COLL_SEDSAMPLES" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="NOTES" Type="String" MaxLength="2000" Unicode="true" FixedLength="false" />
+    <Property Name="MEMBER_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COMPLETE" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="REPORTMETRIC_CONTACT" Relationship="STNModel2.REPORTING_METRICSREPORTMETRIC_CONTACT" FromRole="REPORTING_METRICS" ToRole="REPORTMETRIC_CONTACT" />
+    <NavigationProperty Name="EVENT" Relationship="STNModel2.EVENTREPORTING_METRICS" FromRole="REPORTING_METRICS" ToRole="EVENT" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERREPORTING_METRICS" FromRole="REPORTING_METRICS" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="REPORTMETRIC_CONTACT">
+    <Key>
+      <PropertyRef Name="REPORTMETRIC_CONTACT_ID" />
+    </Key>
+    <Property Name="REPORTMETRIC_CONTACT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="REPORTING_METRICS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="CONTACT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="CONTACT_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <NavigationProperty Name="CONTACT_TYPE" Relationship="STNModel2.CONTACT_TYPEREPORTMETRIC_CONTACT" FromRole="REPORTMETRIC_CONTACT" ToRole="CONTACT_TYPE" />
+    <NavigationProperty Name="CONTACT" Relationship="STNModel2.CONTACTREPORTMETRIC_CONTACT" FromRole="REPORTMETRIC_CONTACT" ToRole="CONTACT" />
+    <NavigationProperty Name="REPORTING_METRICS" Relationship="STNModel2.REPORTING_METRICSREPORTMETRIC_CONTACT" FromRole="REPORTMETRIC_CONTACT" ToRole="REPORTING_METRICS" />
+  </EntityType>
+  <EntityType Name="ROLE">
+    <Key>
+      <PropertyRef Name="ROLE_ID" />
+    </Key>
+    <Property Name="ROLE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="ROLE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="ROLE_DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="MEMBERs" Relationship="STNModel2.ROLEMEMBER" FromRole="ROLE" ToRole="MEMBER" />
+  </EntityType>
+  <EntityType Name="SENSOR_BRAND">
+    <Key>
+      <PropertyRef Name="SENSOR_BRAND_ID" />
+    </Key>
+    <Property Name="SENSOR_BRAND_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="BRAND_NAME" Type="String" MaxLength="400" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.SENSOR_BRANDINSTRUMENT" FromRole="SENSOR_BRAND" ToRole="INSTRUMENT" />
+  </EntityType>
+  <EntityType Name="SENSOR_DEPLOYMENT">
+    <Key>
+      <PropertyRef Name="SENSOR_DEPLOYMENT_ID" />
+    </Key>
+    <Property Name="SENSOR_DEPLOYMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SENSOR_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="DEPLOYMENT_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="DEPLOYMENT_TYPE" Relationship="STNModel2.DEPLOYMENT_TYPESENSOR_DEPLOYMENT" FromRole="SENSOR_DEPLOYMENT" ToRole="DEPLOYMENT_TYPE" />
+    <NavigationProperty Name="SENSOR_TYPE" Relationship="STNModel2.SENSOR_TYPESENSOR_DEPLOYMENT" FromRole="SENSOR_DEPLOYMENT" ToRole="SENSOR_TYPE" />
+  </EntityType>
+  <EntityType Name="SENSOR_TYPE">
+    <Key>
+      <PropertyRef Name="SENSOR_TYPE_ID" />
+    </Key>
+    <Property Name="SENSOR_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SENSOR" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="SENSOR_DEPLOYMENT" Relationship="STNModel2.SENSOR_TYPESENSOR_DEPLOYMENT" FromRole="SENSOR_TYPE" ToRole="SENSOR_DEPLOYMENT" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.SENSOR_TYPEINSTRUMENT" FromRole="SENSOR_TYPE" ToRole="INSTRUMENT" />
+  </EntityType>
+  <EntityType Name="SITE_HOUSING">
+    <Key>
+      <PropertyRef Name="SITE_HOUSING_ID" />
+    </Key>
+    <Property Name="SITE_HOUSING_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="HOUSING_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LENGTH" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="MATERIAL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="NOTES" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="AMOUNT" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="SITE" Relationship="STNModel2.SITESITE_HOUSING" FromRole="SITE_HOUSING" ToRole="SITE" />
+    <NavigationProperty Name="HOUSING_TYPE" Relationship="STNModel2.HOUSING_TYPESITE_HOUSING" FromRole="SITE_HOUSING" ToRole="HOUSING_TYPE" />
+  </EntityType>
+  <EntityType Name="SITE">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="ADDRESS" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="ZIP" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+    <Property Name="OTHER_SID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="WATERBODY" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="HDATUM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DRAINAGE_AREA_SQMI" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="LANDOWNERCONTACT_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="PRIORITY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="ZONE" Type="String" MaxLength="75" Unicode="false" FixedLength="false" />
+    <Property Name="IS_PERMANENT_HOUSING_INSTALLED" Type="String" MaxLength="3" Unicode="true" FixedLength="false" />
+    <Property Name="USGS_SID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="NOAA_SID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="HCOLLECT_METHOD_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SITE_NOTES" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="SAFETY_NOTES" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="ACCESS_GRANTED" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SENSOR_NOT_APPROPRIATE" Type="Decimal" Precision="38" Scale="0" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.SITEOBJECTIVE_POINT" FromRole="SITE" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.SITEFILE" FromRole="SITE" ToRole="FILE" />
+    <NavigationProperty Name="DEPLOYMENT_PRIORITY" Relationship="STNModel2.DEPLOYMENT_PRIORITYSITE" FromRole="SITE" ToRole="DEPLOYMENT_PRIORITY" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERSITE" FromRole="SITE" ToRole="MEMBER" />
+    <NavigationProperty Name="INSTRUMENTs" Relationship="STNModel2.SITEINSTRUMENT" FromRole="SITE" ToRole="INSTRUMENT" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.SITEHWM" FromRole="SITE" ToRole="HWM" />
+    <NavigationProperty Name="SITE_HOUSING" Relationship="STNModel2.SITESITE_HOUSING" FromRole="SITE" ToRole="SITE_HOUSING" />
+    <NavigationProperty Name="HORIZONTAL_COLLECT_METHODS" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSSITE" FromRole="SITE" ToRole="HORIZONTAL_COLLECT_METHODS" />
+    <NavigationProperty Name="NETWORK_NAME_SITE" Relationship="STNModel2.SITENETWORK_NAME_SITE" FromRole="SITE" ToRole="NETWORK_NAME_SITE" />
+    <NavigationProperty Name="LANDOWNERCONTACT" Relationship="STNModel2.LANDOWNERCONTACTSITE" FromRole="SITE" ToRole="LANDOWNERCONTACT" />
+    <NavigationProperty Name="NETWORK_TYPE_SITE" Relationship="STNModel2.SITENETWORK_TYPE_SITE" FromRole="SITE" ToRole="NETWORK_TYPE_SITE" />
+    <NavigationProperty Name="HORIZONTAL_DATUMS" Relationship="STNModel2.HORIZONTAL_DATUMSSITE" FromRole="SITE" ToRole="HORIZONTAL_DATUMS" />
+  </EntityType>
+  <EntityType Name="SOURCE">
+    <Key>
+      <PropertyRef Name="SOURCE_ID" />
+    </Key>
+    <Property Name="SOURCE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SOURCE_NAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="AGENCY_ID" Type="Decimal" Precision="38" Scale="0" />
+    <Property Name="SOURCE_DATE" Type="DateTime" Precision="6" />
+    <Property Name="SOURCE_ACCURACY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="AGENCY" Relationship="STNModel2.AGENCYSOURCE" FromRole="SOURCE" ToRole="AGENCY" />
+    <NavigationProperty Name="FILEs" Relationship="STNModel2.FILESOURCE" FromRole="SOURCE" ToRole="FILE" />
+  </EntityType>
+  <EntityType Name="STATES">
+    <Key>
+      <PropertyRef Name="STATE_ID" />
+    </Key>
+    <Property Name="STATE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATE_NAME" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="STATE_ABBREV" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="COUNTIES" Relationship="STNModel2.STATESCOUNTIES" FromRole="STATES" ToRole="COUNTIES" />
+  </EntityType>
+  <EntityType Name="STATUS_TYPE">
+    <Key>
+      <PropertyRef Name="STATUS_TYPE_ID" />
+    </Key>
+    <Property Name="STATUS_TYPE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.STATUS_TYPEINSTRUMENT_STATUS" FromRole="STATUS_TYPE" ToRole="INSTRUMENT_STATUS" />
+  </EntityType>
+  <EntityType Name="VERTICAL_COLLECT_METHODS">
+    <Key>
+      <PropertyRef Name="VCOLLECT_METHOD_ID" />
+    </Key>
+    <Property Name="VCOLLECT_METHOD_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="VCOLLECT_METHOD" Type="String" MaxLength="250" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.VERTICAL_COLLECT_METHODSOBJECTIVE_POINT" FromRole="VERTICAL_COLLECT_METHODS" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.VERTICAL_COLLECT_METHODSHWM" FromRole="VERTICAL_COLLECT_METHODS" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="VERTICAL_DATUMS">
+    <Key>
+      <PropertyRef Name="DATUM_ID" />
+    </Key>
+    <Property Name="DATUM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="DATUM_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="DATUM_ABBREVIATION" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.VERTICAL_DATUMSOBJECTIVE_POINT" FromRole="VERTICAL_DATUMS" ToRole="OBJECTIVE_POINT" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.VERTICAL_DATUMSHWM" FromRole="VERTICAL_DATUMS" ToRole="HWM" />
+  </EntityType>
+  <EntityType Name="BAROMETRIC_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+  </EntityType>
+  <EntityType Name="METEOROLOGICAL_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+  </EntityType>
+  <EntityType Name="RAPID_DEPLOYMENT_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+  </EntityType>
+  <EntityType Name="STORM_TIDE_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+  </EntityType>
+  <EntityType Name="WAVE_HEIGHT_VIEW">
+    <Key>
+      <PropertyRef Name="SITE_ID" />
+      <PropertyRef Name="LATITUDE_DD" />
+      <PropertyRef Name="LONGITUDE_DD" />
+      <PropertyRef Name="INSTRUMENT_ID" />
+      <PropertyRef Name="EVENT_ID" />
+    </Key>
+    <Property Name="SITE_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="SITE_NO" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SITE_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LATITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="LONGITUDE_DD" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="COUNTY" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="STATE" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CITY" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="INSTRUMENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
+    <Property Name="EVENT_NAME" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="STATUS" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
+  </EntityType>
+  <Association Name="SITEOBJECTIVE_POINT">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="0..1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OBJECTIVE_POINT_TYPEOBJECTIVE_POINT">
+    <End Type="STNModel2.OBJECTIVE_POINT_TYPE" Role="OBJECTIVE_POINT_TYPE" Multiplicity="1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OBJECTIVE_POINT_TYPE">
+        <PropertyRef Name="OBJECTIVE_POINT_TYPE_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="OP_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OBJECTIVE_POINTOP_CONTROL_IDENTIFIER">
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="1" />
+    <End Type="STNModel2.OP_CONTROL_IDENTIFIER" Role="OP_CONTROL_IDENTIFIER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OBJECTIVE_POINT">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Principal>
+      <Dependent Role="OP_CONTROL_IDENTIFIER">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OBJECTIVE_POINTFILE">
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OBJECTIVE_POINT">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VERTICAL_DATUMSOBJECTIVE_POINT">
+    <End Type="STNModel2.VERTICAL_DATUMS" Role="VERTICAL_DATUMS" Multiplicity="0..1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VERTICAL_DATUMS">
+        <PropertyRef Name="DATUM_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="VDATUM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OBJECTIVE_POINTOP_MEASUREMENTS">
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="1" />
+    <End Type="STNModel2.OP_MEASUREMENTS" Role="OP_MEASUREMENTS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OBJECTIVE_POINT">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Principal>
+      <Dependent Role="OP_MEASUREMENTS">
+        <PropertyRef Name="OBJECTIVE_POINT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT">
+    <End Type="STNModel2.HORIZONTAL_COLLECT_METHODS" Role="HORIZONTAL_COLLECT_METHODS" Multiplicity="0..1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HORIZONTAL_COLLECT_METHODS">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VERTICAL_COLLECT_METHODSOBJECTIVE_POINT">
+    <End Type="STNModel2.VERTICAL_COLLECT_METHODS" Role="VERTICAL_COLLECT_METHODS" Multiplicity="0..1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VERTICAL_COLLECT_METHODS">
+        <PropertyRef Name="VCOLLECT_METHOD_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="VCOLLECT_METHOD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FILE_TYPEFILE">
+    <End Type="STNModel2.FILE_TYPE" Role="FILE_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FILE_TYPE">
+        <PropertyRef Name="FILETYPE_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="FILETYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VERTICAL_DATUMSHWM">
+    <End Type="STNModel2.VERTICAL_DATUMS" Role="VERTICAL_DATUMS" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VERTICAL_DATUMS">
+        <PropertyRef Name="DATUM_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="VDATUM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITEFILE">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HWMFILE">
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HWM">
+        <PropertyRef Name="HWM_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="HWM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="INSTRUMENTFILE">
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="INSTRUMENT">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DATA_FILEFILE">
+    <End Type="STNModel2.DATA_FILE" Role="DATA_FILE" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DATA_FILE">
+        <PropertyRef Name="DATA_FILE_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="DATA_FILE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LOCATORTYPEFILE">
+    <End Type="STNModel2.LOCATORTYPE" Role="LOCATORTYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LOCATORTYPE">
+        <PropertyRef Name="LOCATOR_TYPE_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="LOCATOR_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="KEYWORDFILE_KEYWORD">
+    <End Type="STNModel2.KEYWORD" Role="KEYWORD" Multiplicity="1" />
+    <End Type="STNModel2.FILE_KEYWORD" Role="FILE_KEYWORD" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="KEYWORD">
+        <PropertyRef Name="KEYWORD_ID" />
+      </Principal>
+      <Dependent Role="FILE_KEYWORD">
+        <PropertyRef Name="KEYWORD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AGENCYSOURCE">
+    <End Type="STNModel2.AGENCY" Role="AGENCY" Multiplicity="0..1" />
+    <End Type="STNModel2.SOURCE" Role="SOURCE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AGENCY">
+        <PropertyRef Name="AGENCY_ID" />
+      </Principal>
+      <Dependent Role="SOURCE">
+        <PropertyRef Name="AGENCY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERAGENCY">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="*" />
+    <End Type="STNModel2.AGENCY" Role="AGENCY" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="AGENCY">
+        <PropertyRef Name="AGENCY_ID" />
+      </Principal>
+      <Dependent Role="MEMBER">
+        <PropertyRef Name="AGENCY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DEPLOYMENT_PRIORITYSITE">
+    <End Type="STNModel2.DEPLOYMENT_PRIORITY" Role="DEPLOYMENT_PRIORITY" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DEPLOYMENT_PRIORITY">
+        <PropertyRef Name="PRIORITY_ID" />
+      </Principal>
+      <Dependent Role="SITE">
+        <PropertyRef Name="PRIORITY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERSITE">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="SITE">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITEINSTRUMENT">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITEHWM">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITESITE_HOUSING">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE_HOUSING" Role="SITE_HOUSING" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="SITE_HOUSING">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HORIZONTAL_COLLECT_METHODSSITE">
+    <End Type="STNModel2.HORIZONTAL_COLLECT_METHODS" Role="HORIZONTAL_COLLECT_METHODS" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HORIZONTAL_COLLECT_METHODS">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Principal>
+      <Dependent Role="SITE">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITENETWORK_NAME_SITE">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="1" />
+    <End Type="STNModel2.NETWORK_NAME_SITE" Role="NETWORK_NAME_SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="NETWORK_NAME_SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LANDOWNERCONTACTSITE">
+    <End Type="STNModel2.LANDOWNERCONTACT" Role="LANDOWNERCONTACT" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LANDOWNERCONTACT">
+        <PropertyRef Name="LANDOWNERCONTACTID" />
+      </Principal>
+      <Dependent Role="SITE">
+        <PropertyRef Name="LANDOWNERCONTACT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SITENETWORK_TYPE_SITE">
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="1" />
+    <End Type="STNModel2.NETWORK_TYPE_SITE" Role="NETWORK_TYPE_SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Principal>
+      <Dependent Role="NETWORK_TYPE_SITE">
+        <PropertyRef Name="SITE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="NETWORK_TYPENETWORK_TYPE_SITE">
+    <End Type="STNModel2.NETWORK_TYPE" Role="NETWORK_TYPE" Multiplicity="1" />
+    <End Type="STNModel2.NETWORK_TYPE_SITE" Role="NETWORK_TYPE_SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NETWORK_TYPE">
+        <PropertyRef Name="NETWORK_TYPE_ID" />
+      </Principal>
+      <Dependent Role="NETWORK_TYPE_SITE">
+        <PropertyRef Name="NETWORK_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HORIZONTAL_DATUMSSITE">
+    <End Type="STNModel2.HORIZONTAL_DATUMS" Role="HORIZONTAL_DATUMS" Multiplicity="1" />
+    <End Type="STNModel2.SITE" Role="SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HORIZONTAL_DATUMS">
+        <PropertyRef Name="DATUM_ID" />
+      </Principal>
+      <Dependent Role="SITE">
+        <PropertyRef Name="HDATUM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="NETWORK_NAMENETWORK_NAME_SITE">
+    <End Type="STNModel2.NETWORK_NAME" Role="NETWORK_NAME" Multiplicity="1" />
+    <End Type="STNModel2.NETWORK_NAME_SITE" Role="NETWORK_NAME_SITE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NETWORK_NAME">
+        <PropertyRef Name="NETWORK_NAME_ID" />
+      </Principal>
+      <Dependent Role="NETWORK_NAME_SITE">
+        <PropertyRef Name="NETWORK_NAME_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HOUSING_TYPEINSTRUMENT">
+    <End Type="STNModel2.HOUSING_TYPE" Role="HOUSING_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HOUSING_TYPE">
+        <PropertyRef Name="HOUSING_TYPE_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="HOUSING_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="INSTRUMENT_STATUSOP_MEASUREMENTS">
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="1" />
+    <End Type="STNModel2.OP_MEASUREMENTS" Role="OP_MEASUREMENTS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="INSTRUMENT_STATUS_ID" />
+      </Principal>
+      <Dependent Role="OP_MEASUREMENTS">
+        <PropertyRef Name="INSTRUMENT_STATUS_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DEPLOYMENT_TYPESENSOR_DEPLOYMENT">
+    <End Type="STNModel2.DEPLOYMENT_TYPE" Role="DEPLOYMENT_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.SENSOR_DEPLOYMENT" Role="SENSOR_DEPLOYMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DEPLOYMENT_TYPE">
+        <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+      </Principal>
+      <Dependent Role="SENSOR_DEPLOYMENT">
+        <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SENSOR_TYPESENSOR_DEPLOYMENT">
+    <End Type="STNModel2.SENSOR_TYPE" Role="SENSOR_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.SENSOR_DEPLOYMENT" Role="SENSOR_DEPLOYMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SENSOR_TYPE">
+        <PropertyRef Name="SENSOR_TYPE_ID" />
+      </Principal>
+      <Dependent Role="SENSOR_DEPLOYMENT">
+        <PropertyRef Name="SENSOR_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SENSOR_TYPEINSTRUMENT">
+    <End Type="STNModel2.SENSOR_TYPE" Role="SENSOR_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SENSOR_TYPE">
+        <PropertyRef Name="SENSOR_TYPE_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="SENSOR_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="STATUS_TYPEINSTRUMENT_STATUS">
+    <End Type="STNModel2.STATUS_TYPE" Role="STATUS_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="STATUS_TYPE">
+        <PropertyRef Name="STATUS_TYPE_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="STATUS_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OP_QUALITYOBJECTIVE_POINT">
+    <End Type="STNModel2.OP_QUALITY" Role="OP_QUALITY" Multiplicity="0..1" />
+    <End Type="STNModel2.OBJECTIVE_POINT" Role="OBJECTIVE_POINT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OP_QUALITY">
+        <PropertyRef Name="OP_QUALITY_ID" />
+      </Principal>
+      <Dependent Role="OBJECTIVE_POINT">
+        <PropertyRef Name="OP_QUALITY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SENSOR_BRANDINSTRUMENT">
+    <End Type="STNModel2.SENSOR_BRAND" Role="SENSOR_BRAND" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SENSOR_BRAND">
+        <PropertyRef Name="SENSOR_BRAND_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="SENSOR_BRAND_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="INSTRUMENTINSTRUMENT_STATUS">
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="INSTRUMENT">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CONTACT_TYPEREPORTMETRIC_CONTACT">
+    <End Type="STNModel2.CONTACT_TYPE" Role="CONTACT_TYPE" Multiplicity="1" />
+    <End Type="STNModel2.REPORTMETRIC_CONTACT" Role="REPORTMETRIC_CONTACT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CONTACT_TYPE">
+        <PropertyRef Name="CONTACT_TYPE_ID" />
+      </Principal>
+      <Dependent Role="REPORTMETRIC_CONTACT">
+        <PropertyRef Name="CONTACT_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EVENT_TYPEEVENT">
+    <End Type="STNModel2.EVENT_TYPE" Role="EVENT_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EVENT_TYPE">
+        <PropertyRef Name="EVENT_TYPE_ID" />
+      </Principal>
+      <Dependent Role="EVENT">
+        <PropertyRef Name="EVENT_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EVENT_STATUSEVENT">
+    <End Type="STNModel2.EVENT_STATUS" Role="EVENT_STATUS" Multiplicity="0..1" />
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EVENT_STATUS">
+        <PropertyRef Name="EVENT_STATUS_ID" />
+      </Principal>
+      <Dependent Role="EVENT">
+        <PropertyRef Name="EVENT_STATUS_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DEPLOYMENT_TYPEINSTRUMENT">
+    <End Type="STNModel2.DEPLOYMENT_TYPE" Role="DEPLOYMENT_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DEPLOYMENT_TYPE">
+        <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="DEPLOYMENT_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CONTACTREPORTMETRIC_CONTACT">
+    <End Type="STNModel2.CONTACT" Role="CONTACT" Multiplicity="1" />
+    <End Type="STNModel2.REPORTMETRIC_CONTACT" Role="REPORTMETRIC_CONTACT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CONTACT">
+        <PropertyRef Name="CONTACT_ID" />
+      </Principal>
+      <Dependent Role="REPORTMETRIC_CONTACT">
+        <PropertyRef Name="CONTACT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="REPORTING_METRICSREPORTMETRIC_CONTACT">
+    <End Type="STNModel2.REPORTING_METRICS" Role="REPORTING_METRICS" Multiplicity="1" />
+    <End Type="STNModel2.REPORTMETRIC_CONTACT" Role="REPORTMETRIC_CONTACT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="REPORTING_METRICS">
+        <PropertyRef Name="REPORTING_METRICS_ID" />
+      </Principal>
+      <Dependent Role="REPORTMETRIC_CONTACT">
+        <PropertyRef Name="REPORTING_METRICS_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="INSTR_COLLECTION_CONDITIONSINSTRUMENT">
+    <End Type="STNModel2.INSTR_COLLECTION_CONDITIONS" Role="INSTR_COLLECTION_CONDITIONS" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="INSTR_COLLECTION_CONDITIONS">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="INST_COLLECTION_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EVENTINSTRUMENT">
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EVENT">
+        <PropertyRef Name="EVENT_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT">
+        <PropertyRef Name="EVENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EVENTHWM">
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EVENT">
+        <PropertyRef Name="EVENT_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="EVENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBEREVENT">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="EVENT">
+        <PropertyRef Name="EVENT_COORDINATOR" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EVENTREPORTING_METRICS">
+    <End Type="STNModel2.EVENT" Role="EVENT" Multiplicity="1" />
+    <End Type="STNModel2.REPORTING_METRICS" Role="REPORTING_METRICS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EVENT">
+        <PropertyRef Name="EVENT_ID" />
+      </Principal>
+      <Dependent Role="REPORTING_METRICS">
+        <PropertyRef Name="EVENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERREPORTING_METRICS">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="1" />
+    <End Type="STNModel2.REPORTING_METRICS" Role="REPORTING_METRICS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="REPORTING_METRICS">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="INSTRUMENTDATA_FILE">
+    <End Type="STNModel2.INSTRUMENT" Role="INSTRUMENT" Multiplicity="0..1" />
+    <End Type="STNModel2.DATA_FILE" Role="DATA_FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="INSTRUMENT">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Principal>
+      <Dependent Role="DATA_FILE">
+        <PropertyRef Name="INSTRUMENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PEAK_SUMMARYDATA_FILE">
+    <End Type="STNModel2.PEAK_SUMMARY" Role="PEAK_SUMMARY" Multiplicity="0..1" />
+    <End Type="STNModel2.DATA_FILE" Role="DATA_FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEAK_SUMMARY">
+        <PropertyRef Name="PEAK_SUMMARY_ID" />
+      </Principal>
+      <Dependent Role="DATA_FILE">
+        <PropertyRef Name="PEAK_SUMMARY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="APPROVALDATA_FILE">
+    <End Type="STNModel2.APPROVAL" Role="APPROVAL" Multiplicity="0..1" />
+    <End Type="STNModel2.DATA_FILE" Role="DATA_FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="APPROVAL">
+        <PropertyRef Name="APPROVAL_ID" />
+      </Principal>
+      <Dependent Role="DATA_FILE">
+        <PropertyRef Name="APPROVAL_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERDATA_FILE">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.DATA_FILE" Role="DATA_FILE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="DATA_FILE">
+        <PropertyRef Name="PROCESSOR_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERAPPROVAL">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.APPROVAL" Role="APPROVAL" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="APPROVAL">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="APPROVALHWM">
+    <End Type="STNModel2.APPROVAL" Role="APPROVAL" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="APPROVAL">
+        <PropertyRef Name="APPROVAL_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="APPROVAL_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FILESOURCE">
+    <End Type="STNModel2.FILE" Role="FILE" Multiplicity="*" />
+    <End Type="STNModel2.SOURCE" Role="SOURCE" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="SOURCE">
+        <PropertyRef Name="SOURCE_ID" />
+      </Principal>
+      <Dependent Role="FILE">
+        <PropertyRef Name="SOURCE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PEAK_SUMMARYHWM">
+    <End Type="STNModel2.PEAK_SUMMARY" Role="PEAK_SUMMARY" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEAK_SUMMARY">
+        <PropertyRef Name="PEAK_SUMMARY_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="PEAK_SUMMARY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERPEAK_SUMMARY">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.PEAK_SUMMARY" Role="PEAK_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="PEAK_SUMMARY">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HORIZONTAL_DATUMSHWM">
+    <End Type="STNModel2.HORIZONTAL_DATUMS" Role="HORIZONTAL_DATUMS" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HORIZONTAL_DATUMS">
+        <PropertyRef Name="DATUM_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="HDATUM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HWM_TYPESHWM">
+    <End Type="STNModel2.HWM_TYPES" Role="HWM_TYPES" Multiplicity="1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HWM_TYPES">
+        <PropertyRef Name="HWM_TYPE_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="HWM_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HWM_QUALITIESHWM">
+    <End Type="STNModel2.HWM_QUALITIES" Role="HWM_QUALITIES" Multiplicity="1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HWM_QUALITIES">
+        <PropertyRef Name="HWM_QUALITY_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="HWM_QUALITY_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MARKERHWM">
+    <End Type="STNModel2.MARKER" Role="MARKER" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MARKER">
+        <PropertyRef Name="MARKER_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="MARKER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HORIZONTAL_COLLECT_METHODSHWM">
+    <End Type="STNModel2.HORIZONTAL_COLLECT_METHODS" Role="HORIZONTAL_COLLECT_METHODS" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HORIZONTAL_COLLECT_METHODS">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="HCOLLECT_METHOD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VERTICAL_COLLECT_METHODSHWM">
+    <End Type="STNModel2.VERTICAL_COLLECT_METHODS" Role="VERTICAL_COLLECT_METHODS" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VERTICAL_COLLECT_METHODS">
+        <PropertyRef Name="VCOLLECT_METHOD_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="VCOLLECT_METHOD_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="COLLECT_TEAMHWM">
+    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="COLLECT_TEAM">
+        <PropertyRef Name="COLLECT_TEAM_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="FLAG_TEAM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="COLLECT_TEAMHWM1">
+    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="COLLECT_TEAM">
+        <PropertyRef Name="COLLECT_TEAM_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="SURVEY_TEAM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="COLLECT_TEAMINSTRUMENT_STATUS">
+    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="COLLECT_TEAM">
+        <PropertyRef Name="COLLECT_TEAM_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="COLLECTION_TEAM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="COLLECT_TEAMMEMBERS_TEAM">
+    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
+    <End Type="STNModel2.MEMBERS_TEAM" Role="MEMBERS_TEAM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="COLLECT_TEAM">
+        <PropertyRef Name="COLLECT_TEAM_ID" />
+      </Principal>
+      <Dependent Role="MEMBERS_TEAM">
+        <PropertyRef Name="COLLECT_TEAM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERMEMBERS_TEAM">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.MEMBERS_TEAM" Role="MEMBERS_TEAM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="MEMBERS_TEAM">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ROLEMEMBER">
+    <End Type="STNModel2.ROLE" Role="ROLE" Multiplicity="0..1" />
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ROLE">
+        <PropertyRef Name="ROLE_ID" />
+      </Principal>
+      <Dependent Role="MEMBER">
+        <PropertyRef Name="ROLE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HOUSING_TYPESITE_HOUSING">
+    <End Type="STNModel2.HOUSING_TYPE" Role="HOUSING_TYPE" Multiplicity="0..1" />
+    <End Type="STNModel2.SITE_HOUSING" Role="SITE_HOUSING" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HOUSING_TYPE">
+        <PropertyRef Name="HOUSING_TYPE_ID" />
+      </Principal>
+      <Dependent Role="SITE_HOUSING">
+        <PropertyRef Name="HOUSING_TYPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="STATESCOUNTIES">
+    <End Type="STNModel2.STATES" Role="STATES" Multiplicity="1" />
+    <End Type="STNModel2.COUNTIES" Role="COUNTIES" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="STATES">
+        <PropertyRef Name="STATE_ID" />
+      </Principal>
+      <Dependent Role="COUNTIES">
+        <PropertyRef Name="STATE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
