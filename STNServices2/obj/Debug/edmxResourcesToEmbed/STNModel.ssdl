@@ -144,7 +144,7 @@
     <Key>
       <PropertyRef Name="AGENCY_ID" />
     </Key>
-    <Property Name="AGENCY_ID" Type="number" Nullable="false" />
+    <Property Name="AGENCY_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="AGENCY_NAME" Type="nvarchar2" MaxLength="100" />
     <Property Name="ADDRESS" Type="nvarchar2" MaxLength="150" />
     <Property Name="CITY" Type="nvarchar2" MaxLength="100" />
@@ -156,7 +156,7 @@
     <Key>
       <PropertyRef Name="APPROVAL_ID" />
     </Key>
-    <Property Name="APPROVAL_ID" Type="number" Nullable="false" />
+    <Property Name="APPROVAL_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="MEMBER_ID" Type="number" />
     <Property Name="APPROVAL_DATE" Type="timestamp" />
   </EntityType>
@@ -171,7 +171,7 @@
     <Key>
       <PropertyRef Name="CONTACT_ID" />
     </Key>
-    <Property Name="CONTACT_ID" Type="number" Nullable="false" />
+    <Property Name="CONTACT_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="FNAME" Type="nvarchar2" MaxLength="100" />
     <Property Name="LNAME" Type="nvarchar2" MaxLength="200" />
     <Property Name="PHONE" Type="nvarchar2" MaxLength="20" />
@@ -199,7 +199,7 @@
     <Key>
       <PropertyRef Name="DATA_FILE_ID" />
     </Key>
-    <Property Name="DATA_FILE_ID" Type="number" Nullable="false" />
+    <Property Name="DATA_FILE_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="START" Type="timestamp" />
     <Property Name="END" Type="timestamp" />
     <Property Name="GOOD_START" Type="timestamp" />
@@ -257,7 +257,7 @@
     <Key>
       <PropertyRef Name="FILE_KEYWORD_ID" />
     </Key>
-    <Property Name="FILE_KEYWORD_ID" Type="number" Nullable="false" />
+    <Property Name="FILE_KEYWORD_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="FILE_ID" Type="number" Nullable="false" />
     <Property Name="KEYWORD_ID" Type="number" Nullable="false" />
   </EntityType>
@@ -272,7 +272,7 @@
     <Key>
       <PropertyRef Name="FILE_ID" />
     </Key>
-    <Property Name="FILE_ID" Type="number" Nullable="false" />
+    <Property Name="FILE_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="PATH" Type="nvarchar2" MaxLength="200" />
     <Property Name="DESCRIPTION" Type="nclob" />
     <Property Name="PHOTO_DIRECTION" Type="nvarchar2" MaxLength="200" />
@@ -318,7 +318,7 @@
     <Key>
       <PropertyRef Name="HWM_ID" />
     </Key>
-    <Property Name="HWM_ID" Type="number" Nullable="false" />
+    <Property Name="HWM_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="WATERBODY" Type="nvarchar2" MaxLength="100" />
     <Property Name="SITE_ID" Type="number" />
     <Property Name="EVENT_ID" Type="number" />
@@ -365,14 +365,14 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="number" Nullable="false" />
+    <Property Name="ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="CONDITION" Type="nvarchar2" Nullable="false" MaxLength="50" />
   </EntityType>
   <EntityType Name="INSTRUMENT">
     <Key>
       <PropertyRef Name="INSTRUMENT_ID" />
     </Key>
-    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" />
+    <Property Name="INSTRUMENT_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="SENSOR_TYPE_ID" Type="number" />
     <Property Name="DEPLOYMENT_TYPE_ID" Type="number" />
     <Property Name="LOCATION_DESCRIPTION" Type="nvarchar2" MaxLength="255" />
@@ -390,7 +390,7 @@
     <Key>
       <PropertyRef Name="INSTRUMENT_STATUS_ID" />
     </Key>
-    <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" />
+    <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="STATUS_TYPE_ID" Type="number" />
     <Property Name="INSTRUMENT_ID" Type="number" />
     <Property Name="TIME_STAMP" Type="timestamp" />
@@ -403,14 +403,14 @@
     <Key>
       <PropertyRef Name="KEYWORD_ID" />
     </Key>
-    <Property Name="KEYWORD_ID" Type="number" Nullable="false" />
+    <Property Name="KEYWORD_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="WORD" Type="nvarchar2" Nullable="false" MaxLength="20" />
   </EntityType>
   <EntityType Name="LANDOWNERCONTACT">
     <Key>
       <PropertyRef Name="LANDOWNERCONTACTID" />
     </Key>
-    <Property Name="LANDOWNERCONTACTID" Type="number" Nullable="false" />
+    <Property Name="LANDOWNERCONTACTID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="FNAME" Type="nvarchar2" MaxLength="255" />
     <Property Name="LNAME" Type="nvarchar2" MaxLength="255" />
     <Property Name="ADDRESS" Type="nvarchar2" MaxLength="255" />
@@ -440,7 +440,7 @@
     <Key>
       <PropertyRef Name="MEMBER_ID" />
     </Key>
-    <Property Name="MEMBER_ID" Type="number" Nullable="false" />
+    <Property Name="MEMBER_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="FNAME" Type="nvarchar2" Nullable="false" MaxLength="100" />
     <Property Name="LNAME" Type="nvarchar2" MaxLength="100" />
     <Property Name="AGENCY_ID" Type="number" />
@@ -456,7 +456,7 @@
     <Key>
       <PropertyRef Name="MEMBERS_TEAM_ID" />
     </Key>
-    <Property Name="MEMBERS_TEAM_ID" Type="number" Nullable="false" />
+    <Property Name="MEMBERS_TEAM_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="COLLECT_TEAM_ID" Type="number" />
     <Property Name="MEMBER_ID" Type="number" />
   </EntityType>
@@ -479,7 +479,7 @@
     <Key>
       <PropertyRef Name="NETWORK_TYPE_ID" />
     </Key>
-    <Property Name="NETWORK_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="NETWORK_TYPE_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="NETWORK_TYPE_NAME" Type="nvarchar2" MaxLength="50" />
   </EntityType>
   <EntityType Name="NETWORK_TYPE_SITE">
@@ -494,7 +494,7 @@
     <Key>
       <PropertyRef Name="OBJECTIVE_POINT_ID" />
     </Key>
-    <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" />
+    <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="NAME" Type="nvarchar2" MaxLength="100" />
     <Property Name="DESCRIPTION" Type="nvarchar2" MaxLength="1000" />
     <Property Name="ELEV_FT" Type="number" />
@@ -518,7 +518,7 @@
     <Key>
       <PropertyRef Name="OBJECTIVE_POINT_TYPE_ID" />
     </Key>
-    <Property Name="OBJECTIVE_POINT_TYPE_ID" Type="number" Nullable="false" />
+    <Property Name="OBJECTIVE_POINT_TYPE_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="OP_TYPE" Type="varchar2" MaxLength="50" />
   </EntityType>
   <EntityType Name="OP_CONTROL_IDENTIFIER">
@@ -534,7 +534,7 @@
     <Key>
       <PropertyRef Name="OP_MEASUREMENTS_ID" />
     </Key>
-    <Property Name="OP_MEASUREMENTS_ID" Type="number" Nullable="false" />
+    <Property Name="OP_MEASUREMENTS_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" />
     <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" />
     <Property Name="FROM_RP" Type="number" />
@@ -547,14 +547,14 @@
     <Key>
       <PropertyRef Name="OP_QUALITY_ID" />
     </Key>
-    <Property Name="OP_QUALITY_ID" Type="number" Nullable="false" />
+    <Property Name="OP_QUALITY_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="QUALITY" Type="nvarchar2" MaxLength="100" />
   </EntityType>
   <EntityType Name="PEAK_SUMMARY">
     <Key>
       <PropertyRef Name="PEAK_SUMMARY_ID" />
     </Key>
-    <Property Name="PEAK_SUMMARY_ID" Type="number" Nullable="false" />
+    <Property Name="PEAK_SUMMARY_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="MEMBER_ID" Type="number" />
     <Property Name="PEAK_DATE" Type="timestamp" />
     <Property Name="IS_PEAK_ESTIMATED" Type="number" Nullable="false" />
@@ -577,7 +577,7 @@
     <Key>
       <PropertyRef Name="REPORTING_METRICS_ID" />
     </Key>
-    <Property Name="REPORTING_METRICS_ID" Type="number" Nullable="false" />
+    <Property Name="REPORTING_METRICS_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="REPORT_DATE" Type="timestamp" Nullable="false" />
     <Property Name="EVENT_ID" Type="number" Nullable="false" />
     <Property Name="STATE" Type="nvarchar2" Nullable="false" MaxLength="20" />
@@ -645,7 +645,7 @@
     <Key>
       <PropertyRef Name="REPORTMETRIC_CONTACT_ID" />
     </Key>
-    <Property Name="REPORTMETRIC_CONTACT_ID" Type="number" Nullable="false" />
+    <Property Name="REPORTMETRIC_CONTACT_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="REPORTING_METRICS_ID" Type="number" Nullable="false" />
     <Property Name="CONTACT_ID" Type="number" Nullable="false" />
     <Property Name="CONTACT_TYPE_ID" Type="number" Nullable="false" />
@@ -662,14 +662,14 @@
     <Key>
       <PropertyRef Name="SENSOR_BRAND_ID" />
     </Key>
-    <Property Name="SENSOR_BRAND_ID" Type="number" Nullable="false" />
+    <Property Name="SENSOR_BRAND_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="BRAND_NAME" Type="nvarchar2" MaxLength="400" />
   </EntityType>
   <EntityType Name="SENSOR_DEPLOYMENT">
     <Key>
       <PropertyRef Name="SENSOR_DEPLOYMENT_ID" />
     </Key>
-    <Property Name="SENSOR_DEPLOYMENT_ID" Type="number" Nullable="false" />
+    <Property Name="SENSOR_DEPLOYMENT_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="SENSOR_TYPE_ID" Type="number" />
     <Property Name="DEPLOYMENT_TYPE_ID" Type="number" />
   </EntityType>
@@ -696,7 +696,7 @@
     <Key>
       <PropertyRef Name="SITE_ID" />
     </Key>
-    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
     <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
     <Property Name="SITE_DESCRIPTION" Type="nvarchar2" MaxLength="255" />

@@ -124,13 +124,23 @@ namespace STNServices2.Resources
     {
         [DataMember]
         [XmlElement(DataType = "decimal",
-        ElementName = "siteID")]
-        public decimal siteID { get; set; }
+        ElementName = "SITE_ID")]
+        public decimal SITE_ID { get; set; }
 
         [DataMember]
         [XmlElement(DataType = "string",
         ElementName = "SITE_NO")]
         public string SITE_NO { get; set; }
+
+        [DataMember]
+        [XmlElement(DataType = "decimal",
+        ElementName = "Latitude")]
+        public decimal? latitude { get; set; }
+
+        [DataMember]
+        [XmlElement(DataType = "decimal",
+        ElementName = "Longitude")]
+        public decimal? longitude { get; set; }
 
         [DataMember]
         [XmlElement(DataType = "string",

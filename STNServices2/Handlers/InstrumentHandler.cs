@@ -945,8 +945,8 @@ namespace STNServices2.Handlers
                                          INSTRUMENT_ID = i.INSTRUMENT_ID != null ? i.INSTRUMENT_ID.Value : 0,
                                          TIME_STAMP = i.TIME_STAMP.Value,
                                          TIME_ZONE = i.TIME_ZONE,
-                                         NOTES = i.NOTES//,
-                                         // MEMBER_ID = i.MEMBER_ID != null ? i.MEMBER_ID.Value : 0
+                                         NOTES = i.NOTES,
+                                         MEMBER_ID = i.MEMBER_ID != null ? i.MEMBER_ID.Value : 0
                                      }).ToList();
             }
             return instrumentStatusList;

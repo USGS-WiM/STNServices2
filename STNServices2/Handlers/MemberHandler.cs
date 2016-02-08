@@ -441,17 +441,17 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNRDS = GetRDS(securedPassword))
+                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        aMember = aSTNRDS.MEMBERS.SingleOrDefault(
+                        aMember = aSTNE.MEMBERS.SingleOrDefault(
                                                                 m => m.USERNAME == userName);
 
                         if (aMember == null)
                         { return new OperationResult.BadRequest() { ResponseResource = "no member exists" }; }
 
                         // edit user profile using db stored procedure
-                        aSTNRDS.USERPROFILE_EDITPASSWORD(aMember.USERNAME, newPassword);
+                        aSTNE.USERPROFILE_EDITPASSWORD(aMember.USERNAME, newPassword);
 
                     }//end using
                 }//end using
