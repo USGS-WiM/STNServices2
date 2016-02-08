@@ -297,10 +297,10 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //delete files associated with this op
-                        List<FILE> opFiles = aSTNE.FILES.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
+                        List<FILES> opFiles = aSTNE.FILES.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
                         if (opFiles.Count >= 1)
                         {
-                            foreach (FILE f in opFiles)
+                            foreach (FILES f in opFiles)
                             {
                                 if (f.DATA_FILE_ID.HasValue)
                                 {

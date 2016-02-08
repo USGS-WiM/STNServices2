@@ -81,7 +81,7 @@ namespace STNServices2.Handlers
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    locator = aSTNE.LOCATORTYPES.FirstOrDefault(i => i.LOCATOR_TYPE_ID == locatorTypeId);
+                    locator = aSTNE.LOCATORTYPE.FirstOrDefault(i => i.LOCATOR_TYPE_ID == locatorTypeId);
 
                     if (locator != null)
                         locator.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
@@ -146,7 +146,7 @@ namespace STNServices2.Handlers
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    existingLocator = aSTNE.LOCATORTYPES.FirstOrDefault(l => string.Equals(l.LOCATOR.ToUpper(), thisLocator.LOCATOR.ToUpper()));
+                    existingLocator = aSTNE.LOCATORTYPE.FirstOrDefault(l => string.Equals(l.LOCATOR.ToUpper(), thisLocator.LOCATOR.ToUpper()));
 
                 }//end using
                 if (existingLocator == null)

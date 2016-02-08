@@ -22,18 +22,18 @@ using Newtonsoft.Json;
 [assembly: EdmRelationshipAttribute("STNModel2", "SITEOBJECTIVE_POINT", "SITE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.SITE), "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OBJECTIVE_POINT), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "OBJECTIVE_POINT_TYPEOBJECTIVE_POINT", "OBJECTIVE_POINT_TYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.OBJECTIVE_POINT_TYPE), "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OBJECTIVE_POINT), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "OBJECTIVE_POINTOP_CONTROL_IDENTIFIER", "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.OBJECTIVE_POINT), "OP_CONTROL_IDENTIFIER", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OP_CONTROL_IDENTIFIER), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "OBJECTIVE_POINTFILE", "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.OBJECTIVE_POINT), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "OBJECTIVE_POINTFILE", "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.OBJECTIVE_POINT), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "VERTICAL_DATUMSOBJECTIVE_POINT", "VERTICAL_DATUMS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.VERTICAL_DATUMS), "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OBJECTIVE_POINT), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "OBJECTIVE_POINTOP_MEASUREMENTS", "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.OBJECTIVE_POINT), "OP_MEASUREMENTS", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OP_MEASUREMENTS), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "HORIZONTAL_COLLECT_METHODSOBJECTIVE_POINT", "HORIZONTAL_COLLECT_METHODS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HORIZONTAL_COLLECT_METHODS), "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OBJECTIVE_POINT), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "VERTICAL_COLLECT_METHODSOBJECTIVE_POINT", "VERTICAL_COLLECT_METHODS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.VERTICAL_COLLECT_METHODS), "OBJECTIVE_POINT", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.OBJECTIVE_POINT), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "FILE_TYPEFILE", "FILE_TYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.FILE_TYPE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "FILE_TYPEFILE", "FILE_TYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.FILE_TYPE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "VERTICAL_DATUMSHWM", "VERTICAL_DATUMS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.VERTICAL_DATUMS), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "SITEFILE", "SITE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.SITE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "HWMFILE", "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HWM), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "INSTRUMENTFILE", "INSTRUMENT", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.INSTRUMENT), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "DATA_FILEFILE", "DATA_FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.DATA_FILE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "LOCATORTYPEFILE", "LOCATORTYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.LOCATORTYPE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "SITEFILE", "SITE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.SITE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "HWMFILE", "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HWM), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "INSTRUMENTFILE", "INSTRUMENT", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.INSTRUMENT), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "DATA_FILEFILE", "DATA_FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.DATA_FILE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "LOCATORTYPEFILE", "LOCATORTYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.LOCATORTYPE), "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "KEYWORDFILE_KEYWORD", "KEYWORD", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.KEYWORD), "FILE_KEYWORD", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE_KEYWORD), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "AGENCYSOURCE", "AGENCY", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.AGENCY), "SOURCE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.SOURCE), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERAGENCY", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.MEMBER), "AGENCY", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.AGENCY), true)]
@@ -76,7 +76,7 @@ using Newtonsoft.Json;
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERDATA_FILE", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "DATA_FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.DATA_FILE), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERAPPROVAL", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "APPROVAL", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.APPROVAL), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "APPROVALHWM", "APPROVAL", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.APPROVAL), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "FILESOURCE", "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE), "SOURCE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.SOURCE), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "FILESOURCE", "FILE", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILES), "SOURCE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.SOURCE), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "PEAK_SUMMARYHWM", "PEAK_SUMMARY", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.PEAK_SUMMARY), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERPEAK_SUMMARY", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "PEAK_SUMMARY", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.PEAK_SUMMARY), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "HORIZONTAL_DATUMSHWM", "HORIZONTAL_DATUMS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HORIZONTAL_DATUMS), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
@@ -93,6 +93,7 @@ using Newtonsoft.Json;
 [assembly: EdmRelationshipAttribute("STNModel2", "ROLEMEMBER", "ROLE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.ROLE), "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.MEMBER), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "HOUSING_TYPESITE_HOUSING", "HOUSING_TYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HOUSING_TYPE), "SITE_HOUSING", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.SITE_HOUSING), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "STATESCOUNTIES", "STATES", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.STATES), "COUNTIES", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.COUNTIES), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "FILESFILE_KEYWORD", "FILES", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.FILES), "FILE_KEYWORD", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE_KEYWORD), true)]
 
 #endregion
 
@@ -195,18 +196,18 @@ namespace STNServices2
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<CONTACT> CONTACTs
+        public ObjectSet<CONTACT> CONTACT
         {
             get
             {
-                if ((_CONTACTs == null))
+                if ((_CONTACT == null))
                 {
-                    _CONTACTs = base.CreateObjectSet<CONTACT>("CONTACTs");
+                    _CONTACT = base.CreateObjectSet<CONTACT>("CONTACT");
                 }
-                return _CONTACTs;
+                return _CONTACT;
             }
         }
-        private ObjectSet<CONTACT> _CONTACTs;
+        private ObjectSet<CONTACT> _CONTACT;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -371,18 +372,18 @@ namespace STNServices2
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<FILE> FILES
+        public ObjectSet<FILES> FILES
         {
             get
             {
                 if ((_FILES == null))
                 {
-                    _FILES = base.CreateObjectSet<FILE>("FILES");
+                    _FILES = base.CreateObjectSet<FILES>("FILES");
                 }
                 return _FILES;
             }
         }
-        private ObjectSet<FILE> _FILES;
+        private ObjectSet<FILES> _FILES;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -531,18 +532,18 @@ namespace STNServices2
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<KEYWORD> KEYWORDs
+        public ObjectSet<KEYWORD> KEYWORD
         {
             get
             {
-                if ((_KEYWORDs == null))
+                if ((_KEYWORD == null))
                 {
-                    _KEYWORDs = base.CreateObjectSet<KEYWORD>("KEYWORDs");
+                    _KEYWORD = base.CreateObjectSet<KEYWORD>("KEYWORD");
                 }
-                return _KEYWORDs;
+                return _KEYWORD;
             }
         }
-        private ObjectSet<KEYWORD> _KEYWORDs;
+        private ObjectSet<KEYWORD> _KEYWORD;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -563,18 +564,18 @@ namespace STNServices2
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<LOCATORTYPE> LOCATORTYPEs
+        public ObjectSet<LOCATORTYPE> LOCATORTYPE
         {
             get
             {
-                if ((_LOCATORTYPEs == null))
+                if ((_LOCATORTYPE == null))
                 {
-                    _LOCATORTYPEs = base.CreateObjectSet<LOCATORTYPE>("LOCATORTYPEs");
+                    _LOCATORTYPE = base.CreateObjectSet<LOCATORTYPE>("LOCATORTYPE");
                 }
-                return _LOCATORTYPEs;
+                return _LOCATORTYPE;
             }
         }
-        private ObjectSet<LOCATORTYPE> _LOCATORTYPEs;
+        private ObjectSet<LOCATORTYPE> _LOCATORTYPE;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1100,11 +1101,11 @@ namespace STNServices2
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the CONTACTs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the CONTACT EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToCONTACTs(CONTACT cONTACT)
+        public void AddToCONTACT(CONTACT cONTACT)
         {
-            base.AddObject("CONTACTs", cONTACT);
+            base.AddObject("CONTACT", cONTACT);
         }
     
         /// <summary>
@@ -1190,9 +1191,9 @@ namespace STNServices2
         /// <summary>
         /// Deprecated Method for adding a new object to the FILES EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToFILES(FILE fILE)
+        public void AddToFILES(FILES fILES)
         {
-            base.AddObject("FILES", fILE);
+            base.AddObject("FILES", fILES);
         }
     
         /// <summary>
@@ -1268,11 +1269,11 @@ namespace STNServices2
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the KEYWORDs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the KEYWORD EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToKEYWORDs(KEYWORD kEYWORD)
+        public void AddToKEYWORD(KEYWORD kEYWORD)
         {
-            base.AddObject("KEYWORDs", kEYWORD);
+            base.AddObject("KEYWORD", kEYWORD);
         }
     
         /// <summary>
@@ -1284,11 +1285,11 @@ namespace STNServices2
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the LOCATORTYPEs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the LOCATORTYPE EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToLOCATORTYPEs(LOCATORTYPE lOCATORTYPE)
+        public void AddToLOCATORTYPE(LOCATORTYPE lOCATORTYPE)
         {
-            base.AddObject("LOCATORTYPEs", lOCATORTYPE);
+            base.AddObject("LOCATORTYPE", lOCATORTYPE);
         }
     
         /// <summary>
@@ -3495,17 +3496,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "DATA_FILEFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.DATA_FILEFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.DATA_FILEFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.DATA_FILEFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.DATA_FILEFILE", "FILE", value);
                 }
             }
         }
@@ -4527,22 +4528,315 @@ namespace STNServices2
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILE")]
+    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILE_KEYWORD")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class FILE : HypermediaEntity
+    public partial class FILE_KEYWORD : HypermediaEntity
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new FILE object.
+        /// Create a new FILE_KEYWORD object.
+        /// </summary>
+        /// <param name="fILE_KEYWORD_ID">Initial value of the FILE_KEYWORD_ID property.</param>
+        /// <param name="fILE_ID">Initial value of the FILE_ID property.</param>
+        /// <param name="kEYWORD_ID">Initial value of the KEYWORD_ID property.</param>
+        public static FILE_KEYWORD CreateFILE_KEYWORD(global::System.Decimal fILE_KEYWORD_ID, global::System.Decimal fILE_ID, global::System.Decimal kEYWORD_ID)
+        {
+            FILE_KEYWORD fILE_KEYWORD = new FILE_KEYWORD();
+            fILE_KEYWORD.FILE_KEYWORD_ID = fILE_KEYWORD_ID;
+            fILE_KEYWORD.FILE_ID = fILE_ID;
+            fILE_KEYWORD.KEYWORD_ID = kEYWORD_ID;
+            return fILE_KEYWORD;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal FILE_KEYWORD_ID
+        {
+            get
+            {
+                return _FILE_KEYWORD_ID;
+            }
+            set
+            {
+                if (_FILE_KEYWORD_ID != value)
+                {
+                    OnFILE_KEYWORD_IDChanging(value);
+                    ReportPropertyChanging("FILE_KEYWORD_ID");
+                    _FILE_KEYWORD_ID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("FILE_KEYWORD_ID");
+                    OnFILE_KEYWORD_IDChanged();
+                }
+            }
+        }
+        private global::System.Decimal _FILE_KEYWORD_ID;
+        partial void OnFILE_KEYWORD_IDChanging(global::System.Decimal value);
+        partial void OnFILE_KEYWORD_IDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal FILE_ID
+        {
+            get
+            {
+                return _FILE_ID;
+            }
+            set
+            {
+                OnFILE_IDChanging(value);
+                ReportPropertyChanging("FILE_ID");
+                _FILE_ID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FILE_ID");
+                OnFILE_IDChanged();
+            }
+        }
+        private global::System.Decimal _FILE_ID;
+        partial void OnFILE_IDChanging(global::System.Decimal value);
+        partial void OnFILE_IDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal KEYWORD_ID
+        {
+            get
+            {
+                return _KEYWORD_ID;
+            }
+            set
+            {
+                OnKEYWORD_IDChanging(value);
+                ReportPropertyChanging("KEYWORD_ID");
+                _KEYWORD_ID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("KEYWORD_ID");
+                OnKEYWORD_IDChanged();
+            }
+        }
+        private global::System.Decimal _KEYWORD_ID;
+        partial void OnKEYWORD_IDChanging(global::System.Decimal value);
+        partial void OnKEYWORD_IDChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "KEYWORDFILE_KEYWORD", "KEYWORD")]
+        public KEYWORD KEYWORD
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [IgnoreDataMemberAttribute()]
+        public EntityReference<KEYWORD> KEYWORDReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "FILESFILE_KEYWORD", "FILES")]
+        public FILES FILE
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FILES>("STNModel2.FILESFILE_KEYWORD", "FILES").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FILES>("STNModel2.FILESFILE_KEYWORD", "FILES").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [IgnoreDataMemberAttribute()]
+        public EntityReference<FILES> FILEReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FILES>("STNModel2.FILESFILE_KEYWORD", "FILES");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<FILES>("STNModel2.FILESFILE_KEYWORD", "FILES", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILE_TYPE")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class FILE_TYPE : HypermediaEntity
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new FILE_TYPE object.
+        /// </summary>
+        /// <param name="fILETYPE_ID">Initial value of the FILETYPE_ID property.</param>
+        public static FILE_TYPE CreateFILE_TYPE(global::System.Decimal fILETYPE_ID)
+        {
+            FILE_TYPE fILE_TYPE = new FILE_TYPE();
+            fILE_TYPE.FILETYPE_ID = fILETYPE_ID;
+            return fILE_TYPE;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal FILETYPE_ID
+        {
+            get
+            {
+                return _FILETYPE_ID;
+            }
+            set
+            {
+                if (_FILETYPE_ID != value)
+                {
+                    OnFILETYPE_IDChanging(value);
+                    ReportPropertyChanging("FILETYPE_ID");
+                    _FILETYPE_ID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("FILETYPE_ID");
+                    OnFILETYPE_IDChanged();
+                }
+            }
+        }
+        private global::System.Decimal _FILETYPE_ID;
+        partial void OnFILETYPE_IDChanging(global::System.Decimal value);
+        partial void OnFILETYPE_IDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String FILETYPE
+        {
+            get
+            {
+                return _FILETYPE;
+            }
+            set
+            {
+                OnFILETYPEChanging(value);
+                ReportPropertyChanging("FILETYPE");
+                _FILETYPE = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("FILETYPE");
+                OnFILETYPEChanged();
+            }
+        }
+        private global::System.String _FILETYPE;
+        partial void OnFILETYPEChanging(global::System.String value);
+        partial void OnFILETYPEChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "FILE_TYPEFILE", "FILE")]
+        public EntityCollection<FILES> FILEs
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.FILE_TYPEFILE", "FILE");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.FILE_TYPEFILE", "FILE", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILES")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class FILES : HypermediaEntity
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new FILES object.
         /// </summary>
         /// <param name="fILE_ID">Initial value of the FILE_ID property.</param>
-        public static FILE CreateFILE(global::System.Decimal fILE_ID)
+        public static FILES CreateFILES(global::System.Decimal fILE_ID)
         {
-            FILE fILE = new FILE();
-            fILE.FILE_ID = fILE_ID;
-            return fILE;
+            FILES fILES = new FILES();
+            fILES.FILE_ID = fILE_ID;
+            return fILES;
         }
 
         #endregion
@@ -5322,116 +5616,6 @@ namespace STNServices2
                 }
             }
         }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILE_KEYWORD")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class FILE_KEYWORD : HypermediaEntity
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new FILE_KEYWORD object.
-        /// </summary>
-        /// <param name="fILE_KEYWORD_ID">Initial value of the FILE_KEYWORD_ID property.</param>
-        /// <param name="fILE_ID">Initial value of the FILE_ID property.</param>
-        /// <param name="kEYWORD_ID">Initial value of the KEYWORD_ID property.</param>
-        public static FILE_KEYWORD CreateFILE_KEYWORD(global::System.Decimal fILE_KEYWORD_ID, global::System.Decimal fILE_ID, global::System.Decimal kEYWORD_ID)
-        {
-            FILE_KEYWORD fILE_KEYWORD = new FILE_KEYWORD();
-            fILE_KEYWORD.FILE_KEYWORD_ID = fILE_KEYWORD_ID;
-            fILE_KEYWORD.FILE_ID = fILE_ID;
-            fILE_KEYWORD.KEYWORD_ID = kEYWORD_ID;
-            return fILE_KEYWORD;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal FILE_KEYWORD_ID
-        {
-            get
-            {
-                return _FILE_KEYWORD_ID;
-            }
-            set
-            {
-                if (_FILE_KEYWORD_ID != value)
-                {
-                    OnFILE_KEYWORD_IDChanging(value);
-                    ReportPropertyChanging("FILE_KEYWORD_ID");
-                    _FILE_KEYWORD_ID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("FILE_KEYWORD_ID");
-                    OnFILE_KEYWORD_IDChanged();
-                }
-            }
-        }
-        private global::System.Decimal _FILE_KEYWORD_ID;
-        partial void OnFILE_KEYWORD_IDChanging(global::System.Decimal value);
-        partial void OnFILE_KEYWORD_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal FILE_ID
-        {
-            get
-            {
-                return _FILE_ID;
-            }
-            set
-            {
-                OnFILE_IDChanging(value);
-                ReportPropertyChanging("FILE_ID");
-                _FILE_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("FILE_ID");
-                OnFILE_IDChanged();
-            }
-        }
-        private global::System.Decimal _FILE_ID;
-        partial void OnFILE_IDChanging(global::System.Decimal value);
-        partial void OnFILE_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal KEYWORD_ID
-        {
-            get
-            {
-                return _KEYWORD_ID;
-            }
-            set
-            {
-                OnKEYWORD_IDChanging(value);
-                ReportPropertyChanging("KEYWORD_ID");
-                _KEYWORD_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("KEYWORD_ID");
-                OnKEYWORD_IDChanged();
-            }
-        }
-        private global::System.Decimal _KEYWORD_ID;
-        partial void OnKEYWORD_IDChanging(global::System.Decimal value);
-        partial void OnKEYWORD_IDChanged();
-
-        #endregion
-    
-        #region Navigation Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5440,139 +5624,18 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "KEYWORDFILE_KEYWORD", "KEYWORD")]
-        public KEYWORD KEYWORD
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "FILESFILE_KEYWORD", "FILE_KEYWORD")]
+        public EntityCollection<FILE_KEYWORD> FILE_KEYWORD
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [IgnoreDataMemberAttribute()]
-        public EntityReference<KEYWORD> KEYWORDReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE_KEYWORD>("STNModel2.FILESFILE_KEYWORD", "FILE_KEYWORD");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<KEYWORD>("STNModel2.KEYWORDFILE_KEYWORD", "KEYWORD", value);
-                }
-            }
-        }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="FILE_TYPE")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class FILE_TYPE : HypermediaEntity
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new FILE_TYPE object.
-        /// </summary>
-        /// <param name="fILETYPE_ID">Initial value of the FILETYPE_ID property.</param>
-        public static FILE_TYPE CreateFILE_TYPE(global::System.Decimal fILETYPE_ID)
-        {
-            FILE_TYPE fILE_TYPE = new FILE_TYPE();
-            fILE_TYPE.FILETYPE_ID = fILETYPE_ID;
-            return fILE_TYPE;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal FILETYPE_ID
-        {
-            get
-            {
-                return _FILETYPE_ID;
-            }
-            set
-            {
-                if (_FILETYPE_ID != value)
-                {
-                    OnFILETYPE_IDChanging(value);
-                    ReportPropertyChanging("FILETYPE_ID");
-                    _FILETYPE_ID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("FILETYPE_ID");
-                    OnFILETYPE_IDChanged();
-                }
-            }
-        }
-        private global::System.Decimal _FILETYPE_ID;
-        partial void OnFILETYPE_IDChanging(global::System.Decimal value);
-        partial void OnFILETYPE_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String FILETYPE
-        {
-            get
-            {
-                return _FILETYPE;
-            }
-            set
-            {
-                OnFILETYPEChanging(value);
-                ReportPropertyChanging("FILETYPE");
-                _FILETYPE = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("FILETYPE");
-                OnFILETYPEChanged();
-            }
-        }
-        private global::System.String _FILETYPE;
-        partial void OnFILETYPEChanging(global::System.String value);
-        partial void OnFILETYPEChanged();
-
-        #endregion
-    
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "FILE_TYPEFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.FILE_TYPEFILE", "FILE");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.FILE_TYPEFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE_KEYWORD>("STNModel2.FILESFILE_KEYWORD", "FILE_KEYWORD", value);
                 }
             }
         }
@@ -6767,17 +6830,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "HWMFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.HWMFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.HWMFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.HWMFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.HWMFILE", "FILE", value);
                 }
             }
         }
@@ -7921,17 +7984,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "INSTRUMENTFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.INSTRUMENTFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.INSTRUMENTFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.INSTRUMENTFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.INSTRUMENTFILE", "FILE", value);
                 }
             }
         }
@@ -9034,7 +9097,7 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "LANDOWNERCONTACTSITE", "SITE")]
-        public EntityCollection<SITE> SITEs
+        public EntityCollection<SITE> SITES
         {
             get
             {
@@ -9141,17 +9204,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "LOCATORTYPEFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.LOCATORTYPEFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.LOCATORTYPEFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.LOCATORTYPEFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.LOCATORTYPEFILE", "FILE", value);
                 }
             }
         }
@@ -11536,17 +11599,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "OBJECTIVE_POINTFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.OBJECTIVE_POINTFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.OBJECTIVE_POINTFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.OBJECTIVE_POINTFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.OBJECTIVE_POINTFILE", "FILE", value);
                 }
             }
         }
@@ -16628,17 +16691,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "SITEFILE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.SITEFILE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.SITEFILE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.SITEFILE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.SITEFILE", "FILE", value);
                 }
             }
         }
@@ -17434,17 +17497,17 @@ namespace STNServices2
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "FILESOURCE", "FILE")]
-        public EntityCollection<FILE> FILEs
+        public EntityCollection<FILES> FILEs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILE>("STNModel2.FILESOURCE", "FILE");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FILES>("STNModel2.FILESOURCE", "FILE");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILE>("STNModel2.FILESOURCE", "FILE", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FILES>("STNModel2.FILESOURCE", "FILE", value);
                 }
             }
         }

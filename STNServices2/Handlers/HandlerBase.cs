@@ -35,7 +35,7 @@ namespace STNServices2.Handlers
 
         #region "Base Properties"
         //protected String connectionString = @"metadata=res://*/STNModel.csdl|res://*/STNModel.ssdl|res://*/STNModel.msl;provider=Oracle.DataAccess.Client;provider connection string=""DATA SOURCE=STNRDS;USER ID={0};PASSWORD={1}""";
-        protected String connectionString = ConfigurationManager.ConnectionStrings["STNEntities"].ConnectionString;
+        protected String connectionString = ConfigurationManager.ConnectionStrings["STNEntities2"].ConnectionString;
 
         // will be automatically injected by DI in OpenRasta
         public ICommunicationContext Context { get; set; }
@@ -68,7 +68,7 @@ namespace STNServices2.Handlers
                     if (containers[0].TryGetEntitySetByName(entityName, true, out es))
                     {
                         string queryString =
-                            @"SELECT VALUE anEntity FROM STNEntities." + es.Name + " as anEntity";
+                            @"SELECT VALUE anEntity FROM STNEntities2." + es.Name + " as anEntity";
                         var entityQuery =
                             aSTNE.CreateQuery<T>(queryString,
                                 new ObjectParameter("ent", es.ElementType.Name));
@@ -106,7 +106,7 @@ namespace STNServices2.Handlers
                         if (containers[0].TryGetEntitySetByName(entityName, true, out es))
                         {
                             //Only works for single key tables
-                            string queryString = @"SELECT VALUE anEntity FROM STNEntities." +
+                            string queryString = @"SELECT VALUE anEntity FROM STNEntities2." +
                                                  es.Name + " as anEntity ORDER BY anEntity." +
                                                  es.ElementType.KeyMembers[0] + " DESC";
 
@@ -123,7 +123,7 @@ namespace STNServices2.Handlers
 
                             // Create the key that represents the entity object
                             EntityKey objectKey =
-                                new EntityKey("STNEntities." + es.Name,
+                                new EntityKey("STNEntities2." + es.Name,
                                                 es.ElementType.KeyMembers[0].ToString(),
                                                 nextKey);
                             anEntityObject.EntityKey = objectKey;
@@ -165,7 +165,7 @@ namespace STNServices2.Handlers
                         object originalObject = null;
 
                         // Create the detached object's entity key. 
-                        key = aSTNE.CreateEntityKey("STNEntities." + entityName, anEntityObject);
+                        key = aSTNE.CreateEntityKey("STNEntities2." + entityName, anEntityObject);
 
                         // Get the original item based on the entity key from the context 
                         // or from the database. 
@@ -220,7 +220,7 @@ namespace STNServices2.Handlers
                     {
                         //Only works for single key tables
                         string queryString =
-                            @"SELECT VALUE anEntity FROM STNEntities." + es.Name + " as anEntity WHERE anEntity." + es.ElementType.KeyMembers[0] + " = @entId";
+                            @"SELECT VALUE anEntity FROM STNEntities2." + es.Name + " as anEntity WHERE anEntity." + es.ElementType.KeyMembers[0] + " = @entId";
                         ObjectQuery<HypermediaEntity> entityQuery =
                             aSTNE.CreateQuery<HypermediaEntity>(queryString,
                                 new ObjectParameter("entId", entityId));
@@ -269,7 +269,7 @@ namespace STNServices2.Handlers
                         {
                             //Only works for single key tables
                             string queryString =
-                                @"SELECT VALUE anEntity FROM STNEntities." + es.Name + " as anEntity WHERE anEntity." + es.ElementType.KeyMembers[0] + " = @entId";
+                                @"SELECT VALUE anEntity FROM STNEntities2." + es.Name + " as anEntity WHERE anEntity." + es.ElementType.KeyMembers[0] + " = @entId";
                             ObjectQuery<HypermediaEntity> entityQuery =
                                 aSTNE.CreateQuery<HypermediaEntity>(queryString,
                                     new ObjectParameter("entId", entityId));
