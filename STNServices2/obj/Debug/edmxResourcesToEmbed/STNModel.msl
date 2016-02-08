@@ -31,7 +31,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="CONTACTs">
+    <EntitySetMapping Name="CONTACT">
       <EntityTypeMapping TypeName="STNModel2.CONTACT">
         <MappingFragment StoreEntitySet="CONTACT">
           <ScalarProperty Name="CONTACT_ID" ColumnName="CONTACT_ID" />
@@ -144,7 +144,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="FILES">
-      <EntityTypeMapping TypeName="STNModel2.FILE">
+      <EntityTypeMapping TypeName="STNModel2.FILES">
         <MappingFragment StoreEntitySet="FILES">
           <ScalarProperty Name="FILE_ID" ColumnName="FILE_ID" />
           <ScalarProperty Name="PATH" ColumnName="PATH" />
@@ -284,7 +284,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="KEYWORDs">
+    <EntitySetMapping Name="KEYWORD">
       <EntityTypeMapping TypeName="STNModel2.KEYWORD">
         <MappingFragment StoreEntitySet="KEYWORD">
           <ScalarProperty Name="KEYWORD_ID" ColumnName="KEYWORD_ID" />
@@ -309,7 +309,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="LOCATORTYPEs">
+    <EntitySetMapping Name="LOCATORTYPE">
       <EntityTypeMapping TypeName="STNModel2.LOCATORTYPE">
         <MappingFragment StoreEntitySet="LOCATORTYPE">
           <ScalarProperty Name="LOCATOR_TYPE_ID" ColumnName="LOCATOR_TYPE_ID" />
