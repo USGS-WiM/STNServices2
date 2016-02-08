@@ -453,7 +453,7 @@ namespace STNServices2
             //(http://stackoverflow.com/questions/7694839/how-to-handle-multipart-post-using-a-uri-template-of-form-prefix-suffix-in-op)
             //http://stackoverflow.com/questions/1952278/get-image-as-stream-or-byte-array-using-openrasta
             //****************
-            ResourceSpace.Has.ResourcesOfType<FILE>()
+            ResourceSpace.Has.ResourcesOfType<FILES>()
            .AtUri("/Files/{entityId}")
            .And.AtUri("/Files/bytes").Named("UploadFile")
            .HandledBy<FileHandler>()
@@ -461,7 +461,7 @@ namespace STNServices2
            .And.TranscodedBy<MultipartFormDataObjectCodec>()
            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
 
-            ResourceSpace.Has.ResourcesOfType<List<FILE>>()
+            ResourceSpace.Has.ResourcesOfType<List<FILES>>()
            .AtUri("/Files")
            .And.AtUri("/HWMs/{hwmId}/Files").Named("GetHWMFiles")
            .And.AtUri("/ObjectivePoints/{objectivePointId}/Files").Named("GetObjectivePointFiles")
@@ -481,7 +481,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri("/FILES/{fileId}/Item").Named("GetFileItem")
-                //.And.AtUri("/Events/{eventId}/EventFileItems").Named("GetEventFileItems")
+            .And.AtUri("/Events/{eventId}/EventFileItems").Named("GetEventFileItems")
             .And.AtUri("CitizenFiles/{fileId}/Item").Named("GetFileItem")
             .HandledBy<FileHandler>();
             //.RenderedByAspx(new { index = "~/Views/Files/FileItem.aspx" }).ForMediaType("text/html;q=0.2").ForExtension("phtml");  //Display Pretty HTML
@@ -1171,7 +1171,6 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<SiteList>()
             .AtUri("/Sites/points").Named("GetPoints")
-            .And.AtUri("/Sites?Event={eventId}&State={stateName}&SensorType={sensorTypeId}&NetworkName={networkNameId}").Named("GetFilteredSites")//only needed for existing stnweb app
             .And.AtUri("/Events/{eventId}/Sites").Named("GetEventSites")
             .And.AtUri("/NetworkTypes/{networkTypeId}/Sites").Named("getNetworkTypeSites")
             .And.AtUri("/NetworkNames/{networkNameId}/Sites").Named("getNetworkNameSites")
@@ -1203,15 +1202,15 @@ namespace STNServices2
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-            // ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
-            //.AtUri("/Sites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
-            ////.AtUri("/Sites/GetSensorLocationSites").Named("GetSensorLocationSites")
-            ////.And.AtUri("/Sites/GetHWMLocationSites").Named("GetHWMLocationSites")
-            ////.And.AtUri("/Sites/GetRDGLocationSites").Named("GetRDGLocationSites")
-            // .HandledBy<SiteHandler>()
-            // .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            // .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            // .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
+           .AtUri("/Sites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
+                //.AtUri("/Sites/GetSensorLocationSites").Named("GetSensorLocationSites")
+                //.And.AtUri("/Sites/GetHWMLocationSites").Named("GetHWMLocationSites")
+                //.And.AtUri("/Sites/GetRDGLocationSites").Named("GetRDGLocationSites")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddSITE_Resources                 
 

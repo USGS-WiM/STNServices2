@@ -87,7 +87,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<FILE> FileList = new List<FILE>();
+            List<FILES> FileList = new List<FILES>();
 
             try
             {
@@ -143,7 +143,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            FILE aFile;
+            FILES aFile;
 
             //Return BadRequest if there is no ID
             if (entityId <= 0)
@@ -215,7 +215,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItem")]
         public OperationResult GetFileItem(Int32 fileId)
         {
-            FILE aFile;
+            FILES aFile;
             InMemoryFile fileItem;
 
             //Return BadRequest if there is no ID
@@ -236,15 +236,22 @@ namespace STNServices2.Handlers
                     S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
                     //Storage aStorage = new Storage(AppDomain.CurrentDomain.BaseDirectory);
 
-                    switch ((Int32)aFile.SOURCE_ID.Value)
+                    if (aFile.SOURCE_ID.HasValue)
                     {
-                        case 1639: // ASFPM source
-                            directoryName = "CITIZEN_FILE/" + aFile.PATH;
-                            break;
-                        default:
-                            directoryName = BuildFilePath(aFile, aFile.PATH);
-                            break;
-                    }//end switch
+                        switch ((Int32)aFile.SOURCE_ID.Value)
+                        {
+                            case 1639: // ASFPM source
+                                directoryName = "CITIZEN_FILE/" + aFile.PATH;
+                                break;
+                            default:
+                                directoryName = BuildFilePath(aFile, aFile.PATH);
+                                break;
+                        }//end switch
+                    }
+                    else
+                    {
+                        directoryName = BuildFilePath(aFile, aFile.PATH);
+                    }
 
                     fileItem = new InMemoryFile(aBucket.GetObject(directoryName));
 
@@ -266,7 +273,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
-            List<FILE> FileList = new List<FILE>();
+            List<FILES> FileList = new List<FILES>();
             DateTime? FromDate = ValidDate(fromDate);
             DateTime? ToDate = ValidDate(toDate);
             if (!ToDate.HasValue) ToDate = DateTime.Now;
@@ -291,7 +298,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMFiles")]
         public OperationResult GetHWMFiles(Int32 hwmId)
         {
-            List<FILE> FileList = new List<FILE>();
+            List<FILES> FileList = new List<FILES>();
 
             try
             {
@@ -299,7 +306,7 @@ namespace STNServices2.Handlers
                 {
                     FileList = aSTNE.FILES.Where(
                                         file => file.HWM_ID == hwmId)
-                                        .ToList<FILE>();
+                                        .ToList<FILES>();
 
                     if (FileList != null)
                         FileList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
@@ -314,7 +321,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointFiles")]
         public OperationResult GetObjectivePointFiles(Int32 objectivePointId)
         {
-            List<FILE> FileList = new List<FILE>();
+            List<FILES> FileList = new List<FILES>();
 
             try
             {
@@ -322,7 +329,7 @@ namespace STNServices2.Handlers
                 {
                     FileList = aSTNE.FILES.Where(
                                         file => file.OBJECTIVE_POINT_ID == objectivePointId)
-                                        .ToList<FILE>();
+                                        .ToList<FILES>();
 
                     if (FileList != null)
                         FileList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
@@ -337,7 +344,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileTypeFiles")]
         public OperationResult GetFileTypeFiles(Int32 fileTypeId)
         {
-            List<FILE> FileList = new List<FILE>();
+            List<FILES> FileList = new List<FILES>();
 
             try
             {
@@ -360,7 +367,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetSiteFiles")]
         public OperationResult GetSiteFiles(Int32 siteId)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -368,7 +375,7 @@ namespace STNServices2.Handlers
                 {
                     files = aSTNE.FILES.Where(
                                     file => file.SITE_ID == siteId)
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = files };
@@ -380,7 +387,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetSourceFiles")]
         public OperationResult GetSourceFiles(Int32 sourceId)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -389,7 +396,7 @@ namespace STNServices2.Handlers
 
                     files = aSTNE.SOURCES.FirstOrDefault(
                                     s => s.SOURCE_ID == sourceId).FILEs
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
 
                 }//end using
 
@@ -405,7 +412,7 @@ namespace STNServices2.Handlers
             if (dataFileId <= 0)
                 return new OperationResult.BadRequest();
 
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -413,7 +420,7 @@ namespace STNServices2.Handlers
                 {
                     files = aSTNE.DATA_FILE.FirstOrDefault(
                                     df => df.DATA_FILE_ID == dataFileId).FILEs
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = files };
@@ -425,7 +432,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetInstrumentFiles")]
         public OperationResult GetInstrumentFiles(Int32 instrumentId)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -433,7 +440,7 @@ namespace STNServices2.Handlers
                 {
                     files = aSTNE.FILES.Where(
                                     file => file.INSTRUMENT_ID == instrumentId)
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
 
                 }//end using            
 
@@ -448,7 +455,7 @@ namespace STNServices2.Handlers
         public OperationResult GetEventFileItems(Int32 eventId)
         {
             //add additional parameters (don't include 'landowner form' filetypes, allow state filter, file type filter (data, photo
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
             InMemoryFile fileZip = null;
             MemoryStream ms = new MemoryStream();
 
@@ -457,20 +464,20 @@ namespace STNServices2.Handlers
                 String conn = @"metadata=res://*/STNModel.csdl|res://*/STNModel.ssdl|res://*/STNModel.msl;provider=Oracle.DataAccess.Client;provider connection string=""DATA SOURCE=STNRDS;USER ID={0};PASSWORD={1}""";
 
                 ////string.Format(conn, "FRPUBLIC", "STN_Pub1ic"))
-                using (STNEntities2 aSTNE = new STNEntities(string.Format(conn, "FRPUBLIC", "STN_Pub1ic")))
+                using (STNEntities2 aSTNE = new STNEntities2(string.Format(conn, "FRPUBLIC", "STN_Pub1ic")))
                 {
                     //get all the files
                     files = aSTNE.FILES.Where(
                                     file => file.HWM.EVENT_ID == eventId || file.INSTRUMENT.EVENT_ID == eventId ||
                                         file.DATA_FILE.INSTRUMENT.EVENT_ID == eventId)
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
 
                     //get each item for these files
                     string directoryName = string.Empty;
                     S3Bucket aBucket = new S3Bucket("STNStorage");
                     using (ZipFile zip = new ZipFile())
                     {
-                        foreach (FILE f in files)
+                        foreach (FILES f in files)
                         {
                             directoryName = BuildFilePath(f, f.PATH);
 
@@ -498,7 +505,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetEventFiles")]
         public OperationResult GetEventFiles(Int32 eventId)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -507,7 +514,7 @@ namespace STNServices2.Handlers
                     files = aSTNE.FILES.Where(
                                     file => file.HWM.EVENT_ID == eventId || file.INSTRUMENT.EVENT_ID == eventId ||
                                         file.DATA_FILE.INSTRUMENT.EVENT_ID == eventId)
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = files };
@@ -519,7 +526,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult GetSite(Int32 siteId, Int32 eventId)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -528,7 +535,7 @@ namespace STNServices2.Handlers
                     files = aSTNE.FILES.Where(
                                     file => file.SITE_ID == siteId && (file.HWM.EVENT_ID == eventId || file.INSTRUMENT.EVENT_ID == eventId ||
                                         file.DATA_FILE.INSTRUMENT.EVENT_ID == eventId))
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = files };
@@ -540,7 +547,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetFilesByStateName")]
         public OperationResult GetFilesByStateName(string stateName)
         {
-            List<FILE> files = new List<FILE>();
+            List<FILES> files = new List<FILES>();
 
             try
             {
@@ -550,7 +557,7 @@ namespace STNServices2.Handlers
                                     f => string.Equals(f.HWM.SITE.STATE.ToUpper(), stateName.ToUpper()) ||
                                         string.Equals(f.INSTRUMENT.SITE.STATE.ToUpper(), stateName.ToUpper()) ||
                                         string.Equals(f.DATA_FILE.INSTRUMENT.SITE.STATE.ToUpper(), stateName.ToUpper()))
-                                    .ToList<FILE>();
+                                    .ToList<FILES>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = files };
@@ -567,7 +574,7 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult Post(FILE aFile)
+        public OperationResult Post(FILES aFile)
         {
             //Return BadRequest if missing required fields
             if ((aFile.SITE_ID <= 0) && (aFile.HWM_ID <= 0) && (aFile.INSTRUMENT_ID <= 0) && (aFile.DATA_FILE_ID <= 0))
@@ -610,7 +617,7 @@ namespace STNServices2.Handlers
                     String filename = "";
                     XmlSerializer serializer;
 
-                    FILE uploadFile = null;
+                    FILES uploadFile = null;
 
                     foreach (var entity in entities)
                     {
@@ -639,8 +646,8 @@ namespace STNServices2.Handlers
                                 try
                                 {
 
-                                    serializer = new XmlSerializer(typeof(FILE));
-                                    uploadFile = (FILE)serializer.Deserialize(mem);
+                                    serializer = new XmlSerializer(typeof(FILES));
+                                    uploadFile = (FILES)serializer.Deserialize(mem);
                                 }
                                 catch
                                 {
@@ -650,7 +657,7 @@ namespace STNServices2.Handlers
                                     {
                                         using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
                                         {
-                                            uploadFile = (FILE)jsonSerializer.Deserialize(jsonTextReader, typeof(FILE));
+                                            uploadFile = (FILES)jsonSerializer.Deserialize(jsonTextReader, typeof(FILES));
                                         }
                                     }//end using
 
@@ -762,7 +769,7 @@ namespace STNServices2.Handlers
                         aBucket.PutObject("CITIZEN_FILE/" + filename, memoryStream);
                         //aStorage.PutObject("CITIZEN_FILE/"+filename, memoryStream);
 
-                        FILE newFile = new FILE();
+                        FILES newFile = new FILES();
                         newFile.PATH = filename;
                         newFile.LATITUDE_DD = uploadFile.LATITUDE_DD.HasValue ? uploadFile.LATITUDE_DD : null;
                         newFile.LONGITUDE_DD = uploadFile.LONGITUDE_DD.HasValue ? uploadFile.LONGITUDE_DD : null;
@@ -823,9 +830,9 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, FILE aFile)
+        public OperationResult Put(Int32 entityId, FILES aFile)
         {
-            FILE updatedFile;
+            FILES updatedFile;
 
             //Return BadRequest if missing required fields
             if ((aFile.FILE_ID < 0) && (aFile.SITE_ID <= 0) && (aFile.HWM_ID <= 0))
@@ -874,7 +881,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult ValidateCitizenFile(Int32 fileId, string userID, [Optional]CITIZEN_FILE aFile)
         {
-            FILE updatedFile;
+            FILES updatedFile;
 
             //Return BadRequest if missing required fields
             if ((fileId < 0) && (string.IsNullOrEmpty(userID)))
@@ -941,7 +948,7 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        FILE ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == fileId);
+                        FILES ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == fileId);
 
                         //see if a datafile needs to be deleted
                         if (ObjectToBeDeleted.DATA_FILE_ID.HasValue)
@@ -984,7 +991,7 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        FILE ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == fileId && f.SOURCE_ID == 1639);
+                        FILES ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == fileId && f.SOURCE_ID == 1639);
 
                         //delete it
                         if (ObjectToBeDeleted == null) return new OperationResult.NotFound { };
@@ -1028,7 +1035,7 @@ namespace STNServices2.Handlers
                 return null;
             }
         }//end HttpMethod.GET
-        private string BuildFilePath(FILE uploadFile, string fileName)
+        private string BuildFilePath(FILES uploadFile, string fileName)
         {
             try
             {
@@ -1065,10 +1072,10 @@ namespace STNServices2.Handlers
                 return null;
             }
         }
-        private bool Exists(ObjectSet<FILE> entityRDS, ref FILE anEntity)
+        private bool Exists(ObjectSet<FILES> entityRDS, ref FILES anEntity)
         {
-            FILE existingEntity;
-            FILE thisEntity = anEntity;
+            FILES existingEntity;
+            FILES thisEntity = anEntity;
             //check if it exists
             try
             {

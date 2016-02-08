@@ -172,7 +172,7 @@ namespace STNServices2.Handlers
 
                     sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
                     {
-                        siteID = site.SITE_ID,
+                        SITE_ID = site.SITE_ID,
                         SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
                         Description = site.SITE_DESCRIPTION,
                         County = site.COUNTY,
@@ -210,7 +210,7 @@ namespace STNServices2.Handlers
 
                     sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
                     {
-                        siteID = site.SITE_ID,
+                        SITE_ID = site.SITE_ID,
                         SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
                         County = site.COUNTY,
                         State = site.STATE,
@@ -247,7 +247,7 @@ namespace STNServices2.Handlers
 
                     sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
                     {
-                        siteID = site.SITE_ID,
+                        SITE_ID = site.SITE_ID,
                         SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
                         County = site.COUNTY,
                         State = site.STATE,
@@ -266,17 +266,30 @@ namespace STNServices2.Handlers
             }
         }
 
-        //for the existing stnweb app -- prechanges GetFilteredSites
+
         [HttpOperation(ForUriName = "GetFilteredSites")]
-        public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateName, [Optional] Int32 sensorTypeId, [Optional] Int32 networkNameId)
+        public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
         {
             try
             {
-                SiteList sites = new SiteList();
-                string filterState = GetStateByName(stateName).ToString();
+                List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
+                //                SiteList sites = new SiteList();
+
+                List<string> states = new List<string>();
+                char[] delimiter = { ',' };
+                //stateNames will be a list that is comma separated. Need to parse out
+                if (!string.IsNullOrEmpty(stateNames))
+                {
+                    states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+
                 Int32 filterEvent = (eventId > 0) ? eventId : -1;
                 Int32 filterSensorType = (sensorTypeId > 0) ? sensorTypeId : -1;
                 Int32 filternetworkname = (networkNameId > 0) ? networkNameId : -1;
+                Boolean OPhasBeenDefined = opDefined > 0 ? true : false;
+                Boolean hwmOnly = hwmOnlySites > 0 ? true : false;
+                Boolean sensorOnly = sensorOnlySites > 0 ? true : false;
+                Boolean rdgOnly = rdgOnlySites > 0 ? true : false;
 
                 using (STNEntities2 aSTNE = GetRDS())
                 {
@@ -287,8 +300,19 @@ namespace STNServices2.Handlers
                     if (filterEvent > 0)
                         query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == filterEvent) || s.HWMs.Any(h => h.EVENT_ID == filterEvent));
 
-                    if (filterState != State.UNSPECIFIED.ToString())
-                        query = query.Where(s => string.Equals(s.STATE.ToUpper(), filterState.ToUpper()));
+                    if (states.Count >= 2)
+                    {
+                        //multiple STATES
+                        query = from q in query where states.Any(s => q.STATE.Contains(s.Trim())) select q;
+                    }
+                    if (states.Count == 1)
+                    {
+                        string thisState = states[0];
+                        thisState = GetStateByName(thisState).ToString();
+                        query = query.Where(r => string.Equals(r.STATE.ToUpper(), thisState.ToUpper()));
+                    }
+                    if (OPhasBeenDefined)
+                        query = query.Where(s => s.OBJECTIVE_POINT.Any());
 
                     if (filterSensorType > 0)
                         query = query.Where(s => s.INSTRUMENTs.Any(i => i.SENSOR_TYPE_ID == filterSensorType));
@@ -297,15 +321,39 @@ namespace STNServices2.Handlers
                         query = query.Where(s => s.NETWORK_NAME_SITE.Any(i => i.NETWORK_NAME_ID == filternetworkname));
 
 
-                    sites.Sites = query.AsEnumerable().Select(site => new SitePoint
+                    if (hwmOnly)
                     {
-                        SITE_ID = Convert.ToInt32(site.SITE_ID),
-                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-                        latitude = site.LATITUDE_DD,
-                        longitude = site.LONGITUDE_DD
-                    }).ToList<SiteBase>();
-                    if (sites != null)
-                        sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                        //Site with no sensor deployments AND Site with no proposed sensors AND 
+                        //(Site does not have permanent housing installed OR Site has had HWM collected at it in the past OR Site has “Sensor not appropriate” box checked)
+                        query = query.Where(s => !s.INSTRUMENTs.Any() && ((s.IS_PERMANENT_HOUSING_INSTALLED == "No" || s.IS_PERMANENT_HOUSING_INSTALLED == null) || s.HWMs.Any() || s.SENSOR_NOT_APPROPRIATE == 1));
+                    }
+
+                    if (sensorOnly)
+                    {
+                        //Site with previous sensor deployment OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
+                        //OR Site with proposed sensor indicated of any type
+                        query = query.Where(s => s.IS_PERMANENT_HOUSING_INSTALLED == "Yes" || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID > 0 && h.HOUSING_TYPE_ID < 5) || s.INSTRUMENTs.Any());
+                    }
+
+                    if (rdgOnly)
+                    {
+                        //Site with previous RDG sensor type deployed OR Site with RDG housing type listed (type 5) OR Site with RDG checked as a proposed sensor
+                        query = query.Where(s => s.INSTRUMENTs.Any(inst => inst.SENSOR_TYPE_ID == 5) || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID == 5));
+                    }
+
+                    sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
+                            {
+                                SITE_ID = site.SITE_ID,
+                                Description = site.SITE_DESCRIPTION,
+                                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
+                                latitude = site.LATITUDE_DD,
+                                longitude = site.LONGITUDE_DD,
+                                County = site.COUNTY,
+                                State = site.STATE,
+                                Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
+                                RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.DATE_ESTABLISHED).FirstOrDefault(),
+                                Events = aSTNE.EVENTS.Where(e => e.HWMs.Any(h => h.SITE_ID == site.SITE_ID) || e.INSTRUMENTs.Any(inst => inst.SITE_ID == site.SITE_ID)).ToList()
+                            }).ToList<SiteLocationQuery>();
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = sites };
@@ -316,104 +364,6 @@ namespace STNServices2.Handlers
             }
 
         }//end HttpMethod.Get
-
-        //for the new stnweb2 app -- GetFilteredSites
-        //[HttpOperation(ForUriName = "GetFilteredSites")]
-        //public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
-        //{
-        //    try
-        //    {
-        //        List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-        //        //                SiteList sites = new SiteList();
-
-        //        List<string> states = new List<string>();
-        //        char[] delimiter = { ',' };
-        //        //stateNames will be a list that is comma separated. Need to parse out
-        //        if (!string.IsNullOrEmpty(stateNames))
-        //        {
-        //            states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
-        //        }
-
-        //        Int32 filterEvent = (eventId > 0) ? eventId : -1;
-        //        Int32 filterSensorType = (sensorTypeId > 0) ? sensorTypeId : -1;
-        //        Int32 filternetworkname = (networkNameId > 0) ? networkNameId : -1;
-        //        Boolean OPhasBeenDefined = opDefined > 0 ? true : false;
-        //        Boolean hwmOnly = hwmOnlySites > 0 ? true : false;
-        //        Boolean sensorOnly = sensorOnlySites > 0 ? true : false;
-        //        Boolean rdgOnly = rdgOnlySites > 0 ? true : false;
-
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<SITE> query;
-
-        //            query = aSTNE.SITES.Where(s => s.SITE_ID > 0);
-
-        //            if (filterEvent > 0)
-        //                query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == filterEvent) || s.HWMs.Any(h => h.EVENT_ID == filterEvent));
-
-        //            if (states.Count >= 2)
-        //            {
-        //                //multiple STATES
-        //                query = from q in query where states.Any(s => q.STATE.Contains(s.Trim())) select q;
-        //            }
-        //            if (states.Count == 1)
-        //            {
-        //                string thisState = states[0];
-        //                thisState = GetStateByName(thisState).ToString();
-        //                query = query.Where(r => string.Equals(r.STATE.ToUpper(), thisState.ToUpper()));
-        //            }
-        //            if (OPhasBeenDefined)
-        //                query = query.Where(s => s.OBJECTIVE_POINT.Any());
-
-        //            if (filterSensorType > 0)
-        //                query = query.Where(s => s.INSTRUMENTs.Any(i => i.SENSOR_TYPE_ID == filterSensorType));
-
-        //            if (filternetworkname > 0)
-        //                query = query.Where(s => s.NETWORK_NAME_SITE.Any(i => i.NETWORK_NAME_ID == filternetworkname));
-
-
-        //            if (hwmOnly)
-        //            {
-        //                //Site with no sensor deployments AND Site with no proposed sensors AND 
-        //                //(Site does not have permanent housing installed OR Site has had HWM collected at it in the past OR Site has “Sensor not appropriate” box checked)
-        //                query = query.Where(s => !s.INSTRUMENTs.Any() && ((s.IS_PERMANENT_HOUSING_INSTALLED == "No" || s.IS_PERMANENT_HOUSING_INSTALLED == null) || s.HWMs.Any() || s.SENSOR_NOT_APPROPRIATE == 1));
-        //            }
-
-        //            if (sensorOnly)
-        //            {
-        //                //Site with previous sensor deployment OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
-        //                //OR Site with proposed sensor indicated of any type
-        //                query = query.Where(s => s.IS_PERMANENT_HOUSING_INSTALLED == "Yes" || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID > 0 && h.HOUSING_TYPE_ID < 5) || s.INSTRUMENTs.Any());
-        //            }
-
-        //            if (rdgOnly)
-        //            {
-        //                //Site with previous RDG sensor type deployed OR Site with RDG housing type listed (type 5) OR Site with RDG checked as a proposed sensor
-        //                query = query.Where(s => s.INSTRUMENTs.Any(inst => inst.SENSOR_TYPE_ID == 5) || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID == 5));
-        //            }
-
-        //            sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
-        //                    {
-        //                        siteID = site.SITE_ID,
-        //                        Description = site.SITE_DESCRIPTION,
-        //                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                        County = site.COUNTY,
-        //                        State = site.STATE,
-        //                        Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
-        //                        RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.DATE_ESTABLISHED).FirstOrDefault(),
-        //                        Events = aSTNE.EVENTS.Where(e => e.HWMs.Any(h => h.SITE_ID == site.SITE_ID) || e.INSTRUMENTs.Any(inst => inst.SITE_ID == site.SITE_ID)).ToList()
-        //                    }).ToList<SiteLocationQuery>();
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //}//end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult GetSitesByStateName(string stateName)

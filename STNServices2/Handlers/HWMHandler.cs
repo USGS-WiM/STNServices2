@@ -731,6 +731,8 @@ namespace STNServices2.Handlers
                                                       [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
                                                       [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
         {
+            //TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
             List<HWMDownloadable> hwmsList = new List<HWMDownloadable>();
             try
             {
@@ -894,6 +896,8 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, HWM aHWM)
         {
+            //TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
             HWM updatedHWM;
 
             //Return BadRequest if missing required fields
@@ -909,6 +913,8 @@ namespace STNServices2.Handlers
                 {
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
+                        //TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+                        //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
                         updatedHWM = aSTNE.HWMs.SingleOrDefault(hwm => hwm.HWM_ID == entityId);
 
                         updatedHWM.WATERBODY = aHWM.WATERBODY;
@@ -996,10 +1002,10 @@ namespace STNServices2.Handlers
                         }
 
                         //see if there's any files to delete
-                        List<FILE> HWMFiles = aSTNE.FILES.Where(x => x.HWM_ID == hwmId).ToList();
+                        List<FILES> HWMFiles = aSTNE.FILES.Where(x => x.HWM_ID == hwmId).ToList();
                         if (HWMFiles.Count >= 1)
                         {
-                            foreach (FILE f in HWMFiles)
+                            foreach (FILES f in HWMFiles)
                             {
                                 aSTNE.DeleteObject(f);
                                 aSTNE.SaveChanges();
@@ -1056,7 +1062,8 @@ namespace STNServices2.Handlers
             HWM thisEntity = anEntity;
             //check if it exists
             try
-            {
+            {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+                //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
 
                 existingEntity = entityRDS.FirstOrDefault(e => e.HWM_TYPE_ID == thisEntity.HWM_TYPE_ID &&
                                                                e.HWM_QUALITY_ID == thisEntity.HWM_QUALITY_ID &&
@@ -1207,7 +1214,8 @@ namespace STNServices2.Handlers
             return n;
         }
         private string GetFlagTeam(STNEntities2 aSTNE, decimal? flagId)
-        {
+        {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
             string teamName = string.Empty;
             COLLECT_TEAM ct = aSTNE.COLLECT_TEAM.Where(x => x.COLLECT_TEAM_ID == flagId).FirstOrDefault();
             if (ct != null)
@@ -1216,7 +1224,8 @@ namespace STNServices2.Handlers
             return teamName;
         }
         private string GetSurveyTeam(STNEntities2 aSTNE, decimal? surveyId)
-        {
+        {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
+            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
             string teamName = string.Empty;
             COLLECT_TEAM ct = aSTNE.COLLECT_TEAM.Where(x => x.COLLECT_TEAM_ID == surveyId).FirstOrDefault();
             if (ct != null)

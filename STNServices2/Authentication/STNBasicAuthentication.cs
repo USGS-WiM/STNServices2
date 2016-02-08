@@ -40,7 +40,7 @@ namespace STNServices2.Authentication
         #region Methods
         public AuthenticationResult Authenticate(BasicAuthRequestHeader header)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["STNEntities"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["STNEntities2"].ConnectionString;
             try
             {
                 using (STNEntities2 aSTNE = new STNEntities2(string.Format(connectionString, header.Username, header.Password)))
