@@ -48,7 +48,7 @@ namespace STNServices2.Codecs
         //TODO: look into finding the types dynamically and generating this array on the fly.
         public static Type[] extraTypes = new Type[36] {    typeof(HypermediaEntity), 
                                                     typeof(EntityObject), 
-                                                    typeof(AGENCy), 
+                                                    typeof(AGENCY), 
                                                     typeof(APPROVAL), 
                                                     typeof(COLLECT_TEAM), 
                                                     typeof(CONTACT), 
@@ -59,7 +59,7 @@ namespace STNServices2.Codecs
                                                     typeof(EVENT), 
                                                     typeof(EVENT_STATUS),
                                                     typeof(EVENT_TYPE),
-                                                    typeof(FILE), 
+                                                    typeof(FILES), 
                                                     typeof(FILE_TYPE),
                                                     typeof(HORIZONTAL_COLLECT_METHODS), 
                                                     typeof(HORIZONTAL_DATUMS), 
