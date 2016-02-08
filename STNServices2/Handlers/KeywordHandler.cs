@@ -81,7 +81,7 @@ namespace STNServices2.Handlers
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    keyword = aSTNE.KEYWORDS.FirstOrDefault(i => i.KEYWORD_ID == keywordId);
+                    keyword = aSTNE.KEYWORD.FirstOrDefault(i => i.KEYWORD_ID == keywordId);
 
                     if (keyword != null)
                         keyword.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
@@ -146,7 +146,7 @@ namespace STNServices2.Handlers
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    existingKeyword = aSTNE.KEYWORDS.FirstOrDefault(l => string.Equals(l.WORD.ToUpper(), thisKeyword.WORD.ToUpper()));
+                    existingKeyword = aSTNE.KEYWORD.FirstOrDefault(l => string.Equals(l.WORD.ToUpper(), thisKeyword.WORD.ToUpper()));
 
                 }//end using
                 if (existingKeyword == null)
