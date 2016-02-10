@@ -71,6 +71,29 @@
       "BAROMETRIC_VIEW"."TIME_STAMP" AS "TIME_STAMP"
       FROM "FRADMIN"."BAROMETRIC_VIEW" "BAROMETRIC_VIEW"</DefiningQuery>
     </EntitySet>
+    <EntitySet Name="HWM_VIEW" EntityType="STNModel2.Store.HWM_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="HWM_VIEW">
+      <DefiningQuery>SELECT 
+      "HWM_VIEW"."HWM_ID" AS "HWM_ID", 
+      "HWM_VIEW"."LATITUDE_DD" AS "LATITUDE_DD", 
+      "HWM_VIEW"."LONGITUDE_DD" AS "LONGITUDE_DD", 
+      "HWM_VIEW"."ELEV_FT" AS "ELEV_FT", 
+      "HWM_VIEW"."IS_APPROVED" AS "IS_APPROVED", 
+      "HWM_VIEW"."EVENT_NAME" AS "EVENT_NAME", 
+      "HWM_VIEW"."SITE_ID" AS "SITE_ID", 
+      "HWM_VIEW"."SITE_NO" AS "SITE_NO", 
+      "HWM_VIEW"."SITE_NAME" AS "SITE_NAME", 
+      "HWM_VIEW"."STATE" AS "STATE", 
+      "HWM_VIEW"."COUNTY" AS "COUNTY", 
+      "HWM_VIEW"."HWM_TYPE" AS "HWM_TYPE", 
+      "HWM_VIEW"."MARKER" AS "MARKER", 
+      "HWM_VIEW"."HWM_QUALITY" AS "HWM_QUALITY", 
+      "HWM_VIEW"."DATUM_ABBREVIATION" AS "DATUM_ABBREVIATION", 
+      "HWM_VIEW"."WATERBODY" AS "WATERBODY", 
+      "HWM_VIEW"."HWM_LOCATIONDESCRIPTION" AS "HWM_LOCATIONDESCRIPTION", 
+      "HWM_VIEW"."HWM_NOTES" AS "HWM_NOTES", 
+      "HWM_VIEW"."PEAK_SUMMARY_ID" AS "PEAK_SUMMARY_ID"
+      FROM "FRADMIN"."HWM_VIEW" "HWM_VIEW"</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="METEOROLOGICAL_VIEW" EntityType="STNModel2.Store.METEOROLOGICAL_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="METEOROLOGICAL_VIEW">
       <DefiningQuery>SELECT 
       "METEOROLOGICAL_VIEW"."SITE_ID" AS "SITE_ID", 
@@ -87,6 +110,18 @@
       "METEOROLOGICAL_VIEW"."STATUS" AS "STATUS", 
       "METEOROLOGICAL_VIEW"."TIME_STAMP" AS "TIME_STAMP"
       FROM "FRADMIN"."METEOROLOGICAL_VIEW" "METEOROLOGICAL_VIEW"</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="PEAK_VIEW" EntityType="STNModel2.Store.PEAK_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="PEAK_VIEW">
+      <DefiningQuery>SELECT 
+      "PEAK_VIEW"."PEAK_SUMMARY_ID" AS "PEAK_SUMMARY_ID", 
+      "PEAK_VIEW"."PEAK_STAGE" AS "PEAK_STAGE", 
+      "PEAK_VIEW"."PEAK_DATE" AS "PEAK_DATE", 
+      "PEAK_VIEW"."DATUM_NAME" AS "DATUM_NAME", 
+      "PEAK_VIEW"."LATITUDE" AS "LATITUDE", 
+      "PEAK_VIEW"."SITE_ID" AS "SITE_ID", 
+      "PEAK_VIEW"."LONGITUDE" AS "LONGITUDE", 
+      "PEAK_VIEW"."EVENT_NAME" AS "EVENT_NAME"
+      FROM "FRADMIN"."PEAK_VIEW" "PEAK_VIEW"</DefiningQuery>
     </EntitySet>
     <EntitySet Name="RAPID_DEPLOYMENT_VIEW" EntityType="STNModel2.Store.RAPID_DEPLOYMENT_VIEW" store:Type="Views" store:Schema="FRADMIN" store:Name="RAPID_DEPLOYMENT_VIEW">
       <DefiningQuery>SELECT 
@@ -790,6 +825,34 @@
     <Property Name="TIME_STAMP" Type="timestamp" />
   </EntityType>
   <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.HWM_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="HWM_VIEW">
+    <Key>
+      <PropertyRef Name="HWM_ID" />
+      <PropertyRef Name="SITE_ID" />
+    </Key>
+    <Property Name="HWM_ID" Type="number" Nullable="false" />
+    <Property Name="LATITUDE_DD" Type="float" Precision="126" />
+    <Property Name="LONGITUDE_DD" Type="float" Precision="126" />
+    <Property Name="ELEV_FT" Type="float" Precision="126" />
+    <Property Name="IS_APPROVED" Type="varchar2" MaxLength="5" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="SITE_ID" Type="number" Nullable="false" />
+    <Property Name="SITE_NO" Type="nvarchar2" MaxLength="50" />
+    <Property Name="SITE_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="STATE" Type="nvarchar2" MaxLength="20" />
+    <Property Name="COUNTY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="HWM_TYPE" Type="nvarchar2" MaxLength="50" />
+    <Property Name="MARKER" Type="nvarchar2" MaxLength="50" />
+    <Property Name="HWM_QUALITY" Type="nvarchar2" MaxLength="50" />
+    <Property Name="DATUM_ABBREVIATION" Type="nvarchar2" MaxLength="50" />
+    <Property Name="WATERBODY" Type="nvarchar2" MaxLength="100" />
+    <Property Name="HWM_LOCATIONDESCRIPTION" Type="nvarchar2" MaxLength="1000" />
+    <Property Name="HWM_NOTES" Type="nvarchar2" MaxLength="1000" />
+    <Property Name="PEAK_SUMMARY_ID" Type="number" />
+  </EntityType>
+  <!--Errors Found During Generation:
       warning 6002: The table/view 'FRADMIN.METEOROLOGICAL_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
   <EntityType Name="METEOROLOGICAL_VIEW">
@@ -813,6 +876,22 @@
     <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
     <Property Name="STATUS" Type="nvarchar2" MaxLength="255" />
     <Property Name="TIME_STAMP" Type="timestamp" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'FRADMIN.PEAK_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="PEAK_VIEW">
+    <Key>
+      <PropertyRef Name="PEAK_SUMMARY_ID" />
+    </Key>
+    <Property Name="PEAK_SUMMARY_ID" Type="number" Nullable="false" />
+    <Property Name="PEAK_STAGE" Type="number" />
+    <Property Name="PEAK_DATE" Type="timestamp" />
+    <Property Name="DATUM_NAME" Type="nvarchar2" MaxLength="255" />
+    <Property Name="LATITUDE" Type="float" Precision="126" />
+    <Property Name="SITE_ID" Type="number" />
+    <Property Name="LONGITUDE" Type="float" Precision="126" />
+    <Property Name="EVENT_NAME" Type="nvarchar2" MaxLength="255" />
   </EntityType>
   <!--Errors Found During Generation:
       warning 6002: The table/view 'FRADMIN.RAPID_DEPLOYMENT_VIEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.

@@ -243,6 +243,36 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(ForUriName = "GetPeakSummaryViewBySite")]
+        public OperationResult GetSitePeakSummarView(Int32 siteId)
+        {
+            List<PEAK_VIEW> peakSummaryList = new List<PEAK_VIEW>();
+
+            try
+            {
+                using (STNEntities2 aSTNE = GetRDS())
+                {
+                    //IQueryable<PEAK_SUMMARY> query;
+                    //query = aSTNE.PEAK_SUMMARY;
+
+                    peakSummaryList = aSTNE.PEAK_VIEW.Where(ps => ps.SITE_ID == siteId).ToList();
+                    //aSTNE.PEAK_SUMMARY.Where(ps => ps.HWMs.Any(hwm => hwm.SITE_ID == siteId) || ps.DATA_FILE.Any(d => d.INSTRUMENT.SITE_ID == siteId)).ToList();
+                    
+                        
+
+                    if (peakSummaryList != null)
+                        peakSummaryList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = peakSummaryList };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.GET
+
         [HttpOperation(ForUriName = "GetPeakSummariesByStateName")]
         public OperationResult GetPeakSummariesByStateName(string stateName)
         {
