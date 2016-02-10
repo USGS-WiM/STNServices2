@@ -378,6 +378,8 @@
       <End Role="FILES" EntitySet="FILES" />
       <End Role="FILE_KEYWORD" EntitySet="FILE_KEYWORD" />
     </AssociationSet>
+    <EntitySet Name="HWM_VIEW" EntityType="STNModel2.HWM_VIEW" />
+    <EntitySet Name="PEAK_VIEW" EntityType="STNModel2.PEAK_VIEW" />
   </EntityContainer>
   <EntityType Name="AGENCY">
     <Key>
@@ -2163,4 +2165,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="HWM_VIEW">
+    <Key>
+      <PropertyRef Name="HWM_ID" />
+      <PropertyRef Name="SITE_ID" />
+    </Key>
+    <Property Type="Decimal" Name="HWM_ID" Nullable="false" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="LATITUDE_DD" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="LONGITUDE_DD" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="ELEV_FT" Precision="38" Scale="0" />
+    <Property Type="String" Name="IS_APPROVED" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="EVENT_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="SITE_ID" Nullable="false" Precision="38" Scale="0" />
+    <Property Type="String" Name="SITE_NO" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="SITE_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="STATE" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="COUNTY" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="HWM_TYPE" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="MARKER" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="HWM_QUALITY" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="DATUM_ABBREVIATION" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="WATERBODY" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="HWM_LOCATIONDESCRIPTION" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="HWM_NOTES" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="PEAK_SUMMARY_ID" Precision="38" Scale="0" />
+  </EntityType>
+  <EntityType Name="PEAK_VIEW">
+    <Key>
+      <PropertyRef Name="PEAK_SUMMARY_ID" />
+    </Key>
+    <Property Type="Decimal" Name="PEAK_SUMMARY_ID" Nullable="false" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="PEAK_STAGE" Precision="38" Scale="0" />
+    <Property Type="DateTime" Name="PEAK_DATE" Precision="6" />
+    <Property Type="String" Name="DATUM_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="LATITUDE" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="LONGITUDE" Precision="38" Scale="0" />
+    <Property Type="String" Name="EVENT_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="SITE_ID" Precision="38" Scale="0" />
+  </EntityType>
 </Schema>

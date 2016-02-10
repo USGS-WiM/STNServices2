@@ -438,7 +438,7 @@ namespace STNServices2.Handlers
                     }
 
                     //query DATE
-                    query = query.Where(e => e.REPORT_DATE == thisDate.Value);
+                    query = query.Where(e => e.REPORT_DATE.Date == thisDate.Value.Date);
 
                     if (states.Count >= 2)
                     {
