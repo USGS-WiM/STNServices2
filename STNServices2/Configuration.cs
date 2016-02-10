@@ -1056,6 +1056,13 @@ namespace STNServices2
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
+            ResourceSpace.Has.ResourcesOfType<PEAK_VIEW>()
+            .AtUri("/Sites/{siteId}/PeakSummaryView").Named("GetPeakSummaryViewBySite")
+            .HandledBy<PeakSummaryHandler>()
+            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+
         }//end AddPEAK_SUMMARY_Resources
 
         private void AddREPORTING_METRICS_Resources()
