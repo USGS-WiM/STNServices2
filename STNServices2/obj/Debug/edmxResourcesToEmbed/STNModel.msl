@@ -778,5 +778,44 @@
     <FunctionImportMapping FunctionImportName="USERPROFILE_ALTER" FunctionName="STNModel2.Store.USERPROFILE_ALTER" />
     <FunctionImportMapping FunctionImportName="USERPROFILE_EDITPASSWORD" FunctionName="STNModel2.Store.USERPROFILE_EDITPASSWORD" />
     <FunctionImportMapping FunctionImportName="USERPROFILE_REMOVE" FunctionName="STNModel2.Store.USERPROFILE_REMOVE" />
+    <EntitySetMapping Name="HWM_VIEW">
+      <EntityTypeMapping TypeName="STNModel2.HWM_VIEW">
+        <MappingFragment StoreEntitySet="HWM_VIEW">
+          <ScalarProperty Name="PEAK_SUMMARY_ID" ColumnName="PEAK_SUMMARY_ID" />
+          <ScalarProperty Name="HWM_NOTES" ColumnName="HWM_NOTES" />
+          <ScalarProperty Name="HWM_LOCATIONDESCRIPTION" ColumnName="HWM_LOCATIONDESCRIPTION" />
+          <ScalarProperty Name="WATERBODY" ColumnName="WATERBODY" />
+          <ScalarProperty Name="DATUM_ABBREVIATION" ColumnName="DATUM_ABBREVIATION" />
+          <ScalarProperty Name="HWM_QUALITY" ColumnName="HWM_QUALITY" />
+          <ScalarProperty Name="MARKER" ColumnName="MARKER" />
+          <ScalarProperty Name="HWM_TYPE" ColumnName="HWM_TYPE" />
+          <ScalarProperty Name="COUNTY" ColumnName="COUNTY" />
+          <ScalarProperty Name="STATE" ColumnName="STATE" />
+          <ScalarProperty Name="SITE_NAME" ColumnName="SITE_NAME" />
+          <ScalarProperty Name="SITE_NO" ColumnName="SITE_NO" />
+          <ScalarProperty Name="SITE_ID" ColumnName="SITE_ID" />
+          <ScalarProperty Name="EVENT_NAME" ColumnName="EVENT_NAME" />
+          <ScalarProperty Name="IS_APPROVED" ColumnName="IS_APPROVED" />
+          <ScalarProperty Name="ELEV_FT" ColumnName="ELEV_FT" />
+          <ScalarProperty Name="LONGITUDE_DD" ColumnName="LONGITUDE_DD" />
+          <ScalarProperty Name="LATITUDE_DD" ColumnName="LATITUDE_DD" />
+          <ScalarProperty Name="HWM_ID" ColumnName="HWM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PEAK_VIEW">
+      <EntityTypeMapping TypeName="STNModel2.PEAK_VIEW">
+        <MappingFragment StoreEntitySet="PEAK_VIEW">
+          <ScalarProperty Name="SITE_ID" ColumnName="SITE_ID" />
+          <ScalarProperty Name="EVENT_NAME" ColumnName="EVENT_NAME" />
+          <ScalarProperty Name="LONGITUDE" ColumnName="LONGITUDE" />
+          <ScalarProperty Name="LATITUDE" ColumnName="LATITUDE" />
+          <ScalarProperty Name="DATUM_NAME" ColumnName="DATUM_NAME" />
+          <ScalarProperty Name="PEAK_DATE" ColumnName="PEAK_DATE" />
+          <ScalarProperty Name="PEAK_STAGE" ColumnName="PEAK_STAGE" />
+          <ScalarProperty Name="PEAK_SUMMARY_ID" ColumnName="PEAK_SUMMARY_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

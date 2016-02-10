@@ -273,8 +273,7 @@ namespace STNServices2.Handlers
             try
             {
                 List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-                //                SiteList sites = new SiteList();
-
+                
                 List<string> states = new List<string>();
                 char[] delimiter = { ',' };
                 //stateNames will be a list that is comma separated. Need to parse out
@@ -295,7 +294,8 @@ namespace STNServices2.Handlers
                 {
                     IQueryable<SITE> query;
 
-                    query = aSTNE.SITES.Where(s => s.SITE_ID > 0);
+                    //query = aSTNE.SITES.Where(s => s.SITE_ID > 0);
+                    query = aSTNE.SITES;
 
                     if (filterEvent > 0)
                         query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == filterEvent) || s.HWMs.Any(h => h.EVENT_ID == filterEvent));
@@ -723,16 +723,19 @@ namespace STNServices2.Handlers
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    sites.Sites = aSTNE.SITES.AsEnumerable().Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == eventId) ||
-                                                                        s.HWMs.Any(h => h.EVENT_ID == eventId))
-                                                            .Select(site => new SitePoint
-                                                            {
-                                                                SITE_ID = Convert.ToInt32(site.SITE_ID),
-                                                                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-                                                                latitude = site.LATITUDE_DD,
-                                                                longitude = site.LONGITUDE_DD
-                                                            }
-                                                                    ).ToList<SiteBase>();
+                    IQueryable<SITE> query;
+                    query = aSTNE.SITES;
+
+                    query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == eventId) || s.HWMs.Any(h => h.EVENT_ID == eventId));
+
+                    sites.Sites = query.AsEnumerable().Select(site => new SitePoint
+                    {
+                        SITE_ID = Convert.ToInt32(site.SITE_ID),
+                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
+                        latitude = site.LATITUDE_DD,
+                        longitude = site.LONGITUDE_DD
+                    }).ToList<SiteBase>();
+                    
                 }
 
                 if (sites != null)
