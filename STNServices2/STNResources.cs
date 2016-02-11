@@ -85,15 +85,13 @@ using Newtonsoft.Json;
 [assembly: EdmRelationshipAttribute("STNModel2", "MARKERHWM", "MARKER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MARKER), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "HORIZONTAL_COLLECT_METHODSHWM", "HORIZONTAL_COLLECT_METHODS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HORIZONTAL_COLLECT_METHODS), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "VERTICAL_COLLECT_METHODSHWM", "VERTICAL_COLLECT_METHODS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.VERTICAL_COLLECT_METHODS), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "COLLECT_TEAMHWM", "COLLECT_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.COLLECT_TEAM), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "COLLECT_TEAMHWM1", "COLLECT_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.COLLECT_TEAM), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.COLLECT_TEAM), "INSTRUMENT_STATUS", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.INSTRUMENT_STATUS), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.COLLECT_TEAM), "MEMBERS_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.MEMBERS_TEAM), true)]
-[assembly: EdmRelationshipAttribute("STNModel2", "MEMBERMEMBERS_TEAM", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "MEMBERS_TEAM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.MEMBERS_TEAM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "ROLEMEMBER", "ROLE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.ROLE), "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.MEMBER), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "HOUSING_TYPESITE_HOUSING", "HOUSING_TYPE", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.HOUSING_TYPE), "SITE_HOUSING", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.SITE_HOUSING), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "STATESCOUNTIES", "STATES", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.STATES), "COUNTIES", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.COUNTIES), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "FILESFILE_KEYWORD", "FILES", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(STNServices2.FILES), "FILE_KEYWORD", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.FILE_KEYWORD), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "MEMBERHWM", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "MEMBERHWM1", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "MEMBERINSTRUMENT_STATUS", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "INSTRUMENT_STATUS", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.INSTRUMENT_STATUS), true)]
 
 #endregion
 
@@ -176,22 +174,6 @@ namespace STNServices2
             }
         }
         private ObjectSet<APPROVAL> _APPROVALs;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<COLLECT_TEAM> COLLECT_TEAM
-        {
-            get
-            {
-                if ((_COLLECT_TEAM == null))
-                {
-                    _COLLECT_TEAM = base.CreateObjectSet<COLLECT_TEAM>("COLLECT_TEAM");
-                }
-                return _COLLECT_TEAM;
-            }
-        }
-        private ObjectSet<COLLECT_TEAM> _COLLECT_TEAM;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -608,22 +590,6 @@ namespace STNServices2
             }
         }
         private ObjectSet<MEMBER> _MEMBERS;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<MEMBERS_TEAM> MEMBERS_TEAM
-        {
-            get
-            {
-                if ((_MEMBERS_TEAM == null))
-                {
-                    _MEMBERS_TEAM = base.CreateObjectSet<MEMBERS_TEAM>("MEMBERS_TEAM");
-                }
-                return _MEMBERS_TEAM;
-            }
-        }
-        private ObjectSet<MEMBERS_TEAM> _MEMBERS_TEAM;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1125,14 +1091,6 @@ namespace STNServices2
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the COLLECT_TEAM EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToCOLLECT_TEAM(COLLECT_TEAM cOLLECT_TEAM)
-        {
-            base.AddObject("COLLECT_TEAM", cOLLECT_TEAM);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the CONTACT EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToCONTACT(CONTACT cONTACT)
@@ -1338,14 +1296,6 @@ namespace STNServices2
         public void AddToMEMBERS(MEMBER mEMBER)
         {
             base.AddObject("MEMBERS", mEMBER);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the MEMBERS_TEAM EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToMEMBERS_TEAM(MEMBERS_TEAM mEMBERS_TEAM)
-        {
-            base.AddObject("MEMBERS_TEAM", mEMBERS_TEAM);
         }
     
         /// <summary>
@@ -2538,180 +2488,6 @@ namespace STNServices2
 
         #endregion
     
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="COLLECT_TEAM")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class COLLECT_TEAM : HypermediaEntity
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new COLLECT_TEAM object.
-        /// </summary>
-        /// <param name="cOLLECT_TEAM_ID">Initial value of the COLLECT_TEAM_ID property.</param>
-        public static COLLECT_TEAM CreateCOLLECT_TEAM(global::System.Decimal cOLLECT_TEAM_ID)
-        {
-            COLLECT_TEAM cOLLECT_TEAM = new COLLECT_TEAM();
-            cOLLECT_TEAM.COLLECT_TEAM_ID = cOLLECT_TEAM_ID;
-            return cOLLECT_TEAM;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal COLLECT_TEAM_ID
-        {
-            get
-            {
-                return _COLLECT_TEAM_ID;
-            }
-            set
-            {
-                if (_COLLECT_TEAM_ID != value)
-                {
-                    OnCOLLECT_TEAM_IDChanging(value);
-                    ReportPropertyChanging("COLLECT_TEAM_ID");
-                    _COLLECT_TEAM_ID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("COLLECT_TEAM_ID");
-                    OnCOLLECT_TEAM_IDChanged();
-                }
-            }
-        }
-        private global::System.Decimal _COLLECT_TEAM_ID;
-        partial void OnCOLLECT_TEAM_IDChanging(global::System.Decimal value);
-        partial void OnCOLLECT_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String DESCRIPTION
-        {
-            get
-            {
-                return _DESCRIPTION;
-            }
-            set
-            {
-                OnDESCRIPTIONChanging(value);
-                ReportPropertyChanging("DESCRIPTION");
-                _DESCRIPTION = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("DESCRIPTION");
-                OnDESCRIPTIONChanged();
-            }
-        }
-        private global::System.String _DESCRIPTION;
-        partial void OnDESCRIPTIONChanging(global::System.String value);
-        partial void OnDESCRIPTIONChanged();
-
-        #endregion
-    
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMHWM", "HWM")]
-        public EntityCollection<HWM> HWMs
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<HWM>("STNModel2.COLLECT_TEAMHWM", "HWM");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HWM>("STNModel2.COLLECT_TEAMHWM", "HWM", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMHWM1", "HWM")]
-        public EntityCollection<HWM> HWMs_1
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<HWM>("STNModel2.COLLECT_TEAMHWM1", "HWM");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HWM>("STNModel2.COLLECT_TEAMHWM1", "HWM", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMINSTRUMENT_STATUS", "INSTRUMENT_STATUS")]
-        public EntityCollection<INSTRUMENT_STATUS> INSTRUMENT_STATUS
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<INSTRUMENT_STATUS>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "INSTRUMENT_STATUS");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<INSTRUMENT_STATUS>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "INSTRUMENT_STATUS", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMMEMBERS_TEAM", "MEMBERS_TEAM")]
-        public EntityCollection<MEMBERS_TEAM> MEMBERS_TEAM
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<MEMBERS_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "MEMBERS_TEAM");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<MEMBERS_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "MEMBERS_TEAM", value);
-                }
-            }
-        }
-
-        #endregion
     }
     
     /// <summary>
@@ -6736,54 +6512,6 @@ namespace STNServices2
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> FLAG_TEAM_ID
-        {
-            get
-            {
-                return _FLAG_TEAM_ID;
-            }
-            set
-            {
-                OnFLAG_TEAM_IDChanging(value);
-                ReportPropertyChanging("FLAG_TEAM_ID");
-                _FLAG_TEAM_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("FLAG_TEAM_ID");
-                OnFLAG_TEAM_IDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _FLAG_TEAM_ID;
-        partial void OnFLAG_TEAM_IDChanging(Nullable<global::System.Decimal> value);
-        partial void OnFLAG_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> SURVEY_TEAM_ID
-        {
-            get
-            {
-                return _SURVEY_TEAM_ID;
-            }
-            set
-            {
-                OnSURVEY_TEAM_IDChanging(value);
-                ReportPropertyChanging("SURVEY_TEAM_ID");
-                _SURVEY_TEAM_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("SURVEY_TEAM_ID");
-                OnSURVEY_TEAM_IDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _SURVEY_TEAM_ID;
-        partial void OnSURVEY_TEAM_IDChanging(Nullable<global::System.Decimal> value);
-        partial void OnSURVEY_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Decimal> FLAG_MEMBER_ID
         {
             get
@@ -7290,16 +7018,16 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMHWM", "COLLECT_TEAM")]
-        public COLLECT_TEAM COLLECT_TEAM
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERHWM", "MEMBER")]
+        public MEMBER MEMBER
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM", "COLLECT_TEAM").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM", "MEMBER").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM", "COLLECT_TEAM").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM", "MEMBER").Value = value;
             }
         }
         /// <summary>
@@ -7307,17 +7035,17 @@ namespace STNServices2
         /// </summary>
         [BrowsableAttribute(false)]
         [IgnoreDataMemberAttribute()]
-        public EntityReference<COLLECT_TEAM> COLLECT_TEAMReference
+        public EntityReference<MEMBER> MEMBERReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM", "COLLECT_TEAM");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM", "MEMBER");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM", "COLLECT_TEAM", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MEMBER>("STNModel2.MEMBERHWM", "MEMBER", value);
                 }
             }
         }
@@ -7329,16 +7057,16 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMHWM1", "COLLECT_TEAM")]
-        public COLLECT_TEAM COLLECT_TEAM_1
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERHWM1", "MEMBER")]
+        public MEMBER MEMBER_1
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM1", "COLLECT_TEAM").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM1", "MEMBER").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM1", "COLLECT_TEAM").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM1", "MEMBER").Value = value;
             }
         }
         /// <summary>
@@ -7346,17 +7074,17 @@ namespace STNServices2
         /// </summary>
         [BrowsableAttribute(false)]
         [IgnoreDataMemberAttribute()]
-        public EntityReference<COLLECT_TEAM> COLLECT_TEAM_1Reference
+        public EntityReference<MEMBER> MEMBER_1Reference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM1", "COLLECT_TEAM");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERHWM1", "MEMBER");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMHWM1", "COLLECT_TEAM", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MEMBER>("STNModel2.MEMBERHWM1", "MEMBER", value);
                 }
             }
         }
@@ -9013,30 +8741,6 @@ namespace STNServices2
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> COLLECTION_TEAM_ID
-        {
-            get
-            {
-                return _COLLECTION_TEAM_ID;
-            }
-            set
-            {
-                OnCOLLECTION_TEAM_IDChanging(value);
-                ReportPropertyChanging("COLLECTION_TEAM_ID");
-                _COLLECTION_TEAM_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("COLLECTION_TEAM_ID");
-                OnCOLLECTION_TEAM_IDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _COLLECTION_TEAM_ID;
-        partial void OnCOLLECTION_TEAM_IDChanging(Nullable<global::System.Decimal> value);
-        partial void OnCOLLECTION_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String TIME_ZONE
         {
             get
@@ -9192,16 +8896,16 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM")]
-        public COLLECT_TEAM COLLECT_TEAM
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERINSTRUMENT_STATUS", "MEMBER")]
+        public MEMBER MEMBER
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERINSTRUMENT_STATUS", "MEMBER").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERINSTRUMENT_STATUS", "MEMBER").Value = value;
             }
         }
         /// <summary>
@@ -9209,17 +8913,17 @@ namespace STNServices2
         /// </summary>
         [BrowsableAttribute(false)]
         [IgnoreDataMemberAttribute()]
-        public EntityReference<COLLECT_TEAM> COLLECT_TEAMReference
+        public EntityReference<MEMBER> MEMBERReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERINSTRUMENT_STATUS", "MEMBER");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMINSTRUMENT_STATUS", "COLLECT_TEAM", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MEMBER>("STNModel2.MEMBERINSTRUMENT_STATUS", "MEMBER", value);
                 }
             }
         }
@@ -10350,29 +10054,6 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERMEMBERS_TEAM", "MEMBERS_TEAM")]
-        public EntityCollection<MEMBERS_TEAM> MEMBERS_TEAM
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<MEMBERS_TEAM>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBERS_TEAM");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<MEMBERS_TEAM>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBERS_TEAM", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [IgnoreDataMemberAttribute()]
-    	[JsonIgnore]
     	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "ROLEMEMBER", "ROLE")]
         public ROLE ROLE
         {
@@ -10404,112 +10085,6 @@ namespace STNServices2
                 }
             }
         }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="STNModel2", Name="MEMBERS_TEAM")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class MEMBERS_TEAM : HypermediaEntity
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new MEMBERS_TEAM object.
-        /// </summary>
-        /// <param name="mEMBERS_TEAM_ID">Initial value of the MEMBERS_TEAM_ID property.</param>
-        public static MEMBERS_TEAM CreateMEMBERS_TEAM(global::System.Decimal mEMBERS_TEAM_ID)
-        {
-            MEMBERS_TEAM mEMBERS_TEAM = new MEMBERS_TEAM();
-            mEMBERS_TEAM.MEMBERS_TEAM_ID = mEMBERS_TEAM_ID;
-            return mEMBERS_TEAM;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal MEMBERS_TEAM_ID
-        {
-            get
-            {
-                return _MEMBERS_TEAM_ID;
-            }
-            set
-            {
-                if (_MEMBERS_TEAM_ID != value)
-                {
-                    OnMEMBERS_TEAM_IDChanging(value);
-                    ReportPropertyChanging("MEMBERS_TEAM_ID");
-                    _MEMBERS_TEAM_ID = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("MEMBERS_TEAM_ID");
-                    OnMEMBERS_TEAM_IDChanged();
-                }
-            }
-        }
-        private global::System.Decimal _MEMBERS_TEAM_ID;
-        partial void OnMEMBERS_TEAM_IDChanging(global::System.Decimal value);
-        partial void OnMEMBERS_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> COLLECT_TEAM_ID
-        {
-            get
-            {
-                return _COLLECT_TEAM_ID;
-            }
-            set
-            {
-                OnCOLLECT_TEAM_IDChanging(value);
-                ReportPropertyChanging("COLLECT_TEAM_ID");
-                _COLLECT_TEAM_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("COLLECT_TEAM_ID");
-                OnCOLLECT_TEAM_IDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _COLLECT_TEAM_ID;
-        partial void OnCOLLECT_TEAM_IDChanging(Nullable<global::System.Decimal> value);
-        partial void OnCOLLECT_TEAM_IDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> MEMBER_ID
-        {
-            get
-            {
-                return _MEMBER_ID;
-            }
-            set
-            {
-                OnMEMBER_IDChanging(value);
-                ReportPropertyChanging("MEMBER_ID");
-                _MEMBER_ID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("MEMBER_ID");
-                OnMEMBER_IDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _MEMBER_ID;
-        partial void OnMEMBER_IDChanging(Nullable<global::System.Decimal> value);
-        partial void OnMEMBER_IDChanged();
-
-        #endregion
-    
-        #region Navigation Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -10518,34 +10093,18 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM")]
-        public COLLECT_TEAM COLLECT_TEAM
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERHWM", "HWM")]
+        public EntityCollection<HWM> HWMs
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [IgnoreDataMemberAttribute()]
-        public EntityReference<COLLECT_TEAM> COLLECT_TEAMReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<HWM>("STNModel2.MEMBERHWM", "HWM");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<COLLECT_TEAM>("STNModel2.COLLECT_TEAMMEMBERS_TEAM", "COLLECT_TEAM", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HWM>("STNModel2.MEMBERHWM", "HWM", value);
                 }
             }
         }
@@ -10557,34 +10116,41 @@ namespace STNServices2
         [SoapIgnoreAttribute()]
         [IgnoreDataMemberAttribute()]
     	[JsonIgnore]
-    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERMEMBERS_TEAM", "MEMBER")]
-        public MEMBER MEMBER
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERHWM1", "HWM")]
+        public EntityCollection<HWM> HWMs_1
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBER").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBER").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [IgnoreDataMemberAttribute()]
-        public EntityReference<MEMBER> MEMBERReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MEMBER>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBER");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<HWM>("STNModel2.MEMBERHWM1", "HWM");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MEMBER>("STNModel2.MEMBERMEMBERS_TEAM", "MEMBER", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HWM>("STNModel2.MEMBERHWM1", "HWM", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "MEMBERINSTRUMENT_STATUS", "INSTRUMENT_STATUS")]
+        public EntityCollection<INSTRUMENT_STATUS> INSTRUMENT_STATUS
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<INSTRUMENT_STATUS>("STNModel2.MEMBERINSTRUMENT_STATUS", "INSTRUMENT_STATUS");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<INSTRUMENT_STATUS>("STNModel2.MEMBERINSTRUMENT_STATUS", "INSTRUMENT_STATUS", value);
                 }
             }
         }
