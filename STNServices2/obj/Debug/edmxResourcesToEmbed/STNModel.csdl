@@ -3,7 +3,6 @@
   <EntityContainer Name="STNEntities2" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="AGENCIES" EntityType="STNModel2.AGENCY" />
     <EntitySet Name="APPROVALs" EntityType="STNModel2.APPROVAL" />
-    <EntitySet Name="COLLECT_TEAM" EntityType="STNModel2.COLLECT_TEAM" />
     <EntitySet Name="CONTACT" EntityType="STNModel2.CONTACT" />
     <EntitySet Name="CONTACT_TYPE" EntityType="STNModel2.CONTACT_TYPE" />
     <EntitySet Name="COUNTIES" EntityType="STNModel2.COUNTIES" />
@@ -30,7 +29,6 @@
     <EntitySet Name="LOCATORTYPE" EntityType="STNModel2.LOCATORTYPE" />
     <EntitySet Name="MARKERS" EntityType="STNModel2.MARKER" />
     <EntitySet Name="MEMBERS" EntityType="STNModel2.MEMBER" />
-    <EntitySet Name="MEMBERS_TEAM" EntityType="STNModel2.MEMBERS_TEAM" />
     <EntitySet Name="NETWORK_NAME" EntityType="STNModel2.NETWORK_NAME" />
     <EntitySet Name="NETWORK_NAME_SITE" EntityType="STNModel2.NETWORK_NAME_SITE" />
     <EntitySet Name="NETWORK_TYPE" EntityType="STNModel2.NETWORK_TYPE" />
@@ -323,26 +321,6 @@
       <End Role="VERTICAL_COLLECT_METHODS" EntitySet="VERTICAL_COLLECT_METHODS" />
       <End Role="HWM" EntitySet="HWMs" />
     </AssociationSet>
-    <AssociationSet Name="COLLECT_TEAMHWM" Association="STNModel2.COLLECT_TEAMHWM">
-      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
-      <End Role="HWM" EntitySet="HWMs" />
-    </AssociationSet>
-    <AssociationSet Name="COLLECT_TEAMHWM1" Association="STNModel2.COLLECT_TEAMHWM1">
-      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
-      <End Role="HWM" EntitySet="HWMs" />
-    </AssociationSet>
-    <AssociationSet Name="COLLECT_TEAMINSTRUMENT_STATUS" Association="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS">
-      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
-      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
-    </AssociationSet>
-    <AssociationSet Name="COLLECT_TEAMMEMBERS_TEAM" Association="STNModel2.COLLECT_TEAMMEMBERS_TEAM">
-      <End Role="COLLECT_TEAM" EntitySet="COLLECT_TEAM" />
-      <End Role="MEMBERS_TEAM" EntitySet="MEMBERS_TEAM" />
-    </AssociationSet>
-    <AssociationSet Name="MEMBERMEMBERS_TEAM" Association="STNModel2.MEMBERMEMBERS_TEAM">
-      <End Role="MEMBER" EntitySet="MEMBERS" />
-      <End Role="MEMBERS_TEAM" EntitySet="MEMBERS_TEAM" />
-    </AssociationSet>
     <AssociationSet Name="ROLEMEMBER" Association="STNModel2.ROLEMEMBER">
       <End Role="ROLE" EntitySet="ROLES" />
       <End Role="MEMBER" EntitySet="MEMBERS" />
@@ -380,6 +358,18 @@
     </AssociationSet>
     <EntitySet Name="HWM_VIEW" EntityType="STNModel2.HWM_VIEW" />
     <EntitySet Name="PEAK_VIEW" EntityType="STNModel2.PEAK_VIEW" />
+    <AssociationSet Name="MEMBERHWM" Association="STNModel2.MEMBERHWM">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERHWM1" Association="STNModel2.MEMBERHWM1">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="HWM" EntitySet="HWMs" />
+    </AssociationSet>
+    <AssociationSet Name="MEMBERINSTRUMENT_STATUS" Association="STNModel2.MEMBERINSTRUMENT_STATUS">
+      <End Role="MEMBER" EntitySet="MEMBERS" />
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="AGENCY">
     <Key>
@@ -405,17 +395,6 @@
     <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.APPROVALDATA_FILE" FromRole="APPROVAL" ToRole="DATA_FILE" />
     <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERAPPROVAL" FromRole="APPROVAL" ToRole="MEMBER" />
     <NavigationProperty Name="HWMs" Relationship="STNModel2.APPROVALHWM" FromRole="APPROVAL" ToRole="HWM" />
-  </EntityType>
-  <EntityType Name="COLLECT_TEAM">
-    <Key>
-      <PropertyRef Name="COLLECT_TEAM_ID" />
-    </Key>
-    <Property Name="COLLECT_TEAM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
-    <Property Name="DESCRIPTION" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-    <NavigationProperty Name="HWMs" Relationship="STNModel2.COLLECT_TEAMHWM" FromRole="COLLECT_TEAM" ToRole="HWM" />
-    <NavigationProperty Name="HWMs_1" Relationship="STNModel2.COLLECT_TEAMHWM1" FromRole="COLLECT_TEAM" ToRole="HWM" />
-    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS" FromRole="COLLECT_TEAM" ToRole="INSTRUMENT_STATUS" />
-    <NavigationProperty Name="MEMBERS_TEAM" Relationship="STNModel2.COLLECT_TEAMMEMBERS_TEAM" FromRole="COLLECT_TEAM" ToRole="MEMBERS_TEAM" />
   </EntityType>
   <EntityType Name="CONTACT">
     <Key>
@@ -630,8 +609,6 @@
     <Property Name="FLAG_DATE" Type="DateTime" Precision="6" />
     <Property Name="STILLWATER" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="HDATUM_ID" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="FLAG_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="SURVEY_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="FLAG_MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="SURVEY_MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
     <NavigationProperty Name="VERTICAL_DATUMS" Relationship="STNModel2.VERTICAL_DATUMSHWM" FromRole="HWM" ToRole="VERTICAL_DATUMS" />
@@ -646,8 +623,8 @@
     <NavigationProperty Name="MARKER" Relationship="STNModel2.MARKERHWM" FromRole="HWM" ToRole="MARKER" />
     <NavigationProperty Name="HORIZONTAL_COLLECT_METHODS" Relationship="STNModel2.HORIZONTAL_COLLECT_METHODSHWM" FromRole="HWM" ToRole="HORIZONTAL_COLLECT_METHODS" />
     <NavigationProperty Name="VERTICAL_COLLECT_METHODS" Relationship="STNModel2.VERTICAL_COLLECT_METHODSHWM" FromRole="HWM" ToRole="VERTICAL_COLLECT_METHODS" />
-    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMHWM" FromRole="HWM" ToRole="COLLECT_TEAM" />
-    <NavigationProperty Name="COLLECT_TEAM_1" Relationship="STNModel2.COLLECT_TEAMHWM1" FromRole="HWM" ToRole="COLLECT_TEAM" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERHWM" FromRole="HWM" ToRole="MEMBER" />
+    <NavigationProperty Name="MEMBER_1" Relationship="STNModel2.MEMBERHWM1" FromRole="HWM" ToRole="MEMBER" />
   </EntityType>
   <EntityType Name="HWM_QUALITIES">
     <Key>
@@ -710,13 +687,12 @@
     <Property Name="INSTRUMENT_ID" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="TIME_STAMP" Type="DateTime" Precision="6" />
     <Property Name="NOTES" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-    <Property Name="COLLECTION_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="TIME_ZONE" Type="String" MaxLength="8" Unicode="false" FixedLength="false" />
     <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
     <NavigationProperty Name="OP_MEASUREMENTS" Relationship="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS" FromRole="INSTRUMENT_STATUS" ToRole="OP_MEASUREMENTS" />
     <NavigationProperty Name="STATUS_TYPE" Relationship="STNModel2.STATUS_TYPEINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="STATUS_TYPE" />
     <NavigationProperty Name="INSTRUMENT" Relationship="STNModel2.INSTRUMENTINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="INSTRUMENT" />
-    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="COLLECT_TEAM" />
+    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="MEMBER" />
   </EntityType>
   <EntityType Name="KEYWORD">
     <Key>
@@ -781,18 +757,10 @@
     <NavigationProperty Name="DATA_FILE" Relationship="STNModel2.MEMBERDATA_FILE" FromRole="MEMBER" ToRole="DATA_FILE" />
     <NavigationProperty Name="APPROVALs" Relationship="STNModel2.MEMBERAPPROVAL" FromRole="MEMBER" ToRole="APPROVAL" />
     <NavigationProperty Name="PEAK_SUMMARY" Relationship="STNModel2.MEMBERPEAK_SUMMARY" FromRole="MEMBER" ToRole="PEAK_SUMMARY" />
-    <NavigationProperty Name="MEMBERS_TEAM" Relationship="STNModel2.MEMBERMEMBERS_TEAM" FromRole="MEMBER" ToRole="MEMBERS_TEAM" />
     <NavigationProperty Name="ROLE" Relationship="STNModel2.ROLEMEMBER" FromRole="MEMBER" ToRole="ROLE" />
-  </EntityType>
-  <EntityType Name="MEMBERS_TEAM">
-    <Key>
-      <PropertyRef Name="MEMBERS_TEAM_ID" />
-    </Key>
-    <Property Name="MEMBERS_TEAM_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="COLLECT_TEAM_ID" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="MEMBER_ID" Type="Decimal" Precision="38" Scale="0" />
-    <NavigationProperty Name="COLLECT_TEAM" Relationship="STNModel2.COLLECT_TEAMMEMBERS_TEAM" FromRole="MEMBERS_TEAM" ToRole="COLLECT_TEAM" />
-    <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERMEMBERS_TEAM" FromRole="MEMBERS_TEAM" ToRole="MEMBER" />
+    <NavigationProperty Name="HWMs" Relationship="STNModel2.MEMBERHWM" FromRole="MEMBER" ToRole="HWM" />
+    <NavigationProperty Name="HWMs_1" Relationship="STNModel2.MEMBERHWM1" FromRole="MEMBER" ToRole="HWM" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.MEMBERINSTRUMENT_STATUS" FromRole="MEMBER" ToRole="INSTRUMENT_STATUS" />
   </EntityType>
   <EntityType Name="NETWORK_NAME">
     <Key>
@@ -2057,66 +2025,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="COLLECT_TEAMHWM">
-    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
-    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="COLLECT_TEAM">
-        <PropertyRef Name="COLLECT_TEAM_ID" />
-      </Principal>
-      <Dependent Role="HWM">
-        <PropertyRef Name="FLAG_TEAM_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="COLLECT_TEAMHWM1">
-    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
-    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="COLLECT_TEAM">
-        <PropertyRef Name="COLLECT_TEAM_ID" />
-      </Principal>
-      <Dependent Role="HWM">
-        <PropertyRef Name="SURVEY_TEAM_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="COLLECT_TEAMINSTRUMENT_STATUS">
-    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
-    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="COLLECT_TEAM">
-        <PropertyRef Name="COLLECT_TEAM_ID" />
-      </Principal>
-      <Dependent Role="INSTRUMENT_STATUS">
-        <PropertyRef Name="COLLECTION_TEAM_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="COLLECT_TEAMMEMBERS_TEAM">
-    <End Type="STNModel2.COLLECT_TEAM" Role="COLLECT_TEAM" Multiplicity="0..1" />
-    <End Type="STNModel2.MEMBERS_TEAM" Role="MEMBERS_TEAM" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="COLLECT_TEAM">
-        <PropertyRef Name="COLLECT_TEAM_ID" />
-      </Principal>
-      <Dependent Role="MEMBERS_TEAM">
-        <PropertyRef Name="COLLECT_TEAM_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="MEMBERMEMBERS_TEAM">
-    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
-    <End Type="STNModel2.MEMBERS_TEAM" Role="MEMBERS_TEAM" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="MEMBER">
-        <PropertyRef Name="MEMBER_ID" />
-      </Principal>
-      <Dependent Role="MEMBERS_TEAM">
-        <PropertyRef Name="MEMBER_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="ROLEMEMBER">
     <End Type="STNModel2.ROLE" Role="ROLE" Multiplicity="0..1" />
     <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="*" />
@@ -2203,4 +2111,40 @@
     <Property Type="String" Name="EVENT_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
     <Property Type="Decimal" Name="SITE_ID" Precision="38" Scale="0" />
   </EntityType>
+  <Association Name="MEMBERHWM">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="SURVEY_MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERHWM1">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.HWM" Role="HWM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="HWM">
+        <PropertyRef Name="FLAG_MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MEMBERINSTRUMENT_STATUS">
+    <End Type="STNModel2.MEMBER" Role="MEMBER" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MEMBER">
+        <PropertyRef Name="MEMBER_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

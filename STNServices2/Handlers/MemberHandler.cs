@@ -109,10 +109,13 @@ namespace STNServices2.Handlers
                 {
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
+                        //give me all members that deployed sensor or did hwm for this event
+                        memberList = aSTNE.MEMBERS.Where(m => m.HWMs.Any(h => h.EVENT_ID == eventId) ||
+                            m.INSTRUMENT_STATUS.Any(inst => inst.INSTRUMENT.EVENT_ID == eventId)).ToList();
 
-                        memberList = aSTNE.MEMBERS_TEAM.Where(mt => mt.COLLECT_TEAM.HWMs.Any(h => h.EVENT_ID == eventId) ||
-                                                                    mt.COLLECT_TEAM.INSTRUMENT_STATUS.Any(instS => instS.INSTRUMENT.EVENT_ID == eventId))
-                                                            .Select(m => m.MEMBER).Distinct().OrderBy(m => m.MEMBER_ID).ToList();
+                        //memberList = aSTNE.MEMBERS.Where(mt => mt.COLLECT_TEAM.HWMs.Any(h => h.EVENT_ID == eventId) ||
+                        //                                            mt.COLLECT_TEAM.INSTRUMENT_STATUS.Any(instS => instS.INSTRUMENT.EVENT_ID == eventId))
+                        //                                    .Select(m => m.MEMBER).Distinct().OrderBy(m => m.MEMBER_ID).ToList();
 
                         if (memberList != null)
                             memberList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
@@ -126,39 +129,7 @@ namespace STNServices2.Handlers
             {
                 return new OperationResult.BadRequest();
             }
-        }//end HttpMethod.GET
-
-        [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetTeamMembers")]
-        public OperationResult GetTeamMembers(Int32 teamId)
-        {
-            List<MEMBER> memberList = new List<MEMBER>();
-
-            try
-            {
-                //Get basic authentication password
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-
-                        memberList = aSTNE.MEMBERS_TEAM.Where(mt => mt.COLLECT_TEAM.COLLECT_TEAM_ID == teamId)
-                                                            .Select(m => m.MEMBER).Distinct().OrderBy(m => m.MEMBER_ID).ToList();
-
-                        if (memberList != null)
-                            memberList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-
-                    }//end using
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = memberList };
-            }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
-        }//end HttpMethod.GET
+        }//end HttpMethod.GET       
 
         [RequiresAuthentication]
         [HttpOperation(ForUriName = "GetAgencyMembers")]
@@ -521,59 +492,6 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.POST
 
-        /// 
-        /// Force the user to provide authentication 
-        /// 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "AddMemberToTeam")]
-        public OperationResult AddMemberToTeam(Int32 teamId, MEMBER aMember)
-        {
-            List<MEMBER> memberList = new List<MEMBER>();
-            MEMBERS_TEAM aMembersTeam;
-
-            //Return BadRequest if there is no ID
-            if (teamId <= 0 || aMember.MEMBER_ID <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
-            try
-            {
-                //Get basic authentication password
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-                        //note: we may want to flatten the member db hierarchy
-                        if (aSTNE.COLLECT_TEAM.FirstOrDefault(ct => ct.COLLECT_TEAM_ID == teamId) == null)
-                            return new OperationResult.BadRequest { Description = "Team does not exist" };
-
-                        aMembersTeam = new MEMBERS_TEAM() { MEMBER_ID = aMember.MEMBER_ID, COLLECT_TEAM_ID = teamId };
-
-                        //first check if team already contains member
-                        if (!MemberTeamExists(aSTNE.MEMBERS_TEAM, ref aMembersTeam))
-                        {
-                            aSTNE.MEMBERS_TEAM.AddObject(aMembersTeam);
-                            aSTNE.SaveChanges();
-                        }//end if
-
-                        //return the list of members associated with collection team
-                        memberList = aSTNE.MEMBERS.Where(m => m.MEMBERS_TEAM.Any(mt => mt.COLLECT_TEAM_ID == teamId)).ToList();
-
-                        if (memberList != null)
-                            memberList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-                    }//end using
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = memberList };
-            }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
-        }//end HttpMethod.POST
-
         #endregion
 
         #region PutMethods
@@ -764,30 +682,7 @@ namespace STNServices2.Handlers
                 return false;
             }
         }
-        private bool MemberTeamExists(ObjectSet<MEMBERS_TEAM> entityRDS, ref MEMBERS_TEAM anEntity)
-        {
-            MEMBERS_TEAM existingMemberTeam;
-            MEMBERS_TEAM thisMemberTeam = anEntity as MEMBERS_TEAM;
-            //check if it exists
-            try
-            {
-
-                existingMemberTeam = entityRDS.FirstOrDefault(mt => mt.MEMBER_ID == thisMemberTeam.MEMBER_ID && mt.COLLECT_TEAM_ID == thisMemberTeam.COLLECT_TEAM_ID);
-
-
-                if (existingMemberTeam == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingMemberTeam;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+        
         private string RoleName(decimal? roleId)
         {
             using (STNEntities2 aSTNE = GetRDS())
