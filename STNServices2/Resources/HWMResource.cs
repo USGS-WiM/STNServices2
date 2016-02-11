@@ -229,13 +229,13 @@ namespace STNServices2.Resources
 
         [DataMember]
         [XmlElement(typeof(String),
-        ElementName = "FLAG_TEAM_NAME")]
-        public string FLAG_TEAM_NAME { get; set; }
+        ElementName = "FLAG_MEMBER_NAME")]
+        public string FLAG_MEMBER_NAME { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
-        ElementName = "SURVEY_TEAM_NAME")]
-        public string SURVEY_TEAM_NAME { get; set; }
+        ElementName = "SURVEY_MEMBER_NAME")]
+        public string SURVEY_MEMBER_NAME { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -328,8 +328,8 @@ namespace STNServices2.Resources
 
         public double? ELEV_FT { get; set; }
         public Int32? VDATUM_ID { get; set; }
-        public Int32? FLAG_TEAM_ID { get; set; }
-        public Int32? SURVEY_TEAM_ID { get; set; }
+        public Int32? FLAG_MEMBER_ID { get; set; }
+        public Int32? SURVEY_MEMBER_ID { get; set; }
         public Int32? VCOLLECT_METHOD_ID { get; set; }
         public string BANK
         {
@@ -376,8 +376,8 @@ namespace STNServices2.Resources
             this.SURVEY_DATE = hwm.SURVEY_DATE;
             this.ELEV_FT = Convert.ToDouble(hwm.ELEV_FT);
             this.VDATUM_ID = Convert.ToInt32(hwm.VDATUM_ID);
-            this.FLAG_TEAM_ID = Convert.ToInt32(hwm.FLAG_TEAM_ID);
-            this.SURVEY_TEAM_ID = Convert.ToInt32(hwm.SURVEY_TEAM_ID);
+            this.FLAG_MEMBER_ID = Convert.ToInt32(hwm.FLAG_MEMBER_ID);
+            this.SURVEY_MEMBER_ID = Convert.ToInt32(hwm.SURVEY_MEMBER_ID);
             this.VCOLLECT_METHOD_ID = Convert.ToInt32(hwm.VCOLLECT_METHOD_ID);
             this.BANK = !string.IsNullOrEmpty(hwm.BANK) ? hwm.BANK : string.Empty;
             this.APPROVAL_ID = Convert.ToInt32(hwm.APPROVAL_ID);

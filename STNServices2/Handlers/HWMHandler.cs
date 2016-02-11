@@ -326,20 +326,20 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetCollectionTeamHWMs")]
-        public OperationResult GetCollectionTeamHWMs(Int32 teamId)
+        [HttpOperation(ForUriName = "GetMemberHWMs")]
+        public OperationResult GetMemberHWMs(Int32 memberId)
         {
             List<HWM> hwmList = new List<HWM>();
 
             //Return BadRequest if there is no ID
-            if (teamId <= 0)
+            if (memberId <= 0)
                 return new OperationResult.BadRequest();
 
             try
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-                    hwmList = aSTNE.COLLECT_TEAM.FirstOrDefault(i => i.COLLECT_TEAM_ID == teamId).HWMs.ToList();
+                    hwmList = aSTNE.HWMs.Where(i => i.FLAG_MEMBER_ID == memberId || i.SURVEY_MEMBER_ID == memberId).ToList();
 
                     if (hwmList != null)
                         hwmList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
@@ -701,7 +701,7 @@ namespace STNServices2.Handlers
                         query = query.Where(h => h.SITE.STATE == filterState);
 
                     if (filterMember > 0)
-                        query = query.Where(h => h.COLLECT_TEAM.MEMBERS_TEAM.Any(mt => mt.MEMBER_ID == filterMember));
+                        query = query.Where(h => h.FLAG_MEMBER_ID == filterMember || h.SURVEY_MEMBER_ID == filterMember);
 
                     hWMs.HWMs = query.AsEnumerable().Select(hwm => new SimpleHWM
                     {
@@ -816,8 +816,8 @@ namespace STNServices2.Handlers
                             FLAG_DATE = hwmD.FLAG_DATE.HasValue ? hwmD.FLAG_DATE.Value.ToShortDateString() : "",
                             SURVEY_DATE = hwmD.SURVEY_DATE.HasValue ? hwmD.SURVEY_DATE.Value.ToShortDateString() : "",
                             STILLWATER = hwmD.STILLWATER.HasValue && hwmD.STILLWATER.Value > 0 ? "Yes" : "No",
-                            FLAG_TEAM_NAME = hwmD.FLAG_TEAM_ID.HasValue && hwmD.FLAG_TEAM_ID.Value > 0 ? GetFlagTeam(aSTNE, hwmD.FLAG_TEAM_ID) : "",
-                            SURVEY_TEAM_NAME = hwmD.SURVEY_TEAM_ID.HasValue && hwmD.SURVEY_TEAM_ID.Value > 0 ? GetSurveyTeam(aSTNE, hwmD.SURVEY_TEAM_ID) : "",
+                            FLAG_MEMBER_NAME = hwmD.FLAG_MEMBER_ID.HasValue && hwmD.FLAG_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.FLAG_MEMBER_ID) : "",
+                            SURVEY_MEMBER_NAME = hwmD.SURVEY_MEMBER_ID.HasValue && hwmD.SURVEY_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.SURVEY_MEMBER_ID) : "",
                             SITE_NO = hwmD.SITE.SITE_NO,
                             DESCRIPTION = hwmD.SITE.SITE_DESCRIPTION != null ? SiteHandler.GetSiteDesc(hwmD.SITE.SITE_DESCRIPTION) : "",
                             NETWORK = SiteHandler.GetSiteNetwork(aSTNE, hwmD.SITE_ID.Value),
@@ -930,8 +930,8 @@ namespace STNServices2.Handlers
                         updatedHWM.ELEV_FT = aHWM.ELEV_FT;
                         updatedHWM.VDATUM_ID = aHWM.VDATUM_ID;
                         updatedHWM.HDATUM_ID = aHWM.HDATUM_ID;
-                        updatedHWM.FLAG_TEAM_ID = aHWM.FLAG_TEAM_ID;
-                        updatedHWM.SURVEY_TEAM_ID = aHWM.SURVEY_TEAM_ID;
+                        updatedHWM.FLAG_MEMBER_ID = aHWM.FLAG_MEMBER_ID;
+                        updatedHWM.SURVEY_MEMBER_ID = aHWM.SURVEY_MEMBER_ID;
                         updatedHWM.VCOLLECT_METHOD_ID = aHWM.VCOLLECT_METHOD_ID;
                         updatedHWM.BANK = aHWM.BANK;
                         updatedHWM.APPROVAL_ID = aHWM.APPROVAL_ID;
@@ -1077,7 +1077,7 @@ namespace STNServices2.Handlers
                                                                (e.ELEV_FT.Value == thisEntity.ELEV_FT.Value || thisEntity.ELEV_FT.Value <= 0 || !thisEntity.ELEV_FT.HasValue) &&
                                                                (e.VDATUM_ID.Value == thisEntity.VDATUM_ID.Value || thisEntity.VDATUM_ID.Value <= 0 || !thisEntity.VDATUM_ID.HasValue) &&
                                                                (e.HDATUM_ID.Value == thisEntity.HDATUM_ID.Value || thisEntity.HDATUM_ID.Value <= 0 || !thisEntity.HDATUM_ID.HasValue) &&
-                                                               (e.FLAG_TEAM_ID.Value == thisEntity.FLAG_TEAM_ID.Value || thisEntity.FLAG_TEAM_ID.Value <= 0 || !thisEntity.FLAG_TEAM_ID.HasValue) &&
+                                                               (e.FLAG_MEMBER_ID.Value == thisEntity.FLAG_MEMBER_ID.Value || thisEntity.FLAG_MEMBER_ID.Value <= 0 || !thisEntity.FLAG_MEMBER_ID.HasValue) &&
                                                                (e.VCOLLECT_METHOD_ID.Value == thisEntity.VCOLLECT_METHOD_ID.Value || thisEntity.VCOLLECT_METHOD_ID.Value <= 0 || !thisEntity.VCOLLECT_METHOD_ID.HasValue) &&
                                                                (e.APPROVAL_ID.Value == thisEntity.APPROVAL_ID.Value || thisEntity.APPROVAL_ID.Value <= 0 || !thisEntity.APPROVAL_ID.HasValue) &&
                                                                (e.MARKER_ID.Value == thisEntity.MARKER_ID.Value || thisEntity.MARKER_ID.Value <= 0 || !thisEntity.MARKER_ID.HasValue) &&
@@ -1213,25 +1213,13 @@ namespace STNServices2.Handlers
 
             return n;
         }
-        private string GetFlagTeam(STNEntities2 aSTNE, decimal? flagId)
-        {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
-            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
-            string teamName = string.Empty;
-            COLLECT_TEAM ct = aSTNE.COLLECT_TEAM.Where(x => x.COLLECT_TEAM_ID == flagId).FirstOrDefault();
+        private string GetHWMMember(STNEntities2 aSTNE, decimal? memberId)
+        {
+            string memberName = string.Empty;
+            MEMBER ct = aSTNE.MEMBERS.Where(x => x.MEMBER_ID == memberId).FirstOrDefault();
             if (ct != null)
-                teamName = ct.DESCRIPTION;
-
-            return teamName;
-        }
-        private string GetSurveyTeam(STNEntities2 aSTNE, decimal? surveyId)
-        {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
-            //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
-            string teamName = string.Empty;
-            COLLECT_TEAM ct = aSTNE.COLLECT_TEAM.Where(x => x.COLLECT_TEAM_ID == surveyId).FirstOrDefault();
-            if (ct != null)
-                teamName = ct.DESCRIPTION;
-
-            return teamName;
+                memberName = ct.FNAME + " " + ct.LNAME;
+            return memberName;
         }
 
         #endregion hwmDownloadable calls
