@@ -142,36 +142,8 @@ namespace STNServices2.Handlers
             {
                 return new OperationResult.BadRequest();
             }
-        }//end HttpMethod.GET
+        }//end HttpMethod.GET       
 
-        //[HttpOperation(ForUriName = "GetCollectionTeamInstrumentStatuses")]
-        //public OperationResult GetCollectionTeamInstrumentStatuses(Int32 teamId)
-        //{
-        //    List<INSTRUMENT_STATUS> instrumentStatusList = new List<INSTRUMENT_STATUS>();
-
-        //    //Return BadRequest if there is no ID
-        //    if (teamId <= 0)
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            instrumentStatusList = aSTNE.COLLECT_TEAM.FirstOrDefault(ct => ct.COLLECT_TEAM_ID == teamId).INSTRUMENT_STATUS.ToList();
-        //            if (instrumentStatusList != null)
-        //                instrumentStatusList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = instrumentStatusList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end HttpMethod.GET
 
         [HttpOperation(ForUriName = "GetInstrumentStatus")]
         public OperationResult GetInstrumentStatus(Int32 instrumentId)
@@ -282,7 +254,7 @@ namespace STNServices2.Handlers
                         instrumentStatusToUpdate.INSTRUMENT_ID = anInstrumentStatus.INSTRUMENT_ID;
                         instrumentStatusToUpdate.TIME_STAMP = anInstrumentStatus.TIME_STAMP;
                         instrumentStatusToUpdate.NOTES = anInstrumentStatus.NOTES;
-                        instrumentStatusToUpdate.COLLECTION_TEAM_ID = anInstrumentStatus.COLLECTION_TEAM_ID;
+                        instrumentStatusToUpdate.MEMBER_ID = anInstrumentStatus.MEMBER_ID;
                         instrumentStatusToUpdate.TIME_ZONE = anInstrumentStatus.TIME_ZONE;
 
                         aSTNE.SaveChanges();
@@ -354,7 +326,7 @@ namespace STNServices2.Handlers
                 existingEntity = entityRDS.FirstOrDefault(e => e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID &&
                                                                e.STATUS_TYPE_ID == thisEntity.STATUS_TYPE_ID &&
                                                               (DateTime.Equals(e.TIME_STAMP.Value, thisEntity.TIME_STAMP.Value) || !thisEntity.TIME_STAMP.HasValue) &&
-                                                              (!thisEntity.COLLECTION_TEAM_ID.HasValue || e.COLLECTION_TEAM_ID == thisEntity.COLLECTION_TEAM_ID || thisEntity.COLLECTION_TEAM_ID <= 0) &&
+                                                              (!thisEntity.MEMBER_ID.HasValue || e.MEMBER_ID == thisEntity.MEMBER_ID || thisEntity.MEMBER_ID <= 0) &&
                                                               (string.Equals(e.NOTES.ToUpper(), thisEntity.NOTES.ToUpper()) || string.IsNullOrEmpty(thisEntity.NOTES)) &&
                                                                (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)));
 

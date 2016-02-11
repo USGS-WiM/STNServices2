@@ -185,7 +185,6 @@ namespace STNServices2.Handlers
                         query = query.Where(d => d.INSTRUMENT.SITE.STATE == filterState);
 
                     if (filterMember > 0)
-                        //query = query.Where(d => d.INSTRUMENT.INSTRUMENT_STATUS.Any(i => i.COLLECTION_TEAM_ID == filterMember));
                         query = query.Where(d => d.PROCESSOR_ID == filterMember);
 
 

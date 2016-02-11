@@ -122,47 +122,7 @@ namespace STNServices2
         #endregion
 
     }//end Class APPROVAL
-
-    public partial class COLLECT_TEAM : HypermediaEntity
-    {
-        #region Overrided Methods
-
-        protected override string getRelativeURI(refType rType)
-        {
-            string uriString = "";
-            switch (rType)
-            {
-                case refType.GET:
-                case refType.PUT:
-                    //CollectionTeams/{entityId}
-                    uriString = string.Format("CollectionTeams/{0}", this.COLLECT_TEAM_ID);
-                    break;
-                case refType.POST:
-                    uriString = "CollectionTeams";
-                    break;
-                case refType.DELETE:
-                    //CollectionTeams/{entityId}
-                    uriString = string.Format("CollectionTeams/{0}", this._COLLECT_TEAM_ID);
-                    break;
-            }
-            return uriString;
-        }
-        protected override void addRelatedLinks(string baseURI)
-        {
-            //CollectionTeams/{entityId}/Members
-            this.LINKS.Add(GetLinkResource(baseURI, "Members", refType.GET, "/Members"));
-            //CollectionTeams/{entityId}/HWMs
-            this.LINKS.Add(GetLinkResource(baseURI, "HWMs", refType.GET, "/HWMs"));
-            //CollectionTeams/{entityId}/InstrumentStatuses
-            this.LINKS.Add(GetLinkResource(baseURI, "Instrument Status", refType.GET, "/InstrumentStatus"));
-            //CollectionTeams/{entityId}/AddMember
-            //  this.LINKS.Add(GetLinkResource(baseURI, "Add Member", refType.GET, "/AddMember"));
-        }
-
-        #endregion
-
-    }//end Class COLLECT_TEAM
-
+    
     public partial class CONTACT : HypermediaEntity
     {
         #region Overrided Methods
@@ -797,9 +757,9 @@ namespace STNServices2
             //HWMs/{hwmId}/Approval
             if (this.APPROVAL_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Approved", refType.GET, "/Approval"));
             //HWMs/{hwmId}/FlagTeam
-            if (this.FLAG_TEAM_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Flag Team", refType.GET, "/FlagTeam"));
+            if (this.FLAG_MEMBER_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Flag Member", refType.GET, "/FlagMember"));
             //HWMs/{hwmId}/SurveyTeam
-            if (this.SURVEY_TEAM_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Survey Team", refType.GET, "/SurveyTeam"));
+            if (this.SURVEY_MEMBER_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Survey Member", refType.GET, "/SurveyMember"));
             //HWMs/{hwmId}/Event
             if (this.EVENT_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Event", refType.GET, "/Event"));
             //HWMs/{hwmId}/Files
@@ -957,9 +917,7 @@ namespace STNServices2
             //InstrumentStatus/{instrumentStatusId}/InstrMeasurements
             if (this.INSTRUMENT_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Instrument Status OP Measurements", refType.GET, "/InstrMeasurements"));
             //InstrumentStatus/{instrumentStatusId}/Instrument
-            if (this.INSTRUMENT_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Instrument", refType.GET, "/Instrument"));
-            //InstrumentStatus/{instrumentStatusId}/CollectionTeam
-            if (this.COLLECTION_TEAM_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Collection Team", refType.GET, "/CollectionTeam"));
+            if (this.INSTRUMENT_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Instrument", refType.GET, "/Instrument"));            
             //InstrumentStatus/{instrumentStatusId}/Status
             if (this.STATUS_TYPE_ID > 0) this.LINKS.Add(GetLinkResource(baseURI, "Status", refType.GET, "/Status"));
         }

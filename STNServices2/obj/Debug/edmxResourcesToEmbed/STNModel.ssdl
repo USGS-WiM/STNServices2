@@ -3,7 +3,6 @@
   <EntityContainer Name="STNModel2StoreContainer">
     <EntitySet Name="AGENCIES" EntityType="STNModel2.Store.AGENCIES" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="APPROVAL" EntityType="STNModel2.Store.APPROVAL" store:Type="Tables" Schema="FRADMIN" />
-    <EntitySet Name="COLLECT_TEAM" EntityType="STNModel2.Store.COLLECT_TEAM" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="CONTACT" EntityType="STNModel2.Store.CONTACT" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="CONTACT_TYPE" EntityType="STNModel2.Store.CONTACT_TYPE" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="COUNTIES" EntityType="STNModel2.Store.COUNTIES" store:Type="Tables" Schema="FRADMIN" />
@@ -30,7 +29,6 @@
     <EntitySet Name="LOCATORTYPE" EntityType="STNModel2.Store.LOCATORTYPE" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="MARKERS" EntityType="STNModel2.Store.MARKERS" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="MEMBERS" EntityType="STNModel2.Store.MEMBERS" store:Type="Tables" Schema="FRADMIN" />
-    <EntitySet Name="MEMBERS_TEAM" EntityType="STNModel2.Store.MEMBERS_TEAM" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="NETWORK_NAME" EntityType="STNModel2.Store.NETWORK_NAME" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="NETWORK_NAME_SITE" EntityType="STNModel2.Store.NETWORK_NAME_SITE" store:Type="Tables" Schema="FRADMIN" />
     <EntitySet Name="NETWORK_TYPE" EntityType="STNModel2.Store.NETWORK_TYPE" store:Type="Tables" Schema="FRADMIN" />
@@ -194,13 +192,6 @@
     <Property Name="APPROVAL_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="MEMBER_ID" Type="number" />
     <Property Name="APPROVAL_DATE" Type="timestamp" />
-  </EntityType>
-  <EntityType Name="COLLECT_TEAM">
-    <Key>
-      <PropertyRef Name="COLLECT_TEAM_ID" />
-    </Key>
-    <Property Name="COLLECT_TEAM_ID" Type="number" Nullable="false" />
-    <Property Name="DESCRIPTION" Type="nvarchar2" MaxLength="255" />
   </EntityType>
   <EntityType Name="CONTACT">
     <Key>
@@ -377,8 +368,6 @@
     <Property Name="FLAG_DATE" Type="timestamp" />
     <Property Name="STILLWATER" Type="number" />
     <Property Name="HDATUM_ID" Type="number" />
-    <Property Name="FLAG_TEAM_ID" Type="number" />
-    <Property Name="SURVEY_TEAM_ID" Type="number" />
     <Property Name="FLAG_MEMBER_ID" Type="number" />
     <Property Name="SURVEY_MEMBER_ID" Type="number" />
   </EntityType>
@@ -430,7 +419,6 @@
     <Property Name="INSTRUMENT_ID" Type="number" />
     <Property Name="TIME_STAMP" Type="timestamp" />
     <Property Name="NOTES" Type="nvarchar2" MaxLength="255" />
-    <Property Name="COLLECTION_TEAM_ID" Type="number" />
     <Property Name="TIME_ZONE" Type="varchar2" MaxLength="8" />
     <Property Name="MEMBER_ID" Type="number" />
   </EntityType>
@@ -486,14 +474,6 @@
     <Property Name="EMERGENCY_CONTACT_PHONE" Type="nvarchar2" MaxLength="15" />
     <Property Name="ROLE_ID" Type="number" />
     <Property Name="USERNAME" Type="nvarchar2" Nullable="false" MaxLength="50" />
-  </EntityType>
-  <EntityType Name="MEMBERS_TEAM">
-    <Key>
-      <PropertyRef Name="MEMBERS_TEAM_ID" />
-    </Key>
-    <Property Name="MEMBERS_TEAM_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="COLLECT_TEAM_ID" Type="number" />
-    <Property Name="MEMBER_ID" Type="number" />
   </EntityType>
   <EntityType Name="NETWORK_NAME">
     <Key>
