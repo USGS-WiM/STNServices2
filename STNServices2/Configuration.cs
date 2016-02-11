@@ -92,7 +92,6 @@ namespace STNServices2
                 AddAGENCY_Resources();
                 AddAPPROVAL_Resources();
                 AddAUTHENTICATION_Resources();
-                AddCOLLECTION_TEAM_Resources();
                 AddCONTACT_Resources();
                 AddCONTACT_TYPE_Resources();
                 AddCOUNTIES_Resources();
@@ -201,30 +200,7 @@ namespace STNServices2
 
         }//end AddAUTHENTICATION_Resources
 
-        private void AddCOLLECTION_TEAM_Resources()
-        {
-            //GET
-            ResourceSpace.Has.ResourcesOfType<List<COLLECT_TEAM>>()
-            .AtUri("/CollectionTeams")
-            .And.AtUri("/Events/{eventId}/Teams").Named("GetEventTeams")
-            .And.AtUri("/Members/{memberId}/Teams").Named("GetMemberTeams")
-            .HandledBy<CollectionTeamsHandler>()
-            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-            ResourceSpace.Has.ResourcesOfType<COLLECT_TEAM>()
-            .AtUri("/CollectionTeams/{entityId}")
-            .And.AtUri("InstrumentStatus/{instrumentStatusId}/CollectionTeam").Named("GetInstrumentStatusCollectionTeam")
-             .And.AtUri("HWMs/{hwmId}/FlagTeam").Named("GetHWMFlagTeam")
-             .And.AtUri("HWMs/{hwmId}/SurveyTeam").Named("GetHWMSurveyTeam")
-            .HandledBy<CollectionTeamsHandler>()
-            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-
-        }//end AddCOLLECTION_TEAM_Resources
+        
 
         private void AddCONTACT_Resources()
         {
@@ -622,7 +598,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<List<HWM>>()
             .AtUri("/HWMs?IsApproved={boolean}").Named("GetHWMByApproval")
             .And.AtUri("/Approvals/{ApprovalId}/HWMs").Named("GetApprovedHWMs")
-            .And.AtUri("/CollectionTeams/{teamId}/HWMs").Named("GetCollectionTeamHWMs")
+            .And.AtUri("/Members/{memberId}/HWMs").Named("GetMemberHWMs")
             .And.AtUri("/HWMQualities/{hwmQualityId}/HWMs").Named("GetHWMQualityHWMs")
             .And.AtUri("/HWMTypes/{hwmTypeId}/HWMs").Named("GetHWMTypeHWMs")
             .And.AtUri("/HorizontalMethods/{hmethodId}/HWMs").Named("GetHmethodHWMs")
@@ -862,9 +838,7 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<List<MEMBER>>()
             .AtUri("/Members")
-            .And.AtUri("/Events/{eventId}/Members").Named("GetEventMembers")
-            .And.AtUri("/CollectionTeams/{teamId}/AddMember").Named("AddMemberToTeam")
-            .And.AtUri("/CollectionTeams/{teamId}/Members").Named("GetTeamMembers")
+            .And.AtUri("/Events/{eventId}/Members").Named("GetEventMembers")            
             .And.AtUri("/Agencies/{agencyId}/Members").Named("GetAgencyMembers")
             .And.AtUri("/Roles/{roleId}/Members").Named("GetRoleMembers")
             .HandledBy<MemberHandler>()

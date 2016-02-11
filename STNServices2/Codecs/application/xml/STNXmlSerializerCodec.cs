@@ -46,11 +46,10 @@ namespace STNServices2.Codecs
     public class STNXmlSerializerCodec : SimpleUTF8XmlSerializerCodec
     {
         //TODO: look into finding the types dynamically and generating this array on the fly.
-        public static Type[] extraTypes = new Type[36] {    typeof(HypermediaEntity), 
+        public static Type[] extraTypes = new Type[34] {    typeof(HypermediaEntity), 
                                                     typeof(EntityObject), 
                                                     typeof(AGENCY), 
                                                     typeof(APPROVAL), 
-                                                    typeof(COLLECT_TEAM), 
                                                     typeof(CONTACT), 
                                                     typeof(CONTACT_TYPE), 
                                                     typeof(DATA_FILE),
@@ -70,7 +69,6 @@ namespace STNServices2.Codecs
                                                     typeof(INSTRUMENT_STATUS),
                                                     typeof(LANDOWNERCONTACT),
                                                     typeof(MARKER),
-                                                    typeof(MEMBERS_TEAM),
                                                     typeof(OBJECTIVE_POINT),
                                                     typeof(OP_QUALITY),
                                                     typeof(PEAK_SUMMARY),
