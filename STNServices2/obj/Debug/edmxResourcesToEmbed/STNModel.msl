@@ -23,14 +23,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="COLLECT_TEAM">
-      <EntityTypeMapping TypeName="STNModel2.COLLECT_TEAM">
-        <MappingFragment StoreEntitySet="COLLECT_TEAM">
-          <ScalarProperty Name="COLLECT_TEAM_ID" ColumnName="COLLECT_TEAM_ID" />
-          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="CONTACT">
       <EntityTypeMapping TypeName="STNModel2.CONTACT">
         <MappingFragment StoreEntitySet="CONTACT">
@@ -220,8 +212,6 @@
           <ScalarProperty Name="FLAG_DATE" ColumnName="FLAG_DATE" />
           <ScalarProperty Name="STILLWATER" ColumnName="STILLWATER" />
           <ScalarProperty Name="HDATUM_ID" ColumnName="HDATUM_ID" />
-          <ScalarProperty Name="FLAG_TEAM_ID" ColumnName="FLAG_TEAM_ID" />
-          <ScalarProperty Name="SURVEY_TEAM_ID" ColumnName="SURVEY_TEAM_ID" />
           <ScalarProperty Name="FLAG_MEMBER_ID" ColumnName="FLAG_MEMBER_ID" />
           <ScalarProperty Name="SURVEY_MEMBER_ID" ColumnName="SURVEY_MEMBER_ID" />
         </MappingFragment>
@@ -278,7 +268,6 @@
           <ScalarProperty Name="INSTRUMENT_ID" ColumnName="INSTRUMENT_ID" />
           <ScalarProperty Name="TIME_STAMP" ColumnName="TIME_STAMP" />
           <ScalarProperty Name="NOTES" ColumnName="NOTES" />
-          <ScalarProperty Name="COLLECTION_TEAM_ID" ColumnName="COLLECTION_TEAM_ID" />
           <ScalarProperty Name="TIME_ZONE" ColumnName="TIME_ZONE" />
           <ScalarProperty Name="MEMBER_ID" ColumnName="MEMBER_ID" />
         </MappingFragment>
@@ -339,15 +328,6 @@
           <ScalarProperty Name="EMERGENCY_CONTACT_PHONE" ColumnName="EMERGENCY_CONTACT_PHONE" />
           <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
           <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="MEMBERS_TEAM">
-      <EntityTypeMapping TypeName="STNModel2.MEMBERS_TEAM">
-        <MappingFragment StoreEntitySet="MEMBERS_TEAM">
-          <ScalarProperty Name="MEMBERS_TEAM_ID" ColumnName="MEMBERS_TEAM_ID" />
-          <ScalarProperty Name="COLLECT_TEAM_ID" ColumnName="COLLECT_TEAM_ID" />
-          <ScalarProperty Name="MEMBER_ID" ColumnName="MEMBER_ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
