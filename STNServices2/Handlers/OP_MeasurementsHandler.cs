@@ -231,6 +231,7 @@ namespace STNServices2.Handlers
                         ObjectToBeUpdated.HANGING_LENGTH = anOPmeas.HANGING_LENGTH != ObjectToBeUpdated.HANGING_LENGTH ? anOPmeas.HANGING_LENGTH : ObjectToBeUpdated.HANGING_LENGTH;
                         ObjectToBeUpdated.WATER_SURFACE = anOPmeas.WATER_SURFACE != ObjectToBeUpdated.WATER_SURFACE ? anOPmeas.WATER_SURFACE : ObjectToBeUpdated.WATER_SURFACE;
                         ObjectToBeUpdated.GROUND_SURFACE = anOPmeas.GROUND_SURFACE != ObjectToBeUpdated.GROUND_SURFACE ? anOPmeas.GROUND_SURFACE : ObjectToBeUpdated.GROUND_SURFACE;
+                        ObjectToBeUpdated.OFFSET_CORRECTION = anOPmeas.OFFSET_CORRECTION != ObjectToBeUpdated.OFFSET_CORRECTION ? anOPmeas.OFFSET_CORRECTION : ObjectToBeUpdated.OFFSET_CORRECTION;
 
                         aSTNE.SaveChanges();
 
@@ -312,7 +313,8 @@ namespace STNServices2.Handlers
                                                                e.FROM_RP == thisEntity.FROM_RP &&
                                                                e.HANGING_LENGTH == thisEntity.HANGING_LENGTH &&
                                                                e.WATER_SURFACE == thisEntity.WATER_SURFACE &&
-                                                               e.GROUND_SURFACE == thisEntity.GROUND_SURFACE);
+                                                               e.GROUND_SURFACE == thisEntity.GROUND_SURFACE &&
+                                                               e.OFFSET_CORRECTION == thisEntity.OFFSET_CORRECTION);
 
 
                 if (existingRPM == null)

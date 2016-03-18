@@ -263,6 +263,10 @@
     <EntitySetMapping Name="INSTRUMENT_STATUS">
       <EntityTypeMapping TypeName="STNModel2.INSTRUMENT_STATUS">
         <MappingFragment StoreEntitySet="INSTRUMENT_STATUS">
+          <ScalarProperty Name="VDATUM_ID" ColumnName="VDATUM_ID" />
+          <ScalarProperty Name="GS_ELEVATION" ColumnName="GS_ELEVATION" />
+          <ScalarProperty Name="WS_ELEVATION" ColumnName="WS_ELEVATION" />
+          <ScalarProperty Name="SENSOR_ELEVATION" ColumnName="SENSOR_ELEVATION" />
           <ScalarProperty Name="INSTRUMENT_STATUS_ID" ColumnName="INSTRUMENT_STATUS_ID" />
           <ScalarProperty Name="STATUS_TYPE_ID" ColumnName="STATUS_TYPE_ID" />
           <ScalarProperty Name="INSTRUMENT_ID" ColumnName="INSTRUMENT_ID" />
@@ -411,6 +415,7 @@
     <EntitySetMapping Name="OP_MEASUREMENTS">
       <EntityTypeMapping TypeName="STNModel2.OP_MEASUREMENTS">
         <MappingFragment StoreEntitySet="OP_MEASUREMENTS">
+          <ScalarProperty Name="OFFSET_CORRECTION" ColumnName="OFFSET_CORRECTION" />
           <ScalarProperty Name="OP_MEASUREMENTS_ID" ColumnName="OP_MEASUREMENTS_ID" />
           <ScalarProperty Name="OBJECTIVE_POINT_ID" ColumnName="OBJECTIVE_POINT_ID" />
           <ScalarProperty Name="INSTRUMENT_STATUS_ID" ColumnName="INSTRUMENT_STATUS_ID" />
