@@ -53,6 +53,11 @@ namespace STNServices2.Resources
         [XmlElement(DataType = "int",
         ElementName = "HWM_ID")]
         public Int32 HWM_ID { get; set; }
+        
+        [DataMember]
+        [XmlElement(DataType = "int",
+        ElementName = "SITE_ID")]
+        public Int32 SITE_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -133,14 +138,29 @@ namespace STNServices2.Resources
         public decimal SITE_ID { get; set; }
 
         [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "EVENT_ID")]
+        public decimal EVENT_ID { get; set; }
+
+        [DataMember]
         [XmlElement(typeof(String),
         ElementName = "EVENT")]
         public string EVENT { get; set; }
 
         [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "HWM_TYPE_ID")]
+        public decimal HWM_TYPE_ID { get; set; }
+
+        [DataMember]
         [XmlElement(typeof(String),
         ElementName = "HWM_TYPE")]
         public string HWM_TYPE { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "HWM_QUALITY_ID")]
+        public decimal HWM_QUALITY_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -161,6 +181,11 @@ namespace STNServices2.Resources
         [XmlElement(typeof(Decimal),
         ElementName = "LONGITUDE")]
         public Decimal LONGITUDE { get; set; }
+ 
+        [DataMember]
+        [XmlElement(typeof(String),
+        ElementName = "SURVEY_DATE")]
+        public string SURVEY_DATE { get; set; }
 
         [DataMember]
         [XmlElement(typeof(Decimal),
@@ -168,9 +193,19 @@ namespace STNServices2.Resources
         public Decimal ELEV_FT { get; set; }
 
         [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "VDATUM_ID")]
+        public decimal VDATUM_ID { get; set; }
+
+        [DataMember]
         [XmlElement(typeof(String),
         ElementName = "VERTICAL_DATUM")]
         public string VERTICAL_DATUM { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "VCOLLECT_METHOD_ID")]
+        public decimal VCOLLECT_METHOD_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -179,18 +214,23 @@ namespace STNServices2.Resources
 
         [DataMember]
         [XmlElement(typeof(String),
-        ElementName = "HORIZONTAL_COLLECT_METHOD")]
-        public string HORIZONTAL_COLLECT_METHOD { get; set; }
-
-        [DataMember]
-        [XmlElement(typeof(String),
         ElementName = "BANK")]
         public string BANK { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "APPROVAL_ID")]
+        public decimal APPROVAL_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
         ElementName = "APPROVAL_MEMBER")]
         public string APPROVAL_MEMBER { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "MARKER_ID")]
+        public decimal MARKER_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -202,6 +242,21 @@ namespace STNServices2.Resources
         ElementName = "HEIGHT_ABV_GND")]
         public decimal HEIGHT_ABV_GND { get; set; }
 
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "HCOLLECT_METHOD_ID")]
+        public decimal HCOLLECT_METHOD_ID { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(String),
+        ElementName = "HORIZONTAL_COLLECT_METHOD")]
+        public string HORIZONTAL_COLLECT_METHOD { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "PEAK_SUMMARY_ID")]
+        public decimal PEAK_SUMMARY_ID { get; set; }
+                
         [DataMember]
         [XmlElement(typeof(String),
         ElementName = "HWM_NOTES")]
@@ -216,21 +271,36 @@ namespace STNServices2.Resources
         [XmlElement(typeof(String),
         ElementName = "FLAG_DATE")]
         public string FLAG_DATE { get; set; }
-
-        [DataMember]
-        [XmlElement(typeof(String),
-        ElementName = "SURVEY_DATE")]
-        public string SURVEY_DATE { get; set; }
-
+       
         [DataMember]
         [XmlElement(typeof(String),
         ElementName = "STILLWATER")]
         public string STILLWATER { get; set; }
 
         [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "HDATUM_ID")]
+        public decimal HDATUM_ID { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(String),
+        ElementName = "HORIZONTAL_DATUM")]
+        public string HORIZONTAL_DATUM { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "FLAG_MEMBER_ID")]
+        public decimal FLAG_MEMBER_ID { get; set; }
+
+        [DataMember]
         [XmlElement(typeof(String),
         ElementName = "FLAG_MEMBER_NAME")]
         public string FLAG_MEMBER_NAME { get; set; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "SURVEY_MEMBER_ID")]
+        public decimal SURVEY_MEMBER_ID { get; set; }
 
         [DataMember]
         [XmlElement(typeof(String),
@@ -261,12 +331,7 @@ namespace STNServices2.Resources
         [XmlElement(typeof(String),
         ElementName = "COUNTY")]
         public String COUNTY { get; set; }
-
-        [DataMember]
-        [XmlElement(typeof(String),
-        ElementName = "HORIZONTAL_DATUM")]
-        public String HORIZONTAL_DATUM { get; set; }
-
+        
         [DataMember]
         [XmlElement(typeof(String),
         ElementName = "PRIORITY")]

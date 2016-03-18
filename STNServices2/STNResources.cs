@@ -92,6 +92,7 @@ using Newtonsoft.Json;
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERHWM", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERHWM1", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "HWM", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.HWM), true)]
 [assembly: EdmRelationshipAttribute("STNModel2", "MEMBERINSTRUMENT_STATUS", "MEMBER", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.MEMBER), "INSTRUMENT_STATUS", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.INSTRUMENT_STATUS), true)]
+[assembly: EdmRelationshipAttribute("STNModel2", "VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(STNServices2.VERTICAL_DATUMS), "INSTRUMENT_STATUS", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(STNServices2.INSTRUMENT_STATUS), true)]
 
 #endregion
 
@@ -8783,6 +8784,102 @@ namespace STNServices2
         private Nullable<global::System.Decimal> _MEMBER_ID;
         partial void OnMEMBER_IDChanging(Nullable<global::System.Decimal> value);
         partial void OnMEMBER_IDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> SENSOR_ELEVATION
+        {
+            get
+            {
+                return _SENSOR_ELEVATION;
+            }
+            set
+            {
+                OnSENSOR_ELEVATIONChanging(value);
+                ReportPropertyChanging("SENSOR_ELEVATION");
+                _SENSOR_ELEVATION = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("SENSOR_ELEVATION");
+                OnSENSOR_ELEVATIONChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _SENSOR_ELEVATION;
+        partial void OnSENSOR_ELEVATIONChanging(Nullable<global::System.Decimal> value);
+        partial void OnSENSOR_ELEVATIONChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> WS_ELEVATION
+        {
+            get
+            {
+                return _WS_ELEVATION;
+            }
+            set
+            {
+                OnWS_ELEVATIONChanging(value);
+                ReportPropertyChanging("WS_ELEVATION");
+                _WS_ELEVATION = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("WS_ELEVATION");
+                OnWS_ELEVATIONChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _WS_ELEVATION;
+        partial void OnWS_ELEVATIONChanging(Nullable<global::System.Decimal> value);
+        partial void OnWS_ELEVATIONChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> GS_ELEVATION
+        {
+            get
+            {
+                return _GS_ELEVATION;
+            }
+            set
+            {
+                OnGS_ELEVATIONChanging(value);
+                ReportPropertyChanging("GS_ELEVATION");
+                _GS_ELEVATION = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("GS_ELEVATION");
+                OnGS_ELEVATIONChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _GS_ELEVATION;
+        partial void OnGS_ELEVATIONChanging(Nullable<global::System.Decimal> value);
+        partial void OnGS_ELEVATIONChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> VDATUM_ID
+        {
+            get
+            {
+                return _VDATUM_ID;
+            }
+            set
+            {
+                OnVDATUM_IDChanging(value);
+                ReportPropertyChanging("VDATUM_ID");
+                _VDATUM_ID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("VDATUM_ID");
+                OnVDATUM_IDChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _VDATUM_ID;
+        partial void OnVDATUM_IDChanging(Nullable<global::System.Decimal> value);
+        partial void OnVDATUM_IDChanged();
 
         #endregion
     
@@ -8924,6 +9021,45 @@ namespace STNServices2
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MEMBER>("STNModel2.MEMBERINSTRUMENT_STATUS", "MEMBER", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS")]
+        public VERTICAL_DATUMS VERTICAL_DATUMS
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<VERTICAL_DATUMS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<VERTICAL_DATUMS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [IgnoreDataMemberAttribute()]
+        public EntityReference<VERTICAL_DATUMS> VERTICAL_DATUMSReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<VERTICAL_DATUMS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<VERTICAL_DATUMS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "VERTICAL_DATUMS", value);
                 }
             }
         }
@@ -12400,6 +12536,30 @@ namespace STNServices2
         private global::System.String _TYPE;
         partial void OnTYPEChanging(global::System.String value);
         partial void OnTYPEChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> OFFSET_CORRECTION
+        {
+            get
+            {
+                return _OFFSET_CORRECTION;
+            }
+            set
+            {
+                OnOFFSET_CORRECTIONChanging(value);
+                ReportPropertyChanging("OFFSET_CORRECTION");
+                _OFFSET_CORRECTION = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("OFFSET_CORRECTION");
+                OnOFFSET_CORRECTIONChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _OFFSET_CORRECTION;
+        partial void OnOFFSET_CORRECTIONChanging(Nullable<global::System.Decimal> value);
+        partial void OnOFFSET_CORRECTIONChanged();
 
         #endregion
     
@@ -18714,6 +18874,29 @@ namespace STNServices2
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HWM>("STNModel2.VERTICAL_DATUMSHWM", "HWM", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [IgnoreDataMemberAttribute()]
+    	[JsonIgnore]
+    	[EdmRelationshipNavigationPropertyAttribute("STNModel2", "VERTICAL_DATUMSINSTRUMENT_STATUS", "INSTRUMENT_STATUS")]
+        public EntityCollection<INSTRUMENT_STATUS> INSTRUMENT_STATUS
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<INSTRUMENT_STATUS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "INSTRUMENT_STATUS");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<INSTRUMENT_STATUS>("STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS", "INSTRUMENT_STATUS", value);
                 }
             }
         }

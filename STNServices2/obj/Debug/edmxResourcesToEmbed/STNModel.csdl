@@ -370,6 +370,10 @@
       <End Role="MEMBER" EntitySet="MEMBERS" />
       <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
     </AssociationSet>
+    <AssociationSet Name="VERTICAL_DATUMSINSTRUMENT_STATUS" Association="STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS">
+      <End Role="VERTICAL_DATUMS" EntitySet="VERTICAL_DATUMS" />
+      <End Role="INSTRUMENT_STATUS" EntitySet="INSTRUMENT_STATUS" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="AGENCY">
     <Key>
@@ -693,6 +697,11 @@
     <NavigationProperty Name="STATUS_TYPE" Relationship="STNModel2.STATUS_TYPEINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="STATUS_TYPE" />
     <NavigationProperty Name="INSTRUMENT" Relationship="STNModel2.INSTRUMENTINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="INSTRUMENT" />
     <NavigationProperty Name="MEMBER" Relationship="STNModel2.MEMBERINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="MEMBER" />
+    <Property Type="Decimal" Name="SENSOR_ELEVATION" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="WS_ELEVATION" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="GS_ELEVATION" Precision="38" Scale="0" />
+    <Property Type="Decimal" Name="VDATUM_ID" Precision="38" Scale="0" />
+    <NavigationProperty Name="VERTICAL_DATUMS" Relationship="STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS" FromRole="INSTRUMENT_STATUS" ToRole="VERTICAL_DATUMS" />
   </EntityType>
   <EntityType Name="KEYWORD">
     <Key>
@@ -863,6 +872,7 @@
     <Property Name="TYPE" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="OBJECTIVE_POINT" />
     <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="INSTRUMENT_STATUS" />
+    <Property Type="Decimal" Name="OFFSET_CORRECTION" Precision="38" Scale="0" />
   </EntityType>
   <EntityType Name="OP_QUALITY">
     <Key>
@@ -1122,6 +1132,7 @@
     <Property Name="DATUM_ABBREVIATION" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.VERTICAL_DATUMSOBJECTIVE_POINT" FromRole="VERTICAL_DATUMS" ToRole="OBJECTIVE_POINT" />
     <NavigationProperty Name="HWMs" Relationship="STNModel2.VERTICAL_DATUMSHWM" FromRole="VERTICAL_DATUMS" ToRole="HWM" />
+    <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.VERTICAL_DATUMSINSTRUMENT_STATUS" FromRole="VERTICAL_DATUMS" ToRole="INSTRUMENT_STATUS" />
   </EntityType>
   <EntityType Name="BAROMETRIC_VIEW">
     <Key>
@@ -2144,6 +2155,18 @@
       </Principal>
       <Dependent Role="INSTRUMENT_STATUS">
         <PropertyRef Name="MEMBER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VERTICAL_DATUMSINSTRUMENT_STATUS">
+    <End Type="STNModel2.VERTICAL_DATUMS" Role="VERTICAL_DATUMS" Multiplicity="0..1" />
+    <End Type="STNModel2.INSTRUMENT_STATUS" Role="INSTRUMENT_STATUS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VERTICAL_DATUMS">
+        <PropertyRef Name="DATUM_ID" />
+      </Principal>
+      <Dependent Role="INSTRUMENT_STATUS">
+        <PropertyRef Name="VDATUM_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
