@@ -57,7 +57,7 @@ using System.ServiceModel.Syndication;
 using System.Reflection;
 using System.Web;
 using System.Runtime.InteropServices;
-
+using System.Configuration;
 
 namespace STNServices2.Handlers
 {
@@ -710,6 +710,7 @@ namespace STNServices2.Handlers
                         LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
                         HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION != null ? hwm.HWM_LOCATIONDESCRIPTION : "",
                         ELEV_FT = hwm.ELEV_FT != null ? Convert.ToDecimal(hwm.ELEV_FT) : 0,
+                        SITE_ID = Convert.ToInt32(hwm.SITE_ID),
                         SITE_NO = hwm.SITE_ID > 0 ? hwm.SITE.SITE_NO : string.Empty
                     }).ToList<SimpleHWM>();
 
@@ -726,8 +727,8 @@ namespace STNServices2.Handlers
             }
         }// end HttpMethod.Get
 
-        [HttpOperation(ForUriName = "GetFilteredHWMs")]
-        public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] Int32 eventStatusID,
+        [HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
+        public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, Int32 eventStatusID,
                                                       [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
                                                       [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
         {
@@ -796,28 +797,40 @@ namespace STNServices2.Handlers
                             HWM_ID = hwmD.HWM_ID,
                             WATERBODY = hwmD.WATERBODY,
                             SITE_ID = hwmD.SITE_ID.Value,
+                            EVENT_ID = hwmD.EVENT_ID.Value,
                             EVENT = hwmD.EVENT_ID.HasValue ? GetEvent(aSTNE, hwmD.EVENT_ID.Value) : "",
+                            HWM_TYPE_ID = hwmD.HWM_TYPE_ID,
                             HWM_TYPE = hwmD.HWM_TYPE_ID > 0 ? GetHWMType(aSTNE, hwmD.HWM_TYPE_ID) : "",
+                            HWM_QUALITY_ID = hwmD.HWM_QUALITY_ID,
                             HWM_QUALITY = hwmD.HWM_QUALITY_ID > 0 ? GetHWMQuality(aSTNE, hwmD.HWM_QUALITY_ID) : "",
                             HWM_LOCATION_DESCRIPTION = hwmD.HWM_LOCATIONDESCRIPTION != null ? GetHWMLocation(hwmD.HWM_LOCATIONDESCRIPTION) : "",
                             LATITUDE = hwmD.LATITUDE_DD.Value,
                             LONGITUDE = hwmD.LONGITUDE_DD.Value,
                             ELEV_FT = hwmD.ELEV_FT.HasValue ? hwmD.ELEV_FT.Value : 0,
+                            VDATUM_ID = hwmD.VDATUM_ID.HasValue ? hwmD.VDATUM_ID.Value : 0,
                             VERTICAL_DATUM = hwmD.VDATUM_ID.HasValue && hwmD.VDATUM_ID.Value > 0 ? GetVDatum(aSTNE, hwmD.VDATUM_ID.Value) : "",
+                            HDATUM_ID = hwmD.HDATUM_ID.HasValue ? hwmD.HDATUM_ID.Value : 0,
                             HORIZONTAL_DATUM = hwmD.HDATUM_ID.HasValue && hwmD.HDATUM_ID.Value > 0 ? GetHDatum(aSTNE, hwmD.HDATUM_ID.Value) : "",
+                            VCOLLECT_METHOD_ID = hwmD.VCOLLECT_METHOD_ID.HasValue ? hwmD.VCOLLECT_METHOD_ID.Value : 0,
                             VERTICAL_COLLECT_METHOD = hwmD.VCOLLECT_METHOD_ID.HasValue && hwmD.VCOLLECT_METHOD_ID.Value > 0 ? GetVCollMethod(aSTNE, hwmD.VCOLLECT_METHOD_ID.Value) : "",
+                            HCOLLECT_METHOD_ID = hwmD.HCOLLECT_METHOD_ID.HasValue ? hwmD.HCOLLECT_METHOD_ID.Value : 0,
                             HORIZONTAL_COLLECT_METHOD = hwmD.HCOLLECT_METHOD_ID.HasValue && hwmD.HCOLLECT_METHOD_ID.Value > 0 ? GetHCollectMethod(aSTNE, hwmD.HCOLLECT_METHOD_ID.Value) : "",
                             BANK = hwmD.BANK,
-                            APPROVAL_MEMBER = hwmD.APPROVAL_ID != null || hwmD.APPROVAL_ID > 0 ? GetApprovingMember(aSTNE, hwmD.APPROVAL_ID) : "",
-                            MARKER_NAME = hwmD.MARKER_ID != null && hwmD.MARKER_ID > 0 ? GetMarkerName(aSTNE, hwmD.MARKER_ID) : "",
+                            APPROVAL_ID = hwmD.APPROVAL_ID.HasValue ? hwmD.APPROVAL_ID.Value : 0,
+                            APPROVAL_MEMBER = hwmD.APPROVAL_ID.HasValue || hwmD.APPROVAL_ID > 0 ? GetApprovingMember(aSTNE, hwmD.APPROVAL_ID) : "",
+                            MARKER_ID = hwmD.MARKER_ID.HasValue ? hwmD.MARKER_ID.Value: 0,
+                            MARKER_NAME = hwmD.MARKER_ID.HasValue && hwmD.MARKER_ID > 0 ? GetMarkerName(aSTNE, hwmD.MARKER_ID) : "",
                             HEIGHT_ABV_GND = hwmD.HEIGHT_ABOVE_GND.HasValue ? hwmD.HEIGHT_ABOVE_GND.Value : 0,
                             HWM_NOTES = !string.IsNullOrEmpty(hwmD.HWM_NOTES) ? GetNotes(aSTNE, hwmD.HWM_NOTES) : "",
                             HWM_ENVIRONMENT = !string.IsNullOrEmpty(hwmD.HWM_ENVIRONMENT) ? hwmD.HWM_ENVIRONMENT : "",
                             FLAG_DATE = hwmD.FLAG_DATE.HasValue ? hwmD.FLAG_DATE.Value.ToShortDateString() : "",
                             SURVEY_DATE = hwmD.SURVEY_DATE.HasValue ? hwmD.SURVEY_DATE.Value.ToShortDateString() : "",
                             STILLWATER = hwmD.STILLWATER.HasValue && hwmD.STILLWATER.Value > 0 ? "Yes" : "No",
+                            FLAG_MEMBER_ID = hwmD.FLAG_MEMBER_ID.HasValue ? hwmD.FLAG_MEMBER_ID.Value : 0,
                             FLAG_MEMBER_NAME = hwmD.FLAG_MEMBER_ID.HasValue && hwmD.FLAG_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.FLAG_MEMBER_ID) : "",
+                            SURVEY_MEMBER_ID = hwmD.SURVEY_MEMBER_ID.HasValue ? hwmD.SURVEY_MEMBER_ID.Value : 0,
                             SURVEY_MEMBER_NAME = hwmD.SURVEY_MEMBER_ID.HasValue && hwmD.SURVEY_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.SURVEY_MEMBER_ID) : "",
+                            PEAK_SUMMARY_ID = hwmD.PEAK_SUMMARY_ID.HasValue ? hwmD.PEAK_SUMMARY_ID.Value : 0,
                             SITE_NO = hwmD.SITE.SITE_NO,
                             DESCRIPTION = hwmD.SITE.SITE_DESCRIPTION != null ? SiteHandler.GetSiteDesc(hwmD.SITE.SITE_DESCRIPTION) : "",
                             NETWORK = SiteHandler.GetSiteNetwork(aSTNE, hwmD.SITE_ID.Value),
@@ -853,7 +866,7 @@ namespace STNServices2.Handlers
         public OperationResult Post(HWM aHWM)
         {
             //Return BadRequest if missing required fields
-            if ((aHWM.FLAG_DATE == null) || (aHWM.HWM_TYPE_ID <= 0) || (aHWM.HWM_QUALITY_ID <= 0) || aHWM.SITE_ID <= 0)
+            if ((aHWM.FLAG_DATE == null) || (aHWM.HWM_TYPE_ID <= 0) || (aHWM.HWM_QUALITY_ID <= 0) || aHWM.SITE_ID <= 0 || (aHWM.EVENT_ID <= 0))
             {
                 return new OperationResult.BadRequest();
             }
@@ -1007,6 +1020,10 @@ namespace STNServices2.Handlers
                         {
                             foreach (FILES f in HWMFiles)
                             {
+                                //delete the file item from s3
+                                S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+                                aBucket.DeleteObject(BuildFilePath(f, f.PATH));
+                                //delete the file
                                 aSTNE.DeleteObject(f);
                                 aSTNE.SaveChanges();
                             }
@@ -1221,7 +1238,43 @@ namespace STNServices2.Handlers
                 memberName = ct.FNAME + " " + ct.LNAME;
             return memberName;
         }
+        private string BuildFilePath(FILES uploadFile, string fileName)
+        {
+            try
+            {
+                //determine default object name
+                // ../SITE/3043/ex.jpg
+                List<string> objectName = new List<string>();
+                objectName.Add("SITE");
+                objectName.Add(uploadFile.SITE_ID.ToString());
 
+                if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
+                {
+                    // ../SITE/3043/HWM/7956/ex.jpg
+                    objectName.Add("HWM");
+                    objectName.Add(uploadFile.HWM_ID.ToString());
+                }
+                else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
+                {
+                    // ../SITE/3043/DATA_FILE/7956/ex.txt
+                    objectName.Add("DATA_FILE");
+                    objectName.Add(uploadFile.DATA_FILE_ID.ToString());
+                }
+                else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
+                {
+                    // ../SITE/3043/INSTRUMENT/7956/ex.jpg
+                    objectName.Add("INSTRUMENT");
+                    objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
+                }
+                objectName.Add(fileName);
+
+                return string.Join("/", objectName);
+            }
+            catch
+            {
+                return null;
+            }
+        }
         #endregion hwmDownloadable calls
 
         #endregion

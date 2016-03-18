@@ -240,10 +240,38 @@ namespace STNServices2.Resources
         ElementName = "MEMBER_ID")]
         public decimal MEMBER_ID { get; set; }
 
-        //[DataMember]
-        //[XmlElement(typeof(MEMBER),
-        //ElementName = "COLLECT_MEMBER")]
-        //public MEMBER COLLECT_MEMBER { get; set; }
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "SENSOR_ELEVATION")]
+        public decimal? SENSOR_ELEVATION { get; set; }
+        public bool ShouldSerializeSENSOR_ELEVATION()
+        { return SENSOR_ELEVATION.HasValue; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "WS_ELEVATION")]
+        public decimal? WS_ELEVATION { get; set; }
+        public bool ShouldSerializeWS_ELEVATION()
+        { return WS_ELEVATION.HasValue; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "GS_ELEVATION")]
+        public decimal? GS_ELEVATION { get; set; }
+        public bool ShouldSerializeGS_ELEVATION()
+        { return GS_ELEVATION.HasValue; }
+
+        [DataMember]
+        [XmlElement(typeof(decimal),
+        ElementName = "VDATUM_ID")]
+        public decimal? VDATUM_ID { get; set; }
+        public bool ShouldSerializeVDATUM_ID()
+        { return VDATUM_ID.HasValue; }
+
+        [DataMember]
+        [XmlElement(typeof(string),
+        ElementName = "VDatum")]
+        public string VDatum { get; set; }
     }
 
     public class InstrumentDownloadable

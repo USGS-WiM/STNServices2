@@ -505,11 +505,11 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole })]
-        [HttpOperation(HttpMethod.DELETE, ForUriName = "DeletePeakSummary")]
-        public OperationResult Delete(Int32 peakSummaryId)
+        [HttpOperation(HttpMethod.DELETE)]
+        public OperationResult Delete(Int32 entityId)
         {
             //Return BadRequest if missing required fields
-            if (peakSummaryId <= 0)
+            if (entityId <= 0)
             {
                 return new OperationResult.BadRequest();
             }
@@ -522,7 +522,7 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        PEAK_SUMMARY ObjectToBeDeleted = aSTNE.PEAK_SUMMARY.SingleOrDefault(ps => ps.PEAK_SUMMARY_ID == peakSummaryId);
+                        PEAK_SUMMARY ObjectToBeDeleted = aSTNE.PEAK_SUMMARY.SingleOrDefault(ps => ps.PEAK_SUMMARY_ID == entityId);
                         //delete it
                         aSTNE.PEAK_SUMMARY.DeleteObject(ObjectToBeDeleted);
 

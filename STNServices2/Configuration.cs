@@ -200,8 +200,6 @@ namespace STNServices2
 
         }//end AddAUTHENTICATION_Resources
 
-        
-
         private void AddCONTACT_Resources()
         {
             //GET
@@ -430,7 +428,7 @@ namespace STNServices2
             //http://stackoverflow.com/questions/1952278/get-image-as-stream-or-byte-array-using-openrasta
             //****************
             ResourceSpace.Has.ResourcesOfType<FILES>()
-           .AtUri("/Files/{entityId}")
+           .AtUri("/Files/{entityId}")           
            .And.AtUri("/Files/bytes").Named("UploadFile")
            .HandledBy<FileHandler>()
            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -589,7 +587,7 @@ namespace STNServices2
             .AtUri("/HWMs")
             .And.AtUri("/Events/{eventId}/HWMs").Named("GetEventSimpleHWMs")
             .And.AtUri("/Sites/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
-            .And.AtUri("/HWMS?IsApproved={approved}&Event={eventId}&TeamMember={memberId}&State={state}").Named("GetApprovalHWMs")
+            .And.AtUri("/HWMS?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
             .HandledBy<HWMHandler>()
             .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -605,9 +603,6 @@ namespace STNServices2
             .And.AtUri("/VerticalMethods/{vmethodId}/HWMs").Named("GetVmethodHWMs")
             .And.AtUri("/Sites/{siteId}/HWMs").Named("GetSiteHWMs")
             .And.AtUri("/VerticalDatums/{vdatumId}/HWMs").Named("GetVDatumHWMs")
-                //            .And.AtUri(@"/HWMs?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
-                //                                &States={states}&County={counties}&HWMType={hwmTypeIDs}&HWMQuality={hwmQualIDs}
-                //                                &HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}").Named("GetFilteredHWMs")
              .And.AtUri("/Markers/{markerId}/HWMs").Named("GetMarkerHWMs")
             .And.AtUri("/PeakSummaries/{peakSummaryId}/HWMs").Named("GetPeakSummaryHWMs")
             .HandledBy<HWMHandler>()
@@ -616,14 +611,14 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<List<HWMDownloadable>>()
-            .AtUri(@"/HWMs/FilteredHWMs/?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
+            .AtUri(@"/HWMs/FilteredHWMs?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
                             &States={states}&County={counties}&HWMType={hwmTypeIDs}&HWMQuality={hwmQualIDs}
-                            &HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}").Named("GetFilteredHWMs")
+                            &HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}").Named("FilteredHWMs")
             .HandledBy<HWMHandler>()
             .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
+           
             ResourceSpace.Has.ResourcesOfType<HWM>()
             .AtUri("/HWMs/{entityId}").Named("GetHWM")
             .And.AtUri("/Files/{fileId}/HWM").Named("GetFileHWM")
@@ -1166,7 +1161,8 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<SITE>()
             .AtUri("/Sites/{entityId}")
-            .And.AtUri("/Sites?bySiteNo={siteNo}").Named("GetSiteBySiteNo")
+            //.And.AtUri("/Sites?bySiteNo={siteNo}").Named("GetSiteBySiteNo")
+            .And.AtUri("/Sites?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySiteNo")
             .And.AtUri("/Files/{fileId}/Site").Named("GetFileSite")
             .And.AtUri("/ObjectivePoints/{objectivePointId}/Site").Named("GetOPSite")
             .And.AtUri("/HWMs/{hwmId}/Site").Named("getHWMSite")
