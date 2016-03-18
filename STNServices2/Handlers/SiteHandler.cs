@@ -50,6 +50,7 @@ using System.Data.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Configuration;
 using System.Reflection;
 using System.Web;
 using System.Text.RegularExpressions;
@@ -136,7 +137,12 @@ namespace STNServices2.Handlers
                 using (STNEntities2 aSTNE = GetRDS())
                 {
                     sites.Sites = aSTNE.SITES.AsEnumerable().Select(
-                        site => new SitePoint { SITE_ID = Convert.ToInt32(site.SITE_ID), SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "", latitude = site.LATITUDE_DD, longitude = site.LONGITUDE_DD }
+                        site => new SitePoint { 
+                            SITE_ID = Convert.ToInt32(site.SITE_ID), 
+                            SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "", 
+                            latitude = site.LATITUDE_DD, 
+                            longitude = site.LONGITUDE_DD 
+                        }
                     ).ToList<SiteBase>();
                 }
 
@@ -445,12 +451,13 @@ namespace STNServices2.Handlers
                                                             (s.LONGITUDE_DD >= longitude - buffer && s.LONGITUDE_DD <= longitude + buffer))
                                                 .AsEnumerable()
                                                 .Select(
-                                                site => new SimpleSite
+                                                site => new SitePoint
                                                 {
                                                     SITE_ID = Convert.ToInt32(site.SITE_ID),
-                                                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : ""
-                                                }
-                                                ).ToList<SiteBase>();
+                                                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
+                                                    latitude = site.LATITUDE_DD,
+                                                    longitude = site.LONGITUDE_DD
+                                                }).ToList<SiteBase>();
 
                     if (sites != null)
                         sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
@@ -681,19 +688,64 @@ namespace STNServices2.Handlers
             }
         }//end httpMethod.GET
 
+        //[HttpOperation(ForUriName = "GetSiteBySiteNo")]
+        //public OperationResult GetSiteBySiteNo(String siteNo)
+        //{
+        //    SITE aSite;
+
+        //    try
+        //    {
+        //        using (STNEntities2 aSTNE = GetRDS())
+        //        {
+
+        //            aSite = aSTNE.SITES.SingleOrDefault(
+        //                                site => site.SITE_NO.ToUpper() == siteNo.ToUpper());
+
+        //            if (aSite != null)
+        //                aSite.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
+
+        //        }//end using
+
+        //        if (aSite != null)
+        //        {
+        //            return new OperationResult.OK { ResponseResource = aSite };
+        //        }
+        //        else
+        //        {
+        //            return new OperationResult.NotFound { };
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        return new OperationResult.BadRequest();
+        //    }
+        //}//end httpMethod.GET
+
         [HttpOperation(ForUriName = "GetSiteBySiteNo")]
-        public OperationResult GetSiteBySiteNo(String siteNo)
+        public OperationResult GetSiteBySiteNo([Optional] String siteNo, [Optional] String siteName, [Optional] String siteId)
         {
-            SITE aSite;
+            SITE aSite = null;
 
             try
             {
                 using (STNEntities2 aSTNE = GetRDS())
                 {
-
-                    aSite = aSTNE.SITES.SingleOrDefault(
+                    if (!string.IsNullOrEmpty(siteNo))
+                    {
+                        aSite = aSTNE.SITES.SingleOrDefault(
                                         site => site.SITE_NO.ToUpper() == siteNo.ToUpper());
-
+                    }
+                    if (!string.IsNullOrEmpty(siteName))
+                    {
+                        aSite = aSTNE.SITES.SingleOrDefault(
+                                        site => site.SITE_NAME.ToUpper() == siteName.ToUpper());
+                    }
+                    if (!string.IsNullOrEmpty(siteId))
+                    {
+                        Int32 sid = Convert.ToInt32(siteId);
+                        aSite = aSTNE.SITES.SingleOrDefault(
+                                        site => site.SITE_ID == sid);
+                    }
                     if (aSite != null)
                         aSite.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
 
@@ -828,7 +880,7 @@ namespace STNServices2.Handlers
             //Return BadRequest if missing required fields
             if (aSite.LONGITUDE_DD >= 0 || aSite.LATITUDE_DD <= 0 || aSite.HDATUM_ID <= 0 ||
                 string.IsNullOrEmpty(aSite.WATERBODY) || string.IsNullOrEmpty(aSite.STATE) ||
-                string.IsNullOrEmpty(aSite.COUNTY))
+                string.IsNullOrEmpty(aSite.COUNTY) || (!aSite.HCOLLECT_METHOD_ID.HasValue || aSite.HCOLLECT_METHOD_ID <= 0))
             {
                 return new OperationResult.BadRequest();
             }
@@ -961,14 +1013,105 @@ namespace STNServices2.Handlers
 
             try
             {
+                
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
+                        //check into cascade delete 
+
                         //fetch the object to be updated (assuming that it exists)
                         SITE ObjectToBeDeleted = aSTNE.SITES.SingleOrDefault(c => c.SITE_ID == entityId);
-                        //delete it
+                        
+                        //Delete all site-related stuff too
+                        //  Files, DataFiles, 
+                        #region site files to delete
+                        List<FILES> deleteFiles = aSTNE.FILES.Where(file => file.SITE_ID == entityId).ToList<FILES>();
+                        List<DATA_FILE> deleteDFs = new List<DATA_FILE>();
+                        //foreach file, get datafile if exists, and peak summary
+                        foreach (FILES f in deleteFiles)
+                        {
+                            if (f.DATA_FILE_ID.HasValue)
+                            {
+                                DATA_FILE df = aSTNE.DATA_FILE.SingleOrDefault(dataf => dataf.DATA_FILE_ID == f.DATA_FILE_ID);
+                                if (df.PEAK_SUMMARY_ID.HasValue)
+                                {
+                                    PEAK_SUMMARY pk = aSTNE.PEAK_SUMMARY.SingleOrDefault(p => p.PEAK_SUMMARY_ID == df.PEAK_SUMMARY_ID);
+                                    aSTNE.PEAK_SUMMARY.DeleteObject(pk);
+                                }
+                                
+                                aSTNE.DATA_FILE.DeleteObject(df);
+                            }
+                            S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+                            
+                            aBucket.DeleteObject(BuildFilePath(f, f.PATH));
+                            aSTNE.FILES.DeleteObject(f);
+                        }
+                        aSTNE.SaveChanges();
+                        #endregion
+                       
+                        //HWMs 
+                        #region hwms
+                        List<HWM> deleteHWMs = aSTNE.HWMs.Where(h => h.SITE_ID == entityId).ToList();
+                        foreach (HWM h in deleteHWMs)
+                        {
+                            if (h.PEAK_SUMMARY_ID.HasValue)
+                            {
+                                PEAK_SUMMARY pk = aSTNE.PEAK_SUMMARY.SingleOrDefault(p => p.PEAK_SUMMARY_ID == h.PEAK_SUMMARY_ID);
+                                aSTNE.PEAK_SUMMARY.DeleteObject(pk);
+                            }
+                            aSTNE.HWMs.DeleteObject(h);
+                        }
+                        aSTNE.SaveChanges();
+                        #endregion
+                        
+                        //Sensors and Sensor statuses
+                        #region sensors and sensor status
+                        List<INSTRUMENT> deleteInst = aSTNE.INSTRUMENTs.Where(i => i.SITE_ID == entityId).ToList();
+                        List<INSTRUMENT_STATUS> eachStat = new List<INSTRUMENT_STATUS>();
+                        foreach (INSTRUMENT instr in deleteInst)
+                        {
+                            eachStat = aSTNE.INSTRUMENT_STATUS.Where(instrStat => instrStat.INSTRUMENT_ID == instr.INSTRUMENT_ID).ToList();
+                            eachStat.ForEach(insSTAT => aSTNE.INSTRUMENT_STATUS.DeleteObject(insSTAT));
+                            aSTNE.INSTRUMENTs.DeleteObject(instr);
+                        }
+                        aSTNE.SaveChanges();
+                        #endregion
+
+                        //Network_name_sites, Network_type_sites
+                        #region Networks
+                        List<NETWORK_NAME_SITE> deleteNNS = aSTNE.NETWORK_NAME_SITE.Where(nns => nns.SITE_ID == entityId).ToList();
+                        deleteNNS.ForEach(nnsite => aSTNE.NETWORK_NAME_SITE.DeleteObject(nnsite));
+                        List<NETWORK_TYPE_SITE> deleteNTS = aSTNE.NETWORK_TYPE_SITE.Where(nts => nts.SITE_ID == entityId).ToList();
+                        deleteNTS.ForEach(ntsite => aSTNE.NETWORK_TYPE_SITE.DeleteObject(ntsite));
+                        aSTNE.SaveChanges();
+                        #endregion
+
+                        //OPs and OP_Control_Identifiers, OP_measurements 
+                        #region OP stuff
+                        List<OBJECTIVE_POINT> deleteOPs = aSTNE.OBJECTIVE_POINT.Where(op => op.SITE_ID == entityId).ToList();
+                        foreach (OBJECTIVE_POINT op in deleteOPs)
+                        {
+                            //get OP_CONTROL_IDENTIFIERS
+                            List<OP_CONTROL_IDENTIFIER> opcontrols = aSTNE.OP_CONTROL_IDENTIFIER.Where(opci => opci.OBJECTIVE_POINT_ID == op.OBJECTIVE_POINT_ID).ToList();
+                            opcontrols.ForEach(o => aSTNE.OP_CONTROL_IDENTIFIER.DeleteObject(o));
+                            //get OP_MEASURMENTS
+                            List<OP_MEASUREMENTS> opmeasures = aSTNE.OP_MEASUREMENTS.Where(opm => opm.OBJECTIVE_POINT_ID == op.OBJECTIVE_POINT_ID).ToList();
+                            opmeasures.ForEach(opmeas => aSTNE.OP_MEASUREMENTS.DeleteObject(opmeas));
+                            aSTNE.OBJECTIVE_POINT.DeleteObject(op);
+                        }
+                        aSTNE.SaveChanges();
+                        #endregion
+
+                        //site_housing
+                        #region sitehousings
+                        List<SITE_HOUSING> deleteSH = aSTNE.SITE_HOUSING.Where(sh => sh.SITE_ID == entityId).ToList();
+                        deleteSH.ForEach(shouse => aSTNE.SITE_HOUSING.DeleteObject(shouse));
+                        aSTNE.SaveChanges();
+                        #endregion
+                        
+                        //lastly delete the site
                         aSTNE.SITES.DeleteObject(ObjectToBeDeleted);
                         aSTNE.SaveChanges();
 
@@ -1137,7 +1280,43 @@ namespace STNServices2.Handlers
 
             return siteNotes;
         }
+        private string BuildFilePath(FILES uploadFile, string fileName)
+        {
+            try
+            {
+                //determine default object name
+                // ../SITE/3043/ex.jpg
+                List<string> objectName = new List<string>();
+                objectName.Add("SITE");
+                objectName.Add(uploadFile.SITE_ID.ToString());
 
+                if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
+                {
+                    // ../SITE/3043/HWM/7956/ex.jpg
+                    objectName.Add("HWM");
+                    objectName.Add(uploadFile.HWM_ID.ToString());
+                }
+                else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
+                {
+                    // ../SITE/3043/DATA_FILE/7956/ex.txt
+                    objectName.Add("DATA_FILE");
+                    objectName.Add(uploadFile.DATA_FILE_ID.ToString());
+                }
+                else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
+                {
+                    // ../SITE/3043/INSTRUMENT/7956/ex.jpg
+                    objectName.Add("INSTRUMENT");
+                    objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
+                }
+                objectName.Add(fileName);
+
+                return string.Join("/", objectName);
+            }
+            catch
+            {
+                return null;
+            }
+        }
         #endregion
         #endregion
     }//end class SiteHandler

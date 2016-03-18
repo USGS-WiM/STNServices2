@@ -421,6 +421,10 @@
     <Property Name="NOTES" Type="nvarchar2" MaxLength="255" />
     <Property Name="TIME_ZONE" Type="varchar2" MaxLength="8" />
     <Property Name="MEMBER_ID" Type="number" />
+    <Property Name="SENSOR_ELEVATION" Type="number" />
+    <Property Name="WS_ELEVATION" Type="number" />
+    <Property Name="GS_ELEVATION" Type="number" />
+    <Property Name="VDATUM_ID" Type="number" />
   </EntityType>
   <EntityType Name="KEYWORD">
     <Key>
@@ -557,6 +561,7 @@
     <Property Name="WATER_SURFACE" Type="number" />
     <Property Name="GROUND_SURFACE" Type="number" />
     <Property Name="TYPE" Type="nvarchar2" MaxLength="30" />
+    <Property Name="OFFSET_CORRECTION" Type="number" />
   </EntityType>
   <EntityType Name="OP_QUALITY">
     <Key>
