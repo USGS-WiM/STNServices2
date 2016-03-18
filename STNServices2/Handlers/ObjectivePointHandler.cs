@@ -29,7 +29,7 @@
 
 using STNServices2.Resources;
 using STNServices2.Authentication;
-
+using STNServices2.Utilities;
 using OpenRasta.Web;
 using OpenRasta.Security;
 using OpenRasta.Diagnostics;
@@ -45,7 +45,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Reflection;
 using System.Web;
-
+using System.Configuration;
 
 namespace STNServices2.Handlers
 {
@@ -302,13 +302,10 @@ namespace STNServices2.Handlers
                         {
                             foreach (FILES f in opFiles)
                             {
-                                if (f.DATA_FILE_ID.HasValue)
-                                {
-                                    DATA_FILE df = aSTNE.DATA_FILE.Where(x => x.DATA_FILE_ID == f.DATA_FILE_ID).FirstOrDefault();
-                                    aSTNE.DATA_FILE.DeleteObject(df);
-                                    aSTNE.SaveChanges();
-                                }
+
                                 //delete the file item from s3
+                                S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+                                aBucket.DeleteObject(BuildFilePath(f, f.PATH));
 
                                 //delete the file
                                 aSTNE.FILES.DeleteObject(f);
@@ -386,6 +383,44 @@ namespace STNServices2.Handlers
                 return false;
             }
         }
+        private string BuildFilePath(FILES uploadFile, string fileName)
+        {
+            try
+            {
+                //determine default object name
+                // ../SITE/3043/ex.jpg
+                List<string> objectName = new List<string>();
+                objectName.Add("SITE");
+                objectName.Add(uploadFile.SITE_ID.ToString());
+
+                if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
+                {
+                    // ../SITE/3043/HWM/7956/ex.jpg
+                    objectName.Add("HWM");
+                    objectName.Add(uploadFile.HWM_ID.ToString());
+                }
+                else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
+                {
+                    // ../SITE/3043/DATA_FILE/7956/ex.txt
+                    objectName.Add("DATA_FILE");
+                    objectName.Add(uploadFile.DATA_FILE_ID.ToString());
+                }
+                else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
+                {
+                    // ../SITE/3043/INSTRUMENT/7956/ex.jpg
+                    objectName.Add("INSTRUMENT");
+                    objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
+                }
+                objectName.Add(fileName);
+
+                return string.Join("/", objectName);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        
         #endregion
     }//end class ObjectivePointHandler
 }//end namespace

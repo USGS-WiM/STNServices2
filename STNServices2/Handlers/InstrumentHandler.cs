@@ -31,6 +31,7 @@
 
 using STNServices2.Resources;
 using STNServices2.Authentication;
+using STNServices2.Utilities;
 
 using OpenRasta.Web;
 using OpenRasta.Security;
@@ -48,6 +49,7 @@ using System.ServiceModel.Syndication;
 using System.Reflection;
 using System.Web;
 using System.Runtime.InteropServices;
+using System.Configuration;
 
 
 namespace STNServices2.Handlers
@@ -726,7 +728,8 @@ namespace STNServices2.Handlers
             {
                 return new OperationResult.BadRequest();
             }
-        }//end Get        
+        }//end Get       
+
         #endregion
 
         #region PostMethods
@@ -858,6 +861,27 @@ namespace STNServices2.Handlers
                 {
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
+                        //delete files associated with this sensor
+                        List<FILES> opFiles = aSTNE.FILES.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
+                        if (opFiles.Count >= 1)
+                        {
+                            foreach (FILES f in opFiles)
+                            {
+                                //delete data files to this file
+                                if (f.DATA_FILE_ID.HasValue)
+                                {
+                                    DATA_FILE df = aSTNE.DATA_FILE.Where(x => x.DATA_FILE_ID == f.DATA_FILE_ID).FirstOrDefault();
+                                    aSTNE.DATA_FILE.DeleteObject(df);
+                                    aSTNE.SaveChanges();
+                                }
+                                //delete the file item from s3
+                                S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+                                aBucket.DeleteObject(BuildFilePath(f, f.PATH));
+                                //delete the file
+                                aSTNE.FILES.DeleteObject(f);
+                                aSTNE.SaveChanges();
+                            }
+                        }
                         //first delete the INSTRUMENT_STATUSes for this INSTRUMENT, then delete the INSTRUMENT
                         List<INSTRUMENT_STATUS> stats = aSTNE.INSTRUMENT_STATUS.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
 
@@ -868,6 +892,8 @@ namespace STNServices2.Handlers
                         INSTRUMENT ObjectToBeDeleted = aSTNE.INSTRUMENTs.SingleOrDefault(instr => instr.INSTRUMENT_ID == instrumentId);
                         //delete it
                         aSTNE.INSTRUMENTs.DeleteObject(ObjectToBeDeleted);
+
+                        //delete instrument files
 
                         aSTNE.SaveChanges();
 
@@ -930,24 +956,37 @@ namespace STNServices2.Handlers
 
         private List<Instrument_Status> getInstStats(decimal instrumentId)
         {
-            List<Instrument_Status> instrumentStatusList;
+            List<Instrument_Status> instrumentStatusList = new List<Instrument_Status>();
 
             using (STNEntities2 aSTNE = GetRDS())
             {
-                instrumentStatusList = aSTNE.INSTRUMENT_STATUS.AsEnumerable()
-                                     .Where(instStat => instStat.INSTRUMENT_ID == instrumentId)
-                                     .OrderByDescending(instStat => instStat.TIME_STAMP)
-                                     .Select(i => new Instrument_Status
-                                     {
-                                         INSTRUMENT_STATUS_ID = i.INSTRUMENT_STATUS_ID,
-                                         STATUS_TYPE_ID = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE_ID.Value : 0,
-                                         Status = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE.STATUS : "",
-                                         INSTRUMENT_ID = i.INSTRUMENT_ID != null ? i.INSTRUMENT_ID.Value : 0,
-                                         TIME_STAMP = i.TIME_STAMP.Value,
-                                         TIME_ZONE = i.TIME_ZONE,
-                                         NOTES = i.NOTES,
-                                         MEMBER_ID = i.MEMBER_ID != null ? i.MEMBER_ID.Value : 0
-                                     }).ToList();
+                try
+                {
+                    instrumentStatusList = aSTNE.INSTRUMENT_STATUS.AsEnumerable()
+                                         .Where(instStat => instStat.INSTRUMENT_ID == instrumentId)
+                                         .OrderByDescending(instStat => instStat.TIME_STAMP)
+                                         .Select(i => new Instrument_Status
+                                         {
+                                             INSTRUMENT_STATUS_ID = i.INSTRUMENT_STATUS_ID,
+                                             STATUS_TYPE_ID = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE_ID.Value : 0,
+                                             Status = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE.STATUS : "",
+                                             INSTRUMENT_ID = i.INSTRUMENT_ID != null ? i.INSTRUMENT_ID.Value : 0,
+                                             TIME_STAMP = i.TIME_STAMP.Value,
+                                             TIME_ZONE = i.TIME_ZONE,
+                                             NOTES = i.NOTES,
+                                             MEMBER_ID = i.MEMBER_ID != null ? i.MEMBER_ID.Value : 0,
+                                             SENSOR_ELEVATION = i.SENSOR_ELEVATION,
+                                             WS_ELEVATION = i.WS_ELEVATION,
+                                             GS_ELEVATION = i.GS_ELEVATION,
+                                             VDATUM_ID = i.VDATUM_ID,
+                                             VDatum = i.VDATUM_ID.HasValue && i.VDATUM_ID > 0 ? i.VERTICAL_DATUMS.DATUM_ABBREVIATION : ""
+                                         }).ToList();
+                }
+                catch
+                {
+                    return instrumentStatusList;
+                }
+
             }
             return instrumentStatusList;
         }
@@ -1054,6 +1093,43 @@ namespace STNServices2.Handlers
                 }
             }
             return dt;
+        }
+        private string BuildFilePath(FILES uploadFile, string fileName)
+        {
+            try
+            {
+                //determine default object name
+                // ../SITE/3043/ex.jpg
+                List<string> objectName = new List<string>();
+                objectName.Add("SITE");
+                objectName.Add(uploadFile.SITE_ID.ToString());
+
+                if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
+                {
+                    // ../SITE/3043/HWM/7956/ex.jpg
+                    objectName.Add("HWM");
+                    objectName.Add(uploadFile.HWM_ID.ToString());
+                }
+                else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
+                {
+                    // ../SITE/3043/DATA_FILE/7956/ex.txt
+                    objectName.Add("DATA_FILE");
+                    objectName.Add(uploadFile.DATA_FILE_ID.ToString());
+                }
+                else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
+                {
+                    // ../SITE/3043/INSTRUMENT/7956/ex.jpg
+                    objectName.Add("INSTRUMENT");
+                    objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
+                }
+                objectName.Add(fileName);
+
+                return string.Join("/", objectName);
+            }
+            catch
+            {
+                return null;
+            }
         }
         #endregion
 

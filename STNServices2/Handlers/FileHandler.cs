@@ -577,7 +577,7 @@ namespace STNServices2.Handlers
         public OperationResult Post(FILES aFile)
         {
             //Return BadRequest if missing required fields
-            if ((aFile.SITE_ID <= 0) && (aFile.HWM_ID <= 0) && (aFile.INSTRUMENT_ID <= 0) && (aFile.DATA_FILE_ID <= 0))
+            if (aFile.SITE_ID <= 0)
             { return new OperationResult.BadRequest(); }
 
             try
@@ -931,11 +931,11 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.DELETE, ForUriName = "DeleteFile")]
-        public OperationResult Delete(Int32 fileId)
+        [HttpOperation(HttpMethod.DELETE)]
+        public OperationResult Delete(Int32 entityId)
         {
             //Return BadRequest if missing required fields
-            if (fileId <= 0)
+            if (entityId <= 0)
             {
                 return new OperationResult.BadRequest();
             }
@@ -948,7 +948,10 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        FILES ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == fileId);
+                        FILES ObjectToBeDeleted = aSTNE.FILES.SingleOrDefault(f => f.FILE_ID == entityId);
+                        
+                        S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+                        aBucket.DeleteObject(BuildFilePath(ObjectToBeDeleted,ObjectToBeDeleted.PATH));
 
                         //see if a datafile needs to be deleted
                         if (ObjectToBeDeleted.DATA_FILE_ID.HasValue)
@@ -961,7 +964,7 @@ namespace STNServices2.Handlers
                         aSTNE.FILES.DeleteObject(ObjectToBeDeleted);
 
                         //remove any keywords
-                        removeKeywords(aSTNE.FILE_KEYWORD, fileId, ObjectToBeDeleted.FILE_KEYWORD.Select(k => k.KEYWORD).ToList());
+                        removeKeywords(aSTNE.FILE_KEYWORD, entityId, ObjectToBeDeleted.FILE_KEYWORD.Select(k => k.KEYWORD).ToList());
 
                         aSTNE.SaveChanges();
 
@@ -1035,6 +1038,7 @@ namespace STNServices2.Handlers
                 return null;
             }
         }//end HttpMethod.GET
+        
         private string BuildFilePath(FILES uploadFile, string fileName)
         {
             try

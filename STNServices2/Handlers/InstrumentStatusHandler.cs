@@ -256,6 +256,10 @@ namespace STNServices2.Handlers
                         instrumentStatusToUpdate.NOTES = anInstrumentStatus.NOTES;
                         instrumentStatusToUpdate.MEMBER_ID = anInstrumentStatus.MEMBER_ID;
                         instrumentStatusToUpdate.TIME_ZONE = anInstrumentStatus.TIME_ZONE;
+                        instrumentStatusToUpdate.SENSOR_ELEVATION = anInstrumentStatus.SENSOR_ELEVATION;
+                        instrumentStatusToUpdate.GS_ELEVATION = anInstrumentStatus.GS_ELEVATION;
+                        instrumentStatusToUpdate.WS_ELEVATION = anInstrumentStatus.WS_ELEVATION;
+                        instrumentStatusToUpdate.VDATUM_ID = anInstrumentStatus.VDATUM_ID;
 
                         aSTNE.SaveChanges();
 
@@ -328,7 +332,11 @@ namespace STNServices2.Handlers
                                                               (DateTime.Equals(e.TIME_STAMP.Value, thisEntity.TIME_STAMP.Value) || !thisEntity.TIME_STAMP.HasValue) &&
                                                               (!thisEntity.MEMBER_ID.HasValue || e.MEMBER_ID == thisEntity.MEMBER_ID || thisEntity.MEMBER_ID <= 0) &&
                                                               (string.Equals(e.NOTES.ToUpper(), thisEntity.NOTES.ToUpper()) || string.IsNullOrEmpty(thisEntity.NOTES)) &&
-                                                               (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)));
+                                                               (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)) &&
+                                                               thisEntity.SENSOR_ELEVATION == thisEntity.SENSOR_ELEVATION &&
+                                                               thisEntity.WS_ELEVATION == thisEntity.WS_ELEVATION &&
+                                                               thisEntity.GS_ELEVATION == thisEntity.GS_ELEVATION &&
+                                                               thisEntity.VDATUM_ID == thisEntity.VDATUM_ID);
 
 
                 if (existingEntity == null)

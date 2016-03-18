@@ -386,7 +386,7 @@ namespace STNServices2.Handlers
         public OperationResult Post(DATA_FILE aDataFile)
         {
             //Return BadRequest if missing required fields
-            if ((aDataFile.INSTRUMENT_ID <= 0 || !aDataFile.INSTRUMENT_ID.HasValue)) //.DATA_FILE_ID <= 0))
+            if ((aDataFile.INSTRUMENT_ID <= 0 || !aDataFile.INSTRUMENT_ID.HasValue) || (aDataFile.PROCESSOR_ID <= 0 || !aDataFile.PROCESSOR_ID.HasValue)) //.DATA_FILE_ID <= 0))
             { return new OperationResult.BadRequest(); }
 
             try
@@ -478,11 +478,11 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.DELETE, ForUriName = "DeleteInstrument")]
-        public OperationResult Delete(Int32 dataFileId)
+        [HttpOperation(HttpMethod.DELETE)]
+        public OperationResult Delete(Int32 entityId)
         {
             //Return BadRequest if missing required fields
-            if (dataFileId <= 0)
+            if (entityId <= 0)
             {
                 return new OperationResult.BadRequest();
             }
@@ -495,7 +495,7 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        DATA_FILE ObjectToBeDeleted = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == dataFileId);
+                        DATA_FILE ObjectToBeDeleted = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == entityId);
                         //delete it
                         aSTNE.DATA_FILE.DeleteObject(ObjectToBeDeleted);
 
