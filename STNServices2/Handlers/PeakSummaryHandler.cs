@@ -51,7 +51,7 @@ using System.Runtime.InteropServices;
 
 namespace STNServices2.Handlers
 {
-    public class PeakSummaryHandler : HandlerBase
+    public class PeakSummaryHandler : STNHandlerBase
     {
         //needed for peakDownloadable populating of related site
         public SITE globalPeakSite = new SITE();

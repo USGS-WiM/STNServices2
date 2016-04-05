@@ -46,7 +46,7 @@ using System.Web;
 
 namespace STNServices2.Handlers
 {
-    public class KeywordHandler : HandlerBase
+    public class KeywordHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName

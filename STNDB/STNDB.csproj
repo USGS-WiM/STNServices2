@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D984786E-68F6-430D-A16B-8B3028A51621}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>STNDB</RootNamespace>
+    <AssemblyName>STNDB</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.0.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.3.0.5\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.0.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.0.5\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WiMHypermedia, Version=1.0.5938.14288, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMHypermedia.1.0.5938.14288\lib\net45\WiMHypermedia.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="agency.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="approval.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="contact.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="contact_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="county.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="data_file.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="deployment_priority.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="deployment_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="events.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="event_status.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="event_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="file.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="file_keyword.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="file_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="horizontal_collect_methods.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="horizontal_datums.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="housing_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hwm.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hwm_qualities.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hwm_types.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="instrument.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="instrument_status.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="instr_collection_conditions.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="landownercontact.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="locatortype.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="marker.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="member.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="network_name.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="network_name_site.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="network_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="network_type_site.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="objective_point.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="objective_point_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="op_control_identifier.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="op_measurements.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="op_quality.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="peak_summary.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reporting_metrics.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="reportmetric_contact.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="role.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sensor_brand.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sensor_deployment.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sensor_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="site.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="site_housing.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="source.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="state.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="status_type.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="STNEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>STNEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="STNEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="STNEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>STNEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="STNDBEntitiesContext.cs" />
+    <Compile Include="STNEntitiesIEquality.cs" />
+    <Compile Include="STNEntitiesHypermedia.cs" />
+    <Compile Include="vertical_collect_methods.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vertical_datums.cs">
+      <DependentUpon>STNEntities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="STNEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>STNEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="STNEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>STNEntities.edmx</DependentUpon>
+      <LastGenOutput>STNEntities.Context.cs</LastGenOutput>
+    </None>
+    <None Include="STNEntities.edmx.diagram">
+      <DependentUpon>STNEntities.edmx</DependentUpon>
+    </None>
+    <None Include="STNEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>STNEntities.edmx</DependentUpon>
+      <LastGenOutput>STNEntities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
