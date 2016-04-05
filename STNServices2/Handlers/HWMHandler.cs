@@ -6,7 +6,7 @@
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2012 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jon Baier USGS Wisconsin Internet Mapping
 //              Jeremy K. Newson USGS Wisconsin Internet Mapping
@@ -22,6 +22,7 @@
 //     
 
 #region Comments
+// 03.29.16 - JKN - Major update.
 // 02.07.13 - JKN - Added query to get HWMs by eventId and siteID
 // 01.31.13 - JKN - Get(string boolean) method to return only approved or non approved hwms
 // 01.28.13 - JKN - Update POST handler to check if table is empty before assigning a key
@@ -37,41 +38,25 @@
 // 01.19.11 - JB - Created
 #endregion
 
-using STNServices2.Resources;
-using STNServices2.Authentication;
-using STNServices2.Utilities;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Reflection;
-using System.Web;
 using System.Runtime.InteropServices;
-using System.Configuration;
+using STNServices2.Utilities.ServiceAgent;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
+
+using STNServices2.Authentication;
+using WiM.Authentication;
+using OpenRasta.Security;
 
 namespace STNServices2.Handlers
 {
 
-    public class HWMHandler : HandlerBase
+    public class HWMHandler : STNHandlerBase
     {
-        #region Properties
-        public override string entityName
-        {
-            get { return "HWMs"; }
-        }
-        #endregion
-        #region Routed Methods
-
         #region GetMethods
 
         [HttpOperation(HttpMethod.GET)]
@@ -1045,7 +1030,6 @@ namespace STNServices2.Handlers
         }//end HTTP.DELETE
         #endregion
 
-        #endregion
 
         #region Helper Methods
 
@@ -1073,47 +1057,6 @@ namespace STNServices2.Handlers
                 return false;
             }
         }//end PostHWMLayer
-        private bool Exists(ObjectSet<HWM> entityRDS, ref HWM anEntity)
-        {
-            HWM existingEntity;
-            HWM thisEntity = anEntity;
-            //check if it exists
-            try
-            {//TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
-                //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
-
-                existingEntity = entityRDS.FirstOrDefault(e => e.HWM_TYPE_ID == thisEntity.HWM_TYPE_ID &&
-                                                               e.HWM_QUALITY_ID == thisEntity.HWM_QUALITY_ID &&
-                                                               e.SITE_ID.Value == thisEntity.SITE_ID.Value &&
-                                                               (e.EVENT_ID == thisEntity.EVENT_ID || thisEntity.EVENT_ID <= 0 || thisEntity.EVENT_ID == null) &&
-                                                               DateTime.Equals(e.FLAG_DATE.Value, thisEntity.FLAG_DATE.Value) &&
-                                                               (string.Equals(e.WATERBODY.ToUpper(), thisEntity.WATERBODY.ToUpper()) || string.IsNullOrEmpty(thisEntity.WATERBODY)) &&
-                                                               (string.Equals(e.BANK.ToUpper(), thisEntity.BANK.ToUpper()) || string.IsNullOrEmpty(thisEntity.BANK)) &&
-                                                               (e.LATITUDE_DD.Value == thisEntity.LATITUDE_DD.Value || thisEntity.LATITUDE_DD.Value <= 0 || !thisEntity.LATITUDE_DD.HasValue) &&
-                                                               (e.LONGITUDE_DD.Value == thisEntity.LONGITUDE_DD.Value || thisEntity.LONGITUDE_DD.Value <= 0 || !thisEntity.LONGITUDE_DD.HasValue) &&
-                                                               (e.ELEV_FT.Value == thisEntity.ELEV_FT.Value || thisEntity.ELEV_FT.Value <= 0 || !thisEntity.ELEV_FT.HasValue) &&
-                                                               (e.VDATUM_ID.Value == thisEntity.VDATUM_ID.Value || thisEntity.VDATUM_ID.Value <= 0 || !thisEntity.VDATUM_ID.HasValue) &&
-                                                               (e.HDATUM_ID.Value == thisEntity.HDATUM_ID.Value || thisEntity.HDATUM_ID.Value <= 0 || !thisEntity.HDATUM_ID.HasValue) &&
-                                                               (e.FLAG_MEMBER_ID.Value == thisEntity.FLAG_MEMBER_ID.Value || thisEntity.FLAG_MEMBER_ID.Value <= 0 || !thisEntity.FLAG_MEMBER_ID.HasValue) &&
-                                                               (e.VCOLLECT_METHOD_ID.Value == thisEntity.VCOLLECT_METHOD_ID.Value || thisEntity.VCOLLECT_METHOD_ID.Value <= 0 || !thisEntity.VCOLLECT_METHOD_ID.HasValue) &&
-                                                               (e.APPROVAL_ID.Value == thisEntity.APPROVAL_ID.Value || thisEntity.APPROVAL_ID.Value <= 0 || !thisEntity.APPROVAL_ID.HasValue) &&
-                                                               (e.MARKER_ID.Value == thisEntity.MARKER_ID.Value || thisEntity.MARKER_ID.Value <= 0 || !thisEntity.MARKER_ID.HasValue) &&
-                                                               (e.HEIGHT_ABOVE_GND.Value == thisEntity.HEIGHT_ABOVE_GND.Value || thisEntity.HEIGHT_ABOVE_GND.Value <= 0 || !thisEntity.HEIGHT_ABOVE_GND.HasValue));
-
-
-                if (existingEntity == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingEntity;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
 
         #region hwmDownloadable calls
         private string MadeIt()

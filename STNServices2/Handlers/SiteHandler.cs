@@ -58,7 +58,7 @@ using System.Text.RegularExpressions;
 
 namespace STNServices2.Handlers
 {
-    public class SiteHandler : HandlerBase
+    public class SiteHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName

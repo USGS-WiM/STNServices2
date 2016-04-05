@@ -55,7 +55,7 @@ using System.Configuration;
 namespace STNServices2.Handlers
 {
 
-    public class InstrumentHandler : HandlerBase
+    public class InstrumentHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName
