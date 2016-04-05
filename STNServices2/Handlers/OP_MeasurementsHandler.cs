@@ -47,7 +47,7 @@ using System.Web;
 
 namespace STNServices2.Handlers
 {
-    public class OP_MeasurementsHandler : HandlerBase
+    public class OP_MeasurementsHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName

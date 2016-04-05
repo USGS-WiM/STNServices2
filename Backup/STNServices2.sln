@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STNServices2", "STNServices2\STNServices2.csproj", "{87DD0DDB-CEC1-42F4-A7A8-B9625CA03685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRasta", "..\openrasta-2.1\src\openrasta-core\src\OpenRasta\OpenRasta.csproj", "{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRasta.Hosting.AspNet", "..\openrasta-2.1\src\openrasta-aspnet\src\OpenRasta.Hosting.AspNet\OpenRasta.Hosting.AspNet.csproj", "{FE290BB8-9CB4-454E-89BE-E047674BB34F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87DD0DDB-CEC1-42F4-A7A8-B9625CA03685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87DD0DDB-CEC1-42F4-A7A8-B9625CA03685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87DD0DDB-CEC1-42F4-A7A8-B9625CA03685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87DD0DDB-CEC1-42F4-A7A8-B9625CA03685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE290BB8-9CB4-454E-89BE-E047674BB34F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE290BB8-9CB4-454E-89BE-E047674BB34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE290BB8-9CB4-454E-89BE-E047674BB34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE290BB8-9CB4-454E-89BE-E047674BB34F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

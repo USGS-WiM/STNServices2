@@ -49,7 +49,7 @@ using System.Web;
 
 namespace STNServices2.Handlers
 {
-    public class ReportingMetricsHandler : HandlerBase
+    public class ReportingMetricsHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName
