@@ -1,17 +1,30 @@
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.pdb
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\AWSSDK.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Ionic.Zip.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Newtonsoft.Json.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.Hosting.AspNet.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\RestSharp.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.Hosting.AspNet.pdb
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.pdb
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\AWSSDK.pdb
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Ionic.Zip.xml
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.xml
-D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.csprojResolveAssemblyReference.cache
-D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.dll
-D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.pdb
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\STNServices2.dll.config
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\STNServices2.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\STNServices2.pdb
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\AWSSDK.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework.SqlServer.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework6.Npgsql.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Ionic.Zip.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Newtonsoft.Json.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Npgsql.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\OpenRasta.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\OpenRasta.Hosting.AspNet.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\RestSharp.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\ServiceStack.Text.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\STNDB.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\WiMHypermedia.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\WiMServices.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\STNDB.pdb
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\AWSSDK.pdb
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework.SqlServer.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\EntityFramework6.Npgsql.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Ionic.Zip.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Newtonsoft.Json.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\Npgsql.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\RestSharp.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\ServiceStack.Text.xml
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.csprojResolveAssemblyReference.cache
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.dll
+C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.pdb

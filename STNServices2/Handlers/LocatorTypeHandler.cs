@@ -46,7 +46,7 @@ using System.Web;
 
 namespace STNServices2.Handlers
 {
-    public class LocatorTypeHandler : HandlerBase
+    public class LocatorTypeHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName
