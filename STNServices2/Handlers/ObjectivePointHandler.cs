@@ -49,7 +49,7 @@ using System.Configuration;
 
 namespace STNServices2.Handlers
 {
-    public class ObjectivePointHandler : HandlerBase
+    public class ObjectivePointHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName
