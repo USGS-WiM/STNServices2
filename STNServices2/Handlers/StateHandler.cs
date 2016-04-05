@@ -52,7 +52,7 @@ using System.Web;
 namespace STNServices2.Handlers
 {
 
-    public class StateHandler : HandlerBase
+    public class StateHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName

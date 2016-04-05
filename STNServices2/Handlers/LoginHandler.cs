@@ -46,7 +46,7 @@ using System.Web;
 
 namespace STNServices2.Handlers
 {
-    public class LoginHandler : HandlerBase
+    public class LoginHandler : STNHandlerBase
     {
         #region Properties
         public override string entityName
