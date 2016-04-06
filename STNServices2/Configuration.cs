@@ -99,6 +99,7 @@ namespace STNServices2
         public static string sourceResource = "Sources";
         public static string stateResource = "States";
 
+        public static string verticalDatumResource = "VerticalDatums";
         #endregion
 
         public void Configure()
@@ -164,7 +165,7 @@ namespace STNServices2
                 //AddSTATE_Resources();
                 //AddSTATUS_TYPE_Resources();
                 //AddVERTICAL_COLLECTION_METHOD_Resources();
-                //AddVERTICAL_DATUM_Resources();
+                AddVERTICAL_DATUM_Resources();
 
             } //End using OpenRastaConfiguration.Manual
         }
@@ -1252,26 +1253,26 @@ namespace STNServices2
 //            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
 //        }//end AddVERTICAL_COLLECTION_METHOD_Resources
-//        private void AddVERTICAL_DATUM_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<VERTICAL_DATUMS>>()
-//            .AtUri("/VerticalDatums")
-//            .HandledBy<VerticalDatumHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        private void AddVERTICAL_DATUM_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<vertical_datums>>()
+            .AtUri(verticalDatumResource)
+            .HandledBy<VerticalDatumHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<VERTICAL_DATUMS>()
-//            .AtUri("/VerticalDatums/{entityId}")
-//            .And.AtUri("/HWMs/{hwmId}/vDatum").Named("GetHWMVDatum")
-//            .And.AtUri("/ObjectivePoints/{objectivePointId}/vDatum").Named("getOPVDatum")
-//            .HandledBy<VerticalDatumHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<vertical_datums>()
+            .AtUri(verticalDatumResource+"/{entityId}")
+            .And.AtUri("/HWMs/{hwmId}/vDatum").Named("GetHWMVDatum")
+            .And.AtUri("/ObjectivePoints/{objectivePointId}/vDatum").Named("getOPVDatum")
+            .HandledBy<VerticalDatumHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddVERTICAL_DATUM_Resources
+        }//end AddVERTICAL_DATUM_Resources
 
         #endregion
 
