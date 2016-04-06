@@ -111,6 +111,7 @@
         <AssociationConnector Association="STNNEWModel.sourcefile" />
         <AssociationConnector Association="STNNEWModel.file_typefile" />
         <AssociationConnector Association="STNNEWModel.statecounty" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumsobjective_point" />
       </Diagram>
       <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="65" >
         <EntityTypeShape EntityType="STNNEWModel.events" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
@@ -284,6 +285,11 @@
         <EntityTypeShape EntityType="STNNEWModel.state" Width="1.5" PointX="3.5" PointY="1" />
         <EntityTypeShape EntityType="STNNEWModel.county" Width="1.5" PointX="5.5" PointY="1" />
         <AssociationConnector Association="STNNEWModel.statecounty" />
+      </Diagram>
+      <Diagram DiagramId="7a48ee129f2b430699fbd66798e27bba" Name="objective_points" >
+        <EntityTypeShape EntityType="STNNEWModel.objective_point" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="2.75" PointY="0.75" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumsobjective_point" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

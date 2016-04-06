@@ -37,5 +37,6 @@ namespace STNDB
         public virtual site site { get; set; }
         public virtual objective_point_type objective_point_type { get; set; }
         public virtual op_quality op_quality { get; set; }
+        public virtual vertical_datums vertical_datums { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace STNDB
         public vertical_datums()
         {
             this.hwms = new HashSet<hwm>();
+            this.objective_point = new HashSet<objective_point>();
         }
     
         public int datum_id { get; set; }
@@ -26,5 +27,7 @@ namespace STNDB
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hwm> hwms { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<objective_point> objective_point { get; set; }
     }
 }
