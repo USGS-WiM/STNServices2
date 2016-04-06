@@ -403,6 +403,32 @@ namespace STNServices2.Test
             bool success = this.DELETERequest<housing_type>(host + Configuration.housingtypeResource + "/" + postObj.housing_type_id, basicAuth);
             Assert.IsTrue(success);
         }//end method
+
+        [TestMethod]
+        public void VerticalDatumRequest()
+        {
+            //GET LIST
+            List<vertical_datums> RequestList = this.GETRequest<List<vertical_datums>>(host + Configuration.verticalDatumResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            vertical_datums postObj;
+            postObj = this.POSTRequest<vertical_datums>(host + Configuration.verticalDatumResource, new vertical_datums() { datum_name = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.datum_id.ToString());
+
+            //GET POSTed item
+            vertical_datums RequestObj = this.GETRequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.datum_name = "put-test";
+            vertical_datums putObj = this.PUTRequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<housing_type>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
         #endregion
     }
 }

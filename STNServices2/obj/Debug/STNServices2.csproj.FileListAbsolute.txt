@@ -28,3 +28,33 @@ C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\bin\
 C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.csprojResolveAssemblyReference.cache
 C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.dll
 C:\WIM\Documents\Visual Studio\Projects\WiMGitHub\STNServices2\STNServices2\obj\Debug\STNServices2.pdb
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.dll.config
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.pdb
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\AWSSDK.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework.SqlServer.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework6.Npgsql.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Ionic.Zip.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Newtonsoft.Json.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Npgsql.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\OpenRasta.Hosting.AspNet.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\RestSharp.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNDB.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\WiMHypermedia.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\WiMServices.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNDB.pdb
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\AWSSDK.pdb
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework.SqlServer.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\EntityFramework6.Npgsql.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Ionic.Zip.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Newtonsoft.Json.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\Npgsql.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\RestSharp.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.xml
+D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.csprojResolveAssemblyReference.cache
+D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.dll
+D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.pdb

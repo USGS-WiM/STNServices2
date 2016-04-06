@@ -76,4 +76,9 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
+
+    public partial class vertical_datums : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
 }

@@ -125,6 +125,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\VerticalDatumHandler.cs" />
     <Compile Include="Security\STNAuthenticationProvider.cs" />
     <Compile Include="Security\STNAuthorizerContributer.cs" />
     <Compile Include="Security\STNRequiresRoleAttribute.cs" />
