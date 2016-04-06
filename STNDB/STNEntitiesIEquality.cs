@@ -405,4 +405,27 @@ namespace STNDB
                    this.approval_id.GetHashCode()+ this.marker_id.GetHashCode()+ this.height_above_gnd.GetHashCode();
         }
     }
+
+    public partial class vertical_datums:IEquatable<vertical_datums>
+    {
+
+        public bool Equals(vertical_datums other)
+        {
+            return (string.IsNullOrEmpty(other.datum_name) || string.Equals(this.datum_name, other.datum_name, StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(other.datum_abbreviation) || string.Equals(this.datum_abbreviation, other.datum_abbreviation, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as vertical_datums);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.datum_name + this.datum_abbreviation).GetHashCode();
+        }
+    }
 }
