@@ -50,8 +50,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<site>().ToList();
-
-
+                    
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -626,6 +625,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<site>().FirstOrDefault(e => e.site_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -649,6 +649,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<objective_point>().FirstOrDefault(op => op.objective_point_id == objectivePointId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }
 
@@ -671,6 +672,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -694,6 +696,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -717,6 +720,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -742,17 +746,20 @@ namespace STNServices2.Handlers
                     if (!string.IsNullOrEmpty(siteNo))
                     {
                         anEntity = sa.Select<site>().SingleOrDefault(s => string.Equals(s.site_no, siteNo, StringComparison.OrdinalIgnoreCase));
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
                     if (!string.IsNullOrEmpty(siteName))
                     {
                         anEntity = sa.Select<site>().SingleOrDefault(s => string.Equals(s.site_name, siteName, StringComparison.OrdinalIgnoreCase));
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
                     if (!string.IsNullOrEmpty(siteId))
                     {
                         Int32 sid = Convert.ToInt32(siteId);
                         anEntity = sa.Select<site>().SingleOrDefault(s => s.site_id == sid);
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
 

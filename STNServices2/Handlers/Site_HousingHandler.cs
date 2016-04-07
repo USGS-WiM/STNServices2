@@ -71,6 +71,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<site_housing>().FirstOrDefault(e => e.site_housing_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using            
