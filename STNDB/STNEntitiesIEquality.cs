@@ -406,6 +406,154 @@ namespace STNDB
         }
     }
 
+    public partial class site : IEquatable<site>
+    {
+        public bool Equals(site other)
+        {
+            return (this.latitude_dd == other.latitude_dd && this.longitude_dd == other.longitude_dd &&
+                this.hdatum_id == other.hdatum_id && (string.Equals(this.waterbody, other.waterbody , StringComparison.OrdinalIgnoreCase)) &&
+                (string.Equals(this.state, other.state , StringComparison.OrdinalIgnoreCase)) &&
+                (string.Equals(this.county, other.county, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.address) || string.Equals(this.address, other.address, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.zip) || string.Equals(this.zip, other.zip, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.other_sid) || string.Equals(this.other_sid, other.other_sid, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.usgs_sid) || string.Equals(this.usgs_sid, other.usgs_sid, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.noaa_sid) || string.Equals(this.noaa_sid, other.noaa_sid, StringComparison.OrdinalIgnoreCase)) &&
+                (other.drainage_area_sqmi == null || this.drainage_area_sqmi == other.drainage_area_sqmi || other.drainage_area_sqmi <= 0) &&
+                (other.landownercontact_id == null || this.landownercontact_id == other.landownercontact_id || other.landownercontact_id <= 0) &&
+                (other.hcollect_method_id == null || this.hcollect_method_id == other.hcollect_method_id || other.hcollect_method_id <= 0));            
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as site);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.site_description + this.latitude_dd + this.longitude_dd + this.hdatum_id + this.hcollect_method_id + 
+                this.state + this.county + this.waterbody + this.member_id).GetHashCode();
+        }
+    }
+
+    public partial class site_housing : IEquatable<site_housing>
+    {
+
+        public bool Equals(site_housing other)
+        {
+            return (this.site_id == other.site_id && this.housing_type_id == other.housing_type_id &&
+                this.length == other.length && this.amount == other.amount &&
+                (string.Equals(this.material, other.material, StringComparison.OrdinalIgnoreCase)) &&
+                (string.Equals(this.notes, other.notes, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as site_housing);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.site_id + this.amount.Value).GetHashCode();
+        }
+    }
+
+    public partial class source : IEquatable<source>
+    {
+
+        public bool Equals(source other)
+        {
+            return (string.IsNullOrEmpty(other.source_name) || string.Equals(this.source_name, other.source_name) &&
+                (this.agency_id == other.agency_id || other.agency_id <= 0 || other.agency_id == null));               
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as source);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.source_name + this.agency_id.Value).GetHashCode();
+        }
+    }
+
+    public partial class state : IEquatable<state>
+    {
+
+        public bool Equals(state other)
+        {
+            return (string.IsNullOrEmpty(other.state_name) || string.Equals(this.state_name, other.state_name, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(other.state_abbrev) || string.Equals(this.state_abbrev, other.state_abbrev, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as state);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.state_name + this.state_abbrev).GetHashCode();
+        }
+    }
+
+    public partial class status_type : IEquatable<status_type>
+    {
+
+        public bool Equals(status_type other)
+        {
+            return (string.IsNullOrEmpty(other.status) || string.Equals(this.status, other.status, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as status_type);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.status).GetHashCode();
+        }
+    }
+
+    public partial class vertical_collect_methods : IEquatable<vertical_collect_methods>
+    {
+
+        public bool Equals(vertical_collect_methods other)
+        {
+            return (string.IsNullOrEmpty(other.vcollect_method) || string.Equals(this.vcollect_method, other.vcollect_method, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as vertical_collect_methods);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.vcollect_method).GetHashCode();
+        }
+    }
+
     public partial class vertical_datums:IEquatable<vertical_datums>
     {
 
