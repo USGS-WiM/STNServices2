@@ -4,12 +4,12 @@
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2014 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
-//   purpose:   Handles Site resources through the HTTP uniform interface.
+//   purpose:   Handles Vertical Datum resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
 //
 //discussion:   Handlers are objects which handle all interaction with resources. 
@@ -34,19 +34,19 @@ using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
-    public class VerticalDatumHandler : STNHandlerBase
+    public class VerticalCollectionMethodsHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<vertical_datums> entities = null;
+            List<vertical_collect_methods> entities = null;
 
             try
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<vertical_datums>().OrderBy(e => e.datum_id).ToList();
+                    entities = sa.Select<vertical_collect_methods>().OrderBy(e => e.vcollect_method).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
@@ -59,22 +59,18 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            vertical_datums anEntity = null;
+            vertical_collect_methods anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<vertical_datums>().FirstOrDefault(e => e.datum_id == entityId);
+                    anEntity = sa.Select<vertical_collect_methods>().FirstOrDefault(e => e.vcollect_method_id == entityId);
                     sm(sa.Messages);
 
                 }//end using
@@ -91,71 +87,44 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "getOPVDatum")]
-        public OperationResult getOPVDatum(Int32 objectivePointId)
+        [HttpOperation(ForUriName = "GetHWMVerticalMethod")]
+        public OperationResult GetHWMVerticalMethod(Int32 hwmId)
         {
-            vertical_datums vDatum = null;
-            
-            try
-            {
-                if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    vDatum = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;                                       
-                    sm(sa.Messages);
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = vDatum , Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { 
-                return HandleException(ex); 
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(ForUriName = "GetHWMVDatum")]
-        public OperationResult GetHWMVDatum(Int32 hwmId)
-        {
-            vertical_datums vDatum = null;
-
-            //Return BadRequest if there is no ID
-            if (hwmId <= 0)
-                return new OperationResult.BadRequest();
+            vertical_collect_methods anEntity;
 
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    vDatum = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
-                    sm(sa.Messages);           
+                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).vertical_collect_methods;
+                    sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = vDatum, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
-            { 
-                return HandleException(ex); 
+            {
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
-
+       
         #endregion
         #region PostMethods
 
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(vertical_datums anEntity)
+        public OperationResult POST(vertical_collect_methods anEntity)
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.vcollect_method)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<vertical_datums>(anEntity);
+                        anEntity = sa.Add<vertical_collect_methods>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -174,18 +143,17 @@ namespace STNServices2.Handlers
         ///
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, vertical_datums anEntity)
+        public OperationResult Put(Int32 entityId, vertical_collect_methods anEntity)
         {
             try
             {
-                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.vcollect_method)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<vertical_datums>(anEntity);
+                        anEntity = sa.Update<vertical_collect_methods>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -206,7 +174,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            vertical_datums anEntity = null;
+            vertical_collect_methods anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -214,10 +182,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<vertical_datums>().FirstOrDefault(i => i.datum_id == entityId);
+                        anEntity = sa.Select<vertical_collect_methods>().FirstOrDefault(i => i.vcollect_method_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<vertical_datums>(anEntity);
+                        sa.Delete<vertical_collect_methods>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -226,7 +194,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
 
-        }//end HttpMethod.PUT
+        }//end HttpMethod.DELETE
 
         #endregion
     }//end vertical_datumsHandler
