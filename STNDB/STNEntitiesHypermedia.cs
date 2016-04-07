@@ -76,7 +76,31 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
-
+   
+    public partial class site : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class site_housing : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class source : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class state : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class status_type : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class vertical_collect_methods : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
     public partial class vertical_datums : IHypermedia
     {
         public List<Link> Links { get; set; }
