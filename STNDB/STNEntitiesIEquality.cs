@@ -406,6 +406,107 @@ namespace STNDB
         }
     }
 
+    public partial class reporting_metrics : IEquatable<reporting_metrics>
+    {
+        public bool Equals(reporting_metrics other)
+        {
+            return (this.member_id == other.member_id && DateTime.Equals(this.report_date, other.report_date) && this.event_id == other.event_id && 
+                this.state == other.state && this.sw_fieldpers_notacct == other.sw_fieldpers_notacct && this.wq_fieldpers_notacct == other.wq_fieldpers_notacct && 
+                this.sw_yest_fieldpers == other.sw_yest_fieldpers && this.wq_yest_fieldpers == other.wq_yest_fieldpers && this.sw_tod_fieldpers == other.sw_tod_fieldpers == null &&
+                this.wq_tod_fieldpers == other.wq_tod_fieldpers && this.sw_tmw_fieldpers == other.sw_tmw_fieldpers && this.wq_tmw_fieldpers == other.wq_tmw_fieldpers &&
+                this.sw_yest_officepers == other.sw_yest_officepers && this.wq_yest_officepers == other.wq_yest_officepers && this.sw_tod_officepers == other.sw_tod_officepers &&
+                this.wq_tod_officepers == other.wq_tod_officepers && this.sw_tmw_officepers == other.sw_tmw_officepers && this.wq_tmw_officepers == other.wq_tmw_officepers &&
+                this.sw_autos_depl == other.sw_autos_depl && this.wq_autos_depl == other.wq_autos_depl && this.sw_boats_depl == other.sw_boats_depl && this.wq_boats_depl == other.wq_boats_depl &&
+                this.sw_other_depl == other.sw_other_depl && this.wq_other_depl == other.wq_other_depl && this.gage_visit == other.gage_visit && this.gage_down == other.gage_down && 
+                this.tot_discharge_meas == other.tot_discharge_meas && this.plan_discharge_meas == other.plan_discharge_meas && this.tot_check_meas == other.tot_check_meas && 
+                this.plan_check_meas == other.plan_check_meas && this.plan_indirect_meas == other.plan_indirect_meas && this.rating_extens == other.rating_extens && 
+                this.gage_peak_record == other.gage_peak_record && this.plan_rapdepl_gage == other.plan_rapdepl_gage && this.dep_rapdepl_gage == other.dep_rapdepl_gage && 
+                this.rec_rapdepl_gage == other.rec_rapdepl_gage && this.lost_rapdepl_gage == other.lost_rapdepl_gage && this.plan_wtrlev_sensor == other.plan_wtrlev_sensor && 
+                this.dep_wtrlev_sensor == other.dep_wtrlev_sensor && this.rec_wtrlev_sensor == other.rec_wtrlev_sensor && this.lost_wtrlev_sensor == other.lost_wtrlev_sensor && 
+                this.plan_wv_sens == other.plan_wv_sens && this.dep_wv_sens == other.dep_wv_sens && this.rec_wv_sens == other.rec_wv_sens && this.lost_wv_sens == other.lost_wv_sens &&
+                this.plan_barometric == other.plan_barometric && this.dep_barometric == other.dep_barometric && this.rec_barometric == other.rec_barometric && 
+                this.lost_barometric == other.lost_barometric && this.plan_meteorological == other.plan_meteorological && this.dep_meteorological == other.dep_meteorological && 
+                this.rec_meteorological == other.rec_meteorological && this.lost_meteorological == other.lost_meteorological && this.hwm_collected == other.hwm_collected && 
+                this.hwm_flagged == other.hwm_flagged && this.qw_gage_visit == other.qw_gage_visit && this.qw_cont_gagevisit == other.qw_cont_gagevisit && 
+                this.qw_gage_down == other.qw_gage_down && this.qw_discr_samples == other.qw_discr_samples && this.coll_sedsamples == other.coll_sedsamples && this.notes == other.notes); ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as reporting_metrics);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.report_date.ToString() + this.event_id + this.state + this.member_id).GetHashCode();
+        }
+    }
+    public partial class role : IEquatable<role>
+    {
+        public bool Equals(role other)
+        {
+            return (string.Equals(this.role_name, other.role_name, StringComparison.OrdinalIgnoreCase) &&
+                (string.Equals(this.role_description, other.role_description, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as sensor_brand);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.role_name + this.role_description).GetHashCode();
+        }
+    }
+    public partial class sensor_brand : IEquatable<sensor_brand>
+    {
+
+        public bool Equals(sensor_brand other)
+        {
+            return (string.Equals(this.brand_name, other.brand_name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as sensor_brand);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.brand_name).GetHashCode();
+        }
+    }
+    public partial class sensor_type : IEquatable<sensor_type>
+    {
+
+        public bool Equals(sensor_type other)
+        {
+            return (string.Equals(this.sensor, other.sensor, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as sensor_type);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.sensor).GetHashCode();
+        }
+    }
     public partial class site : IEquatable<site>
     {
         public bool Equals(site other)
@@ -438,7 +539,6 @@ namespace STNDB
                 this.state + this.county + this.waterbody + this.member_id).GetHashCode();
         }
     }
-
     public partial class site_housing : IEquatable<site_housing>
     {
 
@@ -463,7 +563,6 @@ namespace STNDB
             return (this.site_id + this.amount.Value).GetHashCode();
         }
     }
-
     public partial class source : IEquatable<source>
     {
 
@@ -486,7 +585,6 @@ namespace STNDB
             return (this.source_name + this.agency_id.Value).GetHashCode();
         }
     }
-
     public partial class state : IEquatable<state>
     {
 
@@ -509,7 +607,6 @@ namespace STNDB
             return (this.state_name + this.state_abbrev).GetHashCode();
         }
     }
-
     public partial class status_type : IEquatable<status_type>
     {
 
@@ -531,7 +628,6 @@ namespace STNDB
             return (this.status).GetHashCode();
         }
     }
-
     public partial class vertical_collect_methods : IEquatable<vertical_collect_methods>
     {
 
@@ -553,7 +649,6 @@ namespace STNDB
             return (this.vcollect_method).GetHashCode();
         }
     }
-
     public partial class vertical_datums:IEquatable<vertical_datums>
     {
 

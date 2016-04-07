@@ -47,7 +47,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<vertical_collect_methods>().OrderBy(e => e.vcollect_method).ToList();
-
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -71,6 +70,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<vertical_collect_methods>().FirstOrDefault(e => e.vcollect_method_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -98,6 +98,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).vertical_collect_methods;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 

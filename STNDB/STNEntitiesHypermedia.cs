@@ -76,7 +76,23 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
-   
+
+    public partial class reporting_metrics : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class role : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class sensor_brand : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class sensor_type : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
     public partial class site : IHypermedia
     {
         public List<Link> Links { get; set; }
