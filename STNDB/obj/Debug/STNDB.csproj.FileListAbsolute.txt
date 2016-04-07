@@ -25,6 +25,5 @@ D:\TMRData\WIMprojects\STNServices2\STNDB\bin\Debug\EntityFramework.xml
 D:\TMRData\WIMprojects\STNServices2\STNDB\bin\Debug\EntityFramework.SqlServer.xml
 D:\TMRData\WIMprojects\STNServices2\STNDB\bin\Debug\EntityFramework6.Npgsql.xml
 D:\TMRData\WIMprojects\STNServices2\STNDB\bin\Debug\Npgsql.xml
-D:\TMRData\WIMprojects\STNServices2\STNDB\obj\Debug\STNDB.csprojResolveAssemblyReference.cache
 D:\TMRData\WIMprojects\STNServices2\STNDB\obj\Debug\STNDB.dll
 D:\TMRData\WIMprojects\STNServices2\STNDB\obj\Debug\STNDB.pdb

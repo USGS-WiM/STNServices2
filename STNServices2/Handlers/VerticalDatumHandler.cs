@@ -75,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<vertical_datums>().FirstOrDefault(e => e.datum_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using
@@ -94,18 +95,19 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "getOPVDatum")]
         public OperationResult getOPVDatum(Int32 objectivePointId)
         {
-            vertical_datums vDatum = null;
+            vertical_datums anEntity = null;
             
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    vDatum = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;                                       
+                    anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = vDatum , Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { 
@@ -116,7 +118,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetHWMVDatum")]
         public OperationResult GetHWMVDatum(Int32 hwmId)
         {
-            vertical_datums vDatum = null;
+            vertical_datums anEntity = null;
 
             //Return BadRequest if there is no ID
             if (hwmId <= 0)
@@ -127,11 +129,12 @@ namespace STNServices2.Handlers
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    vDatum = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
+                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);           
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = vDatum, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { 
