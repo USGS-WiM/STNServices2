@@ -83,6 +83,7 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Select<source>().FirstOrDefault(e => e.source_id == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
 
                     }//end using
@@ -103,7 +104,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetAgencySources")]
         public OperationResult GetAgencySources(Int32 agencyId)
         {
-            List<source> sourceList = null;
+            List<source> entities = null;
             
             try
             {
@@ -112,12 +113,13 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        sourceList = sa.Select<agency>().FirstOrDefault(i => i.agency_id == agencyId).sources.ToList();
+                        entities = sa.Select<agency>().FirstOrDefault(i => i.agency_id == agencyId).sources.ToList();
+                        sm(MessageType.info, "Count: " + entities.Count()); 
                         sm(sa.Messages);
                     }//end using
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = sourceList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             {
@@ -142,6 +144,7 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Select<file>().FirstOrDefault(i => i.file_id == fileId).source;
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }//end using
                 }//end using

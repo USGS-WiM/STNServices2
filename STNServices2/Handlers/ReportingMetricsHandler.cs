@@ -1,417 +1,325 @@
 ﻿//------------------------------------------------------------------------------
-//----- ReportingMetricsHandler -----------------------------------------------------
-//------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2012 WiM - USGS
+// copyright:   2016 WiM - USGS
 
-//    authors:  Tonia Roddick USGS Wisconsin Internet Mapping
-//              
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
-//   purpose:   Handles Resource Metrics resources through the HTTP uniform interface.
+//   purpose:   Handles Reporting Metrics resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
 //
-//discussion:   Handlers are objects which handle all interaction with resources in 
-//              this case the resources are POCO classes derived from the EF. 
+//discussion:   Handlers are objects which handle all interaction with resources. 
 //              https://github.com/openrasta/openrasta/wiki/Handlers
 //
 //     
 
 #region Comments
-// 02.13.14 - TR -Created
-
+// 04.07.16 - TR - Created
 #endregion
-
-using STNServices2.Resources;
-using STNServices2.Authentication;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Runtime.InteropServices;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Text.RegularExpressions;
-using System.Reflection;
-using System.Web;
+using System.Runtime.InteropServices;
+using STNServices2.Security;
+using STNServices2.Utilities.ServiceAgent;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
 
+using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
     public class ReportingMetricsHandler : STNHandlerBase
     {
-        #region Properties
-        public override string entityName
-        {
-            get { return "REPORTING_METRICS"; }
-        }
-        #endregion
-        #region Routed Methods
-
         #region GetMethods
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<REPORTING_METRICS> reportMetList = new List<REPORTING_METRICS>();
+            List<reporting_metrics> entities = null;
 
             try
             {
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent())
                 {
-                    reportMetList = aSTNE.REPORTING_METRICS.OrderBy(ps => ps.REPORTING_METRICS_ID)
-                                     .ToList();
+                    entities = sa.Select<reporting_metrics>().OrderBy(e => e.reporting_metrics_id).ToList();
 
-                    if (reportMetList != null)
-                        reportMetList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = reportMetList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }// end HttpMethod.Get
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            REPORTING_METRICS aReportMet;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            reporting_metrics anEntity = null;
             try
             {
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    aReportMet = aSTNE.REPORTING_METRICS.SingleOrDefault(
-                                  df => df.REPORTING_METRICS_ID == entityId);
+                    anEntity = sa.Select<reporting_metrics>().FirstOrDefault(e => e.reporting_metrics_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
 
-                    if (aReportMet != null)
-                        aReportMet.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = aReportMet };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetReportModel")]
         public OperationResult GetReportModel(Int32 entityId)
         {
-            ReportResource aReportMetModel;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            //ReportResource aReportMetModel;
+            List<reporting_metrics> entities = null;
+            
             try
             {
-                //Get basic authentication password
-                using (EasySecureString securedPassword = GetSecuredPassword())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-                        aReportMetModel = aSTNE.REPORTING_METRICS.Where(df => df.REPORTING_METRICS_ID == entityId).Select(r => new ReportResource
-                        {
-                            Report = r,
-                            ReportContacts = getReportContacts(r)
-                        }).FirstOrDefault();
+                    entities = sa.Select<reporting_metrics>().Include("reportmetric_contact").ToList();
 
-                        //if (aReportMet != null)
-                        //    aReportMet.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-                    }//end using
+                    //aReportMetModel = aSTNE.REPORTING_METRICS.Where(df => df.REPORTING_METRICS_ID == entityId).Select(r => new ReportResource
+                    //{
+                    //    Report = r,
+                    //    ReportContacts = getReportContacts(r)
+                    //}).FirstOrDefault();
+
+                    //if (aReportMet != null)
+                    //    aReportMet.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aReportMetModel };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetMemberReports")]
         public OperationResult GetMemberReports(Int32 memberId)
         {
-            List<REPORTING_METRICS> MemberReports = null;
-
-            //Return BadRequest if there is no ID
-            if (memberId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            List<reporting_metrics> entities = null;
             try
             {
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
+                
+                using (STNAgent sa = new STNAgent())
                 {
-                    MemberReports = aSTNE.REPORTING_METRICS.Where(mr => mr.MEMBER_ID == memberId).ToList();
-
-                    if (MemberReports != null)
-                        MemberReports.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<reporting_metrics>().Where(mr => mr.member_id == memberId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = MemberReports };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetReportsByEventAndState")]
         public OperationResult GetReportsByEventAndState(Int32 eventId, string stateName)
         {
-            List<REPORTING_METRICS> ReportList = null;
-
-            //Return BadRequest if there is no ID
-            if (eventId <= 0 || stateName == string.Empty)
-            {
-                return new OperationResult.BadRequest();
-            }
+            List<reporting_metrics> entities = null;
 
             try
             {
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                if (eventId <= 0 || string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    ReportList = aSTNE.REPORTING_METRICS.Where(mr => mr.EVENT_ID == eventId && mr.STATE == stateName).ToList();
-
-                    if (ReportList != null)
-                        ReportList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<reporting_metrics>().Where(mr => mr.event_id == eventId && mr.state == stateName).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
-                // }//end using
 
-                return new OperationResult.OK { ResponseResource = ReportList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventReports")]
         public OperationResult GetEventReports(Int32 eventId)
         {
-            List<REPORTING_METRICS> ReportList = null;
-
-            //Return BadRequest if there is no ID
-            if (eventId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
+            List<reporting_metrics> entities = null;
 
             try
             {
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    ReportList = aSTNE.REPORTING_METRICS.Where(mr => mr.EVENT_ID == eventId).ToList();
-
-                    if (ReportList != null)
-                        ReportList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<reporting_metrics>().Where(mr => mr.event_id == eventId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = ReportList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetReportsByDate")]
         public OperationResult ReportsByDate(string aDate)
         {
-            List<REPORTING_METRICS> ReportList = null;
-
-            //Return BadRequest if there is no ID
-            if (aDate == string.Empty)
-            {
-                return new OperationResult.BadRequest();
-            }
+            List<reporting_metrics> entities = null;
 
             try
-            {
+            { 
+                if (aDate == string.Empty) throw new BadRequestException("Invalid input parameters");
                 DateTime formattedDate = Convert.ToDateTime(aDate).Date;
-
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent())
                 {
-                    ReportList = aSTNE.REPORTING_METRICS.Where(mr => mr.REPORT_DATE == formattedDate).ToList();
-
-                    if (ReportList != null)
-                        ReportList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<reporting_metrics>().Where(mr => mr.report_date == formattedDate).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = ReportList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetDailyReportTotals")]
         public OperationResult GetDailyReportTotals(string date, Int32 eventId, string stateName)
         {
+            reporting_metrics ReportForTotals = null;
             try
             {
-                REPORTING_METRICS ReportForTotals = new REPORTING_METRICS();
-
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
-                {
+                if (date == string.Empty || eventId <= 0 || string.IsNullOrEmpty(stateName))
+                    throw new BadRequestException("Invalid input parameters");                
+               
+                using (STNAgent sa = new STNAgent())
+                {                      
                     DateTime aDate = Convert.ToDateTime(date).Date;
 
                     //statusType 1 : Deployed, statusType 2 : Retrieved, statusType 3 : lost
 
                     //query instruments with specified eventid, state (input can handle state name or abbr name)
-                    IQueryable<INSTRUMENT> sensorQuery = aSTNE.INSTRUMENTs.Where(i => i.EVENT_ID == eventId &&
-                                                                                      i.SITE.STATE.Equals(stateName));
+                    IQueryable<instrument> sensorQuery = sa.Select<instrument>().Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
 
                     //query instruments by the date being less than status date
-                    List<INSTRUMENT> sensorList = sensorQuery.AsEnumerable().Where(i => i.INSTRUMENT_STATUS.OrderByDescending(instStat => instStat.INSTRUMENT_STATUS_ID)
-                                                                    .FirstOrDefault().TIME_STAMP.Value <= aDate).ToList();
+                    List<instrument> sensorList = sensorQuery.AsEnumerable().Where(i => i.instrument_status.OrderByDescending(instStat => instStat.instrument_status_id)
+                                                                    .FirstOrDefault().time_stamp.Value <= aDate).ToList();
 
-                    List<INSTRUMENT> depINSTs = sensorList.Where(i => i.INSTRUMENT_STATUS.OrderByDescending(inst => inst.TIME_STAMP).FirstOrDefault().STATUS_TYPE_ID == 1).ToList();
-                    List<INSTRUMENT> recINSTs = sensorList.Where(i => i.INSTRUMENT_STATUS.OrderByDescending(inst => inst.TIME_STAMP).FirstOrDefault().STATUS_TYPE_ID == 2).ToList();
-                    List<INSTRUMENT> lostINSTs = sensorList.Where(i => i.INSTRUMENT_STATUS.OrderByDescending(inst => inst.TIME_STAMP).FirstOrDefault().STATUS_TYPE_ID == 3).ToList();
+                    List<instrument> depINSTs = sensorList.Where(i => i.instrument_status.OrderByDescending(inst => inst.time_stamp).FirstOrDefault().status_type_id == 1).ToList();
+                    List<instrument> recINSTs = sensorList.Where(i => i.instrument_status.OrderByDescending(inst => inst.time_stamp).FirstOrDefault().status_type_id == 2).ToList();
+                    List<instrument> lostINSTs = sensorList.Where(i => i.instrument_status.OrderByDescending(inst => inst.time_stamp).FirstOrDefault().status_type_id == 3).ToList();
 
                     //RDG totals ( S(5) )
-                    Int32 DEPrapidDeploymentGageCount = depINSTs.Where(s => s.SENSOR_TYPE_ID == 5).ToList().Count();
-                    Int32 RECrapidDeploymentGageCount = recINSTs.Where(s => s.SENSOR_TYPE_ID == 5).ToList().Count();
-                    Int32 LOSTrapidDeploymentGageCount = lostINSTs.Where(s => s.SENSOR_TYPE_ID == 5).ToList().Count();
+                    Int32 DEPrapidDeploymentGageCount = depINSTs.Where(s => s.sensor_type_id == 5).ToList().Count();
+                    Int32 RECrapidDeploymentGageCount = recINSTs.Where(s => s.sensor_type_id == 5).ToList().Count();
+                    Int32 LOSTrapidDeploymentGageCount = lostINSTs.Where(s => s.sensor_type_id == 5).ToList().Count();
 
                     //water level ( S(1), D(1) )
-                    Int32 DEPwaterLevelCount = depINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 1).ToList().Count();
-                    Int32 RECwaterLevelCount = recINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 1).ToList().Count();
-                    Int32 LOSTwaterLevelCount = lostINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 1).ToList().Count();
+                    Int32 DEPwaterLevelCount = depINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 1).ToList().Count();
+                    Int32 RECwaterLevelCount = recINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 1).ToList().Count();
+                    Int32 LOSTwaterLevelCount = lostINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 1).ToList().Count();
 
                     //wave height ( S(1), D(2) )
-                    Int32 DEPwaveHeightCount = depINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 2).ToList().Count();
-                    Int32 RECwaveHeightCount = recINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 2).ToList().Count();
-                    Int32 LOSTwaveHeightCount = lostINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 2).ToList().Count();
+                    Int32 DEPwaveHeightCount = depINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 2).ToList().Count();
+                    Int32 RECwaveHeightCount = recINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 2).ToList().Count();
+                    Int32 LOSTwaveHeightCount = lostINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 2).ToList().Count();
 
                     //Barometric totals ( S(1), D(3) )
-                    Int32 DEPbarometricCount = depINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 3).ToList().Count();
-                    Int32 RECbarometricCount = recINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 3).ToList().Count();
-                    Int32 LOSTbarometricCount = lostINSTs.Where(s => s.SENSOR_TYPE_ID == 1 && s.DEPLOYMENT_TYPE_ID == 3).ToList().Count();
+                    Int32 DEPbarometricCount = depINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 3).ToList().Count();
+                    Int32 RECbarometricCount = recINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 3).ToList().Count();
+                    Int32 LOSTbarometricCount = lostINSTs.Where(s => s.sensor_type_id == 1 && s.deployment_type_id == 3).ToList().Count();
 
                     //Met totals ( S(2) )
-                    Int32 DEPmetCount = depINSTs.Where(s => s.SENSOR_TYPE_ID == 2).ToList().Count();
-                    Int32 RECmetCount = recINSTs.Where(s => s.SENSOR_TYPE_ID == 2).ToList().Count();
-                    Int32 LOSTmetCount = lostINSTs.Where(s => s.SENSOR_TYPE_ID == 2).ToList().Count();
+                    Int32 DEPmetCount = depINSTs.Where(s => s.sensor_type_id == 2).ToList().Count();
+                    Int32 RECmetCount = recINSTs.Where(s => s.sensor_type_id == 2).ToList().Count();
+                    Int32 LOSTmetCount = lostINSTs.Where(s => s.sensor_type_id == 2).ToList().Count();
 
                     //now go get the HWMs for Flagged and Collected
-                    IQueryable<HWM> hwmQuery = aSTNE.HWMs.Where(i => i.EVENT_ID == eventId &&
-                                                                                      i.SITE.STATE.Equals(stateName));
+                    IQueryable<hwm> hwmQuery = sa.Select<hwm>().Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
 
                     //query instruments by the date being less than status date
-                    hwmQuery = hwmQuery.Where(i => i.EVENT.EVENT_START_DATE <= aDate.Date);
+                    hwmQuery = hwmQuery.Where(i => i.@event.event_start_date <= aDate.Date);
 
-                    Int32 hwmFlagged = hwmQuery.Where(h => h.FLAG_DATE != null).ToList().Count();
-                    Int32 hwmCollected = hwmQuery.Where(h => h.ELEV_FT != null).ToList().Count();
+                    Int32 hwmFlagged = hwmQuery.Where(h => h.flag_date != null).ToList().Count();
+                    Int32 hwmCollected = hwmQuery.Where(h => h.elev_ft != null).ToList().Count();
 
                     //now populate the report to pass back
-                    ReportForTotals.DEP_RAPDEPL_GAGE = DEPrapidDeploymentGageCount >= 1 ? DEPrapidDeploymentGageCount : 0;
-                    ReportForTotals.REC_RAPDEPL_GAGE = RECrapidDeploymentGageCount >= 1 ? RECrapidDeploymentGageCount : 0;
-                    ReportForTotals.LOST_RAPDEPL_GAGE = LOSTrapidDeploymentGageCount >= 1 ? LOSTrapidDeploymentGageCount : 0;
-                    ReportForTotals.DEP_WTRLEV_SENSOR = DEPwaterLevelCount >= 1 ? DEPwaterLevelCount : 0;
-                    ReportForTotals.REC_WTRLEV_SENSOR = RECwaterLevelCount >= 1 ? RECwaterLevelCount : 0;
-                    ReportForTotals.LOST_WTRLEV_SENSOR = LOSTwaterLevelCount >= 1 ? LOSTwaterLevelCount : 0;
-                    ReportForTotals.DEP_WV_SENS = DEPwaveHeightCount >= 1 ? DEPwaveHeightCount : 0;
-                    ReportForTotals.REC_WV_SENS = RECwaveHeightCount >= 1 ? RECwaveHeightCount : 0;
-                    ReportForTotals.LOST_WV_SENS = LOSTwaveHeightCount >= 1 ? LOSTwaveHeightCount : 0;
-                    ReportForTotals.DEP_BAROMETRIC = DEPbarometricCount >= 1 ? DEPbarometricCount : 0;
-                    ReportForTotals.REC_BAROMETRIC = RECbarometricCount >= 1 ? RECbarometricCount : 0;
-                    ReportForTotals.LOST_BAROMETRIC = LOSTbarometricCount >= 1 ? LOSTbarometricCount : 0;
-                    ReportForTotals.DEP_METEOROLOGICAL = DEPmetCount >= 1 ? DEPmetCount : 0;
-                    ReportForTotals.REC_METEOROLOGICAL = RECmetCount >= 1 ? RECmetCount : 0;
-                    ReportForTotals.LOST_METEOROLOGICAL = LOSTmetCount >= 1 ? LOSTmetCount : 0;
-                    ReportForTotals.HWM_FLAGGED = hwmFlagged >= 1 ? hwmFlagged : 0;
-                    ReportForTotals.HWM_COLLECTED = hwmCollected >= 1 ? hwmCollected : 0;
+                    ReportForTotals.dep_rapdepl_gage = DEPrapidDeploymentGageCount >= 1 ? DEPrapidDeploymentGageCount : 0;
+                    ReportForTotals.rec_rapdepl_gage = RECrapidDeploymentGageCount >= 1 ? RECrapidDeploymentGageCount : 0;
+                    ReportForTotals.lost_rapdepl_gage = LOSTrapidDeploymentGageCount >= 1 ? LOSTrapidDeploymentGageCount : 0;
+                    ReportForTotals.dep_wtrlev_sensor = DEPwaterLevelCount >= 1 ? DEPwaterLevelCount : 0;
+                    ReportForTotals.rec_wtrlev_sensor = RECwaterLevelCount >= 1 ? RECwaterLevelCount : 0;
+                    ReportForTotals.lost_wtrlev_sensor = LOSTwaterLevelCount >= 1 ? LOSTwaterLevelCount : 0;
+                    ReportForTotals.dep_wv_sens = DEPwaveHeightCount >= 1 ? DEPwaveHeightCount : 0;
+                    ReportForTotals.rec_wv_sens = RECwaveHeightCount >= 1 ? RECwaveHeightCount : 0;
+                    ReportForTotals.lost_wv_sens = LOSTwaveHeightCount >= 1 ? LOSTwaveHeightCount : 0;
+                    ReportForTotals.dep_barometric = DEPbarometricCount >= 1 ? DEPbarometricCount : 0;
+                    ReportForTotals.rec_barometric = RECbarometricCount >= 1 ? RECbarometricCount : 0;
+                    ReportForTotals.lost_barometric = LOSTbarometricCount >= 1 ? LOSTbarometricCount : 0;
+                    ReportForTotals.dep_meteorological = DEPmetCount >= 1 ? DEPmetCount : 0;
+                    ReportForTotals.rec_meteorological = RECmetCount >= 1 ? RECmetCount : 0;
+                    ReportForTotals.lost_meteorological = LOSTmetCount >= 1 ? LOSTmetCount : 0;
+                    ReportForTotals.hwm_flagged = hwmFlagged >= 1 ? hwmFlagged : 0;
+                    ReportForTotals.hwm_collected = hwmCollected >= 1 ? hwmCollected : 0;
 
+                    if (ReportForTotals == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
 
                 }//end using
-                //}//end using
 
-                return new OperationResult.OK { ResponseResource = ReportForTotals };
+                return new OperationResult.OK { ResponseResource = ReportForTotals, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.Get
 
-        //[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredReports")]
         public OperationResult GetFilteredReports([Optional] int eventId, [Optional] string stateNames, string aDate)
         {
-            List<REPORTING_METRICS> ReportList = null;
-            IQueryable<REPORTING_METRICS> query = null;
-
-            if (aDate == string.Empty)
-                return new OperationResult.BadRequest();
+            List<reporting_metrics> ReportList = null;
+            IQueryable<reporting_metrics> query = null;
 
             try
             {
+                if (aDate == string.Empty)
+                    throw new BadRequestException("Invalid input parameters");     
+
                 DateTime? thisDate = (DateTime?)Convert.ToDateTime(aDate);
                 List<string> states = new List<string>();
                 char[] delimiter = { ',' };
@@ -422,29 +330,26 @@ namespace STNServices2.Handlers
                 }
 
                 Int32 eventID = eventId > 0 ? eventId : -1;
-
-                //Get basic authentication password
-                //using (EasySecureString securedPassword = GetSecuredPassword())
-                //{
-                using (STNEntities2 aSTNE = GetRDS())
+                                
+                using (STNAgent sa = new STNAgent())
                 {
                     //get all the reports first to then narrow down
-                    query = aSTNE.REPORTING_METRICS;
+                    query = sa.Select<reporting_metrics>();
 
                     //do we have an EVENT?
                     if (eventID > 0)
                     {
-                        query = aSTNE.REPORTING_METRICS.Where(e => e.EVENT_ID == eventID);
+                        query = sa.Select<reporting_metrics>().Where(e => e.event_id == eventID);
                     }
 
                     //query DATE
-                    query = query.Where(e => e.REPORT_DATE == thisDate.Value);
+                    query = query.Where(e => e.report_date == thisDate.Value);
 
                     if (states.Count >= 2)
                     {
 
                         //multiple STATES
-                        query = from q in query where states.Any(s => q.STATE.Contains(s.Trim())) select q;
+                        query = from q in query where states.Any(s => q.state.Contains(s.Trim())) select q;
                     }
 
                     if (states.Count == 1)
@@ -453,42 +358,41 @@ namespace STNServices2.Handlers
                         {
                             string thisState = states[0];
                             thisState = GetStateByName(thisState).ToString();
-                            query = query.Where(r => r.STATE == thisState);
+                            query = query.Where(r => r.state == thisState);
                         }
                     }
 
                     //only completed reports please
-                    ReportList = query.AsEnumerable().Where(x => x.COMPLETE == 1).ToList();
-
-                    if (ReportList != null)
-                        ReportList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    ReportList = query.AsEnumerable().Where(x => x.complete == 1).ToList();
+                    sm(MessageType.info, "Count: " + ReportList.Count());
+                    sm(sa.Messages);
 
                 }//end using
-                //   }//end using
 
-                return new OperationResult.OK { ResponseResource = ReportList };
-            } //end try
-            catch
+                return new OperationResult.OK { ResponseResource = ReportList, Description = this.MessageString };
+            }
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
 
-        [RequiresAuthentication]
+        [STNRequiresRole(new string[] {AdminRole, ManagerRole, FieldRole})]//[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredReportsModel")]
         public OperationResult GetFilteredReportModel(int eventId, string aDate, [Optional] string stateNames)
         {
             //this returns only completed reports
 
-            List<ReportResource> ReportList = null;
-            IQueryable<REPORTING_METRICS> query = null;
-
-            if (aDate == string.Empty)
-                return new OperationResult.BadRequest();
+            //List<ReportResource> ReportList = null; 
+            List<reporting_metrics> ReportList = null;
+            IQueryable<reporting_metrics> query = null;
 
             try
             {
+                if (aDate == string.Empty || eventId <= 0)
+                    throw new BadRequestException("Invalid input parameters");                
+                                  
                 DateTime? thisDate = (DateTime?)Convert.ToDateTime(aDate);
                 List<string> states = new List<string>();
                 char[] delimiter = { ',' };
@@ -499,29 +403,28 @@ namespace STNServices2.Handlers
                 }
 
                 Int32 eventID = eventId > 0 ? eventId : -1;
-
-                //Get basic authentication password
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
+                    using (STNAgent sa = new STNAgent())
+                    { 
                         //get all the reports first to then narrow down
-                        query = aSTNE.REPORTING_METRICS;
+                        query = sa.Select<reporting_metrics>();
 
                         //do we have an EVENT?
                         if (eventID > 0)
                         {
-                            query = aSTNE.REPORTING_METRICS.Where(e => e.EVENT_ID == eventID);
+                            query = sa.Select<reporting_metrics>().Where(e => e.event_id == eventID);
                         }
 
                         //query DATE
-                        query = query.Where(e => e.REPORT_DATE == thisDate.Value);
+                        query = query.Where(e => e.report_date == thisDate.Value);
 
                         if (states.Count >= 2)
                         {
 
                             //multiple STATES
-                            query = from q in query where states.Any(s => q.STATE.Contains(s.Trim())) select q;
+                            query = from q in query where states.Any(s => q.state.Contains(s.Trim())) select q;
                         }
 
                         if (states.Count == 1)
@@ -530,47 +433,48 @@ namespace STNServices2.Handlers
                             {
                                 string thisState = states[0];
                                 thisState = GetStateByName(thisState).ToString();
-                                query = query.Where(r => r.STATE == thisState);
+                                query = query.Where(r => r.state == thisState);
                             }
                         }
 
+                        query = query.Where(x => x.complete == 1);
+
+                        ReportList = query.Include("reportmetric_contact").ToList();
+
                         //only completed reports please
-                        ReportList = query.AsEnumerable().Where(x => x.COMPLETE == 1).Select(x => new ReportResource
-                        {
-                            Report = x,
-                            ReportContacts = getReportContacts(x)
-                        }).ToList();
-
-                        //if (ReportList != null)
-                        //    ReportList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
+                        //ReportList = query.AsEnumerable().Where(x => x.complete == 1).Select(x => new ReportResource
+                        //{
+                        //    Report = x,
+                        //    ReportContacts = getReportContacts(x)
+                        //}).ToList();                       
+                        sm(MessageType.info, "Count: " + ReportList.Count());
+                        sm(sa.Messages);
                     }//end using
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = ReportList };
-            } //end try
-            catch
+                }
+                return new OperationResult.OK { ResponseResource = ReportList, Description = this.MessageString };
+            }
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }
+        
 
-        private List<ReportContactModel> getReportContacts(REPORTING_METRICS x)
-        {
-            var contactList = x.REPORTMETRIC_CONTACT.Select(c => new ReportContactModel
-            {
-                ContactId = c.CONTACT_ID,
-                FNAME = c.CONTACT.FNAME,
-                LNAME = c.CONTACT.LNAME,
-                PHONE = c.CONTACT.PHONE,
-                ALT_PHONE = c.CONTACT.ALT_PHONE,
-                EMAIL = c.CONTACT.EMAIL,
-                TYPE = c.CONTACT_TYPE.TYPE
-            }).ToList();
-            return contactList;
+        //private List<ReportContactModel> getReportContacts(REPORTING_METRICS x)
+        //{
+        //    var contactList = x.REPORTMETRIC_CONTACT.Select(c => new ReportContactModel
+        //    {
+        //        ContactId = c.CONTACT_ID,
+        //        FNAME = c.CONTACT.FNAME,
+        //        LNAME = c.CONTACT.LNAME,
+        //        PHONE = c.CONTACT.PHONE,
+        //        ALT_PHONE = c.CONTACT.ALT_PHONE,
+        //        EMAIL = c.CONTACT.EMAIL,
+        //        TYPE = c.CONTACT_TYPE.TYPE
+        //    }).ToList();
+        //    return contactList;
 
-        }//end HttpMethod.GET
-
+        //}//end HttpMethod.GET        
 
         #endregion
 
@@ -578,39 +482,29 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST, ForUriName = "PostReportMetrics")]
-        public OperationResult Post(REPORTING_METRICS aReportMetrics)
+        public OperationResult Post(reporting_metrics anEntity)
         {
-            //Return BadRequest if missing required fields
-            if ((aReportMetrics.EVENT_ID <= 0 || aReportMetrics.STATE == null || aReportMetrics.MEMBER_ID <= 0))
-            {
-                return new OperationResult.BadRequest();
-            }
-
             try
             {
+                if (anEntity.report_date == null || anEntity.event_id <= 0 || anEntity.state == null || anEntity.member_id <= 0)
+                    throw new BadRequestException("Invalid input parameters");                
+                                
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-                        if (!Exists(aSTNE.REPORTING_METRICS, ref aReportMetrics))
-                        {
-                            aSTNE.REPORTING_METRICS.AddObject(aReportMetrics);
-                        }
+                    using (STNAgent sa = new STNAgent())
+                    { 
+                        anEntity = sa.Add<reporting_metrics>(anEntity);
+                        sm(sa.Messages);
 
-                        aSTNE.SaveChanges();
                     }//end using
                 }//end using
-
-                //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = aReportMetrics };
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.POST
 
         #endregion
@@ -619,158 +513,59 @@ namespace STNServices2.Handlers
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, REPORTING_METRICS aReport)
-        {
-            REPORTING_METRICS ReportToUpdate = null;
-            //Return BadRequest if missing required fields
-            if (aReport.REPORTING_METRICS_ID <= 0 || entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+        public OperationResult Put(Int32 entityId, reporting_metrics anEntity)
+        {          
             try
             {
+                if (anEntity.report_date == null || anEntity.event_id <= 0 || anEntity.state == null || anEntity.member_id <= 0)
+                    throw new BadRequestException("Invalid input parameters");                
+                                
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //Grab the report row to update
-                        ReportToUpdate = aSTNE.REPORTING_METRICS.SingleOrDefault(
-                                           ps => ps.REPORTING_METRICS_ID == entityId);
-                        //Update fields
-                        ReportToUpdate.REPORT_DATE = aReport.REPORT_DATE;
-                        ReportToUpdate.EVENT_ID = aReport.EVENT_ID;
-                        ReportToUpdate.STATE = aReport.STATE;
-                        ReportToUpdate.SW_FIELDPERS_NOTACCT = aReport.SW_FIELDPERS_NOTACCT;
-                        ReportToUpdate.WQ_FIELDPERS_NOTACCT = aReport.WQ_FIELDPERS_NOTACCT;
-                        ReportToUpdate.SW_YEST_FIELDPERS = aReport.SW_YEST_FIELDPERS;
-                        ReportToUpdate.WQ_YEST_FIELDPERS = aReport.WQ_YEST_FIELDPERS;
-                        ReportToUpdate.SW_TOD_FIELDPERS = aReport.SW_TOD_FIELDPERS;
-                        ReportToUpdate.WQ_TOD_FIELDPERS = aReport.WQ_TOD_FIELDPERS;
-                        ReportToUpdate.SW_TMW_FIELDPERS = aReport.SW_TMW_FIELDPERS;
-                        ReportToUpdate.WQ_TMW_FIELDPERS = aReport.WQ_TMW_FIELDPERS;
-                        ReportToUpdate.SW_YEST_OFFICEPERS = aReport.SW_YEST_OFFICEPERS;
-                        ReportToUpdate.WQ_YEST_OFFICEPERS = aReport.WQ_YEST_OFFICEPERS;
-                        ReportToUpdate.SW_TOD_OFFICEPERS = aReport.SW_TOD_OFFICEPERS;
-                        ReportToUpdate.WQ_TOD_OFFICEPERS = aReport.WQ_TOD_OFFICEPERS;
-                        ReportToUpdate.SW_TMW_OFFICEPERS = aReport.SW_TMW_OFFICEPERS;
-                        ReportToUpdate.WQ_TMW_OFFICEPERS = aReport.WQ_TMW_OFFICEPERS;
-                        ReportToUpdate.SW_AUTOS_DEPL = aReport.SW_AUTOS_DEPL;
-                        ReportToUpdate.WQ_AUTOS_DEPL = aReport.WQ_AUTOS_DEPL;
-                        ReportToUpdate.SW_BOATS_DEPL = aReport.SW_BOATS_DEPL;
-                        ReportToUpdate.WQ_BOATS_DEPL = aReport.WQ_BOATS_DEPL;
-                        ReportToUpdate.SW_OTHER_DEPL = aReport.SW_OTHER_DEPL;
-                        ReportToUpdate.WQ_OTHER_DEPL = aReport.WQ_OTHER_DEPL;
-                        ReportToUpdate.GAGE_VISIT = aReport.GAGE_VISIT;
-                        ReportToUpdate.GAGE_DOWN = aReport.GAGE_DOWN;
-                        ReportToUpdate.TOT_DISCHARGE_MEAS = aReport.TOT_DISCHARGE_MEAS;
-                        ReportToUpdate.PLAN_DISCHARGE_MEAS = aReport.PLAN_DISCHARGE_MEAS;
-                        ReportToUpdate.TOT_CHECK_MEAS = aReport.TOT_CHECK_MEAS;
-                        ReportToUpdate.PLAN_CHECK_MEAS = aReport.PLAN_CHECK_MEAS;
-                        ReportToUpdate.PLAN_INDIRECT_MEAS = aReport.PLAN_INDIRECT_MEAS;
-                        ReportToUpdate.RATING_EXTENS = aReport.RATING_EXTENS;
-                        ReportToUpdate.GAGE_PEAK_RECORD = aReport.GAGE_PEAK_RECORD;
-                        ReportToUpdate.PLAN_RAPDEPL_GAGE = aReport.PLAN_RAPDEPL_GAGE;
-                        ReportToUpdate.DEP_RAPDEPL_GAGE = aReport.DEP_RAPDEPL_GAGE;
-                        ReportToUpdate.REC_RAPDEPL_GAGE = aReport.REC_RAPDEPL_GAGE;
-                        ReportToUpdate.LOST_RAPDEPL_GAGE = aReport.LOST_RAPDEPL_GAGE;
-                        ReportToUpdate.PLAN_WTRLEV_SENSOR = aReport.PLAN_WTRLEV_SENSOR;
-                        ReportToUpdate.DEP_WTRLEV_SENSOR = aReport.DEP_WTRLEV_SENSOR;
-                        ReportToUpdate.REC_WTRLEV_SENSOR = aReport.REC_WTRLEV_SENSOR;
-                        ReportToUpdate.LOST_WTRLEV_SENSOR = aReport.LOST_WTRLEV_SENSOR;
-                        ReportToUpdate.PLAN_WV_SENS = aReport.PLAN_WV_SENS;
-                        ReportToUpdate.DEP_WV_SENS = aReport.DEP_WV_SENS;
-                        ReportToUpdate.REC_WV_SENS = aReport.REC_WV_SENS;
-                        ReportToUpdate.LOST_WV_SENS = aReport.LOST_WV_SENS;
-                        ReportToUpdate.PLAN_BAROMETRIC = aReport.PLAN_BAROMETRIC;
-                        ReportToUpdate.DEP_BAROMETRIC = aReport.DEP_BAROMETRIC;
-                        ReportToUpdate.REC_BAROMETRIC = aReport.REC_BAROMETRIC;
-                        ReportToUpdate.LOST_BAROMETRIC = aReport.LOST_BAROMETRIC;
-                        ReportToUpdate.PLAN_METEOROLOGICAL = aReport.PLAN_METEOROLOGICAL;
-                        ReportToUpdate.DEP_METEOROLOGICAL = aReport.DEP_METEOROLOGICAL;
-                        ReportToUpdate.REC_METEOROLOGICAL = aReport.REC_METEOROLOGICAL;
-                        ReportToUpdate.LOST_METEOROLOGICAL = aReport.LOST_METEOROLOGICAL;
-                        ReportToUpdate.HWM_FLAGGED = aReport.HWM_FLAGGED;
-                        ReportToUpdate.HWM_COLLECTED = aReport.HWM_COLLECTED;
-                        ReportToUpdate.QW_GAGE_VISIT = aReport.QW_GAGE_VISIT;
-                        ReportToUpdate.QW_CONT_GAGEVISIT = aReport.QW_CONT_GAGEVISIT;
-                        ReportToUpdate.QW_GAGE_DOWN = aReport.QW_GAGE_DOWN;
-                        ReportToUpdate.QW_DISCR_SAMPLES = aReport.QW_DISCR_SAMPLES;
-                        ReportToUpdate.COLL_SEDSAMPLES = aReport.COLL_SEDSAMPLES;
-                        ReportToUpdate.NOTES = aReport.NOTES;
-                        ReportToUpdate.MEMBER_ID = aReport.MEMBER_ID;
-                        ReportToUpdate.COMPLETE = aReport.COMPLETE;
-
-                        aSTNE.SaveChanges();
-
+                        anEntity = sa.Update<reporting_metrics>(anEntity);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
+                return new OperationResult.Modified { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
 
-                return new OperationResult.OK { ResponseResource = aReport };
-            }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
         }//end HttpMethod.PUT
 
         #endregion
 
         #region DeleteMethods
-
-        #endregion
-
-        #endregion
-        #region Helper Methods
-        private bool Exists(ObjectSet<REPORTING_METRICS> entityRDS, ref REPORTING_METRICS anEntity)
+        [RequiresRole(AdminRole)]
+        [HttpOperation(HttpMethod.DELETE)]
+        public OperationResult Delete(Int32 entityId)
         {
-            REPORTING_METRICS existingEntity;
-            REPORTING_METRICS thisEntity = anEntity;
-            //check if it exists
+            reporting_metrics anEntity = null;
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        anEntity = sa.Select<reporting_metrics>().FirstOrDefault(i => i.reporting_metrics_id == entityId);
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                existingEntity = entityRDS.FirstOrDefault(e => e.MEMBER_ID == thisEntity.MEMBER_ID &&
-                                                              (DateTime.Equals(e.REPORT_DATE, thisEntity.REPORT_DATE)) &&
-                                                              (e.EVENT_ID == thisEntity.EVENT_ID) && (e.STATE == thisEntity.STATE) && (e.SW_FIELDPERS_NOTACCT == thisEntity.SW_FIELDPERS_NOTACCT) &&
-                                                              (e.WQ_FIELDPERS_NOTACCT == thisEntity.WQ_FIELDPERS_NOTACCT) && (e.SW_YEST_FIELDPERS == thisEntity.SW_YEST_FIELDPERS) &&
-                                                              (e.WQ_YEST_FIELDPERS == thisEntity.WQ_YEST_FIELDPERS) && (e.SW_TOD_FIELDPERS == thisEntity.SW_TOD_FIELDPERS == null) &&
-                                                              (e.WQ_TOD_FIELDPERS == thisEntity.WQ_TOD_FIELDPERS) && (e.SW_TMW_FIELDPERS == thisEntity.SW_TMW_FIELDPERS) && (e.WQ_TMW_FIELDPERS == thisEntity.WQ_TMW_FIELDPERS) &&
-                                                              (e.SW_YEST_OFFICEPERS == thisEntity.SW_YEST_OFFICEPERS) && (e.WQ_YEST_OFFICEPERS == thisEntity.WQ_YEST_OFFICEPERS) &&
-                                                              (e.SW_TOD_OFFICEPERS == thisEntity.SW_TOD_OFFICEPERS) && (e.WQ_TOD_OFFICEPERS == thisEntity.WQ_TOD_OFFICEPERS) &&
-                                                              (e.SW_TMW_OFFICEPERS == thisEntity.SW_TMW_OFFICEPERS) && (e.WQ_TMW_OFFICEPERS == thisEntity.WQ_TMW_OFFICEPERS) &&
-                                                              (e.SW_AUTOS_DEPL == thisEntity.SW_AUTOS_DEPL) && (e.WQ_AUTOS_DEPL == thisEntity.WQ_AUTOS_DEPL) &&
-                                                              (e.SW_BOATS_DEPL == thisEntity.SW_BOATS_DEPL) && (e.WQ_BOATS_DEPL == thisEntity.WQ_BOATS_DEPL) &&
-                                                              (e.SW_OTHER_DEPL == thisEntity.SW_OTHER_DEPL) && (e.WQ_OTHER_DEPL == thisEntity.WQ_OTHER_DEPL) &&
-                                                              (e.GAGE_VISIT == thisEntity.GAGE_VISIT) && (e.GAGE_DOWN == thisEntity.GAGE_DOWN) && (e.TOT_DISCHARGE_MEAS == thisEntity.TOT_DISCHARGE_MEAS) &&
-                                                              (e.PLAN_DISCHARGE_MEAS == thisEntity.PLAN_DISCHARGE_MEAS) && (e.TOT_CHECK_MEAS == thisEntity.TOT_CHECK_MEAS) && (e.PLAN_CHECK_MEAS == thisEntity.PLAN_CHECK_MEAS) &&
-                                                              (e.PLAN_INDIRECT_MEAS == thisEntity.PLAN_INDIRECT_MEAS) && (e.RATING_EXTENS == thisEntity.RATING_EXTENS) && (e.GAGE_PEAK_RECORD == thisEntity.GAGE_PEAK_RECORD) &&
-                                                              (e.PLAN_RAPDEPL_GAGE == thisEntity.PLAN_RAPDEPL_GAGE) && (e.DEP_RAPDEPL_GAGE == thisEntity.DEP_RAPDEPL_GAGE) && (e.REC_RAPDEPL_GAGE == thisEntity.REC_RAPDEPL_GAGE) &&
-                                                              (e.LOST_RAPDEPL_GAGE == thisEntity.LOST_RAPDEPL_GAGE) && (e.PLAN_WTRLEV_SENSOR == thisEntity.PLAN_WTRLEV_SENSOR) && (e.DEP_WTRLEV_SENSOR == thisEntity.DEP_WTRLEV_SENSOR) &&
-                                                              (e.REC_WTRLEV_SENSOR == thisEntity.REC_WTRLEV_SENSOR) && (e.LOST_WTRLEV_SENSOR == thisEntity.LOST_WTRLEV_SENSOR) && (e.PLAN_WV_SENS == thisEntity.PLAN_WV_SENS) &&
-                                                              (e.DEP_WV_SENS == thisEntity.DEP_WV_SENS) && (e.REC_WV_SENS == thisEntity.REC_WV_SENS) && (e.LOST_WV_SENS == thisEntity.LOST_WV_SENS) && (e.PLAN_BAROMETRIC == thisEntity.PLAN_BAROMETRIC) &&
-                                                              (e.DEP_BAROMETRIC == thisEntity.DEP_BAROMETRIC) && (e.REC_BAROMETRIC == thisEntity.REC_BAROMETRIC) && (e.LOST_BAROMETRIC == thisEntity.LOST_BAROMETRIC) && (e.PLAN_METEOROLOGICAL == thisEntity.PLAN_METEOROLOGICAL) &&
-                                                              (e.DEP_METEOROLOGICAL == thisEntity.DEP_METEOROLOGICAL) && (e.REC_METEOROLOGICAL == thisEntity.REC_METEOROLOGICAL) && (e.LOST_METEOROLOGICAL == thisEntity.LOST_METEOROLOGICAL) &&
-                                                              (e.HWM_COLLECTED == thisEntity.HWM_COLLECTED) && (e.HWM_FLAGGED == thisEntity.HWM_FLAGGED) && (e.QW_GAGE_VISIT == thisEntity.QW_GAGE_VISIT) &&
-                                                              (e.QW_CONT_GAGEVISIT == thisEntity.QW_CONT_GAGEVISIT) && (e.QW_GAGE_DOWN == thisEntity.QW_GAGE_DOWN) && (e.QW_DISCR_SAMPLES == thisEntity.QW_DISCR_SAMPLES) &&
-                                                              (e.COLL_SEDSAMPLES == thisEntity.COLL_SEDSAMPLES) && (e.NOTES == thisEntity.NOTES || thisEntity.NOTES == null));
-
-                if (existingEntity == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingEntity;
-                return true;
-
+                        sa.Delete<reporting_metrics>(anEntity);
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+            catch (Exception ex)
+            { return HandleException(ex); }
+
+        }//end HttpMethod.DELETE
 
         #endregion
-
-    }//end class PeakSummaryHandler
+        
+    }//end class ReportMetricHandler
 }//end namespace
