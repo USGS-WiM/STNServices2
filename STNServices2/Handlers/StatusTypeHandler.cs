@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
-using STNServices2.Security;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -35,65 +34,20 @@ using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
-    public class Site_HousingHandler : STNHandlerBase
+    public class StatusTypeHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<site_housing> entities = null;
+            List<status_type> entities = null;
 
             try
-            {               
+            {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<site_housing>().OrderBy(e => e.site_housing_id).ToList();
+                    entities = sa.Select<status_type>().OrderBy(e => e.status_type_id).ToList();
 
-                    sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
-                }
-
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
-        {
-            site_housing anEntity = null;
-            try
-            {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");              
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<site_housing>().FirstOrDefault(e => e.site_housing_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using            
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }            
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "SiteHousing")]
-        public OperationResult SiteHousings(Int32 siteId)
-        {
-            List<site_housing> entities = null;
-                        
-            try
-            {
-                if (siteId <= 0) throw new BadRequestException("Invalid input parameters");        
-                using (STNAgent sa = new STNAgent())
-                {
-                    entities = sa.Select<site_housing>().Where(m => m.site_id == siteId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -105,26 +59,75 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get(Int32 entityId)
+        {
+            status_type anEntity = null;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<status_type>().FirstOrDefault(e => e.status_type_id == entityId);
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatusStatus")]
+        public OperationResult GetInstrumentStatusStatus(Int32 instrumentStatusId)
+        {
+            status_type anEntity = null;
+
+            try
+            {
+                if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<instrument_status>().FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).status_type;
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         #endregion
         #region PostMethods
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(site_housing anEntity)
+        public OperationResult POST(status_type anEntity)
         {
-            //this is changed from previous version.. passed in siteId and site_housing object , then before adding, put the site_id prop on it.
             try
             {
-                if (anEntity.site_id <= 0 || anEntity.housing_type_id <= 0  || anEntity.amount <= 0) 
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.status)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<site_housing>(anEntity);
+                        anEntity = sa.Add<status_type>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -141,20 +144,19 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, site_housing anEntity)
+        public OperationResult Put(Int32 entityId, status_type anEntity)
         {
             try
             {
-                if (anEntity.site_id <= 0 || anEntity.housing_type_id <= 0 || anEntity.amount <= 0)
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.status)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<site_housing>(anEntity);
+                        anEntity = sa.Update<status_type>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -171,11 +173,11 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            site_housing anEntity = null;
+            status_type anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -183,10 +185,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<site_housing>().FirstOrDefault(i => i.site_housing_id == entityId);
+                        anEntity = sa.Select<status_type>().FirstOrDefault(i => i.status_type_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<site_housing>(anEntity);
+                        sa.Delete<status_type>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
