@@ -100,9 +100,19 @@ namespace STNServices2
         public static string instrcollectionResource = "InstrCollectConditions";
 
         public static string memberResource = "Members";
+
+
+        public static string reportMetricResource = "ReportingMetrics";
+        public static string roleResource = "Roles";
+        public static string sensorBrandResource = "SensorBrands";
+        public static string sensorTypeResource = "SensorTypes";
+        public static string siteResource = "Sites";
+        public static string siteHousingResource = "SiteHousings";
         public static string sourceResource = "Sources";
         public static string stateResource = "States";
-
+        public static string statusTypeResource = "StatusTypes";
+        public static string verticalCollectMethodResource = "VerticalMethods";
+        public static string verticalDatumResource = "VerticalDatums";
         #endregion
 
         public void Configure()
@@ -155,19 +165,19 @@ namespace STNServices2
                 //AddOBJECTIVE_POINT_TYPE_Resources();
                 //AddOP_CONTROL_IDENTIFIER_Resources();
                 //AddOP_QUALTITY_Resources();
-                //AddREPORTING_METRICS_Resources();
                 //AddOP_MEASUREMENTS_Resources();
-                //AddROLE_Resources();
-                //AddSENSOR_BRAND_Resourses();
-                //AddSENSOR_DEPLOYMENT_Resources();
-                //AddSENSOR_TYPE_Resources();
-                //AddSITE_Resources();
-                //AddSITE_HOUSING_Resources();
-                //AddSOURCE_Resources();
-                //AddSTATE_Resources();
-                //AddSTATUS_TYPE_Resources();
-                //AddVERTICAL_COLLECTION_METHOD_Resources();
-                //AddVERTICAL_DATUM_Resources();
+
+                AddREPORTING_METRICS_Resources();
+                AddROLE_Resources();
+                AddSENSOR_BRAND_Resourses();                
+                AddSENSOR_TYPE_Resources();
+                AddSITE_Resources();
+                AddSITE_HOUSING_Resources();
+                AddSOURCE_Resources();
+                AddSTATE_Resources();
+                AddSTATUS_TYPE_Resources();
+                AddVERTICAL_COLLECTION_METHOD_Resources();
+                AddVERTICAL_DATUM_Resources();
 
             } //End using OpenRastaConfiguration.Manual
         }
@@ -996,274 +1006,259 @@ namespace STNServices2
 //            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
 //        }//end AddPEAK_SUMMARY_Resources
-//        private void AddREPORTING_METRICS_Resources()
-//        {
-//            ResourceSpace.Has.ResourcesOfType<List<REPORTING_METRICS>>()
-//            .AtUri("/ReportingMetrics")
-//            .And.AtUri("/Members/{memberId}/Reports").Named("GetMemberReports")
-//            .And.AtUri("/ReportingMetrics/ReportsByDate?Date={aDate}").Named("GetReportsByDate")
-//            .And.AtUri("/ReportingMetrics?Event={eventId}&State={stateName}").Named("GetReportsByEventAndState")
-//            .And.AtUri("/Events/{eventId}/Reports").Named("GetEventReports")
-//            .And.AtUri("/ReportingMetrics/FilteredReports?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReports")
-//            .HandledBy<ReportingMetricsHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        private void AddREPORTING_METRICS_Resources()
+        {
+            ResourceSpace.Has.ResourcesOfType<List<reporting_metrics>>()
+            .AtUri(reportMetricResource)
+            .And.AtUri("/Members/{memberId}/Reports").Named("GetMemberReports")
+            .And.AtUri(reportMetricResource+"/ReportsByDate?Date={aDate}").Named("GetReportsByDate")
+            .And.AtUri(reportMetricResource+"?Event={eventId}&State={stateName}").Named("GetReportsByEventAndState")
+            .And.AtUri("/Events/{eventId}/Reports").Named("GetEventReports")
+            .And.AtUri(reportMetricResource+"/FilteredReports?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReports")
+            .HandledBy<ReportingMetricsHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<List<ReportResource>>()
-//            .AtUri("/ReportResource/FilteredReportModel?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReportsModel")
-//            .HandledBy<ReportingMetricsHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<reporting_metrics>()
+            .AtUri(reportMetricResource+"/{entityId}")
+            .And.AtUri(reportMetricResource+"/DailyReportTotals?Date={date}&Event={eventId}&State={stateName}").Named("GetDailyReportTotals")
+            .HandledBy<ReportingMetricsHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            
+            //ResourceSpace.Has.ResourcesOfType<List<ReportResource>>()
+            //.AtUri("/ReportResource/FilteredReportModel?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReportsModel")
+            //.HandledBy<ReportingMetricsHandler>()
+            //.TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //.And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<REPORTING_METRICS>()
-//            .AtUri("/ReportingMetrics/{entityId}")
-//            .And.AtUri("/ReportingMetrics/DailyReportTotals?Date={date}&Event={eventId}&State={stateName}").Named("GetDailyReportTotals")
-//            .HandledBy<ReportingMetricsHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            //ResourceSpace.Has.ResourcesOfType<ReportResource>()
+            //.AtUri("/ReportResource/{entityId}").Named("GetReportModel")
+            //.HandledBy<ReportingMetricsHandler>()
+            //.TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //.And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        } //end AddREPORTING_METRICS_Resources
+        private void AddROLE_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<role>>()
+            .AtUri(roleResource)
+            .HandledBy<RoleHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<ReportResource>()
-//            .AtUri("/ReportResource/{entityId}").Named("GetReportModel")
-//            .HandledBy<ReportingMetricsHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-//        } //end AddREPORTING_METRICS_Resources
-//        private void AddROLE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<ROLE>>()
-//            .AtUri("/Roles")
-//            .HandledBy<RoleHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<role>()
+            .AtUri(roleResource+"/{entityId}")
+            .And.AtUri("/Members/{memberId}/Role").Named("GetMemberRole")
+            .HandledBy<RoleHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<ROLE>()
-//            .AtUri("/Roles/{entityId}")
-//            .And.AtUri("/Members/{memberId}/Role").Named("GetMemberRole")
-//            .HandledBy<RoleHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddROLE_TYPE_Resources
+        private void AddSENSOR_BRAND_Resourses()
+        {
+            ResourceSpace.Has.ResourcesOfType<List<sensor_brand>>()
+            .AtUri(sensorBrandResource)
+            .HandledBy<SensorBrandHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddROLE_TYPE_Resources
-//        private void AddSENSOR_BRAND_Resourses()
-//        {
-//            ResourceSpace.Has.ResourcesOfType<List<SENSOR_BRAND>>()
-//            .AtUri("/SensorBrands")
-//            .HandledBy<SensorBrandHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<sensor_brand>()
+            .AtUri(sensorBrandResource+"/{entityId}")
+            .And.AtUri("/Instruments/{instrumentId}/SensorBrand").Named("GetInstrumentSensorBrand")
+            .HandledBy<SensorBrandHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }
+        private void AddSENSOR_TYPE_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<sensor_type>>()
+            .AtUri(sensorTypeResource)
+            .HandledBy<SensorTypeHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<SENSOR_BRAND>()
-//            .AtUri("/SensorBrands/{entityId}")
-//            .And.AtUri("/Instruments/{instrumentId}/SensorBrand").Named("GetInstrumentSensorBrand")
-//            .HandledBy<SensorBrandHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-//        }
-//        private void AddSENSOR_DEPLOYMENT_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<SENSOR_DEPLOYMENT>>()
-//            .AtUri("/SensorDeployments")
-//            .HandledBy<SensorDeploymentHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-//        }
-//        private void AddSENSOR_TYPE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<SENSOR_TYPE>>()
-//            .AtUri("/SensorTypes")
-//            .HandledBy<SensorTypeHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-//            ResourceSpace.Has.ResourcesOfType<SENSOR_TYPE>()
-//            .AtUri("/SensorTypes/{entityId}")
-//            .And.AtUri("/Instruments/{instrumentId}/SensorType").Named("GetInstrumentSensorType")
-//            .And.AtUri("/DeploymentTypes/{deploymentTypeId}/SensorType").Named("GetDeploymentSensorType")
-//            .HandledBy<SensorTypeHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<sensor_type>()
+            .AtUri(sensorTypeResource+"/{entityId}")
+            .And.AtUri("/Instruments/{instrumentId}/SensorType").Named("GetInstrumentSensorType")
+            .And.AtUri("/DeploymentTypes/{deploymentTypeId}/SensorType").Named("GetDeploymentSensorType")
+            .HandledBy<SensorTypeHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
 
-//        }//end AddSENSOR_TYPE_Resources
-//        private void AddSITE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<SiteList>()
-//            .AtUri("/Sites/points").Named("GetPoints")
-//            .And.AtUri("/Events/{eventId}/Sites").Named("GetEventSites")
-//            .And.AtUri("/NetworkTypes/{networkTypeId}/Sites").Named("getNetworkTypeSites")
-//            .And.AtUri("/NetworkNames/{networkNameId}/Sites").Named("getNetworkNameSites")
-//            .And.AtUri("/Sites?State={stateName}").Named("GetSitesByStateName")
-//            .And.AtUri("/Sites?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
-//            .And.AtUri("HorizontalDatums/{hdatumId}/Sites").Named("GetHDatumSites")
-//            .And.AtUri("LandOwners/{landOwnerId}/Sites").Named("GetLandOwnserSites")
-//            .HandledBy<SiteHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddSENSOR_TYPE_Resources
+        private void AddSITE_Resources()
+        {
+            //GET
+            //ResourceSpace.Has.ResourcesOfType<SiteList>()
+            //.AtUri("/Sites/points").Named("GetPoints")
+            //.And.AtUri("/Events/{eventId}/Sites").Named("GetEventSites")
+            //.And.AtUri("/NetworkTypes/{networkTypeId}/Sites").Named("getNetworkTypeSites")
+            //.And.AtUri("/NetworkNames/{networkNameId}/Sites").Named("getNetworkNameSites")
+            //.And.AtUri("/Sites?State={stateName}").Named("GetSitesByStateName")
+            //.And.AtUri("/Sites?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
+            //.And.AtUri("HorizontalDatums/{hdatumId}/Sites").Named("GetHDatumSites")
+            //.And.AtUri("LandOwners/{landOwnerId}/Sites").Named("GetLandOwnserSites")
+            //.HandledBy<SiteHandler>()
+            //.TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //.And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<SITE>()
-//            .AtUri("/Sites/{entityId}")
-//            //.And.AtUri("/Sites?bySiteNo={siteNo}").Named("GetSiteBySiteNo")
-//            .And.AtUri("/Sites?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySiteNo")
-//            .And.AtUri("/Files/{fileId}/Site").Named("GetFileSite")
-//            .And.AtUri("/ObjectivePoints/{objectivePointId}/Site").Named("GetOPSite")
-//            .And.AtUri("/HWMs/{hwmId}/Site").Named("getHWMSite")
-//            .And.AtUri("/Instruments/{instrumentId}/Site").Named("GetInstrumentSite")
-//            .HandledBy<SiteHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<site>()
+            .AtUri(siteResource+"/{entityId}")
+            .And.AtUri(siteResource+"?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySiteNo")
+            .And.AtUri("/Files/{fileId}/Site").Named("GetFileSite")
+            .And.AtUri("/ObjectivePoints/{objectivePointId}/Site").Named("GetOPSite")
+            .And.AtUri("/HWMs/{hwmId}/Site").Named("getHWMSite")
+            .And.AtUri("/Instruments/{instrumentId}/Site").Named("GetInstrumentSite")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<List<SITE>>()
-//            .AtUri("/FullSites").Named("GetAllSites")
-//            .HandledBy<SiteHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<List<site>>()
+            .AtUri("/FullSites").Named("GetAllSites")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
-//           .AtUri("/Sites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
-//                //.AtUri("/Sites/GetSensorLocationSites").Named("GetSensorLocationSites")
-//                //.And.AtUri("/Sites/GetHWMLocationSites").Named("GetHWMLocationSites")
-//                //.And.AtUri("/Sites/GetRDGLocationSites").Named("GetRDGLocationSites")
-//            .HandledBy<SiteHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+           // ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
+           //.AtUri("/Sites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
+           // .HandledBy<SiteHandler>()
+           // .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+           // .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+           // .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddSITE_Resources                 
-//        private void AddSITE_HOUSING_Resources()
-//        {
-//            ResourceSpace.Has.ResourcesOfType<List<SITE_HOUSING>>()
-//            .AtUri("/SiteHousings")
-//            .And.AtUri("Sites/{siteId}/SiteHousings").Named("GetSiteSiteHousing")
-//            .HandledBy<Site_HousingHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddSITE_Resources                 
+        private void AddSITE_HOUSING_Resources()
+        {
+            ResourceSpace.Has.ResourcesOfType<List<site_housing>>()
+            .AtUri(siteHousingResource)
+            .And.AtUri("Sites/{siteId}/"+siteHousingResource).Named("GetSiteSiteHousing")
+            .HandledBy<Site_HousingHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<SITE_HOUSING>()
-//            .AtUri("/SiteHousings/{entityId}")
-//            .And.AtUri("Site/{siteId}/AddSiteSiteHousing").Named("AddSiteSiteHousing")
-//            .HandledBy<Site_HousingHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<site_housing>()
+            .AtUri(siteHousingResource+"/{entityId}")
+            //.And.AtUri("Site/{siteId}/AddSiteSiteHousing").Named("AddSiteSiteHousing") -- just use regular post and apply siteId before sending object
+            .HandledBy<Site_HousingHandler>()
+             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//End AddOP_MEASUREMENTS_Resources()
-//        private void AddSOURCE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<SOURCE>>()
-//            .AtUri("/Sources")
-//            .And.AtUri("Agencies/{agencyId}/Sources").Named("GetAgencySources")
-//            .HandledBy<SourceHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//End AddSITE_HOUSING_Resources()
+        private void AddSOURCE_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<source>>()
+            .AtUri(sourceResource)
+            .And.AtUri("Agencies/{agencyId}/"+sourceResource).Named("GetAgencySources")
+            .HandledBy<SourceHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<SOURCE>()
-//            .AtUri("/Sources/{entityId}")
-//            .And.AtUri("Files/{fileId}/Source").Named("GetFileSource")
-//            .HandledBy<SourceHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<source>()
+            .AtUri(sourceResource+"/{entityId}")
+            .And.AtUri("Files/{fileId}/Source").Named("GetFileSource")
+            .HandledBy<SourceHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddSOURCE_Resources        
-//        private void AddSTATE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<STATES>>()
-//            .AtUri("/States").Named("GetAllStates")
-//            .And.AtUri("/Sites/States").Named("GetSiteStates")
-//                //NOW BEING HANDLED BY COUNTIES .And.AtUri("/StateCounties/{stateName}").Named("StateCounties")
-//            .HandledBy<StateHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddSOURCE_Resources        
+        private void AddSTATE_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<state>>()
+            .AtUri(stateResource).Named("GetAllStates")
+            .And.AtUri("/Sites/"+stateResource).Named("GetSiteStates")
+            .HandledBy<StateHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<STATES>()
-//            .AtUri("States/{entityId}")
-//            .HandledBy<StateHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<state>()
+            .AtUri(stateResource+"/{entityId}")
+            .HandledBy<StateHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddSTATE_Resources
-//        private void AddSTATUS_TYPE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<STATUS_TYPE>>()
-//            .AtUri("/StatusTypes")
-//            .HandledBy<StatusTypeHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddSTATE_Resources
+        private void AddSTATUS_TYPE_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<status_type>>()
+            .AtUri(statusTypeResource)
+            .HandledBy<StatusTypeHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<STATUS_TYPE>()
-//            .AtUri("/StatusTypes/{entityId}")
-//            .And.AtUri("/InstrumentStatus/{instrumentStatusId}/Status").Named("GetInstrumentStatusStatus")
-//            .HandledBy<StatusTypeHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<status_type>()
+            .AtUri(statusTypeResource+"/{entityId}")
+            .And.AtUri("/InstrumentStatus/{instrumentStatusId}/Status").Named("GetInstrumentStatusStatus")
+            .HandledBy<StatusTypeHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddSTATUS_TYPE_Resources
-//        private void AddVERTICAL_COLLECTION_METHOD_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<VERTICAL_COLLECT_METHODS>>()
-//            .AtUri("/VerticalMethods")
-//            .HandledBy<VerticalCollectionMethodsHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddSTATUS_TYPE_Resources
+        private void AddVERTICAL_COLLECTION_METHOD_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<vertical_collect_methods>>()
+            .AtUri(verticalCollectMethodResource)
+            .HandledBy<VerticalCollectionMethodsHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<VERTICAL_COLLECT_METHODS>()
-//            .AtUri("/VerticalMethods/{entityId}")
-//            .And.AtUri("/HWMs/{hwmId}/VerticalMethod").Named("GetHWMVerticalMethod")
-//            .HandledBy<VerticalCollectionMethodsHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<vertical_collect_methods>()
+            .AtUri(verticalCollectMethodResource+"/{entityId}")
+            .And.AtUri("/HWMs/{hwmId}/VerticalMethod").Named("GetHWMVerticalMethod")
+            .HandledBy<VerticalCollectionMethodsHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddVERTICAL_COLLECTION_METHOD_Resources
-//        private void AddVERTICAL_DATUM_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<VERTICAL_DATUMS>>()
-//            .AtUri("/VerticalDatums")
-//            .HandledBy<VerticalDatumHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddVERTICAL_COLLECTION_METHOD_Resources
+        private void AddVERTICAL_DATUM_Resources()
+        {
+            //GET
+            ResourceSpace.Has.ResourcesOfType<List<vertical_datums>>()
+            .AtUri(verticalDatumResource)
+            .HandledBy<VerticalDatumHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<VERTICAL_DATUMS>()
-//            .AtUri("/VerticalDatums/{entityId}")
-//            .And.AtUri("/HWMs/{hwmId}/vDatum").Named("GetHWMVDatum")
-//            .And.AtUri("/ObjectivePoints/{objectivePointId}/vDatum").Named("getOPVDatum")
-//            .HandledBy<VerticalDatumHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<vertical_datums>()
+            .AtUri(verticalDatumResource+"/{entityId}")
+            .And.AtUri("/HWMs/{hwmId}/vDatum").Named("GetHWMVDatum")
+            .And.AtUri("/ObjectivePoints/{objectivePointId}/vDatum").Named("getOPVDatum")
+            .HandledBy<VerticalDatumHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddVERTICAL_DATUM_Resources
+        }//end AddVERTICAL_DATUM_Resources
 
         #endregion
 

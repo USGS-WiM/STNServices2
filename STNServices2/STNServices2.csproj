@@ -125,6 +125,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\ReportingMetricsHandler.cs" />
+    <Compile Include="Handlers\RoleHandler.cs" />
+    <Compile Include="Handlers\SiteHandler.cs" />
+    <Compile Include="Handlers\Site_HousingHandler.cs" />
+    <Compile Include="Handlers\StateHandler.cs" />
+    <Compile Include="Handlers\SourceHandler.cs" />
+    <Compile Include="Handlers\SensorTypeHandler.cs" />
+    <Compile Include="Handlers\SensorBrandHandler.cs" />
+    <Compile Include="Handlers\StatusTypeHandler.cs" />
+    <Compile Include="Handlers\VerticalCollectionMethodsHandler.cs" />
+    <Compile Include="Handlers\VerticalDatumHandler.cs" />
     <Compile Include="Handlers\InstrumentCollectionConditionHandler.cs" />
     <Compile Include="Handlers\HWMHandler.cs" />
     <Compile Include="Handlers\HWMTypeHandler.cs" />

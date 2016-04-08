@@ -4,12 +4,12 @@
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2014 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
-//   purpose:   Handles Site resources through the HTTP uniform interface.
+//   purpose:   Handles Sensor Type resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
 //
 //discussion:   Handlers are objects which handle all interaction with resources. 
@@ -18,15 +18,15 @@
 //     
 
 #region Comments
-// 03.28.16 - JKN - Created
+// 04.07.16 - TR - Created
 #endregion
 using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
-using STNServices2.Security;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -35,65 +35,20 @@ using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
-    public class Site_HousingHandler : STNHandlerBase
+    public class SensorTypeHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<site_housing> entities = null;
+            List<sensor_type> entities = null;
 
             try
-            {               
+            {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<site_housing>().OrderBy(e => e.site_housing_id).ToList();
+                    entities = sa.Select<sensor_type>().Include("sensor_deployment.deployment_type").OrderBy(e => e.sensor_type_id).ToList();
 
-                    sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
-                }
-
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
-        {
-            site_housing anEntity = null;
-            try
-            {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");              
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<site_housing>().FirstOrDefault(e => e.site_housing_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using            
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }            
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "SiteHousing")]
-        public OperationResult SiteHousings(Int32 siteId)
-        {
-            List<site_housing> entities = null;
-                        
-            try
-            {
-                if (siteId <= 0) throw new BadRequestException("Invalid input parameters");        
-                using (STNAgent sa = new STNAgent())
-                {
-                    entities = sa.Select<site_housing>().Where(m => m.site_id == siteId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -107,24 +62,98 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get(Int32 entityId)
+        {
+            sensor_type anEntity = null;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<sensor_type>().FirstOrDefault(e => e.sensor_type_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+
+        [HttpOperation(ForUriName = "GetInstrumentSensorType")]
+        public OperationResult GetInstrumentSensorType(Int32 instrumentId)
+        {
+            sensor_type anEntity = null;
+
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                     if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                 
+                     anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).sensor_type;
+                     if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+
+        [HttpOperation(ForUriName = "GetDeploymentSensorType")]
+        public OperationResult GetDeploymentSensorType(Int32 deploymentTypeId)
+        {
+            sensor_type anEntity = null;
+
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    if (deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                    //need the sensor type that this deployment type is connected to.
+                    anEntity = sa.Select<sensor_deployment>().FirstOrDefault(i => i.deployment_type_id == deploymentTypeId).sensor_type;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         #endregion
         #region PostMethods
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(site_housing anEntity)
+        public OperationResult POST(sensor_type anEntity)
         {
-            //this is changed from previous version.. passed in siteId and site_housing object , then before adding, put the site_id prop on it.
             try
             {
-                if (anEntity.site_id <= 0 || anEntity.housing_type_id <= 0  || anEntity.amount <= 0) 
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.sensor)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<site_housing>(anEntity);
+                        anEntity = sa.Add<sensor_type>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -141,20 +170,19 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, site_housing anEntity)
+        public OperationResult Put(Int32 entityId, sensor_type anEntity)
         {
             try
             {
-                if (anEntity.site_id <= 0 || anEntity.housing_type_id <= 0 || anEntity.amount <= 0)
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.sensor)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<site_housing>(anEntity);
+                        anEntity = sa.Update<sensor_type>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -171,11 +199,11 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            site_housing anEntity = null;
+            sensor_type anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -183,10 +211,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<site_housing>().FirstOrDefault(i => i.site_housing_id == entityId);
+                        anEntity = sa.Select<sensor_type>().FirstOrDefault(i => i.sensor_type_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<site_housing>(anEntity);
+                        sa.Delete<sensor_type>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
