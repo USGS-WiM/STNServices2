@@ -405,6 +405,157 @@ namespace STNServices2.Test
         }//end method
 
         [TestMethod]
+        public void ObjectivePointRequest()
+        {
+            //GET LIST
+            List<objective_point> RequestList = this.GETRequest<List<objective_point>>(host + Configuration.objectivePointResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            objective_point postObj;
+            postObj = this.POSTRequest<objective_point>(host + Configuration.objectivePointResource, new objective_point() { 
+                name = "test-post", description = "test-descr", op_type_id = 1, date_established = DateTime.Now, site_id = 123 }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.objective_point_id.ToString());
+
+            //GET POSTed item
+            objective_point RequestObj = this.GETRequest<objective_point>(host + Configuration.objectivePointResource + "/" + postObj.objective_point_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.name = "test-put"; postObj.description = "test-descr2"; postObj.op_type_id = 1; postObj.date_established = DateTime.Now; postObj.site_id = 123;
+            objective_point putObj = this.PUTRequest<objective_point>(host + Configuration.objectivePointResource + "/" + postObj.objective_point_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<objective_point>(host + Configuration.objectivePointResource + "/" + postObj.objective_point_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void OPTypeRequest()
+        {
+            //GET LIST
+            List<objective_point_type> RequestList = this.GETRequest<List<objective_point_type>>(host + Configuration.objectivePointTypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            objective_point_type postObj;
+            postObj = this.POSTRequest<objective_point_type>(host + Configuration.objectivePointTypeResource, new objective_point_type() { op_type = "test-post" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.objective_point_type_id.ToString());
+
+            //GET POSTed item
+            objective_point_type RequestObj = this.GETRequest<objective_point_type>(host + Configuration.objectivePointTypeResource + "/" + postObj.objective_point_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.op_type = "test-put";
+            objective_point_type putObj = this.PUTRequest<objective_point_type>(host + Configuration.objectivePointTypeResource + "/" + postObj.objective_point_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<objective_point_type>(host + Configuration.objectivePointTypeResource + "/" + postObj.objective_point_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void OPControlRequest()
+        {
+            //GET LIST
+            List<op_control_identifier> RequestList = this.GETRequest<List<op_control_identifier>>(host + Configuration.opControlResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            op_control_identifier postObj;
+            postObj = this.POSTRequest<op_control_identifier>(host + Configuration.opControlResource, new op_control_identifier() { objective_point_id = 1, identifier = "test-post", identifier_type = "PID" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.op_control_identifier_id.ToString());
+
+            //GET POSTed item
+            op_control_identifier RequestObj = this.GETRequest<op_control_identifier>(host + Configuration.opControlResource + "/" + postObj.op_control_identifier_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.objective_point_id = 2; postObj.identifier = "test-put"; postObj.identifier_type = "PID";
+            op_control_identifier putObj = this.PUTRequest<op_control_identifier>(host + Configuration.opControlResource + "/" + postObj.op_control_identifier_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<op_control_identifier>(host + Configuration.opControlResource + "/" + postObj.op_control_identifier_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void OPMeasurementRequest()
+        {
+            //GET LIST
+            List<op_measurements> RequestList = this.GETRequest<List<op_measurements>>(host + Configuration.opMeasurementsResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            op_measurements postObj;
+            postObj = this.POSTRequest<op_measurements>(host + Configuration.opMeasurementsResource, new op_measurements() { objective_point_id = 1, instrument_status_id = 12 }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.op_measurements_id.ToString());
+
+            //GET POSTed item
+            op_measurements RequestObj = this.GETRequest<op_measurements>(host + Configuration.opMeasurementsResource + "/" + postObj.op_measurements_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.objective_point_id = 2; postObj.instrument_status_id = 22;
+            op_measurements putObj = this.PUTRequest<op_measurements>(host + Configuration.opMeasurementsResource + "/" + postObj.op_measurements_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<op_measurements>(host + Configuration.opMeasurementsResource + "/" + postObj.op_measurements_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void OPQualityRequest()
+        {
+            //GET LIST
+            List<op_quality> RequestList = this.GETRequest<List<op_quality>>(host + Configuration.opQualityResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            op_quality postObj;
+            postObj = this.POSTRequest<op_quality>(host + Configuration.opQualityResource, new op_quality() { quality = "Post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.op_quality_id.ToString());
+
+            //GET POSTed item
+            op_quality RequestObj = this.GETRequest<op_quality>(host + Configuration.opQualityResource + "/" + postObj.op_quality_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.quality = "Put-test";
+            op_quality putObj = this.PUTRequest<op_quality>(host + Configuration.opQualityResource + "/" + postObj.op_quality_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<op_quality>(host + Configuration.opQualityResource + "/" + postObj.op_quality_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void PeakSummaryRequest()
+        {
+            //GET LIST
+            List<peak_summary> RequestList = this.GETRequest<List<peak_summary>>(host + Configuration.peakSummaryResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            peak_summary postObj;
+            postObj = this.POSTRequest<peak_summary>(host + Configuration.peakSummaryResource, new peak_summary() { member_id = 1, peak_date = DateTime.Now, time_zone = "UTC" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.peak_summary_id.ToString());
+
+            //GET POSTed item
+            peak_summary RequestObj = this.GETRequest<peak_summary>(host + Configuration.peakSummaryResource + "/" + postObj.peak_summary_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.member_id = 2; postObj.peak_date = DateTime.Now; postObj.time_zone = "UTC";
+            peak_summary putObj = this.PUTRequest<peak_summary>(host + Configuration.peakSummaryResource + "/" + postObj.peak_summary_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<peak_summary>(host + Configuration.peakSummaryResource + "/" + postObj.peak_summary_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
         public void ReportingMetricsRequest()
         {
             //GET LIST

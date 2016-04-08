@@ -1,6 +1,4 @@
 ﻿//------------------------------------------------------------------------------
-//----- OP_ControlIdentifierHandler -----------------------------------------------------
-//------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
@@ -8,7 +6,8 @@
 
 // copyright:   2014 WiM - USGS
 
-//    authors:  Tonia Roddick USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //              
 //  
 //   purpose:   Handles OP Control Identifiers resources through the HTTP uniform interface.
@@ -21,119 +20,95 @@
 //     
 
 #region Comments
-// 05.25.14 - TR - Created
+// 04.08.16 - TR - Created
 
 #endregion
-
-using STNServices2.Resources;
-using STNServices2.Authentication;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Reflection;
-using System.Web;
+using System.Runtime.InteropServices;
+using STNServices2.Utilities.ServiceAgent;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
+
+using WiM.Authentication;
 
 
 namespace STNServices2.Handlers
 {
     public class OP_ControlIdentifierHandler : STNHandlerBase
-    {
-        #region Properties
-        public override string entityName
-        {
-            get { return "OP_CONTROL_IDENTIFIER"; }
-        }
-        #endregion
-        #region Routed Methods
-
+    {   
         #region GetMethods
-
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<OP_CONTROL_IDENTIFIER> OPcontrolIdentifiers = new List<OP_CONTROL_IDENTIFIER>();
+            List<op_control_identifier> entities = null;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent())
                 {
-                    OPcontrolIdentifiers = aSTNE.OP_CONTROL_IDENTIFIER.OrderBy(m => m.OP_CONTROL_IDENTIFIER_ID)
-                                    .ToList();
+                    entities = sa.Select<op_control_identifier>().OrderBy(m => m.op_control_identifier_id).ToList();
 
-                    if (OPcontrolIdentifiers != null)
-                        OPcontrolIdentifiers.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = OPcontrolIdentifiers };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            { return new OperationResult.BadRequest(); }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-
-            OP_CONTROL_IDENTIFIER anOPControl;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            { return new OperationResult.BadRequest(); }
+            op_control_identifier anEntity;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    anOPControl = aSTNE.OP_CONTROL_IDENTIFIER.SingleOrDefault(
-                                m => m.OP_CONTROL_IDENTIFIER_ID == entityId);
-
-                    if (anOPControl != null)
-                        anOPControl.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
+                    anEntity = sa.Select<op_control_identifier>().SingleOrDefault(m => m.op_control_identifier_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anOPControl };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            { return new OperationResult.BadRequest(); }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "OPControls")]
         public OperationResult OPControls(Int32 objectivePointId)
         {
-            List<OP_CONTROL_IDENTIFIER> OP_controls;
+            List<op_control_identifier> anEntity;
 
-            //Return BadRequest if there is no ID
-            if (objectivePointId <= 0)
-            { return new OperationResult.BadRequest(); }
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    OP_controls = aSTNE.OP_CONTROL_IDENTIFIER.Where(m => m.OBJECTIVE_POINT_ID == objectivePointId).ToList();
-
-                    if (OP_controls != null)
-                        OP_controls.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
+                    anEntity = sa.Select<op_control_identifier>().Where(m => m.objective_point_id == objectivePointId).ToList();
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = OP_controls };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
@@ -141,35 +116,28 @@ namespace STNServices2.Handlers
 
         #region PostMethods
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "AddOPControls")]
-        public OperationResult AddOPControls(Int32 objectivePointId, OP_CONTROL_IDENTIFIER opCI)
-        {
-            //Return BadRequest if there is no ID
-            if (objectivePointId <= 0 || String.IsNullOrEmpty(opCI.IDENTIFIER))
-            {
-                return new OperationResult.BadRequest();
-            }
-
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [HttpOperation(HttpMethod.POST)]
+        public OperationResult POST(op_control_identifier anEntity)
+        {            
             try
             {
+                if (anEntity.objective_point_id <= 0 || string.IsNullOrEmpty(anEntity.identifier) || string.IsNullOrEmpty(anEntity.identifier_type))
+                    throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent())
                     {
-                        opCI.OBJECTIVE_POINT_ID = objectivePointId;
-                        if (!Exists(aSTNE.OP_CONTROL_IDENTIFIER, ref opCI))
-                        {
-                            aSTNE.OP_CONTROL_IDENTIFIER.AddObject(opCI);
-                            aSTNE.SaveChanges();
-                        }//end if
-                    }
-                }
-                return new OperationResult.OK();
+                        anEntity = sa.Add<op_control_identifier>(anEntity);
+                        sm(sa.Messages);
+
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            { return new OperationResult.BadRequest(); }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.POST
 
         #endregion
@@ -179,36 +147,27 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.PUT, ForUriName = "Put")]
-        public OperationResult Put(Int32 entityId, OP_CONTROL_IDENTIFIER anOPControl)
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [HttpOperation(HttpMethod.PUT)]
+        public OperationResult Put(Int32 entityId, op_control_identifier anEntity)
         {
-            //Return BadRequest if missing required fields
-            if (anOPControl.OBJECTIVE_POINT_ID <= 0 || string.IsNullOrEmpty(anOPControl.IDENTIFIER_TYPE))
-            { return new OperationResult.BadRequest(); }
-
             try
             {
+                if (anEntity.objective_point_id <= 0 || string.IsNullOrEmpty(anEntity.identifier) || string.IsNullOrEmpty(anEntity.identifier_type))
+                    throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //fetch the object to be updated (assuming that it exists)
-                        OP_CONTROL_IDENTIFIER ObjectToBeUpdated = aSTNE.OP_CONTROL_IDENTIFIER.Single(m => m.OP_CONTROL_IDENTIFIER_ID == entityId);
-
-                        ObjectToBeUpdated.IDENTIFIER = anOPControl.IDENTIFIER != ObjectToBeUpdated.IDENTIFIER ? anOPControl.IDENTIFIER : ObjectToBeUpdated.IDENTIFIER;
-                        ObjectToBeUpdated.IDENTIFIER_TYPE = anOPControl.IDENTIFIER_TYPE != ObjectToBeUpdated.IDENTIFIER_TYPE ? anOPControl.IDENTIFIER_TYPE : ObjectToBeUpdated.IDENTIFIER_TYPE;
-
-                        aSTNE.SaveChanges();
-
+                        anEntity = sa.Update<op_control_identifier>(anEntity);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
-
-                return new OperationResult.OK { };
+                return new OperationResult.Modified { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            { return new OperationResult.BadRequest(); }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.PUT
 
         #endregion
@@ -217,81 +176,36 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            OP_CONTROL_IDENTIFIER ObjectToBeDeleted = null;
-
-            //Return BadRequest if missing required fields
-            if (entityId <= 0)
+            op_control_identifier anEntity = null;
+            
+            try
             {
-                return new OperationResult.BadRequest();
-            }
-
-            //Get basic authentication password
-            using (EasySecureString securedPassword = GetSecuredPassword())
-            {
-                using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    // create user profile using db stored proceedure
-                    try
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //fetch the object to be updated (assuming that it exists)
-                        ObjectToBeDeleted = aSTNE.OP_CONTROL_IDENTIFIER.SingleOrDefault(
-                                                m => m.OP_CONTROL_IDENTIFIER_ID == entityId);
+                        if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                        //delete it
-                        aSTNE.OP_CONTROL_IDENTIFIER.DeleteObject(ObjectToBeDeleted);
-                        aSTNE.SaveChanges();
-                        //Return object to verify persisitance
+                        anEntity = sa.Select<op_control_identifier>().FirstOrDefault(i => i.op_control_identifier_id == entityId);
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        return new OperationResult.OK { };
-
+                        sa.Delete<op_control_identifier>(anEntity);
+                        sm(sa.Messages);
                     }
-                    catch (Exception)
-                    {
-                        //TODO: relay failure type message 
-                        // EX. if profile failed to be removed
-                        return new OperationResult.BadRequest();
-                    }
-
-                }// end using
-            } //end using
+                }
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HTTP.DELETE
         #endregion
 
-        #endregion
-        #region Helper Methods
-        private bool Exists(ObjectSet<OP_CONTROL_IDENTIFIER> entityRDS, ref OP_CONTROL_IDENTIFIER anEntity)
-        {
-            OP_CONTROL_IDENTIFIER existingSH;
-            OP_CONTROL_IDENTIFIER thisEntity = anEntity as OP_CONTROL_IDENTIFIER;
-            //check if it exists
-            try
-            {
-
-                existingSH = entityRDS.FirstOrDefault(e => e.OBJECTIVE_POINT_ID == thisEntity.OBJECTIVE_POINT_ID &&
-                                                               (string.Equals(e.IDENTIFIER.ToUpper(), thisEntity.IDENTIFIER.ToUpper())) &&
-                                                               (string.Equals(e.IDENTIFIER_TYPE.ToUpper(), thisEntity.IDENTIFIER_TYPE.ToUpper())));
-
-
-                if (existingSH == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingSH;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        #endregion
-
+      
+       
 
     }//end class PeakSummaryHandler
 }//end namespace

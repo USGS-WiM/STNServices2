@@ -608,7 +608,7 @@
           <Property Name="datum_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="datum_name" Type="varchar" MaxLength="255" />
           <Property Name="datum_abbreviation" Type="varchar" MaxLength="50" />
-        </EntityType>
+        </EntityType>        
         <EntityContainer Name="STNNEWModelStoreContainer">
           <EntitySet Name="agencies" EntityType="Self.agencies" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="approval" EntityType="Self.approval" Schema="fradmin" store:Type="Tables" />

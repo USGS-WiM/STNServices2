@@ -77,6 +77,30 @@ namespace STNDB
         public List<Link> Links { get; set; }
     }
 
+    public partial class objective_point : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class objective_point_type : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class op_control_identifier : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class op_measurements : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class op_quality : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class peak_summary : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
     public partial class reporting_metrics : IHypermedia
     {
         public List<Link> Links { get; set; }
