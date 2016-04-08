@@ -94,6 +94,10 @@ namespace STNServices2
         public static string horizontalmethodResource = "HorizontalMethods";
         public static string horizontaldatumResource = "HorizontalDatums";
         public static string housingtypeResource = "HousingTypes";
+        public static string hwmResource = "HWMs";
+        public static string hwmqualityResource = "HWMQualities";
+        public static string hwmtypeResource = "HWMTypes";
+        public static string instrcollectionResource = "InstrCollectConditions";
 
         public static string memberResource = "Members";
 
@@ -143,16 +147,15 @@ namespace STNServices2
                 AddEVENT_Resources();
                 AddEVENT_STATUS_Resources();
                 AddEVENT_TYPE_Resources();
-                //AddFEED_Resources();
                 AddFILE_Resources();
                 AddFILE_TYPE_Resources();
                 AddHORIZONTAL_COLLECT_METHODS_Resources();
                 AddHORIZONTAL_DATUM_Resources();
                 AddHOUSING_TYPE_Resources();
-                //AddHWM_QUALITY_Resources();
-                //AddHWM_Resources();
-                //AddHWM_TYPE_Resources();
-                //AddINSTR_COLLECTION_CONDITIONS_Resources();
+                AddHWM_Resources();
+                AddHWM_QUALITY_Resources();
+                AddHWM_TYPE_Resources();
+                AddINSTR_COLLECTION_CONDITIONS_Resources();
                 //AddINSTRUMENT_Resources();
                 //AddINSTRUMENT_STATUS_Resources();
                 //AddKEYWORD_Resources();
@@ -219,12 +222,12 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<approval>()
             .AtUri(approvalResource + "/{entityId}")
-            .And.AtUri("/HWMs/{hwmId}/Approve").Named("ApproveHWM")
-            .And.AtUri("/DataFiles/{dataFileId}/Approve").Named("ApproveDataFile")
-            .And.AtUri("/HWMs/{hwmId}/Unapprove").Named("UnApproveHWM")
-            .And.AtUri("/DataFiles/{dataFileId}/Unapprove").Named("UnApproveDataFile")
-            .And.AtUri("/DataFiles/{dataFileId}/Approval").Named("GetDataFileApproval")
-            .And.AtUri("/HWMs/{hwmId}/Approval").Named("GetHWMApproval")
+            .And.AtUri(hwmResource+"/{hwmId}/Approve").Named("ApproveHWM")
+            .And.AtUri(datafileResource+"/{dataFileId}/Approve").Named("ApproveDataFile")
+            .And.AtUri(hwmResource+"/{hwmId}/Unapprove").Named("UnApproveHWM")
+            .And.AtUri(datafileResource+"/{dataFileId}/Unapprove").Named("UnApproveDataFile")
+            .And.AtUri(datafileResource+"/{dataFileId}/Approval").Named("GetDataFileApproval")
+            .And.AtUri(hwmResource+"/{hwmId}/Approval").Named("GetHWMApproval")
             .HandledBy<ApprovalHandler>()
             .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -319,7 +322,7 @@ namespace STNServices2
           .And.AtUri("/Instruments/{instrumentId}/"+datafileResource).Named("GetInstrumentDataFiles")
           .And.AtUri("/PeakSummaries/{peakSummaryId}/" + datafileResource).Named("GetPeakSummaryDatafiles")
           .And.AtUri(datafileResource+"?IsApproved={boolean}")
-          .And.AtUri("Approvals/{ApprovalId}/" + datafileResource).Named("GetApprovedDataFiles")
+          .And.AtUri(approvalResource+"/{ApprovalId}/" + datafileResource).Named("GetApprovedDataFiles")
           .And.AtUri(datafileResource+"/?IsApproved={approved}&Event={eventId}&Processor={memberId}&State={state}").Named("GetFilteredDataFiles")
           .HandledBy<DataFileHandler>()
           .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -329,7 +332,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<data_file>()
                 //.AtUri("/DataFiles").Named("CreateDataFile")
             .AtUri(datafileResource+"/{entityId}")
-            .And.AtUri("Files/{fileId}/DataFile").Named("GetFileDataFile")
+            .And.AtUri(fileResource+"/{fileId}/DataFile").Named("GetFileDataFile")
             .HandledBy<DataFileHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -393,7 +396,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<events>()
             .AtUri(eventsResource+"/{entityId}")
-            .And.AtUri("/HWMs/{hwmId}/Event").Named("GetHWMEvent")
+            .And.AtUri(hwmResource+"/{hwmId}/Event").Named("GetHWMEvent")
             .And.AtUri("/Instruments/{instrumentId}/Event").Named("GetInstrumentEvent")
             .HandledBy<EventsHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -439,16 +442,6 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddEVENT_TYPE_Resources
-//        private void AddFEED_Resources()
-//        {
-//            //Syndication feeds
-//            ResourceSpace.Has.ResourcesOfType<SyndicationFeed>()
-//            .AtUri("/feeds/HWMs")
-//            .Named("GetProvisionalHWMs")
-//            .HandledBy<HWMHandler>();
-            
-
-//        }//end AddFEED_Resources
         private void AddFILE_Resources()
         {
             //******NOTE******
@@ -467,9 +460,9 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<List<file>>()
            .AtUri(fileResource)
-           .And.AtUri("/HWMs/{hwmId}/" + fileResource).Named("GetHWMFiles")
+           .And.AtUri(hwmResource+"/{hwmId}/" + fileResource).Named("GetHWMFiles")
            .And.AtUri("/ObjectivePoints/{objectivePointId}/" + fileResource).Named("GetObjectivePointFiles")
-           .And.AtUri("/FileTypes/{fileTypeId}/" + fileResource).Named("GetFileTypeFiles")
+           .And.AtUri(filetypeResource+"/{fileTypeId}/" + fileResource).Named("GetFileTypeFiles")
            .And.AtUri("/Sites/{siteId}/" + fileResource).Named("GetSiteFile")
            .And.AtUri("/Sources/{sourceId}/" + fileResource).Named("GetSourceFiles")
            .And.AtUri(datafileResource+"/{dataFileId}/" + fileResource).Named("GetDataFileFiles")
@@ -519,7 +512,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<horizontal_collect_methods>()
             .AtUri(horizontalmethodResource+"/{entityId}")
-            .And.AtUri("/HWMs/{hwmId}/HorizontalMethod").Named("GetHWMHorizontalMethods")
+            .And.AtUri(hwmResource+"/{hwmId}/HorizontalMethod").Named("GetHWMHorizontalMethods")
             .HandledBy<HorizontalCollectionMethodHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -564,54 +557,35 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddHOUSING_TYPE_Resources
-//        private void AddHWM_QUALITY_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<HWM_QUALITIES>>()
-//            .AtUri("/HWMQualities")
-//            .HandledBy<HWMQualitiesHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        private void AddHWM_Resources()
+        {
+            //High water marks
+            //ResourceSpace.Has.ResourcesOfType<HWMList>()
+            //.AtUri("/HWMs")
+            //.And.AtUri("/Events/{eventId}/HWMs").Named("GetEventSimpleHWMs")
+            //.And.AtUri("/Sites/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
+            //.And.AtUri("/HWMS?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
+            //.HandledBy<HWMHandler>()
+            //.TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //.And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<HWM_QUALITIES>()
-//            .AtUri("/HWMQualities/{entityId}")
-//            .And.AtUri("/HWMs/{hwmId}/Quality").Named("GetHWMQuality")
-//            .HandledBy<HWMQualitiesHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-//        }//end AddHWM_QUALITY_Resources
-//        private void AddHWM_Resources()
-//        {
-//            //High water marks
-//            ResourceSpace.Has.ResourcesOfType<HWMList>()
-//            .AtUri("/HWMs")
-//            .And.AtUri("/Events/{eventId}/HWMs").Named("GetEventSimpleHWMs")
-//            .And.AtUri("/Sites/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
-//            .And.AtUri("/HWMS?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
-//            .HandledBy<HWMHandler>()
-//            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-//            ResourceSpace.Has.ResourcesOfType<List<HWM>>()
-//            .AtUri("/HWMs?IsApproved={boolean}").Named("GetHWMByApproval")
-//            .And.AtUri("/Approvals/{ApprovalId}/HWMs").Named("GetApprovedHWMs")
-//            .And.AtUri("/Members/{memberId}/HWMs").Named("GetMemberHWMs")
-//            .And.AtUri("/HWMQualities/{hwmQualityId}/HWMs").Named("GetHWMQualityHWMs")
-//            .And.AtUri("/HWMTypes/{hwmTypeId}/HWMs").Named("GetHWMTypeHWMs")
-//            .And.AtUri("/HorizontalMethods/{hmethodId}/HWMs").Named("GetHmethodHWMs")
-//            .And.AtUri("/VerticalMethods/{vmethodId}/HWMs").Named("GetVmethodHWMs")
-//            .And.AtUri("/Sites/{siteId}/HWMs").Named("GetSiteHWMs")
-//            .And.AtUri("/VerticalDatums/{vdatumId}/HWMs").Named("GetVDatumHWMs")
-//             .And.AtUri("/Markers/{markerId}/HWMs").Named("GetMarkerHWMs")
-//            .And.AtUri("/PeakSummaries/{peakSummaryId}/HWMs").Named("GetPeakSummaryHWMs")
-//            .HandledBy<HWMHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<List<hwm>>()
+            .AtUri(hwmResource+"?IsApproved={boolean}").Named("GetHWMByApproval")
+            .And.AtUri(approvalResource+"/{ApprovalId}/"+hwmResource).Named("GetApprovedHWMs")
+            .And.AtUri(memberResource+"/{memberId}/"+hwmResource).Named("GetMemberHWMs")
+            .And.AtUri(hwmqualityResource+"/{hwmQualityId}/" + hwmResource).Named("GetHWMQualityHWMs")
+            .And.AtUri(hwmtypeResource+"/{hwmTypeId}/" + hwmResource).Named("GetHWMTypeHWMs")
+            .And.AtUri(horizontalmethodResource+"/{hmethodId}/" + hwmResource).Named("GetHmethodHWMs")
+            .And.AtUri("/VerticalMethods/{vmethodId}/" + hwmResource).Named("GetVmethodHWMs")
+            .And.AtUri("/Sites/{siteId}/" + hwmResource).Named("GetSiteHWMs")
+            .And.AtUri("/VerticalDatums/{vdatumId}/" + hwmResource).Named("GetVDatumHWMs")
+             .And.AtUri("/Markers/{markerId}/" + hwmResource).Named("GetMarkerHWMs")
+            .And.AtUri("/PeakSummaries/{peakSummaryId}/" + hwmResource).Named("GetPeakSummaryHWMs")
+            .HandledBy<HWMHandler>()
+            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
 //            ResourceSpace.Has.ResourcesOfType<List<HWMDownloadable>>()
 //            .AtUri(@"/HWMs/FilteredHWMs?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
@@ -621,53 +595,71 @@ namespace STNServices2
 //            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
 //            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
 //            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-           
-//            ResourceSpace.Has.ResourcesOfType<HWM>()
-//            .AtUri("/HWMs/{entityId}").Named("GetHWM")
-//            .And.AtUri("/Files/{fileId}/HWM").Named("GetFileHWM")
-//                //.And.AtUri("/HWMs/").Named("CreateHWM")
-//            .HandledBy<HWMHandler>()
-//            .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddHWM_Resources
-//        private void AddHWM_TYPE_Resources()
-//        {
-//            //GET
-//            ResourceSpace.Has.ResourcesOfType<List<HWM_TYPES>>()
-//            .AtUri("/HWMTypes")
-//            .HandledBy<HWMTypesHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<hwm>()
+            .AtUri(hwmResource+"/{entityId}").Named("GetHWM")
+            .And.AtUri(fileResource+"/{fileId}/HWM").Named("GetFileHWM")
+            .HandledBy<HWMHandler>()
+            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<HWM_TYPES>()
-//            .AtUri("/HWMTypes/{entityId}")
-//            .And.AtUri("/HWMs/{hwmId}/Type").Named("GetHWMType")
-//            .HandledBy<HWMTypesHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end AddHWM_Resources
+        private void AddHWM_QUALITY_Resources()
+         {
+             //GET
+             ResourceSpace.Has.ResourcesOfType<List<hwm_qualities>>()
+             .AtUri(hwmqualityResource)
+             .HandledBy<HWMQualityHandler>()
+             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//        }//end AddHWM_TYPE_Resources
-//        private void AddINSTR_COLLECTION_CONDITIONS_Resources()
-//        {
-//            ResourceSpace.Has.ResourcesOfType<List<INSTR_COLLECTION_CONDITIONS>>()
-//            .AtUri("/InstrCollectConditions")
-//            .HandledBy<InstrCollectConditionsHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+             ResourceSpace.Has.ResourcesOfType<hwm_qualities>()
+             .AtUri(hwmqualityResource+"/{entityId}")
+             .And.AtUri(hwmResource+"/{hwmId}/Quality").Named("GetHWMQuality")
+             .HandledBy<HWMQualityHandler>()
+             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<INSTR_COLLECTION_CONDITIONS>()
-//            .AtUri("/InstrCollectConditions/{entityId}")
-//            .And.AtUri("/Instruments/{instrumentId}/CollectCondition").Named("GetInstrumentCondition")
-//            .HandledBy<InstrCollectConditionsHandler>()
-//            .TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-//        }//end INSTR_COLLECTION_CONDITIONS_Resources
+         }//end AddHWM_QUALITY_Resources
+        private void AddHWM_TYPE_Resources()
+         {
+             //GET
+             ResourceSpace.Has.ResourcesOfType<List<hwm_types>>()
+             .AtUri(hwmtypeResource)
+             .HandledBy<HWMTypeHandler>()
+             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+
+             ResourceSpace.Has.ResourcesOfType<hwm_types>()
+             .AtUri(hwmtypeResource+"/{entityId}")
+             .And.AtUri(hwmResource+"/{hwmId}/Type").Named("GetHWMType")
+             .HandledBy<HWMTypeHandler>()
+             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+             .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+
+         }//end AddHWM_TYPE_Resources
+        private void AddINSTR_COLLECTION_CONDITIONS_Resources()
+        {
+            ResourceSpace.Has.ResourcesOfType<List<instr_collection_conditions>>()
+            .AtUri(instrcollectionResource)
+            .HandledBy<InstrumentCollectionConditionHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+
+            ResourceSpace.Has.ResourcesOfType<instr_collection_conditions>()
+            .AtUri(instrcollectionResource+"/{entityId}")
+            .And.AtUri("/Instruments/{instrumentId}/CollectCondition").Named("GetInstrumentCondition")
+            .HandledBy<InstrumentCollectionConditionHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        }//end INSTR_COLLECTION_CONDITIONS_Resources
 //        private void AddINSTRUMENT_Resources()
 //        {
 //            //Instruments
