@@ -123,7 +123,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.datum_name))
+                if (string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
                     throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
@@ -152,7 +152,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (entityId <=0 ||string.IsNullOrEmpty(anEntity.datum_name))
+                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
                     throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
