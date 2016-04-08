@@ -47,7 +47,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<vertical_datums>().OrderBy(e => e.datum_id).ToList();
-
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -59,10 +58,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -86,10 +81,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(ForUriName = "getOPVDatum")]
