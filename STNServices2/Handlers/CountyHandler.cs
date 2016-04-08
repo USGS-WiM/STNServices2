@@ -162,9 +162,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(anEntity.county_name) || anEntity.state_id <=0||
-                    anEntity.state_fip>=0 || anEntity.county_fip <=0)
+                    anEntity.state_fip<=0 || anEntity.county_fip <=0)
                     throw new BadRequestException("Invalid input parameters");
-                if (!anEntity.county_name.Contains(" Parish") || !anEntity.county_name.Contains(" County"))
+                if (!anEntity.county_name.Contains(" Parish") && !anEntity.county_name.Contains(" County"))
                     throw new BadRequestException("Invalid county name.... County name must contain: 'Parish' or 'County'.");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
@@ -194,9 +194,9 @@ namespace STNServices2.Handlers
             try
             {
                  if (entityId <=0 || string.IsNullOrEmpty(anEntity.county_name) || anEntity.state_id <=0||
-                    anEntity.state_fip>=0 || anEntity.county_fip <=0)
+                    anEntity.state_fip<=0 || anEntity.county_fip <=0)
                     throw new BadRequestException("Invalid input parameters");
-                if (!anEntity.county_name.Contains(" Parish") || !anEntity.county_name.Contains(" County"))
+                if (!anEntity.county_name.Contains(" Parish") && !anEntity.county_name.Contains(" County"))
                     throw new BadRequestException("Invalid county name.... County name must contain: 'Parish' or 'County'.");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {

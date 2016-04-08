@@ -217,7 +217,6 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
         #endregion
-
         #region PostMethods
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
@@ -280,7 +279,6 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
         #endregion
-
         #region PutMethods
 
         /// 
@@ -311,7 +309,6 @@ namespace STNServices2.Handlers
         }//end HttpMethod.PUT
 
         #endregion
-
         #region Delete
 
         /// 
