@@ -95,12 +95,9 @@ namespace STNServices2.Handlers
         public OperationResult GetInstrumentDeploymentType(Int32 instrumentId)
         {
             deployment_type mdeployment_type = null;
-
-            //Return BadRequest if there is no ID
-            if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
-
             try
             {
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     mdeployment_type = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
@@ -117,12 +114,9 @@ namespace STNServices2.Handlers
         public OperationResult GetSensorDeploymentTypes(Int32 sensorTypeId)
         {
             List<deployment_type> deployment_typeList = null;
-
-            //Return BadRequest if there is no ID
-            if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-
             try
             {
+                if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     deployment_typeList = sa.Select<sensor_deployment>().Where(sd => sd.sensor_type_id == sensorTypeId).Select(s => s.deployment_type).ToList();
@@ -144,6 +138,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(anEntity.method))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -171,6 +167,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <=0 || string.IsNullOrEmpty(anEntity.method))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
