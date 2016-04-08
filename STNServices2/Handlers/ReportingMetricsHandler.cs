@@ -406,7 +406,7 @@ namespace STNServices2.Handlers
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent())
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     { 
                         //get all the reports first to then narrow down
                         query = sa.Select<reporting_metrics>();
@@ -494,7 +494,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent())
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     { 
                         anEntity = sa.Add<reporting_metrics>(anEntity);
                         sm(sa.Messages);
