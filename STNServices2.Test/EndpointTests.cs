@@ -403,6 +403,289 @@ namespace STNServices2.Test
             bool success = this.DELETERequest<housing_type>(host + Configuration.housingtypeResource + "/" + postObj.housing_type_id, basicAuth);
             Assert.IsTrue(success);
         }//end method
+
+        [TestMethod]
+        public void ReportingMetricsRequest()
+        {
+            //GET LIST
+            List<reporting_metrics> RequestList = this.GETRequest<List<reporting_metrics>>(host + Configuration.reportMetricResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            reporting_metrics postObj;
+            postObj = this.POSTRequest<reporting_metrics>(host + Configuration.reportMetricResource, new reporting_metrics() { report_date = DateTime.Now, event_id = 1, state = "WI", member_id = 1 }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.reporting_metrics_id.ToString());
+
+            //GET POSTed item
+            reporting_metrics RequestObj = this.GETRequest<reporting_metrics>(host + Configuration.reportMetricResource + "/" + postObj.reporting_metrics_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.report_date = DateTime.Now; postObj.event_id = 2; postObj.state = "MN"; postObj.member_id = 1;
+            reporting_metrics putObj = this.PUTRequest<reporting_metrics>(host + Configuration.reportMetricResource + "/" + postObj.reporting_metrics_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<reporting_metrics>(host + Configuration.reportMetricResource + "/" + postObj.reporting_metrics_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void RoleRequest()
+        {
+            //GET LIST
+            List<role> RequestList = this.GETRequest<List<role>>(host + Configuration.roleResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            role postObj;
+            postObj = this.POSTRequest<role>(host + Configuration.roleResource, new role() { role_name = "post-testName", role_description = "post-testDesc" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.role_id.ToString());
+
+            //GET POSTed item
+            role RequestObj = this.GETRequest<role>(host + Configuration.roleResource + "/" + postObj.role_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.role_name = "put-testName"; postObj.role_description = "put-testDesc";
+            role putObj = this.PUTRequest<role>(host + Configuration.roleResource + "/" + postObj.role_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<role>(host + Configuration.roleResource + "/" + postObj.role_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void SensorBrandRequest()
+        {
+            //GET LIST
+            List<sensor_brand> RequestList = this.GETRequest<List<sensor_brand>>(host + Configuration.sensorBrandResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            sensor_brand postObj;
+            postObj = this.POSTRequest<sensor_brand>(host + Configuration.sensorBrandResource, new sensor_brand() { brand_name = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.sensor_brand_id.ToString());
+
+            //GET POSTed item
+            sensor_brand RequestObj = this.GETRequest<sensor_brand>(host + Configuration.sensorBrandResource + "/" + postObj.sensor_brand_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.brand_name = "put-test";
+            sensor_brand putObj = this.PUTRequest<sensor_brand>(host + Configuration.sensorBrandResource + "/" + postObj.sensor_brand_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<sensor_brand>(host + Configuration.sensorBrandResource + "/" + postObj.sensor_brand_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void SensorTypeRequest()
+        {
+            //GET LIST
+            List<sensor_type> RequestList = this.GETRequest<List<sensor_type>>(host + Configuration.sensorTypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            sensor_type postObj;
+            postObj = this.POSTRequest<sensor_type>(host + Configuration.sensorTypeResource, new sensor_type() { sensor = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.sensor_type_id.ToString());
+
+            //GET POSTed item
+            sensor_type RequestObj = this.GETRequest<sensor_type>(host + Configuration.sensorTypeResource + "/" + postObj.sensor_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.sensor = "put-test";
+            sensor_type putObj = this.PUTRequest<sensor_type>(host + Configuration.sensorTypeResource + "/" + postObj.sensor_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<sensor_type>(host + Configuration.sensorTypeResource + "/" + postObj.sensor_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void SiteRequest()
+        {
+            //GET LIST
+            List<site> RequestList = this.GETRequest<List<site>>(host + "/FullSites");//Configuration.siteResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            site postObj;
+            postObj = this.POSTRequest<site>(host + Configuration.siteResource, new site() { 
+               site_description = "site_post1", latitude_dd = 45.52, longitude_dd = -89.32, hdatum_id = 1,
+                hcollect_method_id = 1, state = "WI", county = "Dane County", waterbody = "test2", member_id = 1}, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.site_id.ToString());
+
+            //GET POSTed item
+            site RequestObj = this.GETRequest<site>(host + Configuration.siteResource + "/" + postObj.site_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.site_description = "site_put2"; postObj.latitude_dd = 42.3; postObj.longitude_dd = -90.3; postObj.hdatum_id = 2;
+            postObj.hcollect_method_id = 2; postObj.state = "WI"; postObj.county = "Dane County"; postObj.waterbody = "test2"; postObj.member_id = 1;
+            site putObj = this.PUTRequest<site>(host + Configuration.siteResource + "/" + postObj.site_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<site>(host + Configuration.siteResource + "/" + postObj.site_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void SiteHousingRequest()
+        {
+            //GET LIST
+            List<site_housing> RequestList = this.GETRequest<List<site_housing>>(host + Configuration.siteHousingResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            site_housing postObj;
+            postObj = this.POSTRequest<site_housing>(host + Configuration.siteHousingResource, new site_housing() { site_id = 123, housing_type_id = 1, amount = 1 }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.site_housing_id.ToString());
+
+            //GET POSTed item
+            site_housing RequestObj = this.GETRequest<site_housing>(host + Configuration.siteHousingResource + "/" + postObj.site_housing_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.site_id = 234;
+            postObj.housing_type_id = 2;
+            postObj.amount = 2;
+            site_housing putObj = this.PUTRequest<site_housing>(host + Configuration.siteHousingResource + "/" + postObj.site_housing_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<site_housing>(host + Configuration.siteHousingResource + "/" + postObj.site_housing_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void SourceRequest()
+        {
+            //GET LIST
+            List<source> RequestList = this.GETRequest<List<source>>(host + Configuration.sourceResource, basicAuth);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            source postObj;
+            postObj = this.POSTRequest<source>(host + Configuration.sourceResource, new source() { source_name = "post-test", agency_id = 1 }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.source_id.ToString());
+
+            //GET POSTed item
+            source RequestObj = this.GETRequest<source>(host + Configuration.sourceResource + "/" + postObj.source_id, basicAuth);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.source_name = "put-test";
+            postObj.agency_id = 2;
+            source putObj = this.PUTRequest<source>(host + Configuration.sourceResource + "/" + postObj.source_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            ////Delete POSTed item
+            //bool success = this.DELETERequest<state>(host + Configuration.stateResource + "/" + postObj.state_id, basicAuth);
+            //Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void StateRequest()
+        {
+            //GET LIST
+            List<state> RequestList = this.GETRequest<List<state>>(host + Configuration.stateResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            state postObj;
+            postObj = this.POSTRequest<state>(host + Configuration.stateResource, new state() { state_name = "post-test", state_abbrev = "pt" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.state_id.ToString());
+
+            //GET POSTed item
+            state RequestObj = this.GETRequest<state>(host + Configuration.stateResource + "/" + postObj.state_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.state_name = "put-test";
+            postObj.state_abbrev = "te";
+            state putObj = this.PUTRequest<state>(host + Configuration.stateResource + "/" + postObj.state_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<state>(host + Configuration.stateResource + "/" + postObj.state_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void StatusTypeRequest()
+        {
+            //GET LIST
+            List<status_type> RequestList = this.GETRequest<List<status_type>>(host + Configuration.statusTypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            status_type postObj;
+            postObj = this.POSTRequest<status_type>(host + Configuration.statusTypeResource, new status_type() { status = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.status_type_id.ToString());
+
+            //GET POSTed item
+            status_type RequestObj = this.GETRequest<status_type>(host + Configuration.statusTypeResource + "/" + postObj.status_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.status = "put-test";
+            status_type putObj = this.PUTRequest<status_type>(host + Configuration.statusTypeResource + "/" + postObj.status_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<status_type>(host + Configuration.statusTypeResource + "/" + postObj.status_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void VerticalCollectMethodRequest()
+        {
+            //GET LIST
+            List<vertical_collect_methods> RequestList = this.GETRequest<List<vertical_collect_methods>>(host + Configuration.verticalCollectMethodResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            vertical_collect_methods postObj;
+            postObj = this.POSTRequest<vertical_collect_methods>(host + Configuration.verticalCollectMethodResource, new vertical_collect_methods() {  vcollect_method = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.vcollect_method_id.ToString());
+
+            //GET POSTed item
+            vertical_collect_methods RequestObj = this.GETRequest<vertical_collect_methods>(host + Configuration.verticalCollectMethodResource + "/" + postObj.vcollect_method_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.vcollect_method = "put-test";
+            vertical_collect_methods putObj = this.PUTRequest<vertical_collect_methods>(host + Configuration.verticalCollectMethodResource + "/" + postObj.vcollect_method_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<vertical_collect_methods>(host + Configuration.verticalCollectMethodResource + "/" + postObj.vcollect_method_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void VerticalDatumRequest()
+        {
+            //GET LIST
+            List<vertical_datums> RequestList = this.GETRequest<List<vertical_datums>>(host + Configuration.verticalDatumResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            vertical_datums postObj;
+            postObj = this.POSTRequest<vertical_datums>(host + Configuration.verticalDatumResource, new vertical_datums() { datum_name = "post-test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.datum_id.ToString());
+
+            //GET POSTed item
+            vertical_datums RequestObj = this.GETRequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.datum_name = "put-test";
+            vertical_datums putObj = this.PUTRequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
         [TestMethod]
         public void HWMRequest()
         {
