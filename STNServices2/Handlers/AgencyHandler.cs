@@ -72,6 +72,7 @@ namespace STNServices2.Handlers
 
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     entity = sa.Select<agency>().FirstOrDefault(e => e.agency_id == entityId);
@@ -94,12 +95,11 @@ namespace STNServices2.Handlers
         public OperationResult GetMemberAgency(Int32 memberId)
         {
             agency mAgency = null;
-
-            //Return BadRequest if there is no ID
-            if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
-
             try
             {
+                //Return BadRequest if there is no ID
+                if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
+
                 using (STNAgent sa = new STNAgent())
                 {
                     mAgency = sa.Select<member>().FirstOrDefault(i => i.member_id == memberId).agency;
@@ -143,6 +143,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(anEntity.agency_name))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -170,6 +172,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <=0 ||string.IsNullOrEmpty(anEntity.agency_name))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))

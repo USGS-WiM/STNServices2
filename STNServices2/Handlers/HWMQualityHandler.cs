@@ -18,7 +18,7 @@
 //     
 
 #region Comments
-// 03.28.16 - JKN - Created
+// 03.23.16 - JKN - Created
 #endregion
 using OpenRasta.Web;
 using System;
@@ -34,19 +34,19 @@ using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
-    public class EventTypeHandler : STNHandlerBase
+    public class HWMQualityHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<event_type> entities = null;
+            List<hwm_qualities> entities = null;
 
             try
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<event_type>().OrderBy(e => e.event_type_id).ToList();
+                    entities = sa.Select<hwm_qualities>().OrderBy(e => e.hwm_quality_id).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
@@ -65,48 +65,58 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventType")]
+        [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            event_type mevent_type = null;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+            hwm_qualities entity = null;
 
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    mevent_type = sa.Select<event_type>().FirstOrDefault(i => i.event_type_id == entityId);
+                    entity = sa.Select<hwm_qualities>().FirstOrDefault(e => e.hwm_quality_id == entityId);
                     sm(sa.Messages);
+
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mevent_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
             }
             catch (Exception ex)
-            { return HandleException(ex); }
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
         }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventType")]
-        public OperationResult GetEventType(Int32 eventId)
+        
+        [HttpOperation(ForUriName = "GetHWMQuality")]
+        public OperationResult GetHWMQuality(Int32 hwmId)
         {
-            event_type mevent_type = null;
-
-            //Return BadRequest if there is no ID
-            if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+            hwm_qualities entity = null;
 
             try
             {
+                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    mevent_type = sa.Select<events>().FirstOrDefault(i => i.event_id == eventId).event_type;
+                    entity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).hwm_qualities;
                     sm(sa.Messages);
+
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mevent_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
             }
             catch (Exception ex)
-            { return HandleException(ex); }
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
         }//end HttpMethod.GET
 
         #endregion
@@ -114,17 +124,18 @@ namespace STNServices2.Handlers
 
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(event_type anEntity)
+        public OperationResult POST(hwm_qualities anEntity)
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.type))
+                if (string.IsNullOrEmpty(anEntity.hwm_quality))
                     throw new BadRequestException("Invalid input parameters");
+
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<event_type>(anEntity);
+                        anEntity = sa.Add<hwm_qualities>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -143,17 +154,16 @@ namespace STNServices2.Handlers
         ///
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, event_type anEntity)
+        public OperationResult Put(Int32 entityId, hwm_qualities anEntity)
         {
             try
             {
-                if (entityId <=0 || string.IsNullOrEmpty(anEntity.type))
-                    throw new BadRequestException("Invalid input parameters");
+                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.hwm_quality)) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<event_type>(anEntity);
+                        anEntity = sa.Update<hwm_qualities>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -174,7 +184,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            event_type anEntity = null;
+            hwm_qualities anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -182,10 +192,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<event_type>().FirstOrDefault(i => i.event_type_id == entityId);
+                        anEntity = sa.Select<hwm_qualities>().FirstOrDefault(i => i.hwm_quality_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<event_type>(anEntity);
+                        sa.Delete<hwm_qualities>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -197,5 +207,5 @@ namespace STNServices2.Handlers
         }//end HttpMethod.PUT
 
         #endregion
-    }//end event_typeHandler
+    }//end hwm_qualitiesHandler
 }

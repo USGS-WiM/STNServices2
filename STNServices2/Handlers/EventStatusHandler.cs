@@ -117,6 +117,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(anEntity.status))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -144,6 +146,7 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId<=0||string.IsNullOrEmpty(anEntity.status))
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))

@@ -273,9 +273,10 @@ namespace STNServices2.Handlers
         {
             try
             {
-                //Return BadRequest if missing required fields
-                if ((aDataFile.instrument_id <= 0 || !aDataFile.instrument_id.HasValue) || 
-                    (aDataFile.processor_id <= 0 || !aDataFile.processor_id.HasValue))throw new BadRequestException("Invalid input parameters");
+                if (!aDataFile.good_start.HasValue || !aDataFile.good_end.HasValue ||aDataFile.collect_date.HasValue||
+                    (!aDataFile.instrument_id.HasValue|| aDataFile.instrument_id <= 0) || 
+                    (!aDataFile.processor_id.HasValue|| aDataFile.processor_id <= 0)
+                    )throw new BadRequestException("Invalid input parameters");
 
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -312,8 +313,10 @@ namespace STNServices2.Handlers
             data_file DataFileToUpdate = null;
             try
             {
-                //Return BadRequest if missing required fields
-                if (aDataFile.data_file_id <= 0 || entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                if (entityId <=0 || !aDataFile.good_start.HasValue || !aDataFile.good_end.HasValue || aDataFile.collect_date.HasValue ||
+                    (!aDataFile.instrument_id.HasValue || aDataFile.instrument_id <= 0) ||
+                    (!aDataFile.processor_id.HasValue || aDataFile.processor_id <= 0)
+                    ) throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
