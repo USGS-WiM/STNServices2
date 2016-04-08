@@ -217,7 +217,6 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
         #endregion
-
         #region PostMethods
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
@@ -226,6 +225,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
+                    throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -278,7 +279,6 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
         #endregion
-
         #region PutMethods
 
         /// 
@@ -290,6 +290,10 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || 
+                    string.IsNullOrEmpty(anEntity.phone))
+                    throw new BadRequestException("Invalid input parameters");
+
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -305,7 +309,6 @@ namespace STNServices2.Handlers
         }//end HttpMethod.PUT
 
         #endregion
-
         #region Delete
 
         /// 
