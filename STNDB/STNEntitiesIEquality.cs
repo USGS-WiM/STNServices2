@@ -406,13 +406,171 @@ namespace STNDB
         }
     }
 
+    public partial class objective_point : IEquatable<objective_point>
+    {
+
+        public bool Equals(objective_point other)
+        {
+            return (string.Equals(this.name, other.name, StringComparison.OrdinalIgnoreCase) && 
+                (string.IsNullOrEmpty(other.description) || string.Equals(this.description, other.description, StringComparison.OrdinalIgnoreCase)) &&
+                (!other.date_established.HasValue || DateTime.Equals(this.date_established, other.date_established)) && 
+                this.elev_ft == other.elev_ft) &&
+                (!other.date_recovered.HasValue || DateTime.Equals(this.date_recovered, other.date_recovered)) &&
+                (this.op_is_destroyed == other.op_is_destroyed) &&
+                (string.IsNullOrEmpty(other.op_notes) || string.Equals(this.op_notes, other.op_notes, StringComparison.OrdinalIgnoreCase)) &&
+                (this.site_id == other.site_id) &&
+                (!other.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
+                (!other.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&
+                (!other.vdatum_id.HasValue || other.vdatum_id <= 0 || this.vdatum_id == other.vdatum_id) &&
+                (other.hdatum_id <= 0 || !other.hdatum_id.HasValue || this.hdatum_id == other.hdatum_id) &&
+                (other.vcollect_method_id <= 0 || !other.vcollect_method_id.HasValue || this.vcollect_method_id == other.vcollect_method_id) &&
+                (other.hcollect_method_id <= 0 || !other.hcollect_method_id.HasValue || this.hcollect_method_id == other.hcollect_method_id) &&
+                (other.uncertainty <= 0 || !other.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
+                (string.IsNullOrEmpty(other.unquantified) || string.Equals(this.unquantified, other.unquantified, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as objective_point);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.name + this.description + this.op_type_id.ToString() + this.date_established.ToString() + this.site_id.ToString()).GetHashCode();
+        }
+    }
+    public partial class objective_point_type : IEquatable<objective_point_type>
+    {
+
+        public bool Equals(objective_point_type other)
+        {
+            return (string.Equals(this.op_type, other.op_type, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as objective_point_type);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.op_type).GetHashCode();
+        }
+    }
+    public partial class op_control_identifier : IEquatable<op_control_identifier>
+    {
+
+        public bool Equals(op_control_identifier other)
+        {
+            return (this.objective_point_id == other.objective_point_id &&
+                (string.Equals(this.identifier, other.identifier, StringComparison.OrdinalIgnoreCase)) &&
+                (string.Equals(this.identifier_type, other.identifier_type, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as op_control_identifier);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.objective_point_id.ToString() + this.identifier + this.identifier_type).GetHashCode();
+        }
+    }
+    public partial class op_measurements : IEquatable<op_measurements>
+    {
+
+        public bool Equals(op_measurements other)
+        {
+            return (this.objective_point_id == other.objective_point_id && this.instrument_status_id == other.instrument_status_id &&                
+                this.water_surface == other.water_surface && this.ground_surface == other.ground_surface && this.offset_correction == other.offset_correction);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as op_quality);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.objective_point_id.ToString() + this.instrument_status_id.ToString()).GetHashCode();
+        }
+    }
+    public partial class op_quality : IEquatable<op_quality>
+    {
+
+        public bool Equals(op_quality other)
+        {
+            return (string.IsNullOrEmpty(other.quality) || string.Equals(this.quality, other.quality, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as op_quality);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.quality).GetHashCode();
+        }
+    }
+    public partial class peak_summary : IEquatable<peak_summary>
+    {
+        public bool Equals(peak_summary other)
+        {
+            return (this.member_id == other.member_id) && !other.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
+                (other.is_peak_estimated <= 0 || this.is_peak_estimated == other.is_peak_estimated || other.is_peak_estimated <= 0 ) &&
+                (other.is_peak_time_estimated <= 0 || this.is_peak_time_estimated == other.is_peak_time_estimated || other.is_peak_time_estimated <= 0) &&
+                (other.peak_stage.Value <= 0 || this.peak_stage.Value == other.peak_stage.Value || other.peak_stage.Value <= 0) &&
+                (other.is_peak_stage_estimated <= 0 || this.is_peak_stage_estimated == other.is_peak_stage_estimated || other.is_peak_stage_estimated <= 0) &&
+                (!other.peak_discharge.HasValue || this.peak_discharge.Value == other.peak_discharge.Value || other.peak_discharge.Value <= 0) &&
+                (other.is_peak_discharge_estimated <= 0 || this.is_peak_discharge_estimated == other.is_peak_discharge_estimated || (other.is_peak_discharge_estimated <= 0)) &&
+                (!other.vdatum_id.HasValue || this.vdatum_id.Value == other.vdatum_id.Value || other.vdatum_id.Value <= 0) &&
+                (other.height_above_gnd.Value <= 0 || this.height_above_gnd.Value == other.height_above_gnd.Value || other.height_above_gnd.Value <= 0) &&
+                (other.is_hag_estimated.Value  <= 0 || this.is_hag_estimated.Value == other.is_hag_estimated.Value || other.is_hag_estimated.Value <= 0) &&
+                (!string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone)) &&
+                (!other.aep.HasValue|| this.aep.Value == other.aep.Value || other.aep.Value <= 0) &&
+                (!other.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci.Value || other.aep_lowci.Value <= 0) &&
+                (!other.aep_upperci.HasValue || this.aep_upperci.Value == other.aep_upperci.Value || other.aep_upperci.Value <= 0) &&
+                (!other.aep_range.HasValue || this.aep_range.Value == other.aep_range.Value || other.aep_range.Value <= 0) &&
+                (string.Equals(this.calc_notes, other.calc_notes, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as peak_summary);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.member_id.Value.ToString() + this.peak_date.Value.ToString() + this.time_zone).GetHashCode();
+        }
+    }
     public partial class reporting_metrics : IEquatable<reporting_metrics>
     {
         public bool Equals(reporting_metrics other)
         {
             return (this.member_id == other.member_id && DateTime.Equals(this.report_date, other.report_date) && this.event_id == other.event_id && 
                 this.state == other.state && this.sw_fieldpers_notacct == other.sw_fieldpers_notacct && this.wq_fieldpers_notacct == other.wq_fieldpers_notacct && 
-                this.sw_yest_fieldpers == other.sw_yest_fieldpers && this.wq_yest_fieldpers == other.wq_yest_fieldpers && this.sw_tod_fieldpers == other.sw_tod_fieldpers == null &&
+                this.sw_yest_fieldpers == other.sw_yest_fieldpers && this.wq_yest_fieldpers == other.wq_yest_fieldpers && this.sw_tod_fieldpers == other.sw_tod_fieldpers &&
                 this.wq_tod_fieldpers == other.wq_tod_fieldpers && this.sw_tmw_fieldpers == other.sw_tmw_fieldpers && this.wq_tmw_fieldpers == other.wq_tmw_fieldpers &&
                 this.sw_yest_officepers == other.sw_yest_officepers && this.wq_yest_officepers == other.wq_yest_officepers && this.sw_tod_officepers == other.sw_tod_officepers &&
                 this.wq_tod_officepers == other.wq_tod_officepers && this.sw_tmw_officepers == other.sw_tmw_officepers && this.wq_tmw_officepers == other.wq_tmw_officepers &&
@@ -457,7 +615,7 @@ namespace STNDB
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as sensor_brand);
+            return Equals(obj as role);
         }
 
         public override int GetHashCode()

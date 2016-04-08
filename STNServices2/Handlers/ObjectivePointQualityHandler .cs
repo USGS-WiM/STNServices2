@@ -4,12 +4,12 @@
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2014 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
-//   purpose:   Handles Site resources through the HTTP uniform interface.
+//   purpose:   Handles OP Quality resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
 //
 //discussion:   Handlers are objects which handle all interaction with resources. 
@@ -18,7 +18,7 @@
 //     
 
 #region Comments
-// 03.28.16 - JKN - Created
+// 04.08.16 - TR - Created
 #endregion
 using OpenRasta.Web;
 using System;
@@ -34,19 +34,19 @@ using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
-    public class VerticalDatumHandler : STNHandlerBase
+    public class ObjectivePointQualityHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<vertical_datums> entities = null;
+            List<op_quality> entities = null;
 
             try
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<vertical_datums>().OrderBy(e => e.datum_id).ToList();
+                    entities = sa.Select<op_quality>().OrderBy(e => e.op_quality_id).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -63,14 +63,14 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            vertical_datums anEntity = null;
+            op_quality anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<vertical_datums>().FirstOrDefault(e => e.datum_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    anEntity = sa.Select<op_quality>().FirstOrDefault(e => e.op_quality_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -83,73 +83,45 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "getOPVDatum")]
-        public OperationResult getOPVDatum(Int32 objectivePointId)
+        [HttpOperation(ForUriName = "GetObjectivePointQuality")]
+        public OperationResult GetObjectivePointQuality(Int32 objectivePointId)
         {
-            vertical_datums anEntity = null;
-            
+            op_quality anEntity;
+
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    anEntity = sa.Select<objective_point>().FirstOrDefault(h => h.objective_point_id == objectivePointId).op_quality;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
-            { 
-                return HandleException(ex); 
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(ForUriName = "GetHWMVDatum")]
-        public OperationResult GetHWMVDatum(Int32 hwmId)
-        {
-            vertical_datums anEntity = null;
-
-            //Return BadRequest if there is no ID
-            if (hwmId <= 0)
-                return new OperationResult.BadRequest();
-
-            try
             {
-                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);           
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { 
-                return HandleException(ex); 
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
-
+       
         #endregion
         #region PostMethods
 
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(vertical_datums anEntity)
+        public OperationResult POST(op_quality anEntity)
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.quality)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<vertical_datums>(anEntity);
+                        anEntity = sa.Add<op_quality>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -168,18 +140,17 @@ namespace STNServices2.Handlers
         ///
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, vertical_datums anEntity)
+        public OperationResult Put(Int32 entityId, op_quality anEntity)
         {
             try
             {
-                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.datum_name) || string.IsNullOrEmpty(anEntity.datum_abbreviation))
-                    throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.quality)) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<vertical_datums>(anEntity);
+                        anEntity = sa.Update<op_quality>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -200,7 +171,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            vertical_datums anEntity = null;
+            op_quality anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -208,10 +179,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<vertical_datums>().FirstOrDefault(i => i.datum_id == entityId);
+                        anEntity = sa.Select<op_quality>().FirstOrDefault(i => i.op_quality_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<vertical_datums>(anEntity);
+                        sa.Delete<op_quality>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -220,8 +191,8 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
 
-        }//end HttpMethod.PUT
+        }//end HttpMethod.DELETE
 
         #endregion
-    }//end vertical_datumsHandler
+    }//end ObjectivePointQualityHandler
 }
