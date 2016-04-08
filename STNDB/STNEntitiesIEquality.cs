@@ -374,19 +374,19 @@ namespace STNDB
                     this.hwm_quality_id == other.hwm_quality_id &&
                     this.site_id.Value == other.site_id.Value &&
                     (this.event_id == other.event_id || other.event_id <= 0 || other.event_id == null) &&
-                    DateTime.Equals(this.flag_date.Value, other.flag_date.Value) &&
-                    (string.Equals(this.waterbody.ToUpper(), other.waterbody.ToUpper()) || string.IsNullOrEmpty(other.waterbody)) &&
-                    (string.Equals(this.bank.ToUpper(), other.bank.ToUpper()) || string.IsNullOrEmpty(other.bank)) &&
-                    (this.latitude_dd.Value == other.latitude_dd.Value || other.latitude_dd.Value <= 0 || !other.latitude_dd.HasValue) &&
-                    (this.longitude_dd.Value == other.longitude_dd.Value || other.longitude_dd.Value <= 0 || !other.longitude_dd.HasValue) &&
-                    (this.elev_ft.Value == other.elev_ft.Value || other.elev_ft.Value <= 0 || !other.elev_ft.HasValue) &&
-                    (this.vdatum_id.Value == other.vdatum_id.Value || other.vdatum_id.Value <= 0 || !other.vdatum_id.HasValue) &&
-                    (this.hdatum_id.Value == other.hdatum_id.Value || other.hdatum_id.Value <= 0 || !other.hdatum_id.HasValue) &&
-                    (this.flag_member_id.Value == other.flag_member_id.Value || other.flag_member_id.Value <= 0 || !other.flag_member_id.HasValue) &&
-                    (this.vcollect_method_id.Value == other.vcollect_method_id.Value || other.vcollect_method_id.Value <= 0 || !other.vcollect_method_id.HasValue) &&
-                    (this.approval_id.Value == other.approval_id.Value || other.approval_id.Value <= 0 || !other.approval_id.HasValue) &&
-                    (this.marker_id.Value == other.marker_id.Value || other.marker_id.Value <= 0 || !other.marker_id.HasValue) &&
-                    (this.height_above_gnd.Value == other.height_above_gnd.Value || other.height_above_gnd.Value <= 0 || !other.height_above_gnd.HasValue));
+                    (!this.flag_date.HasValue || DateTime.Equals(this.flag_date.Value, other.flag_date.Value)) &&
+                    (string.IsNullOrEmpty(other.waterbody) || string.Equals(this.waterbody, other.waterbody, StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(other.bank) || string.Equals(this.bank, other.bank, StringComparison.OrdinalIgnoreCase)) &&
+                    (!other.latitude_dd.HasValue || this.latitude_dd.Value == other.latitude_dd.Value) &&
+                    (!other.longitude_dd.HasValue||this.longitude_dd.Value == other.longitude_dd.Value) &&
+                    (!other.elev_ft.HasValue||this.elev_ft.Value == other.elev_ft.Value) &&
+                    (!other.vdatum_id.HasValue|| this.vdatum_id.Value == other.vdatum_id.Value) &&
+                    (!other.hdatum_id.HasValue||this.hdatum_id.Value == other.hdatum_id.Value) &&
+                    (!other.flag_member_id.HasValue || this.flag_member_id.Value == other.flag_member_id.Value) &&
+                    (!other.vcollect_method_id.HasValue||this.vcollect_method_id.Value == other.vcollect_method_id.Value) &&
+                    (!other.approval_id.HasValue||this.approval_id.Value == other.approval_id.Value) &&
+                    (!other.marker_id.HasValue||this.marker_id.Value == other.marker_id.Value) &&
+                    (!other.height_above_gnd.HasValue||this.height_above_gnd.Value == other.height_above_gnd.Value));
 
 
         }
@@ -669,6 +669,60 @@ namespace STNDB
         public override int GetHashCode()
         {
             return (this.datum_name + this.datum_abbreviation).GetHashCode();
+        }
+    }
+    public partial class hwm_qualities : IEquatable<hwm_qualities>
+    {
+        public bool Equals(hwm_qualities other)
+        {
+            return string.Equals(this.hwm_quality, other.hwm_quality,StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as hwm_qualities);
+        }
+        public override int GetHashCode()
+        {
+            return this.hwm_quality.GetHashCode();
+        }
+    }
+    public partial class hwm_types : IEquatable<hwm_types>
+    {
+        public bool Equals(hwm_types other)
+        {
+            return string.Equals(this.hwm_type, other.hwm_type, StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as hwm_types);
+        }
+        public override int GetHashCode()
+        {
+            return this.hwm_type.GetHashCode();
+        }
+    }
+    public partial class instr_collection_conditions : IEquatable<instr_collection_conditions>
+    {
+        public bool Equals(instr_collection_conditions other)
+        {
+            return string.Equals(this.condition, other.condition, StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as instr_collection_conditions);
+        }
+        public override int GetHashCode()
+        {
+            return this.condition.GetHashCode();
         }
     }
 }

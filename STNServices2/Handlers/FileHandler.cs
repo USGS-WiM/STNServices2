@@ -455,24 +455,25 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult Post(file aFile)
+        public OperationResult Post(file anEntity)
         {
             //Return BadRequest if missing required fields
-            if (aFile.site_id <= 0) throw new BadRequestException("Invalid input parameters");
-
+            if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue ||
+               anEntity.site_id <= 0)
+                throw new BadRequestException("Invalid input parameters");
             try
             {
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        aFile = sa.Add<file>(aFile);
+                        anEntity = sa.Add<file>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.Created { ResponseResource = aFile };
+                return new OperationResult.Created { ResponseResource = anEntity };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -541,7 +542,9 @@ namespace STNServices2.Handlers
                     }//next
                     //Return BadRequest if missing required fields
 
-                    if (uploadFile == null || uploadFile.site_id <= 0) throw new BadRequestException("Invalid input parameters");
+                    if (uploadFile.filetype_id <= 0 || uploadFile.file_date.HasValue ||
+                        uploadFile.site_id <= 0)
+                        throw new BadRequestException("Invalid input parameters");
 
                     //Get basic authentication password
                     using (EasySecureString securedPassword = GetSecuredPassword())
