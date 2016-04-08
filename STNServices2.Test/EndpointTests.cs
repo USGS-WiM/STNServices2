@@ -62,7 +62,7 @@ namespace STNServices2.Test
 
             //POST
             contact postObj;
-            postObj = this.POSTRequest<contact>(host + Configuration.contactResource, new contact() { fname = "post-test" }, basicAuth);
+            postObj = this.POSTRequest<contact>(host + Configuration.contactResource, new contact() { fname = "post", lname="Test", phone ="123" }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.contact_id.ToString());
 
             //GET POSTed item
@@ -70,7 +70,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(RequestObj);
 
             //PUT POSTed item
-            postObj.fname = "put-test";
+            postObj.fname = "put";
             contact putObj = this.PUTRequest<contact>(host + Configuration.contactResource + "/" + postObj.contact_id, postObj, basicAuth);
             Assert.IsNotNull(putObj);
 
@@ -112,7 +112,9 @@ namespace STNServices2.Test
 
             //POST
             county postObj;
-            postObj = this.POSTRequest<county>(host + Configuration.countyResource, new county() { county_name = "post-test" },basicAuth);
+            postObj = this.POSTRequest<county>(host + Configuration.countyResource, new county() { county_name = "post-test County",
+                                                                                                   state_id =1, state_fip=1,
+                                                                                                   county_fip =1},basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.county_id.ToString());
 
             //GET POSTed item
@@ -120,7 +122,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(RequestObj);
 
             //PUT POSTed item
-            postObj.county_name = "put-test";
+            postObj.county_name = "post-test Parish";
             county putObj = this.PUTRequest<county>(host + Configuration.countyResource + "/" + postObj.county_id, postObj, basicAuth);
             Assert.IsNotNull(putObj);
 
@@ -212,7 +214,9 @@ namespace STNServices2.Test
 
             //POST
             events postObj;
-            postObj = this.POSTRequest<events>(host + Configuration.eventsResource, new events() { event_name = "post-test" }, basicAuth);
+            postObj = this.POSTRequest<events>(host + Configuration.eventsResource, new events() { event_name = "post-test",
+                                                                                                   event_type_id =1, event_status_id =1,
+                                                                                                   event_coordinator =1}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.event_id.ToString());
 
             //GET POSTed item
@@ -362,7 +366,7 @@ namespace STNServices2.Test
 
             //POST
             horizontal_datums postObj;
-            postObj = this.POSTRequest<horizontal_datums>(host + Configuration.horizontaldatumResource, new horizontal_datums() { datum_name = "post-test" }, basicAuth);
+            postObj = this.POSTRequest<horizontal_datums>(host + Configuration.horizontaldatumResource, new horizontal_datums() { datum_name = "post-test", datum_abbreviation="test" }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.datum_id.ToString());
 
             //GET POSTed item
@@ -670,7 +674,7 @@ namespace STNServices2.Test
 
             //POST
             vertical_datums postObj;
-            postObj = this.POSTRequest<vertical_datums>(host + Configuration.verticalDatumResource, new vertical_datums() { datum_name = "post-test" }, basicAuth);
+            postObj = this.POSTRequest<vertical_datums>(host + Configuration.verticalDatumResource, new vertical_datums() { datum_name = "post-test",datum_abbreviation ="tst" }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.datum_id.ToString());
 
             //GET POSTed item
