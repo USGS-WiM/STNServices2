@@ -1,6 +1,4 @@
 ﻿//------------------------------------------------------------------------------
-//----- MemberHandler -----------------------------------------------------
-//------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
@@ -8,10 +6,11 @@
 
 // copyright:   2014 WiM - USGS
 
-//    authors:  Tonia Roddick USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //              
 //  
-//   purpose:   Handles Reference Points/measurements to Instrument status resources through the HTTP uniform interface.
+//   purpose:   Handles OP measurements to Instrument status resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
 //
 //discussion:   Handlers are objects which handle all interaction with resources in 
@@ -21,184 +20,149 @@
 //     
 
 #region Comments
-// 04.22.14 - TR - Created
+// 04.08.16 - TR - Created
 
 #endregion
 
-using STNServices2.Resources;
-using STNServices2.Authentication;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Reflection;
-using System.Web;
+using System.Runtime.InteropServices;
+using STNServices2.Utilities.ServiceAgent;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
 
+using WiM.Authentication;
 
 namespace STNServices2.Handlers
 {
     public class OP_MeasurementsHandler : STNHandlerBase
-    {
-        #region Properties
-        public override string entityName
-        {
-            get { return "OP_MEASUREMENTS"; }
-        }
-        #endregion
-        #region Routed Methods
-
+    {        
         #region GetMethods
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<OP_MEASUREMENTS> RP_measurList = new List<OP_MEASUREMENTS>();
+            List<op_measurements> entities = null;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent())
                 {
-                    RP_measurList = aSTNE.OP_MEASUREMENTS.OrderBy(m => m.OP_MEASUREMENTS_ID).ToList();
-
-                    if (RP_measurList != null)
-                        RP_measurList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<op_measurements>().OrderBy(m => m.op_measurements_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = RP_measurList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            OP_MEASUREMENTS anOPMeas;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            { return new OperationResult.BadRequest(); }
+            op_measurements anEntity = null;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    anOPMeas = aSTNE.OP_MEASUREMENTS.SingleOrDefault(m => m.OP_MEASUREMENTS_ID == entityId);
-
-                    if (anOPMeas != null)
-                        anOPMeas.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
+                    anEntity = sa.Select<op_measurements>().FirstOrDefault(e => e.op_measurements_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anOPMeas };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatOPMeasurements")]
         public OperationResult InstrMeasurements(Int32 instrumentStatusId)
         {
-            List<OP_MEASUREMENTS> opMeasurements;
+            List<op_measurements> entities;
 
-            //Return BadRequest if there is no ID
-            if (instrumentStatusId <= 0)
-            { return new OperationResult.BadRequest(); }
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    opMeasurements = aSTNE.OP_MEASUREMENTS.Where(m => m.INSTRUMENT_STATUS_ID == instrumentStatusId).ToList();
-
-                    if (opMeasurements != null)
-                        opMeasurements.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<op_measurements>().Where(m => m.instrument_status_id == instrumentStatusId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = opMeasurements };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetOPOPMeasurements")]
         public OperationResult OPOPMeasurements(Int32 objectivePointId)
         {
-            List<OP_MEASUREMENTS> opMeasurements;
+            List<op_measurements> entities;
 
             //Return BadRequest if there is no ID
             if (objectivePointId <= 0)
             { return new OperationResult.BadRequest(); }
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    opMeasurements = aSTNE.OP_MEASUREMENTS.Where(m => m.OBJECTIVE_POINT_ID == objectivePointId).ToList();
-
-                    if (opMeasurements != null)
-                        opMeasurements.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<op_measurements>().Where(m => m.objective_point_id == objectivePointId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = opMeasurements };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
         }//end HttpMethod.GET
         #endregion
 
         #region PostMethods
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST, ForUriName = "AddInstrumentStatOPMeasurements")]
-        public OperationResult AddInstrumentStatOPMeasurements(Int32 instrumentStatusId, OP_MEASUREMENTS anOPMeasurement)
-        {
-            //Return BadRequest if there is no ID
-            if (instrumentStatusId <= 0 || anOPMeasurement.OBJECTIVE_POINT_ID <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+        public OperationResult AddInstrumentStatOPMeasurements(op_measurements anEntity)
+        {            
             try
             {
+                if (anEntity.instrument_status_id <= 0 || anEntity.objective_point_id <= 0) throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-                        anOPMeasurement.INSTRUMENT_STATUS_ID = instrumentStatusId;
-                        if (!Exists(aSTNE.OP_MEASUREMENTS, ref anOPMeasurement))
-                        {
-                            aSTNE.OP_MEASUREMENTS.AddObject(anOPMeasurement);
-                            aSTNE.SaveChanges();
-                        }//end if
-                    }
-                }
-                return new OperationResult.OK();
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {                        
+                        anEntity = sa.Add<op_measurements>(anEntity);
+                        sm(sa.Messages);
+                    }//end if                    
+                }//end using
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.POST
 
         #endregion
@@ -208,42 +172,26 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT, ForUriName = "Put")]
-        public OperationResult Put(Int32 entityId, OP_MEASUREMENTS anOPmeas)
-        {
-            //Return BadRequest if missing required fields
-            if (anOPmeas.OBJECTIVE_POINT_ID <= 0 || anOPmeas.INSTRUMENT_STATUS_ID <= 0)
-            { return new OperationResult.BadRequest(); }
-
+        public OperationResult Put(Int32 entityId, op_measurements anEntity)
+        {            
             try
-            {
+            { 
+                if (anEntity.objective_point_id <= 0 || anEntity.instrument_status_id <= 0) throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //fetch the object to be updated (assuming that it exists)
-                        OP_MEASUREMENTS ObjectToBeUpdated = aSTNE.OP_MEASUREMENTS.Single(m => m.OP_MEASUREMENTS_ID == entityId);
-
-                        ObjectToBeUpdated.TYPE = anOPmeas.TYPE != ObjectToBeUpdated.TYPE ? anOPmeas.TYPE : ObjectToBeUpdated.TYPE;
-                        ObjectToBeUpdated.FROM_RP = anOPmeas.FROM_RP != ObjectToBeUpdated.FROM_RP ? anOPmeas.FROM_RP : ObjectToBeUpdated.FROM_RP;
-                        ObjectToBeUpdated.HANGING_LENGTH = anOPmeas.HANGING_LENGTH != ObjectToBeUpdated.HANGING_LENGTH ? anOPmeas.HANGING_LENGTH : ObjectToBeUpdated.HANGING_LENGTH;
-                        ObjectToBeUpdated.WATER_SURFACE = anOPmeas.WATER_SURFACE != ObjectToBeUpdated.WATER_SURFACE ? anOPmeas.WATER_SURFACE : ObjectToBeUpdated.WATER_SURFACE;
-                        ObjectToBeUpdated.GROUND_SURFACE = anOPmeas.GROUND_SURFACE != ObjectToBeUpdated.GROUND_SURFACE ? anOPmeas.GROUND_SURFACE : ObjectToBeUpdated.GROUND_SURFACE;
-                        ObjectToBeUpdated.OFFSET_CORRECTION = anOPmeas.OFFSET_CORRECTION != ObjectToBeUpdated.OFFSET_CORRECTION ? anOPmeas.OFFSET_CORRECTION : ObjectToBeUpdated.OFFSET_CORRECTION;
-
-                        aSTNE.SaveChanges();
-
+                        anEntity = sa.Update<op_measurements>(anEntity);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
-
-                return new OperationResult.OK { };
+                return new OperationResult.Modified { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
 
         }//end HttpMethod.PUT
 
@@ -253,86 +201,33 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            OP_MEASUREMENTS ObjectToBeDeleted = null;
+            op_measurements anEntity = null;
 
-            //Return BadRequest if missing required fields
-            if (entityId <= 0)
+            try
             {
-                return new OperationResult.BadRequest();
-            }
-
-            //Get basic authentication password
-            using (EasySecureString securedPassword = GetSecuredPassword())
-            {
-                using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+           
+                using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-
-                    // create user profile using db stored proceedure
-                    try
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //fetch the object to be updated (assuming that it exists)
-                        ObjectToBeDeleted = aSTNE.OP_MEASUREMENTS.SingleOrDefault(
-                                                m => m.OP_MEASUREMENTS_ID == entityId);
+                        anEntity = sa.Select<op_measurements>().FirstOrDefault(i => i.op_measurements_id == entityId);
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        //delete it
-                        aSTNE.OP_MEASUREMENTS.DeleteObject(ObjectToBeDeleted);
-                        aSTNE.SaveChanges();
-                        //Return object to verify persisitance
-
-                        return new OperationResult.OK { };
-
-                    }
-                    catch (Exception)
-                    {
-                        return new OperationResult.BadRequest();
-                    }
-
-                }// end using
-            } //end using
+                        sa.Delete<op_measurements>(anEntity);
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HTTP.DELETE
 
         #endregion
-
-        #endregion
-        #region Helper Methods
-        private bool Exists(ObjectSet<OP_MEASUREMENTS> entityRDS, ref OP_MEASUREMENTS anEntity)
-        {
-            OP_MEASUREMENTS existingRPM;
-            OP_MEASUREMENTS thisEntity = anEntity as OP_MEASUREMENTS;
-            //check if it exists
-            try
-            {
-
-                existingRPM = entityRDS.FirstOrDefault(e => e.OBJECTIVE_POINT_ID == thisEntity.OBJECTIVE_POINT_ID &&
-                                                               e.INSTRUMENT_STATUS_ID == thisEntity.INSTRUMENT_STATUS_ID &&
-                                                               e.TYPE == thisEntity.TYPE &&
-                                                               e.FROM_RP == thisEntity.FROM_RP &&
-                                                               e.HANGING_LENGTH == thisEntity.HANGING_LENGTH &&
-                                                               e.WATER_SURFACE == thisEntity.WATER_SURFACE &&
-                                                               e.GROUND_SURFACE == thisEntity.GROUND_SURFACE &&
-                                                               e.OFFSET_CORRECTION == thisEntity.OFFSET_CORRECTION);
-
-
-                if (existingRPM == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingRPM;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        #endregion
-
-
     }//end class PeakSummaryHandler
 }//end namespace

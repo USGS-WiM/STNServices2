@@ -125,6 +125,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\ObjectivePointHandler.cs" />
+    <Compile Include="Handlers\OP_ControlIdentifierHandler.cs" />
+    <Compile Include="Handlers\OP_MeasurementsHandler.cs" />
+    <Compile Include="Handlers\PeakSummaryHandler.cs" />
     <Compile Include="Handlers\ReportingMetricsHandler.cs" />
     <Compile Include="Handlers\RoleHandler.cs" />
     <Compile Include="Handlers\SiteHandler.cs" />
@@ -133,7 +137,9 @@
     <Compile Include="Handlers\SourceHandler.cs" />
     <Compile Include="Handlers\SensorTypeHandler.cs" />
     <Compile Include="Handlers\SensorBrandHandler.cs" />
+    <Compile Include="Handlers\ObjectivePointTypeHandler.cs" />
     <Compile Include="Handlers\StatusTypeHandler.cs" />
+    <Compile Include="Handlers\ObjectivePointQualityHandler .cs" />
     <Compile Include="Handlers\VerticalCollectionMethodsHandler.cs" />
     <Compile Include="Handlers\VerticalDatumHandler.cs" />
     <Compile Include="Handlers\InstrumentCollectionConditionHandler.cs" />
