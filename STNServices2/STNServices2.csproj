@@ -125,6 +125,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\InstrumentCollectionConditionHandler.cs" />
+    <Compile Include="Handlers\HWMHandler.cs" />
+    <Compile Include="Handlers\HWMTypeHandler.cs" />
+    <Compile Include="Handlers\HWMQualityHandler.cs" />
     <Compile Include="Security\STNAuthenticationProvider.cs" />
     <Compile Include="Security\STNAuthorizerContributer.cs" />
     <Compile Include="Security\STNRequiresRoleAttribute.cs" />
