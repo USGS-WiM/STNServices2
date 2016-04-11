@@ -252,6 +252,7 @@ namespace STNServices2.Handlers
                         //Update fields
                         instrumentStatusToUpdate.INSTRUMENT_STATUS_ID = anInstrumentStatus.INSTRUMENT_STATUS_ID;
                         instrumentStatusToUpdate.INSTRUMENT_ID = anInstrumentStatus.INSTRUMENT_ID;
+                        instrumentStatusToUpdate.STATUS_TYPE_ID = anInstrumentStatus.STATUS_TYPE_ID;
                         instrumentStatusToUpdate.TIME_STAMP = anInstrumentStatus.TIME_STAMP;
                         instrumentStatusToUpdate.NOTES = anInstrumentStatus.NOTES;
                         instrumentStatusToUpdate.MEMBER_ID = anInstrumentStatus.MEMBER_ID;

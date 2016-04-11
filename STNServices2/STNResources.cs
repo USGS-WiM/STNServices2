@@ -96,6 +96,7 @@ using Newtonsoft.Json;
 
 #endregion
 
+
 namespace STNServices2
 {
     #region Contexts
@@ -1073,6 +1074,7 @@ namespace STNServices2
         private ObjectSet<PEAK_VIEW> _PEAK_VIEW;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -1540,6 +1542,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Function Imports
     
         /// <summary>
@@ -1682,10 +1685,12 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
 
     #endregion
+
     
     #region Entities
     
@@ -1711,6 +1716,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1885,6 +1891,7 @@ namespace STNServices2
         partial void OnPHONEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1935,6 +1942,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1959,6 +1967,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2037,6 +2046,7 @@ namespace STNServices2
         partial void OnAPPROVAL_DATEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2126,6 +2136,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2158,6 +2169,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2488,6 +2500,7 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
+
     
     }
     
@@ -2513,6 +2526,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2663,6 +2677,7 @@ namespace STNServices2
         partial void OnEMAILChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2690,6 +2705,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2716,6 +2732,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2770,6 +2787,7 @@ namespace STNServices2
         partial void OnTYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2797,6 +2815,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2823,6 +2842,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2949,6 +2969,7 @@ namespace STNServices2
         partial void OnCOUNTY_FIPChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2992,6 +3013,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3016,6 +3038,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3310,6 +3333,7 @@ namespace STNServices2
         partial void OnTIME_ZONEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3493,6 +3517,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3517,6 +3542,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3571,6 +3597,7 @@ namespace STNServices2
         partial void OnPRIORITY_NAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3598,6 +3625,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3622,6 +3650,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3676,6 +3705,7 @@ namespace STNServices2
         partial void OnMETHODChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3726,6 +3756,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3750,6 +3781,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3948,6 +3980,7 @@ namespace STNServices2
         partial void OnEVENT_COORDINATORChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4138,6 +4171,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4162,6 +4196,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4216,6 +4251,7 @@ namespace STNServices2
         partial void OnSTATUSChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4243,6 +4279,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4267,6 +4304,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4321,6 +4359,7 @@ namespace STNServices2
         partial void OnTYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4348,6 +4387,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4376,6 +4416,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4454,6 +4495,7 @@ namespace STNServices2
         partial void OnKEYWORD_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4536,6 +4578,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4560,6 +4603,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4614,6 +4658,7 @@ namespace STNServices2
         partial void OnFILETYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4641,6 +4686,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4665,6 +4711,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5127,6 +5174,7 @@ namespace STNServices2
         partial void OnOBJECTIVE_POINT_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5466,6 +5514,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5490,6 +5539,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5544,6 +5594,7 @@ namespace STNServices2
         partial void OnHCOLLECT_METHODChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5617,6 +5668,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5641,6 +5693,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5719,6 +5772,7 @@ namespace STNServices2
         partial void OnDATUM_ABBREVIATIONChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5769,6 +5823,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5795,6 +5850,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5849,6 +5905,7 @@ namespace STNServices2
         partial void OnTYPE_NAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5899,6 +5956,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5927,6 +5985,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6557,6 +6616,7 @@ namespace STNServices2
         partial void OnSURVEY_MEMBER_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7091,6 +7151,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7115,6 +7176,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7169,6 +7231,7 @@ namespace STNServices2
         partial void OnHWM_QUALITYChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7196,6 +7259,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7220,6 +7284,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7274,6 +7339,7 @@ namespace STNServices2
         partial void OnHWM_TYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7301,6 +7367,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7327,6 +7394,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7792,6 +7860,7 @@ namespace STNServices2
         partial void OnPEAK_SUMMARY_IDChanged();
 
         #endregion
+
     
     }
     
@@ -7819,6 +7888,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7873,6 +7943,7 @@ namespace STNServices2
         partial void OnCONDITIONChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7900,6 +7971,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7924,6 +7996,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8242,6 +8315,7 @@ namespace STNServices2
         partial void OnVENTEDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -8588,6 +8662,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -8612,6 +8687,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8882,6 +8958,7 @@ namespace STNServices2
         partial void OnVDATUM_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -9065,6 +9142,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9091,6 +9169,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9145,6 +9224,7 @@ namespace STNServices2
         partial void OnWORDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -9172,6 +9252,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9196,6 +9277,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9466,6 +9548,7 @@ namespace STNServices2
         partial void OnTITLEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -9493,6 +9576,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9519,6 +9603,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9573,6 +9658,7 @@ namespace STNServices2
         partial void OnLOCATORChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -9600,6 +9686,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9624,6 +9711,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9678,6 +9766,7 @@ namespace STNServices2
         partial void OnMARKER1Changed();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -9705,6 +9794,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9733,6 +9823,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10003,6 +10094,7 @@ namespace STNServices2
         partial void OnUSERNAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -10292,6 +10384,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -10324,6 +10417,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10654,6 +10748,7 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
+
     
     }
     
@@ -10679,6 +10774,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10733,6 +10829,7 @@ namespace STNServices2
         partial void OnNAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -10760,6 +10857,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -10788,6 +10886,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10866,6 +10965,7 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -10948,6 +11048,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -10972,6 +11073,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11026,6 +11128,7 @@ namespace STNServices2
         partial void OnNETWORK_TYPE_NAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -11053,6 +11156,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -11081,6 +11185,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11159,6 +11264,7 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -11241,6 +11347,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -11267,6 +11374,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11729,6 +11837,7 @@ namespace STNServices2
         partial void OnOP_QUALITY_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -12036,6 +12145,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -12060,6 +12170,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12114,6 +12225,7 @@ namespace STNServices2
         partial void OnOP_TYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -12141,6 +12253,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -12167,6 +12280,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12269,6 +12383,7 @@ namespace STNServices2
         partial void OnIDENTIFIER_TYPEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -12312,6 +12427,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -12340,6 +12456,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12562,6 +12679,7 @@ namespace STNServices2
         partial void OnOFFSET_CORRECTIONChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -12644,6 +12762,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -12668,6 +12787,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12722,6 +12842,7 @@ namespace STNServices2
         partial void OnQUALITYChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -12749,6 +12870,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -12781,6 +12903,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13219,6 +13342,7 @@ namespace STNServices2
         partial void OnCALC_NOTESChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -13308,6 +13432,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -13332,6 +13457,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13530,6 +13656,7 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
+
     
     }
     
@@ -13563,6 +13690,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13893,6 +14021,7 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
+
     
     }
     
@@ -14038,6 +14167,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15556,6 +15686,7 @@ namespace STNServices2
         partial void OnCOMPLETEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -15661,6 +15792,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -15691,6 +15823,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15793,6 +15926,7 @@ namespace STNServices2
         partial void OnCONTACT_TYPE_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -15914,6 +16048,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -15938,6 +16073,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16016,6 +16152,7 @@ namespace STNServices2
         partial void OnROLE_DESCRIPTIONChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -16043,6 +16180,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -16067,6 +16205,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16121,6 +16260,7 @@ namespace STNServices2
         partial void OnBRAND_NAMEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -16148,6 +16288,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -16172,6 +16313,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16250,6 +16392,7 @@ namespace STNServices2
         partial void OnDEPLOYMENT_TYPE_IDChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -16332,6 +16475,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -16356,6 +16500,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16410,6 +16555,7 @@ namespace STNServices2
         partial void OnSENSORChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -16460,6 +16606,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -16492,6 +16639,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17146,6 +17294,7 @@ namespace STNServices2
         partial void OnSENSOR_NOT_APPROPRIATEChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -17506,6 +17655,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -17530,6 +17680,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17704,6 +17855,7 @@ namespace STNServices2
         partial void OnAMOUNTChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -17786,6 +17938,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -17810,6 +17963,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17936,6 +18090,7 @@ namespace STNServices2
         partial void OnSOURCE_ACCURACYChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -18002,6 +18157,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -18026,6 +18182,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -18104,6 +18261,7 @@ namespace STNServices2
         partial void OnSTATE_ABBREVChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -18131,6 +18289,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -18155,6 +18314,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -18209,6 +18369,7 @@ namespace STNServices2
         partial void OnSTATUSChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -18236,6 +18397,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -18268,6 +18430,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -18598,6 +18761,7 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
+
     
     }
     
@@ -18623,6 +18787,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -18677,6 +18842,7 @@ namespace STNServices2
         partial void OnVCOLLECT_METHODChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -18727,6 +18893,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -18751,6 +18918,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -18829,6 +18997,7 @@ namespace STNServices2
         partial void OnDATUM_ABBREVIATIONChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -18902,6 +19071,7 @@ namespace STNServices2
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -18934,6 +19104,7 @@ namespace STNServices2
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -19264,9 +19435,11 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }
