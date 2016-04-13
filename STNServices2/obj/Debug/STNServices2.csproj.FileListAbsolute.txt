@@ -15,4 +15,3 @@ D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.xml
 D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.csprojResolveAssemblyReference.cache
 D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.dll
 D:\TMRData\WIMprojects\STNServices2\STNServices2\obj\Debug\STNServices2.pdb
-D:\TMRData\WIMprojects\STNServices2\STNServices2\bin\STNServices2.dll.config
