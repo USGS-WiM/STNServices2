@@ -474,11 +474,12 @@ namespace STNServices2.Handlers
             try
             {
                 char[] delimiterChars = { ';', ',', ' ' };
+                char[] cntyDeliminter = { ';', ',' };
                 //parse the requests
                 List<decimal> eventIdList = !string.IsNullOrEmpty(eventIds) ? eventIds.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
-                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(cntyDeliminter, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 List<decimal> statusIdList = !string.IsNullOrEmpty(statusIDs) ? statusIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
@@ -501,7 +502,7 @@ namespace STNServices2.Handlers
                         query = query.Where(i => stateList.Contains(i.SITE.STATE));
 
                     if (countyList != null && countyList.Count > 0)
-                        query = query.Where(i => countyList.Contains(i.SITE.COUNTY));
+                        query = query.Where(i => countyList.Contains(i.SITE.COUNTY.ToUpper()));
 
                     if (collectionConditionIdList != null && collectionConditionIdList.Count > 0)
                         query = query.Where(i => i.INST_COLLECTION_ID.HasValue && collectionConditionIdList.Contains(i.INST_COLLECTION_ID.Value));
