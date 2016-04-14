@@ -157,5 +157,9 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
+    public partial class member : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
     
 }
