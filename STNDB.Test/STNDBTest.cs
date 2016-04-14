@@ -38,7 +38,7 @@ namespace STNDB.Test
         }//end NSSDBConnectionTest
 
         [TestMethod]
-        public void NSSDBQueryTest()
+        public void STNDBQueryTest()
         {
             using (STNDBEntities context = new STNDBEntities(string.Format(connectionString, password)))
             {

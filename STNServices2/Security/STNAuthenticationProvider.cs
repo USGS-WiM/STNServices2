@@ -1,24 +1,33 @@
-﻿#region Comments
-// 08.23.12 - JB - Fixed Case sensitivity bug
-// 07.02.12 - JKN - Implemented Authorization Roles
-// 05.24.12 - JB - Made member table check case insensitive
-// 02.17.12 - JB - Added Base64 decode method for Basic Auth
-// 01.24.12 - JB - Created
-#endregion
-#region Copywright
-/* Authors:
- *      Jonathan Baier (jbaier@usgs.gov)
- * Copyright:
- *      2012 USGS - WiM
- */
+﻿
+//------------------------------------------------------------------------------
+
+//-------1---------2---------3---------4---------5---------6---------7---------8
+//       01234567890123456789012345678901234567890123456789012345678901234567890
+//-------+---------+---------+---------+---------+---------+---------+---------+
+
+// copyright:   2016 WiM - USGS
+
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              
+//              
+//  
+//   purpose:  validate user and password for required authentication. 
+//
+//discussion:   
+//
+//     
+
+#region Comments
+// 03.23.16 - JKN - created
 #endregion
 
+using System;
 using System.Linq;
 using System.Data.Entity;
 
-
 using OpenRasta.Security;
-using WiM.Authentication;
+using STNServices2.Security;
+using WiM.Security;
 using STNDB;
 using STNServices2.Utilities.ServiceAgent;
 
@@ -33,12 +42,13 @@ namespace STNServices2.Security
             {
                 using (STNAgent sa = new STNAgent("fradmin", securedPassword))
                 {
-                    member user = sa.Select<member>().Include(r=>r.role).FirstOrDefault(u=>string.Equals(u.username.ToUpper(), username.ToUpper()));
+                    member user = sa.Select<member>().Include(r=>r.role).AsEnumerable().FirstOrDefault(u=>string.Equals(u.username, username,StringComparison.OrdinalIgnoreCase));
                     if (user == null) return (null);
-                    return (new Credentials()
+                    return (new WiMCredentials()
                     {  
-                        Username = user.username,
-                        Password = "Ij7E9doC",
+                        Username = user.username, 
+                        salt = user.salt,
+                        Password = user.password,
                         Roles = new string[] { user.role.role_name }
                     });
                 }//end using
@@ -48,7 +58,9 @@ namespace STNServices2.Security
         public bool ValidatePassword(Credentials credentials, string suppliedPassword)
         {
             if (credentials == null) return (false);
-            return (credentials.Password == suppliedPassword);
+            WiMCredentials creds = (WiMCredentials)credentials;
+            bool authenticated =  Cryptography.VerifyPassword(suppliedPassword, creds.salt, creds.Password);
+            return authenticated;
         }
     }//end Class STNBAsicAuthentication
 

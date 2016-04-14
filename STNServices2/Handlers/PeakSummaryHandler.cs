@@ -33,7 +33,7 @@ using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
 
-using WiM.Authentication;
+using WiM.Security;
 
 
 namespace STNServices2.Handlers

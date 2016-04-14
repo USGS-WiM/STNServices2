@@ -68,10 +68,10 @@ namespace STNDB
         public virtual ICollection<objective_point> objective_points { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<site_housing> site_housing { get; set; }
-        public virtual member member { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<network_type_site> network_type_site { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<network_name_site> network_name_site { get; set; }
+        public virtual member member { get; set; }
     }
 }
