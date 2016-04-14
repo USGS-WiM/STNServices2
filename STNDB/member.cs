@@ -17,24 +17,27 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public member()
         {
+            this.events = new HashSet<events>();
             this.sites = new HashSet<site>();
             this.data_file = new HashSet<data_file>();
             this.peak_summary = new HashSet<peak_summary>();
-            this.events = new HashSet<events>();
         }
     
         public int member_id { get; set; }
         public string fname { get; set; }
         public string lname { get; set; }
-        public Nullable<int> agency_id { get; set; }
+        public int agency_id { get; set; }
         public string phone { get; set; }
         public string email { get; set; }
-        public string rssfeed { get; set; }
         public string emergency_contact_name { get; set; }
         public string emergency_contact_phone { get; set; }
-        public Nullable<int> role_id { get; set; }
+        public int role_id { get; set; }
         public string username { get; set; }
+        public string password { get; set; }
+        public string salt { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<events> events { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<site> sites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -43,7 +46,5 @@ namespace STNDB
         public virtual ICollection<peak_summary> peak_summary { get; set; }
         public virtual agency agency { get; set; }
         public virtual role role { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<events> events { get; set; }
     }
 }

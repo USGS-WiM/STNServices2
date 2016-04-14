@@ -405,6 +405,29 @@ namespace STNDB
                    this.approval_id.GetHashCode()+ this.marker_id.GetHashCode()+ this.height_above_gnd.GetHashCode();
         }
     }
+    public partial class member : IEquatable<member>
+    {
+
+        public bool Equals(member other)
+        {
+            return string.Equals(this.username, other.username,StringComparison.OrdinalIgnoreCase) &&
+                  (string.Equals(this.fname, other.fname,StringComparison.OrdinalIgnoreCase)) &&
+                  (string.Equals(this.lname, other.lname, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as member);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.username + this.fname + this.lname).GetHashCode();
+        }
+    }
 
     public partial class objective_point : IEquatable<objective_point>
     {
