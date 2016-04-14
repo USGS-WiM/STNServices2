@@ -51,7 +51,6 @@ namespace STNDB
         public virtual DbSet<landownercontact> landownercontacts { get; set; }
         public virtual DbSet<locatortype> locatortypes { get; set; }
         public virtual DbSet<marker> markers { get; set; }
-        public virtual DbSet<member> members { get; set; }
         public virtual DbSet<network_name> network_name { get; set; }
         public virtual DbSet<network_name_site> network_name_site { get; set; }
         public virtual DbSet<network_type> network_type { get; set; }
@@ -75,5 +74,6 @@ namespace STNDB
         public virtual DbSet<status_type> status_type { get; set; }
         public virtual DbSet<vertical_collect_methods> vertical_collect_methods { get; set; }
         public virtual DbSet<vertical_datums> vertical_datums { get; set; }
+        public virtual DbSet<member> members { get; set; }
     }
 }
