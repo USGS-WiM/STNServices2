@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WiM.Authentication;
+using WiM.Security;
 using WiM.Handlers;
 using OpenRasta.Security;
 
@@ -13,7 +13,6 @@ namespace STNServices2.Handlers
         protected const string AdminRole = "Admin";
         protected const string ManagerRole = "Manager";
         protected const string FieldRole = "Field";
-        protected const string CitizenManagerRole = "CitizenManager";
         protected const string PublicRole = "Public";
 
         #endregion
@@ -35,9 +34,8 @@ namespace STNServices2.Handlers
 
         public bool IsAuthorizedToEdit(string OwnerUserName)
         {
-            if (string.Equals(OwnerUserName.ToUpper(), username.ToUpper()))
+            if (string.Equals(OwnerUserName, username,StringComparison.OrdinalIgnoreCase))
                 return true;
-
             if (IsAuthorized(AdminRole))
                 return true;
 

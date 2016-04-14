@@ -30,8 +30,9 @@ using STNServices2.Utilities.ServiceAgent;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
+using STNServices2.Resources;
 
-using WiM.Authentication;
+using WiM.Security;
 
 namespace STNServices2.Handlers
 {
@@ -47,7 +48,11 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<sensor_type>().Include("sensor_deployment.deployment_type").OrderBy(e => e.sensor_type_id).ToList();
+                    entities = sa.Select<sensor_type>().Include("sensor_deployment.deployment_type")
+                        .Select(st => new SensorType() { sensor_type_id = st.sensor_type_id,
+                                                         sensor = st.sensor,
+                                                         deploymenttypes = st.sensor_deployment.Select(x=>x.deployment_type).ToList()
+                                                       }).ToList<sensor_type>();
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);

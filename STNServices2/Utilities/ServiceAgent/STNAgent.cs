@@ -8,7 +8,7 @@ using System.IO;
 
 using WiM.Utilities;
 using WiM.Utilities.ServiceAgent;
-using WiM.Authentication;
+using WiM.Security;
 using WiM.Exceptions;
 
 using WiM.Utilities.Storage;
@@ -44,7 +44,7 @@ namespace STNServices2.Utilities.ServiceAgent
         internal STNAgent(string username, EasySecureString password, Boolean include = false)
             : base(ConfigurationManager.ConnectionStrings["STNDBEntities"].ConnectionString)
         {
-            this.context = new  STNDBEntities (string.Format(connectionString, username, password.decryptString()));
+            this.context = new  STNDBEntities (string.Format(connectionString, username.ToLower(), password.decryptString()));
             this.context.Configuration.ProxyCreationEnabled = include;
         }
         #endregion
