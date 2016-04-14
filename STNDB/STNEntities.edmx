@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="STNNEWModel.Store" Provider="Npgsql" ProviderManifestToken="9.4.1" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="STNNEWModel.Store" Provider="Npgsql" ProviderManifestToken="9.4.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="agencies">
           <Key>
             <PropertyRef Name="agency_id" />
@@ -294,15 +294,16 @@
           </Key>
           <Property Name="member_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="fname" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="lname" Type="varchar" MaxLength="100" />
-          <Property Name="agency_id" Type="int4" />
-          <Property Name="phone" Type="varchar" MaxLength="15" />
-          <Property Name="email" Type="varchar" MaxLength="50" />
-          <Property Name="rssfeed" Type="varchar" MaxLength="100" />
+          <Property Name="lname" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="agency_id" Type="int4" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="emergency_contact_name" Type="varchar" MaxLength="255" />
           <Property Name="emergency_contact_phone" Type="varchar" MaxLength="15" />
-          <Property Name="role_id" Type="int4" />
+          <Property Name="role_id" Type="int4" Nullable="false" />
           <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="salt" Type="varchar" MaxLength="8000" Nullable="false" />
         </EntityType>
         <EntityType Name="network_name">
           <Key>
@@ -608,7 +609,7 @@
           <Property Name="datum_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="datum_name" Type="varchar" MaxLength="255" />
           <Property Name="datum_abbreviation" Type="varchar" MaxLength="50" />
-        </EntityType>        
+        </EntityType>
         <EntityContainer Name="STNNEWModelStoreContainer">
           <EntitySet Name="agencies" EntityType="Self.agencies" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="approval" EntityType="Self.approval" Schema="fradmin" store:Type="Tables" />
@@ -676,8 +677,8 @@
           <Property Name="state" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="members" Relationship="STNNEWModel.agencymember" FromRole="agency" ToRole="member" />
           <NavigationProperty Name="sources" Relationship="STNNEWModel.agencysource" FromRole="agency" ToRole="source" />
+          <NavigationProperty Name="members" Relationship="STNNEWModel.agencymember" FromRole="agency" ToRole="member" />
         </EntityType>
         <EntityType Name="approval">
           <Key>
@@ -738,9 +739,9 @@
           <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="instrument" Relationship="STNNEWModel.data_fileinstrument" FromRole="data_file" ToRole="instrument" />
           <NavigationProperty Name="approval" Relationship="STNNEWModel.approvaldata_file" FromRole="data_file" ToRole="approval" />
-          <NavigationProperty Name="member" Relationship="STNNEWModel.memberdata_file" FromRole="data_file" ToRole="member" />
           <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.peak_summarydata_file" FromRole="data_file" ToRole="peak_summary" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.data_filefile" FromRole="data_file" ToRole="file" />
+          <NavigationProperty Name="member" Relationship="STNNEWModel.memberdata_file" FromRole="data_file" ToRole="member" />
         </EntityType>
         <EntityType Name="deployment_priority">
           <Key>
@@ -1010,28 +1011,6 @@
           <Property Name="marker_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="marker1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.markerhwm" FromRole="marker" ToRole="hwm" />
-        </EntityType>
-        <EntityType Name="member">
-          <Key>
-            <PropertyRef Name="member_id" />
-          </Key>
-          <Property Name="member_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="lname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="agency_id" Type="Int32" />
-          <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="rssfeed" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="emergency_contact_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="emergency_contact_phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="role_id" Type="Int32" />
-          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="sites" Relationship="STNNEWModel.membersite" FromRole="member" ToRole="site" />
-          <NavigationProperty Name="data_file" Relationship="STNNEWModel.memberdata_file" FromRole="member" ToRole="data_file" />
-          <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.memberpeak_summary" FromRole="member" ToRole="peak_summary" />
-          <NavigationProperty Name="agency" Relationship="STNNEWModel.agencymember" FromRole="member" ToRole="agency" />
-          <NavigationProperty Name="role" Relationship="STNNEWModel.rolemember" FromRole="member" ToRole="role" />
-          <NavigationProperty Name="events" Relationship="STNNEWModel.memberevents" FromRole="member" ToRole="events" />
         </EntityType>
         <EntityType Name="network_name">
           <Key>
@@ -1332,9 +1311,9 @@
           <NavigationProperty Name="horizontal_collect_methods" Relationship="STNNEWModel.horizontal_collect_methodssite" FromRole="site" ToRole="horizontal_collect_methods" />
           <NavigationProperty Name="objective_points" Relationship="STNNEWModel.objective_pointsite" FromRole="site" ToRole="objective_point" />
           <NavigationProperty Name="site_housing" Relationship="STNNEWModel.sitesite_housing" FromRole="site" ToRole="site_housing" />
-          <NavigationProperty Name="member" Relationship="STNNEWModel.membersite" FromRole="site" ToRole="member" />
           <NavigationProperty Name="network_type_site" Relationship="STNNEWModel.sitenetwork_type_site" FromRole="site" ToRole="network_type_site" />
           <NavigationProperty Name="network_name_site" Relationship="STNNEWModel.sitenetwork_name_site" FromRole="site" ToRole="network_name_site" />
+          <NavigationProperty Name="member" Relationship="STNNEWModel.membersite" FromRole="site" ToRole="member" />
         </EntityType>
         <EntityType Name="source">
           <Key>
@@ -1410,7 +1389,6 @@
           <EntitySet Name="landownercontacts" EntityType="Self.landownercontact" />
           <EntitySet Name="locatortypes" EntityType="Self.locatortype" />
           <EntitySet Name="markers" EntityType="Self.marker" />
-          <EntitySet Name="members" EntityType="Self.member" />
           <EntitySet Name="network_name" EntityType="Self.network_name" />
           <EntitySet Name="network_name_site" EntityType="Self.network_name_site" />
           <EntitySet Name="network_type" EntityType="Self.network_type" />
@@ -1514,10 +1492,6 @@
             <End Role="site" EntitySet="sites" />
             <End Role="site_housing" EntitySet="site_housing" />
           </AssociationSet>
-          <AssociationSet Name="membersite" Association="STNNEWModel.membersite">
-            <End Role="member" EntitySet="members" />
-            <End Role="site" EntitySet="sites" />
-          </AssociationSet>
           <AssociationSet Name="network_typenetwork_type_site" Association="STNNEWModel.network_typenetwork_type_site">
             <End Role="network_type" EntitySet="network_type" />
             <End Role="network_type_site" EntitySet="network_type_site" />
@@ -1586,29 +1560,13 @@
             <End Role="approval" EntitySet="approvals" />
             <End Role="data_file" EntitySet="data_file" />
           </AssociationSet>
-          <AssociationSet Name="memberdata_file" Association="STNNEWModel.memberdata_file">
-            <End Role="member" EntitySet="members" />
-            <End Role="data_file" EntitySet="data_file" />
-          </AssociationSet>
           <AssociationSet Name="peak_summarydata_file" Association="STNNEWModel.peak_summarydata_file">
             <End Role="peak_summary" EntitySet="peak_summary" />
             <End Role="data_file" EntitySet="data_file" />
           </AssociationSet>
-          <AssociationSet Name="memberpeak_summary" Association="STNNEWModel.memberpeak_summary">
-            <End Role="member" EntitySet="members" />
-            <End Role="peak_summary" EntitySet="peak_summary" />
-          </AssociationSet>
           <AssociationSet Name="data_filefile" Association="STNNEWModel.data_filefile">
             <End Role="data_file" EntitySet="data_file" />
             <End Role="file" EntitySet="files" />
-          </AssociationSet>
-          <AssociationSet Name="agencymember" Association="STNNEWModel.agencymember">
-            <End Role="agency" EntitySet="agencies" />
-            <End Role="member" EntitySet="members" />
-          </AssociationSet>
-          <AssociationSet Name="rolemember" Association="STNNEWModel.rolemember">
-            <End Role="role" EntitySet="roles" />
-            <End Role="member" EntitySet="members" />
           </AssociationSet>
           <AssociationSet Name="agencysource" Association="STNNEWModel.agencysource">
             <End Role="agency" EntitySet="agencies" />
@@ -1642,10 +1600,6 @@
             <End Role="event_type" EntitySet="event_type" />
             <End Role="events" EntitySet="events" />
           </AssociationSet>
-          <AssociationSet Name="memberevents" Association="STNNEWModel.memberevents">
-            <End Role="member" EntitySet="members" />
-            <End Role="events" EntitySet="events" />
-          </AssociationSet>
           <AssociationSet Name="sourcefile" Association="STNNEWModel.sourcefile">
             <End Role="source" EntitySet="sources" />
             <End Role="file" EntitySet="files" />
@@ -1661,6 +1615,31 @@
           <AssociationSet Name="vertical_datumsobjective_point" Association="STNNEWModel.vertical_datumsobjective_point">
             <End Role="vertical_datums" EntitySet="vertical_datums" />
             <End Role="objective_point" EntitySet="objective_point" />
+          </AssociationSet>
+          <EntitySet Name="members" EntityType="STNNEWModel.member" />
+          <AssociationSet Name="memberevents" Association="STNNEWModel.memberevents">
+            <End Role="member" EntitySet="members" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="membersite" Association="STNNEWModel.membersite">
+            <End Role="member" EntitySet="members" />
+            <End Role="site" EntitySet="sites" />
+          </AssociationSet>
+          <AssociationSet Name="memberdata_file" Association="STNNEWModel.memberdata_file">
+            <End Role="member" EntitySet="members" />
+            <End Role="data_file" EntitySet="data_file" />
+          </AssociationSet>
+          <AssociationSet Name="memberpeak_summary" Association="STNNEWModel.memberpeak_summary">
+            <End Role="member" EntitySet="members" />
+            <End Role="peak_summary" EntitySet="peak_summary" />
+          </AssociationSet>
+          <AssociationSet Name="agencymember" Association="STNNEWModel.agencymember">
+            <End Role="agency" EntitySet="agencies" />
+            <End Role="member" EntitySet="members" />
+          </AssociationSet>
+          <AssociationSet Name="rolemember" Association="STNNEWModel.rolemember">
+            <End Role="role" EntitySet="roles" />
+            <End Role="member" EntitySet="members" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
@@ -1903,18 +1882,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="membersite">
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
-          <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="member">
-              <PropertyRef Name="member_id" />
-            </Principal>
-            <Dependent Role="site">
-              <PropertyRef Name="member_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="network_typenetwork_type_site">
           <End Type="STNNEWModel.network_type" Role="network_type" Multiplicity="1" />
           <End Type="STNNEWModel.network_type_site" Role="network_type_site" Multiplicity="*" />
@@ -2119,18 +2086,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="memberdata_file">
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
-          <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="member">
-              <PropertyRef Name="member_id" />
-            </Principal>
-            <Dependent Role="data_file">
-              <PropertyRef Name="processor_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="peak_summarydata_file">
           <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="0..1" />
           <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
@@ -2143,18 +2098,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="memberpeak_summary">
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
-          <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="member">
-              <PropertyRef Name="member_id" />
-            </Principal>
-            <Dependent Role="peak_summary">
-              <PropertyRef Name="member_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="data_filefile">
           <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="0..1" />
           <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
@@ -2164,30 +2107,6 @@
             </Principal>
             <Dependent Role="file">
               <PropertyRef Name="data_file_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="agencymember">
-          <End Type="STNNEWModel.agency" Role="agency" Multiplicity="0..1" />
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="agency">
-              <PropertyRef Name="agency_id" />
-            </Principal>
-            <Dependent Role="member">
-              <PropertyRef Name="agency_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="rolemember">
-          <End Type="STNNEWModel.role" Role="role" Multiplicity="0..1" />
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="role">
-              <PropertyRef Name="role_id" />
-            </Principal>
-            <Dependent Role="member">
-              <PropertyRef Name="role_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2287,18 +2206,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="memberevents">
-          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
-          <End Type="STNNEWModel.events" Role="events" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="member">
-              <PropertyRef Name="member_id" />
-            </Principal>
-            <Dependent Role="events">
-              <PropertyRef Name="event_coordinator" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="sourcefile">
           <End Type="STNNEWModel.source" Role="source" Multiplicity="0..1" />
           <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
@@ -2344,6 +2251,101 @@
             </Principal>
             <Dependent Role="objective_point">
               <PropertyRef Name="vdatum_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="member">
+          <Key>
+            <PropertyRef Name="member_id" />
+          </Key>
+          <Property Name="member_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fname" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="lname" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="agency_id" Type="Int32" Nullable="false" />
+          <Property Name="phone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="emergency_contact_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="emergency_contact_phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="true" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="salt" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="events" Relationship="STNNEWModel.memberevents" FromRole="member" ToRole="events" />
+          <NavigationProperty Name="sites" Relationship="STNNEWModel.membersite" FromRole="member" ToRole="site" />
+          <NavigationProperty Name="data_file" Relationship="STNNEWModel.memberdata_file" FromRole="member" ToRole="data_file" />
+          <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.memberpeak_summary" FromRole="member" ToRole="peak_summary" />
+          <NavigationProperty Name="agency" Relationship="STNNEWModel.agencymember" FromRole="member" ToRole="agency" />
+          <NavigationProperty Name="role" Relationship="STNNEWModel.rolemember" FromRole="member" ToRole="role" />
+        </EntityType>
+        <Association Name="memberevents">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.events" Role="events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="event_coordinator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="membersite">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="site">
+              <PropertyRef Name="member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberdata_file">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="data_file">
+              <PropertyRef Name="processor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberpeak_summary">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="peak_summary">
+              <PropertyRef Name="member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="agencymember">
+          <End Type="STNNEWModel.agency" Role="agency" Multiplicity="1" />
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="agency">
+              <PropertyRef Name="agency_id" />
+            </Principal>
+            <Dependent Role="member">
+              <PropertyRef Name="agency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="rolemember">
+          <End Type="STNNEWModel.role" Role="role" Multiplicity="1" />
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="member">
+              <PropertyRef Name="role_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2659,23 +2661,6 @@
               <MappingFragment StoreEntitySet="markers">
                 <ScalarProperty Name="marker_id" ColumnName="marker_id" />
                 <ScalarProperty Name="marker1" ColumnName="marker" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="members">
-            <EntityTypeMapping TypeName="STNNEWModel.member">
-              <MappingFragment StoreEntitySet="members">
-                <ScalarProperty Name="member_id" ColumnName="member_id" />
-                <ScalarProperty Name="fname" ColumnName="fname" />
-                <ScalarProperty Name="lname" ColumnName="lname" />
-                <ScalarProperty Name="agency_id" ColumnName="agency_id" />
-                <ScalarProperty Name="phone" ColumnName="phone" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="rssfeed" ColumnName="rssfeed" />
-                <ScalarProperty Name="emergency_contact_name" ColumnName="emergency_contact_name" />
-                <ScalarProperty Name="emergency_contact_phone" ColumnName="emergency_contact_phone" />
-                <ScalarProperty Name="role_id" ColumnName="role_id" />
-                <ScalarProperty Name="username" ColumnName="username" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3004,6 +2989,24 @@
                 <ScalarProperty Name="datum_id" ColumnName="datum_id" />
                 <ScalarProperty Name="datum_name" ColumnName="datum_name" />
                 <ScalarProperty Name="datum_abbreviation" ColumnName="datum_abbreviation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="members">
+            <EntityTypeMapping TypeName="STNNEWModel.member">
+              <MappingFragment StoreEntitySet="members">
+                <ScalarProperty Name="salt" ColumnName="salt" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="emergency_contact_phone" ColumnName="emergency_contact_phone" />
+                <ScalarProperty Name="emergency_contact_name" ColumnName="emergency_contact_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="agency_id" ColumnName="agency_id" />
+                <ScalarProperty Name="lname" ColumnName="lname" />
+                <ScalarProperty Name="fname" ColumnName="fname" />
+                <ScalarProperty Name="member_id" ColumnName="member_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

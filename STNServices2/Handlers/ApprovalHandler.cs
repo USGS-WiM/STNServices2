@@ -31,7 +31,7 @@ using STNServices2.Utilities.ServiceAgent;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
-using WiM.Authentication;
+using WiM.Security;
 using STNServices2.Security;
 
 namespace STNServices2.Handlers

@@ -407,6 +407,40 @@ namespace STNServices2.Test
             bool success = this.DELETERequest<housing_type>(host + Configuration.housingtypeResource + "/" + postObj.housing_type_id, basicAuth);
             Assert.IsTrue(success);
         }//end method
+        [TestMethod]
+        public void MemberRequest()
+        {
+            //GET LIST
+            List<member> RequestList = this.GETRequest<List<member>>(host + Configuration.memberResource, basicAuth);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            member postObj;
+            postObj = this.POSTRequest<member>(host + Configuration.memberResource, new member() 
+                                                                                      {
+                                                                                          username = "test",
+                                                                                          fname = "test",
+                                                                                          lname="test",
+                                                                                          phone="123-456-7890",
+                                                                                          email="test@usgs.gov",
+                                                                                          agency_id = 1,
+                                                                                          password = "test"
+                                                                                      }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.member_id.ToString());
+
+            //GET POSTed item
+            member RequestObj = this.GETRequest<member>(host + Configuration.memberResource + "/" + postObj.member_id,basicAuth);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.fname = "put-test";
+            member putObj = this.PUTRequest<member>(host + Configuration.memberResource + "/" + postObj.member_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<member>(host + Configuration.memberResource + "/" + postObj.member_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
 
         [TestMethod]
         public void ObjectivePointRequest()

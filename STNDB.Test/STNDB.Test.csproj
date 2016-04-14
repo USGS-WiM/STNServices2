@@ -55,8 +55,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="WiMHypermedia, Version=1.0.5938.14288, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WiMHypermedia.1.0.5938.14288\lib\net45\WiMHypermedia.dll</HintPath>
+    <Reference Include="WiMHypermedia, Version=1.0.5947.24027, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
