@@ -49,12 +49,6 @@ namespace STNServices2.Handlers
 {
     public class InstrumentStatusHandler : STNHandlerBase
     {
-        #region Properties
-        public override string entityName
-        {
-            get { return "INSTRUMENTSTATUS"; }
-        }
-        #endregion
         #region Routed Methods
 
         #region GetMethods
