@@ -114,8 +114,8 @@
       <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WiMServices, Version=1.0.5947.24028, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WiMServices.1.0.5947.24028\lib\net45\WiMServices.dll</HintPath>
+    <Reference Include="WiMServices, Version=1.0.5949.18624, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMServices.1.0.5949.18624\lib\net45\WiMServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -125,6 +125,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\InstrumentHandler.cs" />
     <Compile Include="Handlers\MemberHandler.cs" />
     <Compile Include="Handlers\ObjectivePointHandler.cs" />
     <Compile Include="Handlers\OP_ControlIdentifierHandler.cs" />
