@@ -10,8 +10,6 @@ namespace STNDB
 {
     public partial class agency :IEquatable<agency>
     {
-
-
         public bool Equals(agency other)
         {
             if (other == null) return false;
@@ -156,13 +154,13 @@ namespace STNDB
             if (obj.GetType() != GetType()) return false;
             return Equals(obj as data_file);
         }
-        public override int GetHashCode()
-        {
-            return (this.instrument_id + this.start.GetHashCode() + this.end.GetHashCode() +
-                this.good_start.GetHashCode() + this.good_end.GetHashCode() + this.collect_date.GetHashCode() +
-                this.processor_id + this.peak_summary_id + this.approval_id).GetHashCode();
+        //public override int GetHashCode()
+        //{
+        //    return (this.instrument_id + this.start.GetHashCode() + this.end.GetHashCode() +
+        //        this.good_start.GetHashCode() + this.good_end.GetHashCode() + this.collect_date.GetHashCode() +
+        //        this.processor_id + this.peak_summary_id + this.approval_id).GetHashCode();
 
-        }
+        //}
     }
     public partial class deployment_priority : IEquatable<deployment_priority>
     {
@@ -286,12 +284,12 @@ namespace STNDB
             if (obj.GetType() != GetType()) return false;
             return Equals(obj as file);
         }
-        public override int GetHashCode()
-        {
-            return this.hwm_id.GetHashCode() + this.site_id.GetHashCode() + this.instrument_id.GetHashCode() + this.data_file_id.GetHashCode() + this.filetype_id.GetHashCode() + this.source_id.GetHashCode() +
-                this.path.GetHashCode() + this.file_url.GetHashCode() + this.photo_direction.GetHashCode()+
-                this.latitude_dd.GetHashCode() + this.longitude_dd.GetHashCode() + this.file_date.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return this.hwm_id.GetHashCode() + this.site_id.GetHashCode() + this.instrument_id.GetHashCode() + this.data_file_id.GetHashCode() + this.filetype_id.GetHashCode() + this.source_id.GetHashCode() +
+        //        this.path.GetHashCode() + this.file_url.GetHashCode() + this.photo_direction.GetHashCode()+
+        //        this.latitude_dd.GetHashCode() + this.longitude_dd.GetHashCode() + this.file_date.GetHashCode();
+        //}
     }
     public partial class file_type : IEquatable<file_type>
     {
@@ -404,6 +402,118 @@ namespace STNDB
                    this.elev_ft.GetHashCode()+ this.vdatum_id.GetHashCode()+this.hdatum_id.GetHashCode()+ this.flag_member_id.GetHashCode()+this.vcollect_method_id.GetHashCode() +
                    this.approval_id.GetHashCode()+ this.marker_id.GetHashCode()+ this.height_above_gnd.GetHashCode();
         }
+    }
+    public partial class hwm_qualities : IEquatable<hwm_qualities>
+    {
+        public bool Equals(hwm_qualities other)
+        {
+            return string.Equals(this.hwm_quality, other.hwm_quality, StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as hwm_qualities);
+        }
+        public override int GetHashCode()
+        {
+            return this.hwm_quality.GetHashCode();
+        }
+    }
+    public partial class hwm_types : IEquatable<hwm_types>
+    {
+        public bool Equals(hwm_types other)
+        {
+            return string.Equals(this.hwm_type, other.hwm_type, StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as hwm_types);
+        }
+        public override int GetHashCode()
+        {
+            return this.hwm_type.GetHashCode();
+        }
+    }
+    public partial class instr_collection_conditions : IEquatable<instr_collection_conditions>
+    {
+        public bool Equals(instr_collection_conditions other)
+        {
+            return string.Equals(this.condition, other.condition, StringComparison.OrdinalIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as instr_collection_conditions);
+        }
+        public override int GetHashCode()
+        {
+            return this.condition.GetHashCode();
+        }
+    }
+    public partial class instrument : IEquatable<instrument>
+    {
+        public bool Equals(instrument other)
+        {
+            return this.sensor_type_id == other.sensor_type_id &&
+                    ( !other.deployment_type_id.HasValue || other.deployment_type_id.Value <= 0|| this.deployment_type_id.Value == other.deployment_type_id.Value ) &&
+                    (!other.sensor_brand_id.HasValue || other.sensor_brand_id.Value <= 0 || this.sensor_brand_id.Value == other.sensor_brand_id.Value ) &&
+                    (!other.interval.HasValue || other.interval <= 0 || this.interval == other.interval ) &&
+                    (!other.event_id.HasValue ||other.event_id <= 0 || this.event_id == other.event_id ) &&
+                    (string.IsNullOrEmpty(other.location_description) || string.Equals(this.location_description, other.location_description,StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(other.serial_number) || string.Equals(this.serial_number, other.serial_number,StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(other.vented) || string.Equals(this.vented, other.vented,StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(other.housing_serial_number) || string.Equals(this.housing_serial_number, other.housing_serial_number,StringComparison.OrdinalIgnoreCase) );
+
+
+        }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as instrument);
+        }
+        //public override int GetHashCode()
+        //{
+        //    return sensor_type_id.Value + sensor_brand_id.Value + event_id.Value + site_id.Value + serial_number.GetHashCode();
+        //}
+    }
+    public partial class instrument_status: IEquatable<instrument_status>
+    {
+        public bool Equals(instrument_status other)
+        {
+            return e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID &&
+                    e.STATUS_TYPE_ID == thisEntity.STATUS_TYPE_ID &&
+                    (DateTime.Equals(e.TIME_STAMP.Value, thisEntity.TIME_STAMP.Value) || !thisEntity.TIME_STAMP.HasValue) &&
+                    (!thisEntity.MEMBER_ID.HasValue || e.MEMBER_ID == thisEntity.MEMBER_ID || thisEntity.MEMBER_ID <= 0) &&
+                    (string.Equals(e.NOTES.ToUpper(), thisEntity.NOTES.ToUpper()) || string.IsNullOrEmpty(thisEntity.NOTES)) &&
+                    (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)) &&
+                    thisEntity.SENSOR_ELEVATION == thisEntity.SENSOR_ELEVATION &&
+                    thisEntity.WS_ELEVATION == thisEntity.WS_ELEVATION &&
+                    thisEntity.GS_ELEVATION == thisEntity.GS_ELEVATION &&
+                    thisEntity.VDATUM_ID == thisEntity.VDATUM_ID);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as instrument_status);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.username + this.fname + this.lname).GetHashCode();
+        }
+
     }
     public partial class member : IEquatable<member>
     {
@@ -852,58 +962,5 @@ namespace STNDB
             return (this.datum_name + this.datum_abbreviation).GetHashCode();
         }
     }
-    public partial class hwm_qualities : IEquatable<hwm_qualities>
-    {
-        public bool Equals(hwm_qualities other)
-        {
-            return string.Equals(this.hwm_quality, other.hwm_quality,StringComparison.OrdinalIgnoreCase);
-        }
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as hwm_qualities);
-        }
-        public override int GetHashCode()
-        {
-            return this.hwm_quality.GetHashCode();
-        }
-    }
-    public partial class hwm_types : IEquatable<hwm_types>
-    {
-        public bool Equals(hwm_types other)
-        {
-            return string.Equals(this.hwm_type, other.hwm_type, StringComparison.OrdinalIgnoreCase);
-        }
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as hwm_types);
-        }
-        public override int GetHashCode()
-        {
-            return this.hwm_type.GetHashCode();
-        }
-    }
-    public partial class instr_collection_conditions : IEquatable<instr_collection_conditions>
-    {
-        public bool Equals(instr_collection_conditions other)
-        {
-            return string.Equals(this.condition, other.condition, StringComparison.OrdinalIgnoreCase);
-        }
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as instr_collection_conditions);
-        }
-        public override int GetHashCode()
-        {
-            return this.condition.GetHashCode();
-        }
-    }
+
 }

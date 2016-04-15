@@ -44,7 +44,7 @@ namespace STNDB.Test
             {
                 try
                 {
-                    var testQuery = context.agencies.ToList();
+                    var testQuery = context.instruments.ToList();
                     Assert.IsNotNull(testQuery, testQuery.Count.ToString());
                 }
                 catch (Exception ex)

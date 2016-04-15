@@ -98,6 +98,7 @@ namespace STNServices2
         public static string hwmqualityResource = "HWMQualities";
         public static string hwmtypeResource = "HWMTypes";
         public static string instrcollectionResource = "InstrCollectConditions";
+        public static string instrumentsResource = "Instruments";
 
         public static string memberResource = "Members";
 
@@ -156,7 +157,7 @@ namespace STNServices2
                 AddHWM_QUALITY_Resources();
                 AddHWM_TYPE_Resources();
                 AddINSTR_COLLECTION_CONDITIONS_Resources();
-                //AddINSTRUMENT_Resources();
+                AddINSTRUMENT_Resources();
                 //AddINSTRUMENT_STATUS_Resources();
                 //AddKEYWORD_Resources();
                 //AddLANDOWNER_CONTACT_Resources();
@@ -660,67 +661,64 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
         }//end INSTR_COLLECTION_CONDITIONS_Resources
-//        private void AddINSTRUMENT_Resources()
-//        {
-//            //Instruments
-//            ResourceSpace.Has.ResourcesOfType<InstrumentSerialNumberList>()
-//               .AtUri("/Instruments/SerialNumbers").Named("SerialNumbers")  //
-//               .HandledBy<InstrumentHandler>() //handler. what class is gonna handle this
-//               .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//               .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+        private void AddINSTRUMENT_Resources()
+        {
+            ResourceSpace.Has.ResourcesOfType<List<instrument>>()
+               .AtUri(instrumentsResource)
+               .And.AtUri(siteResource+"/{siteId}/" + instrumentsResource).Named("GetSiteInstruments")
+               .And.AtUri(sensorBrandResource+"/{sensorBrandId}/" + instrumentsResource).Named("SensorBrandInstruments")
+               .And.AtUri(sensorTypeResource+"/{sensorTypeId}/" + instrumentsResource).Named("SensorTypeInstruments")
+               .And.AtUri(deploymenttypeResource+"/{deploymentTypeId}/" + instrumentsResource).Named("GetDeploymentTypeInstruments")
+               .And.AtUri(instrumentsResource+@"/?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
+                                &States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}
+                                &DeploymentType={deploymentTypeIDs}").Named("GetFilteredInstruments")
+                //.And.AtUri("/Sites/Instruments?bySiteNo={siteNo}").Named("GetSiteInstrumentsByInternalId")
+               .And.AtUri(eventsResource+"/{eventId}/" + instrumentsResource).Named("GetEventInstruments")
+                //NOT SEEING IT USED .And.AtUri("/Instruments/ReportInstruments?Date={aDate}&Event={eventId}&State={stateAbbrev}").Named("GetReportInstruments")  //Instruments?Date={aDate}&Event={eventId}&State={stateAbbrev}").Named("GetReportInstruments")
+               .And.AtUri(siteResource+"/{siteId}/"+instrumentsResource+"?Event={eventId}").Named("GetSiteEventInstruments")
+               .HandledBy<InstrumentHandler>()
+               .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+               .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<List<INSTRUMENT>>()
-//               .AtUri("/Instruments")
-//               .And.AtUri("/Instruments/GetAll").Named("GetAllInstruments")
-//               .And.AtUri("/Sites/{siteId}/Instruments").Named("GetSiteInstruments")
-//               .And.AtUri("/SensorBrands/{sensorBrandId}/Instruments").Named("SensorBrandInstruments")
-//               .And.AtUri("/SensorTypes/{sensorTypeId}/Instruments").Named("SensorTypeInstruments")
-//               .And.AtUri("/DeploymentTypes/{deploymentTypeId}/Instruments").Named("GetDeploymentTypeInstruments")
-//               .And.AtUri(@"/Instruments?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
-//                                &States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}
-//                                &DeploymentType={deploymentTypeIDs}").Named("GetFilteredInstruments")
-//                //.And.AtUri("/Sites/Instruments?bySiteNo={siteNo}").Named("GetSiteInstrumentsByInternalId")
-//               .And.AtUri("/Events/{eventId}/Instruments").Named("GetEventInstruments")
-//                //NOT SEEING IT USED .And.AtUri("/Instruments/ReportInstruments?Date={aDate}&Event={eventId}&State={stateAbbrev}").Named("GetReportInstruments")  //Instruments?Date={aDate}&Event={eventId}&State={stateAbbrev}").Named("GetReportInstruments")
-//               .And.AtUri("/Sites/{siteId}/Instruments?Event={eventId}").Named("GetSiteEventInstruments")
-//               .HandledBy<InstrumentHandler>()
-//               .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//               .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<instrument>()
+                .AtUri(instrumentsResource+"/{entityId}")
+                .And.AtUri(datafileResource+"/{dataFileId}/Instrument").Named("GetDataFileInstrument")
+                .And.AtUri("/InstrumentStatus/{instrumentStatusId}/Instrument").Named("GetInstrumentStatusInstrument")
+                .And.AtUri(fileResource+"/{fileId}/Instrument").Named("GetFileInstrument")
+                .HandledBy<InstrumentHandler>()
+                .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+                .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            //ResourceSpace.Has.ResourcesOfType<InstrumentSerialNumberList>()
+            //   .AtUri("/Instruments/SerialNumbers").Named("SerialNumbers")  //
+            //   .HandledBy<InstrumentHandler>() //handler. what class is gonna handle this
+            //   .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //   .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<INSTRUMENT>()
-//                .AtUri("/Instruments/{entityId}")
-//                .And.AtUri("/DataFiles/{dataFileId}/Instrument").Named("GetDataFileInstrument")
-//                .And.AtUri("/InstrumentStatus/{instrumentStatusId}/Instrument").Named("GetInstrumentStatusInstrument")
-//                .And.AtUri("/Files/{fileId}/Instrument").Named("GetFileInstrument")
-//                .HandledBy<InstrumentHandler>()
-//                .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//                .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            //ResourceSpace.Has.ResourcesOfType<FullInstrument>()
+            //    .AtUri("/Instruments/{instrumentId}/FullInstrument").Named("GetFullInstruments")
+            //    .HandledBy<InstrumentHandler>()
+            //    .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //    .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<FullInstrument>()
-//                .AtUri("/Instruments/{instrumentId}/FullInstrument").Named("GetFullInstruments")
-//                .HandledBy<InstrumentHandler>()
-//                .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//                .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            //ResourceSpace.Has.ResourcesOfType<List<FullInstrument>>()
+            //    .AtUri("/Sites/{siteId}/FullInstrumentList").Named("GetFullInstrumentList")
+            //    .HandledBy<InstrumentHandler>()
+            //    .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //    .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<List<FullInstrument>>()
-//                .AtUri("/Sites/{siteId}/FullInstrumentList").Named("GetFullInstrumentList")
-//                .HandledBy<InstrumentHandler>()
-//                .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//                .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            //ResourceSpace.Has.ResourcesOfType<SensorViews>()
+            //    .AtUri("/SensorViews/{eventId}").Named("GetSensorViews")
+            //    .HandledBy<InstrumentHandler>()
+            //    .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            //    .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<SensorViews>()
-//                .AtUri("/SensorViews/{eventId}").Named("GetSensorViews")
-//                .HandledBy<InstrumentHandler>()
-//                .TranscodedBy<SimpleUTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//                .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-//        }//end AddINSTRUMENT_Resources
+        }//end AddINSTRUMENT_Resources
 //        private void AddINSTRUMENT_STATUS_Resources()
 //        {
 //            //InstrumentStatus

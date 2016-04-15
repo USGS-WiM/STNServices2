@@ -480,6 +480,5 @@ namespace STNServices2.Handlers
         }//end buildDefaultPassword
         #endregion
 
-
     }//end class PeakSummaryHandler
 }//end namespace
