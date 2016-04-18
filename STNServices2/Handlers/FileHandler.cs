@@ -584,7 +584,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        aFile = sa.Update<file>(aFile);
+                        aFile = sa.Update<file>(entityId, aFile);
                         sm(sa.Messages);
                     }//end using
                 }//end using

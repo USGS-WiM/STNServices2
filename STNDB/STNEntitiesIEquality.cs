@@ -461,7 +461,7 @@ namespace STNDB
     {
         public bool Equals(instrument other)
         {
-            return this.sensor_type_id == other.sensor_type_id &&
+            var t = this.sensor_type_id == other.sensor_type_id &&
                     ( !other.deployment_type_id.HasValue || other.deployment_type_id.Value <= 0|| this.deployment_type_id.Value == other.deployment_type_id.Value ) &&
                     (!other.sensor_brand_id.HasValue || other.sensor_brand_id.Value <= 0 || this.sensor_brand_id.Value == other.sensor_brand_id.Value ) &&
                     (!other.interval.HasValue || other.interval <= 0 || this.interval == other.interval ) &&
@@ -471,7 +471,7 @@ namespace STNDB
                     (string.IsNullOrEmpty(other.vented) || string.Equals(this.vented, other.vented,StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.housing_serial_number) || string.Equals(this.housing_serial_number, other.housing_serial_number,StringComparison.OrdinalIgnoreCase) );
 
-
+            return t;
         }
         public override bool Equals(object obj)
         {
@@ -489,16 +489,14 @@ namespace STNDB
     {
         public bool Equals(instrument_status other)
         {
-            return e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID &&
-                    e.STATUS_TYPE_ID == thisEntity.STATUS_TYPE_ID &&
-                    (DateTime.Equals(e.TIME_STAMP.Value, thisEntity.TIME_STAMP.Value) || !thisEntity.TIME_STAMP.HasValue) &&
-                    (!thisEntity.MEMBER_ID.HasValue || e.MEMBER_ID == thisEntity.MEMBER_ID || thisEntity.MEMBER_ID <= 0) &&
-                    (string.Equals(e.NOTES.ToUpper(), thisEntity.NOTES.ToUpper()) || string.IsNullOrEmpty(thisEntity.NOTES)) &&
-                    (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)) &&
-                    thisEntity.SENSOR_ELEVATION == thisEntity.SENSOR_ELEVATION &&
-                    thisEntity.WS_ELEVATION == thisEntity.WS_ELEVATION &&
-                    thisEntity.GS_ELEVATION == thisEntity.GS_ELEVATION &&
-                    thisEntity.VDATUM_ID == thisEntity.VDATUM_ID);
+            return this.instrument_id == other.instrument_id &&
+                   this.status_type_id == other.status_type_id &&
+                   (!other.time_stamp.HasValue || DateTime.Equals(this.time_stamp.Value, other.time_stamp.Value)) &&
+                   (!other.member_id.HasValue || this.member_id == other.member_id || other.member_id <= 0) &&
+                   (string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone, StringComparison.OrdinalIgnoreCase)) &&
+                   (!other.sensor_elevation.HasValue || this.sensor_elevation == other.sensor_elevation) &&
+                   (!other.ws_elevation.HasValue || this.ws_elevation == other.ws_elevation) &&
+                   (!other.gs_elevation.HasValue || this.gs_elevation == other.gs_elevation);
         }
 
         public override bool Equals(object obj)
@@ -511,7 +509,72 @@ namespace STNDB
 
         public override int GetHashCode()
         {
-            return (this.username + this.fname + this.lname).GetHashCode();
+            return (this.instrument_id + this.status_type_id).GetHashCode() + this.time_stamp.GetHashCode();
+        }
+
+    }
+    public partial class landownercontact : IEquatable<landownercontact>
+    {
+        public bool Equals(landownercontact other)
+        {
+            return (string.IsNullOrEmpty(other.fname) || string.Equals(this.fname, other.fname, StringComparison.OrdinalIgnoreCase)) &&
+                   (string.IsNullOrEmpty(other.lname) || string.Equals(this.lname, other.lname, StringComparison.OrdinalIgnoreCase)) &&
+                   (string.IsNullOrEmpty(other.address) || string.Equals(this.address, other.address, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as landownercontact);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.fname+this.lname).GetHashCode();
+        }
+
+    }
+    public partial class locatortype : IEquatable<locatortype>
+    {
+        public bool Equals(locatortype other)
+        {
+            return string.Equals(this.locator, other.locator, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as locatortype);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.locator.GetHashCode();
+        }
+
+    }
+    public partial class marker : IEquatable<marker>
+    {
+        public bool Equals(marker other)
+        {
+            return string.Equals(this.marker1, other.marker1, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as marker);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.marker1.GetHashCode();
         }
 
     }
@@ -538,7 +601,48 @@ namespace STNDB
             return (this.username + this.fname + this.lname).GetHashCode();
         }
     }
+    public partial class network_name : IEquatable<network_name>
+    {
+        public bool Equals(network_name other)
+        {
+            return string.Equals(this.name, other.name, StringComparison.OrdinalIgnoreCase);
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as network_name);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.name.GetHashCode();
+        }
+
+    }
+    public partial class network_type : IEquatable<network_type>
+    {
+        public bool Equals(network_type other)
+        {
+            return string.Equals(this.network_type_name, other.network_type_name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as network_type);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.network_type_name.GetHashCode();
+        }
+
+    }
     public partial class objective_point : IEquatable<objective_point>
     {
 

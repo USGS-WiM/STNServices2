@@ -421,7 +421,7 @@ namespace STNServices2.Handlers
                             sm(MessageType.info, "Password updated.");
                         }
 
-                        anEntity = sa.Update<member>(ObjectToBeUpdated);
+                        anEntity = sa.Update<member>(entityId, ObjectToBeUpdated);
                         sm(sa.Messages);
                         //remove info not relevant
                         anEntity.password = string.Empty;
