@@ -525,7 +525,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<reporting_metrics>(anEntity);
+                        anEntity = sa.Update<reporting_metrics>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using

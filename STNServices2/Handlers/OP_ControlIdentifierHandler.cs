@@ -160,7 +160,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<op_control_identifier>(anEntity);
+                        anEntity = sa.Update<op_control_identifier>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
