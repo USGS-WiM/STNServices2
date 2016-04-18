@@ -154,7 +154,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<vertical_collect_methods>(anEntity);
+                        anEntity = sa.Update<vertical_collect_methods>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using

@@ -29,10 +29,10 @@ namespace STNDB
         public Nullable<int> instrument_id { get; set; }
         public string validator_userid { get; set; }
         public Nullable<int> locator_type_id { get; set; }
-        public Nullable<System.DateTime> date_validated { get; set; }
-        public Nullable<int> validated { get; set; }
         public Nullable<int> objective_point_id { get; set; }
         public Nullable<int> site_id { get; set; }
+        public Nullable<System.DateTime> photo_date { get; set; }
+        public Nullable<int> is_nwis { get; set; }
     
         public virtual hwm hwm { get; set; }
         public virtual site site { get; set; }
