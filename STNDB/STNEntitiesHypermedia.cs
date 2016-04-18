@@ -76,7 +76,50 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
-
+    public partial class hwm_qualities : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class hwm_types : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class instr_collection_conditions : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class instrument : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class instrument_status : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class landownercontact : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class locatortype : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class marker : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class member : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class network_name : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
+    public partial class network_type : IHypermedia
+    {
+        public List<Link> Links { get; set; }
+    }
     public partial class objective_point : IHypermedia
     {
         public List<Link> Links { get; set; }
@@ -145,21 +188,7 @@ namespace STNDB
     {
         public List<Link> Links { get; set; }
     }
-    public partial class hwm_qualities : IHypermedia
-    {
-        public List<Link> Links { get; set; }
-    }
-    public partial class hwm_types : IHypermedia
-    {
-        public List<Link> Links { get; set; }
-    }
-    public partial class instr_collection_conditions : IHypermedia
-    {
-        public List<Link> Links { get; set; }
-    }
-    public partial class member : IHypermedia
-    {
-        public List<Link> Links { get; set; }
-    }
+
+    
     
 }
