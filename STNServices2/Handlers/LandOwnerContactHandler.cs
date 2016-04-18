@@ -34,19 +34,19 @@ using WiM.Security;
 
 namespace STNServices2.Handlers
 {
-    public class StatusTypeHandler : STNHandlerBase
+    public class LandOwnerHandler : STNHandlerBase
     {
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<status_type> entities = null;
+            List<landownercontact> entities = null;
 
             try
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<status_type>().OrderBy(e => e.status_type_id).ToList();
+                    entities = sa.Select<landownercontact>().OrderBy(e => e.landownercontactid).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
@@ -68,13 +68,13 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            status_type anEntity = null;
+            landownercontact anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<status_type>().FirstOrDefault(e => e.status_type_id == entityId);
+                    anEntity = sa.Select<landownercontact>().FirstOrDefault(e => e.landownercontactid == entityId);
                     sm(sa.Messages);
 
                 }//end using
@@ -91,22 +91,21 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatusStatus")]
-        public OperationResult GetInstrumentStatusStatus(Int32 instrumentStatusId)
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteLandOwner")]
+        public OperationResult GetSiteLandOwner(Int32 siteId)
         {
-            status_type anEntity = null;
-
+            landownercontact mlandownercontact = null;
             try
             {
-                if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
+                if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument_status>().FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).status_type;
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
+                    if (mlandownercontact == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = mlandownercontact, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -117,17 +116,18 @@ namespace STNServices2.Handlers
 
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(status_type anEntity)
+        public OperationResult POST(landownercontact anEntity)
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.status)) throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(anEntity.fname) && string.IsNullOrEmpty(anEntity.lname))
+                    throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Add<status_type>(anEntity);
+                        anEntity = sa.Add<landownercontact>(anEntity);
                         sm(sa.Messages);
 
                     }//end using
@@ -146,17 +146,18 @@ namespace STNServices2.Handlers
         ///
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, status_type anEntity)
+        public OperationResult Put(Int32 entityId, landownercontact anEntity)
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.status)) throw new BadRequestException("Invalid input parameters");
+                if (entityId <=0 || (string.IsNullOrEmpty(anEntity.fname) && string.IsNullOrEmpty(anEntity.lname)))
+                    throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<status_type>(entityId, anEntity);
+                        anEntity = sa.Update<landownercontact>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -169,15 +170,11 @@ namespace STNServices2.Handlers
 
         #endregion
         #region DeleteMethods
-
-        /// 
-        /// Force the user to provide authentication and authorization 
-        ///
         [RequiresRole(AdminRole)]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            status_type anEntity = null;
+            landownercontact anEntity = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -185,10 +182,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<status_type>().FirstOrDefault(i => i.status_type_id == entityId);
+                        anEntity = sa.Select<landownercontact>().FirstOrDefault(i => i.landownercontactid == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<status_type>(anEntity);
+                        sa.Delete<landownercontact>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -200,5 +197,5 @@ namespace STNServices2.Handlers
         }//end HttpMethod.PUT
 
         #endregion
-    }//end horizontal_datumsHandler
+    }//end landownercontactHandler
 }

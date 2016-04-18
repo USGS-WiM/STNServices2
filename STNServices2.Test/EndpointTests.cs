@@ -408,6 +408,262 @@ namespace STNServices2.Test
             Assert.IsTrue(success);
         }//end method
         [TestMethod]
+        public void HWMRequest()
+        {
+            //GET LIST
+            //List<hwm> RequestList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource);
+            //Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            hwm postObj;
+            postObj = this.POSTRequest<hwm>(host + Configuration.hwmResource, new hwm()
+            {
+                site_id = 1,
+                event_id = 1,
+                hwm_type_id = 1,
+                hwm_quality_id = 1,
+                hwm_environment = "post-Test",
+                hdatum_id = 1,
+                flag_member_id = 1
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_id.ToString());
+
+            //GET POSTed item
+            hwm RequestObj = this.GETRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.hwm_environment = "put-test";
+            hwm putObj = this.PUTRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void HWMQualityRequest()
+        {
+            //GET LIST
+            List<hwm_qualities> RequestList = this.GETRequest<List<hwm_qualities>>(host + Configuration.hwmqualityResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            hwm_qualities postObj;
+            postObj = this.POSTRequest<hwm_qualities>(host + Configuration.hwmqualityResource, new hwm_qualities() { hwm_quality = "POST-Test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_quality_id.ToString());
+
+            //GET POSTed item
+            hwm_qualities RequestObj = this.GETRequest<hwm_qualities>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.hwm_quality = "put-test";
+            hwm_qualities putObj = this.PUTRequest<hwm_qualities>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<hwm>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void HWMTypeRequest()
+        {
+            //GET LIST
+            List<hwm_types> RequestList = this.GETRequest<List<hwm_types>>(host + Configuration.hwmtypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            hwm_types postObj;
+            postObj = this.POSTRequest<hwm_types>(host + Configuration.hwmtypeResource, new hwm_types() { hwm_type = "POST-Test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_type_id.ToString());
+
+            //GET POSTed item
+            hwm_types RequestObj = this.GETRequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.hwm_type = "put-test";
+            hwm_types putObj = this.PUTRequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void InstrumentCollectionContitionsRequest()
+        {
+            //GET LIST
+            List<instr_collection_conditions> RequestList = this.GETRequest<List<instr_collection_conditions>>(host + Configuration.instrcollectionResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            instr_collection_conditions postObj;
+            postObj = this.POSTRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource, new instr_collection_conditions() { condition = "POST-Test" }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.id.ToString());
+
+            //GET POSTed item
+            instr_collection_conditions RequestObj = this.GETRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.condition = "put-test";
+            instr_collection_conditions putObj = this.PUTRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void InstrumentRequest()
+        {
+            //GET LIST
+            List<instrument> RequestList = this.GETRequest<List<instrument>>(host + Configuration.instrumentsResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            instrument postObj;
+            postObj = this.POSTRequest<instrument>(host + Configuration.instrumentsResource, new instrument() { sensor_type_id = 1,
+                                                                                                                sensor_brand_id =1,
+                                                                                                                event_id =1,
+                                                                                                                 site_id=1,
+                                                                                                                 location_description ="Post-Test"
+                                                                                                                }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.instrument_id.ToString());
+
+            //GET POSTed item
+            instrument RequestObj = this.GETRequest<instrument>(host + Configuration.instrumentsResource + "/" + postObj.instrument_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.location_description = "put-test";
+            instrument putObj = this.PUTRequest<instrument>(host + Configuration.instrumentsResource + "/" + postObj.instrument_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<instrument>(host + Configuration.instrumentsResource + "/" + postObj.instrument_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void InstrumentStatusRequest()
+        {
+            //GET LIST
+            List<instrument_status> RequestList = this.GETRequest<List<instrument_status>>(host + Configuration.instrumentStatusResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            instrument_status postObj;
+            postObj = this.POSTRequest<instrument_status>(host + Configuration.instrumentStatusResource, new instrument_status()
+            {
+                instrument_id = 1,
+                time_stamp = DateTime.Now,
+                status_type_id = 1,
+                member_id = 1,
+                time_zone = "MST",
+                notes = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.instrument_status_id.ToString());
+
+            //GET POSTed item
+            instrument_status RequestObj = this.GETRequest<instrument_status>(host + Configuration.instrumentStatusResource + "/" + postObj.instrument_status_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.notes = "Put-Test";
+            instrument_status putObj = this.PUTRequest<instrument_status>(host + Configuration.instrumentStatusResource + "/" + postObj.instrument_status_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<instrument_status>(host + Configuration.instrumentStatusResource + "/" + postObj.instrument_status_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void LandOwnerContactRequest()
+        {
+            //GET LIST
+            List<landownercontact> RequestList = this.GETRequest<List<landownercontact>>(host + Configuration.landOwnerResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            landownercontact postObj;
+            postObj = this.POSTRequest<landownercontact>(host + Configuration.landOwnerResource, new landownercontact()
+            {
+                fname = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.landownercontactid.ToString());
+
+            //GET POSTed item
+            landownercontact RequestObj = this.GETRequest<landownercontact>(host + Configuration.landOwnerResource + "/" + postObj.landownercontactid);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.lname = "put-test";
+            landownercontact putObj = this.PUTRequest<landownercontact>(host + Configuration.landOwnerResource + "/" + postObj.landownercontactid, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<landownercontact>(host + Configuration.landOwnerResource + "/" + postObj.landownercontactid, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void LocatorTypeRequest()
+        {
+            //GET LIST
+            List<locatortype> RequestList = this.GETRequest<List<locatortype>>(host + Configuration.locatorTypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            locatortype postObj;
+            postObj = this.POSTRequest<locatortype>(host + Configuration.locatorTypeResource, new locatortype()
+            {
+                locator = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.locator_type_id.ToString());
+
+            //GET POSTed item
+            locatortype RequestObj = this.GETRequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.locator = "put-test";
+            locatortype putObj = this.PUTRequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void MarkerRequest()
+        {
+            //GET LIST
+            List<marker> RequestList = this.GETRequest<List<marker>>(host + Configuration.markerResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            marker postObj;
+            postObj = this.POSTRequest<marker>(host + Configuration.markerResource, new marker()
+            {
+                marker1 = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.marker_id.ToString());
+
+            //GET POSTed item
+            marker RequestObj = this.GETRequest<marker>(host + Configuration.markerResource + "/" + postObj.marker_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.marker1 = "put-test";
+            marker putObj = this.PUTRequest<marker>(host + Configuration.markerResource + "/" + postObj.marker_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<marker>(host + Configuration.markerResource + "/" + postObj.marker_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
         public void MemberRequest()
         {
             //GET LIST
@@ -441,7 +697,62 @@ namespace STNServices2.Test
             bool success = this.DELETERequest<member>(host + Configuration.memberResource + "/" + postObj.member_id, basicAuth);
             Assert.IsTrue(success);
         }//end method
+        [TestMethod]
+        public void NetworkNameRequest()
+        {
+            //GET LIST
+            List<network_name> RequestList = this.GETRequest<List<network_name>>(host + Configuration.networkNameResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
+            //POST
+            network_name postObj;
+            postObj = this.POSTRequest<network_name>(host + Configuration.networkNameResource, new network_name()
+            {
+               name = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.network_name_id.ToString());
+
+            //GET POSTed item
+            network_name RequestObj = this.GETRequest<network_name>(host + Configuration.networkNameResource + "/" + postObj.network_name_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.name = "put-test";
+            network_name putObj = this.PUTRequest<network_name>(host + Configuration.networkNameResource + "/" + postObj.network_name_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<network_name>(host + Configuration.networkNameResource + "/" + postObj.network_name_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
+        [TestMethod]
+        public void NetworkTypeRequest()
+        {
+            //GET LIST
+            List<network_type> RequestList = this.GETRequest<List<network_type>>(host + Configuration.networkTypeResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //POST
+            network_type postObj;
+            postObj = this.POSTRequest<network_type>(host + Configuration.networkTypeResource, new network_type()
+            {
+               network_type_name = "Post-Test"
+            }, basicAuth);
+            Assert.IsNotNull(postObj, "ID: " + postObj.network_type_id.ToString());
+
+            //GET POSTed item
+            network_type RequestObj = this.GETRequest<network_type>(host + Configuration.networkTypeResource + "/" + postObj.network_type_id);
+            Assert.IsNotNull(RequestObj);
+
+            //PUT POSTed item
+            postObj.network_type_name = "put-test";
+            network_type putObj = this.PUTRequest<network_type>(host + Configuration.networkTypeResource + "/" + postObj.network_type_id, postObj, basicAuth);
+            Assert.IsNotNull(putObj);
+
+            //Delete POSTed item
+            bool success = this.DELETERequest<network_type>(host + Configuration.networkTypeResource + "/" + postObj.network_type_id, basicAuth);
+            Assert.IsTrue(success);
+        }//end method
         [TestMethod]
         public void ObjectivePointRequest()
         {
@@ -770,9 +1081,7 @@ namespace STNServices2.Test
             source putObj = this.PUTRequest<source>(host + Configuration.sourceResource + "/" + postObj.source_id, postObj, basicAuth);
             Assert.IsNotNull(putObj);
 
-            ////Delete POSTed item
-            //bool success = this.DELETERequest<state>(host + Configuration.stateResource + "/" + postObj.state_id, basicAuth);
-            //Assert.IsTrue(success);
+            // sources are not deletable.
         }//end method
         [TestMethod]
         public void StateRequest()
@@ -873,109 +1182,6 @@ namespace STNServices2.Test
 
             //Delete POSTed item
             bool success = this.DELETERequest<vertical_datums>(host + Configuration.verticalDatumResource + "/" + postObj.datum_id, basicAuth);
-            Assert.IsTrue(success);
-        }//end method
-        [TestMethod]
-        public void HWMRequest()
-        {
-            //GET LIST
-            //List<hwm> RequestList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource);
-            //Assert.IsNotNull(RequestList, RequestList.Count.ToString());
-
-            //POST
-            hwm postObj;
-            postObj = this.POSTRequest<hwm>(host + Configuration.hwmResource, new hwm(){site_id = 1, event_id = 1,
-                                                                                        hwm_type_id = 1, hwm_quality_id = 1, 
-                                                                                        hwm_environment ="post-Test",
-                                                                                        hdatum_id =1, flag_member_id=1}, basicAuth);
-            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_id.ToString());
-
-            //GET POSTed item
-            hwm RequestObj = this.GETRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id);
-            Assert.IsNotNull(RequestObj);
-
-            //PUT POSTed item
-            postObj.hwm_environment = "put-test";
-            hwm putObj = this.PUTRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, postObj, basicAuth);
-            Assert.IsNotNull(putObj);
-
-            //Delete POSTed item
-            bool success = this.DELETERequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, basicAuth);
-            Assert.IsTrue(success);
-        }//end method
-        [TestMethod]
-        public void HWMQualityRequest()
-        {
-            //GET LIST
-            List<hwm_qualities> RequestList = this.GETRequest<List<hwm_qualities>>(host + Configuration.hwmqualityResource);
-            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
-
-            //POST
-            hwm_qualities postObj;
-            postObj = this.POSTRequest<hwm_qualities>(host + Configuration.hwmqualityResource, new hwm_qualities() {  hwm_quality = "POST-Test" }, basicAuth);
-            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_quality_id.ToString());
-
-            //GET POSTed item
-            hwm_qualities RequestObj = this.GETRequest<hwm_qualities>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id);
-            Assert.IsNotNull(RequestObj);
-
-            //PUT POSTed item
-            postObj.hwm_quality = "put-test";
-            hwm_qualities putObj = this.PUTRequest<hwm_qualities>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id, postObj, basicAuth);
-            Assert.IsNotNull(putObj);
-
-            //Delete POSTed item
-            bool success = this.DELETERequest<hwm>(host + Configuration.hwmqualityResource + "/" + postObj.hwm_quality_id, basicAuth);
-            Assert.IsTrue(success);
-        }//end method
-        [TestMethod]
-        public void HWMTypeRequest()
-        {
-            //GET LIST
-            List<hwm_types> RequestList = this.GETRequest<List<hwm_types>>(host + Configuration.hwmtypeResource);
-            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
-
-            //POST
-            hwm_types postObj;
-            postObj = this.POSTRequest<hwm_types>(host + Configuration.hwmtypeResource, new hwm_types() { hwm_type = "POST-Test" }, basicAuth);
-            Assert.IsNotNull(postObj, "ID: " + postObj.hwm_type_id.ToString());
-
-            //GET POSTed item
-            hwm_types RequestObj = this.GETRequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id);
-            Assert.IsNotNull(RequestObj);
-
-            //PUT POSTed item
-            postObj.hwm_type = "put-test";
-            hwm_types putObj = this.PUTRequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id, postObj, basicAuth);
-            Assert.IsNotNull(putObj);
-
-            //Delete POSTed item
-            bool success = this.DELETERequest<hwm_types>(host + Configuration.hwmtypeResource + "/" + postObj.hwm_type_id, basicAuth);
-            Assert.IsTrue(success);
-        }//end method
-        [TestMethod]
-        public void InstrumentCollectionContitionsRequest()
-        {
-            //GET LIST
-            List<instr_collection_conditions> RequestList = this.GETRequest<List<instr_collection_conditions>>(host + Configuration.instrcollectionResource);
-            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
-
-            //POST
-            instr_collection_conditions postObj;
-            postObj = this.POSTRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource, new instr_collection_conditions() { condition = "POST-Test" }, basicAuth);
-            Assert.IsNotNull(postObj, "ID: " + postObj.id.ToString());
-
-            //GET POSTed item
-            instr_collection_conditions RequestObj = this.GETRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id);
-            Assert.IsNotNull(RequestObj);
-
-            //PUT POSTed item
-            postObj.condition = "put-test";
-            instr_collection_conditions putObj = this.PUTRequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id, postObj, basicAuth);
-            Assert.IsNotNull(putObj);
-
-            //Delete POSTed item
-            bool success = this.DELETERequest<instr_collection_conditions>(host + Configuration.instrcollectionResource + "/" + postObj.id, basicAuth);
             Assert.IsTrue(success);
         }//end method
         #endregion

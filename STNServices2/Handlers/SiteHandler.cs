@@ -849,7 +849,7 @@ namespace STNServices2.Handlers
                         //update state to be the abbrv. state
                         //aSite.STATE = this.GetStateByName(aSite.STATE).ToString();
 
-                        anEntity = sa.Update<site>(updatedSite);
+                        anEntity = sa.Update<site>(entityId, updatedSite);
                         sm(sa.Messages);                        
                     }//end using
                 }//end using

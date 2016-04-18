@@ -146,8 +146,8 @@
           <Property Name="instrument_id" Type="int4" />
           <Property Name="validator_userid" Type="varchar" MaxLength="20" />
           <Property Name="locator_type_id" Type="int4" />
-          <Property Name="date_validated" Type="timestamp" />
-          <Property Name="validated" Type="int4" />
+          <Property Name="photo_date" Type="timestamp" />
+          <Property Name="is_nwis" Type="int4" />
           <Property Name="objective_point_id" Type="int4" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
@@ -829,8 +829,6 @@
           <Property Name="instrument_id" Type="Int32" />
           <Property Name="validator_userid" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="locator_type_id" Type="Int32" />
-          <Property Name="date_validated" Type="DateTime" Precision="6" />
-          <Property Name="validated" Type="Int32" />
           <Property Name="objective_point_id" Type="Int32" />
           <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitefile" FromRole="file" ToRole="site" />
@@ -839,6 +837,8 @@
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.data_filefile" FromRole="file" ToRole="data_file" />
           <NavigationProperty Name="source" Relationship="STNNEWModel.sourcefile" FromRole="file" ToRole="source" />
           <NavigationProperty Name="file_type" Relationship="STNNEWModel.file_typefile" FromRole="file" ToRole="file_type" />
+          <Property Name="photo_date" Type="DateTime" Precision="6" />
+          <Property Name="is_nwis" Type="Int32" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -2492,6 +2492,8 @@
           <EntitySetMapping Name="files">
             <EntityTypeMapping TypeName="STNNEWModel.file">
               <MappingFragment StoreEntitySet="files">
+                <ScalarProperty Name="is_nwis" ColumnName="is_nwis" />
+                <ScalarProperty Name="photo_date" ColumnName="photo_date" />
                 <ScalarProperty Name="site_id" ColumnName="site_id" />
                 <ScalarProperty Name="file_id" ColumnName="file_id" />
                 <ScalarProperty Name="path" ColumnName="path" />
@@ -2508,8 +2510,6 @@
                 <ScalarProperty Name="instrument_id" ColumnName="instrument_id" />
                 <ScalarProperty Name="validator_userid" ColumnName="validator_userid" />
                 <ScalarProperty Name="locator_type_id" ColumnName="locator_type_id" />
-                <ScalarProperty Name="date_validated" ColumnName="date_validated" />
-                <ScalarProperty Name="validated" ColumnName="validated" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
               </MappingFragment>
             </EntityTypeMapping>
