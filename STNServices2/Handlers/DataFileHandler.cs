@@ -337,7 +337,7 @@ namespace STNServices2.Handlers
                         DataFileToUpdate.peak_summary_id = aDataFile.peak_summary_id;
                         DataFileToUpdate.elevation_status = aDataFile.elevation_status;
 
-                        sa.Update<data_file>(DataFileToUpdate);
+                        sa.Update<data_file>(entityId, DataFileToUpdate);
                         sm(sa.Messages);
 
                     }//end using

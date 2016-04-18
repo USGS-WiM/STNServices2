@@ -151,7 +151,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<event_status>(anEntity);
+                        anEntity = sa.Update<event_status>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using

@@ -179,7 +179,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Update<vertical_datums>(anEntity);
+                        anEntity = sa.Update<vertical_datums>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
