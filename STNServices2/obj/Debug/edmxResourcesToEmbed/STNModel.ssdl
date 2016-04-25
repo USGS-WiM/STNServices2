@@ -314,8 +314,8 @@
     <Property Name="INSTRUMENT_ID" Type="number" />
     <Property Name="VALIDATOR_USERID" Type="nvarchar2" MaxLength="20" />
     <Property Name="LOCATOR_TYPE_ID" Type="number" />
-    <Property Name="DATE_VALIDATED" Type="date" />
-    <Property Name="VALIDATED" Type="number" />
+    <Property Name="PHOTO_DATE" Type="date" />
+    <Property Name="IS_NWIS" Type="number" />
     <Property Name="OBJECTIVE_POINT_ID" Type="number" />
   </EntityType>
   <EntityType Name="HORIZONTAL_COLLECT_METHODS">
@@ -556,11 +556,8 @@
     <Property Name="OP_MEASUREMENTS_ID" Type="number" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="OBJECTIVE_POINT_ID" Type="number" Nullable="false" />
     <Property Name="INSTRUMENT_STATUS_ID" Type="number" Nullable="false" />
-    <Property Name="FROM_RP" Type="number" />
-    <Property Name="HANGING_LENGTH" Type="number" />
     <Property Name="WATER_SURFACE" Type="number" />
     <Property Name="GROUND_SURFACE" Type="number" />
-    <Property Name="TYPE" Type="nvarchar2" MaxLength="30" />
     <Property Name="OFFSET_CORRECTION" Type="number" />
   </EntityType>
   <EntityType Name="OP_QUALITY">
