@@ -543,8 +543,6 @@
     <Property Name="INSTRUMENT_ID" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="VALIDATOR_USERID" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
     <Property Name="LOCATOR_TYPE_ID" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="DATE_VALIDATED" Type="DateTime" />
-    <Property Name="VALIDATED" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Precision="38" Scale="0" />
     <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTFILE" FromRole="FILE" ToRole="OBJECTIVE_POINT" />
     <NavigationProperty Name="FILE_TYPE" Relationship="STNModel2.FILE_TYPEFILE" FromRole="FILE" ToRole="FILE_TYPE" />
@@ -555,6 +553,8 @@
     <NavigationProperty Name="LOCATORTYPE" Relationship="STNModel2.LOCATORTYPEFILE" FromRole="FILE" ToRole="LOCATORTYPE" />
     <NavigationProperty Name="SOURCE" Relationship="STNModel2.FILESOURCE" FromRole="FILE" ToRole="SOURCE" />
     <NavigationProperty Name="FILE_KEYWORD" Relationship="STNModel2.FILESFILE_KEYWORD" FromRole="FILES" ToRole="FILE_KEYWORD" />
+    <Property Type="DateTime" Name="PHOTO_DATE" />
+    <Property Type="Decimal" Name="IS_NWIS" Precision="38" Scale="0" />
   </EntityType>
   <EntityType Name="HORIZONTAL_COLLECT_METHODS">
     <Key>
@@ -865,11 +865,8 @@
     <Property Name="OP_MEASUREMENTS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="OBJECTIVE_POINT_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
     <Property Name="INSTRUMENT_STATUS_ID" Type="Decimal" Nullable="false" Precision="38" Scale="0" />
-    <Property Name="FROM_RP" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="HANGING_LENGTH" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="WATER_SURFACE" Type="Decimal" Precision="38" Scale="0" />
     <Property Name="GROUND_SURFACE" Type="Decimal" Precision="38" Scale="0" />
-    <Property Name="TYPE" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="OBJECTIVE_POINT" Relationship="STNModel2.OBJECTIVE_POINTOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="OBJECTIVE_POINT" />
     <NavigationProperty Name="INSTRUMENT_STATUS" Relationship="STNModel2.INSTRUMENT_STATUSOP_MEASUREMENTS" FromRole="OP_MEASUREMENTS" ToRole="INSTRUMENT_STATUS" />
     <Property Type="Decimal" Name="OFFSET_CORRECTION" Precision="38" Scale="0" />

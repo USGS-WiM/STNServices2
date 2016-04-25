@@ -863,10 +863,10 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //delete files associated with this sensor
-                        List<FILES> opFiles = aSTNE.FILES.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
-                        if (opFiles.Count >= 1)
+                        List<FILES> instFiles = aSTNE.FILES.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
+                        if (instFiles.Count >= 1)
                         {
-                            foreach (FILES f in opFiles)
+                            foreach (FILES f in instFiles)
                             {
                                 //delete data files to this file
                                 if (f.DATA_FILE_ID.HasValue)
