@@ -224,11 +224,7 @@ namespace STNServices2.Handlers
                     using (STNEntities2 aSTNE = GetRDS(securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        OP_MEASUREMENTS ObjectToBeUpdated = aSTNE.OP_MEASUREMENTS.Single(m => m.OP_MEASUREMENTS_ID == entityId);
-
-                        ObjectToBeUpdated.TYPE = anOPmeas.TYPE != ObjectToBeUpdated.TYPE ? anOPmeas.TYPE : ObjectToBeUpdated.TYPE;
-                        ObjectToBeUpdated.FROM_RP = anOPmeas.FROM_RP != ObjectToBeUpdated.FROM_RP ? anOPmeas.FROM_RP : ObjectToBeUpdated.FROM_RP;
-                        ObjectToBeUpdated.HANGING_LENGTH = anOPmeas.HANGING_LENGTH != ObjectToBeUpdated.HANGING_LENGTH ? anOPmeas.HANGING_LENGTH : ObjectToBeUpdated.HANGING_LENGTH;
+                        OP_MEASUREMENTS ObjectToBeUpdated = aSTNE.OP_MEASUREMENTS.Single(m => m.OP_MEASUREMENTS_ID == entityId);                        
                         ObjectToBeUpdated.WATER_SURFACE = anOPmeas.WATER_SURFACE != ObjectToBeUpdated.WATER_SURFACE ? anOPmeas.WATER_SURFACE : ObjectToBeUpdated.WATER_SURFACE;
                         ObjectToBeUpdated.GROUND_SURFACE = anOPmeas.GROUND_SURFACE != ObjectToBeUpdated.GROUND_SURFACE ? anOPmeas.GROUND_SURFACE : ObjectToBeUpdated.GROUND_SURFACE;
                         ObjectToBeUpdated.OFFSET_CORRECTION = anOPmeas.OFFSET_CORRECTION != ObjectToBeUpdated.OFFSET_CORRECTION ? anOPmeas.OFFSET_CORRECTION : ObjectToBeUpdated.OFFSET_CORRECTION;
@@ -308,10 +304,7 @@ namespace STNServices2.Handlers
             {
 
                 existingRPM = entityRDS.FirstOrDefault(e => e.OBJECTIVE_POINT_ID == thisEntity.OBJECTIVE_POINT_ID &&
-                                                               e.INSTRUMENT_STATUS_ID == thisEntity.INSTRUMENT_STATUS_ID &&
-                                                               e.TYPE == thisEntity.TYPE &&
-                                                               e.FROM_RP == thisEntity.FROM_RP &&
-                                                               e.HANGING_LENGTH == thisEntity.HANGING_LENGTH &&
+                                                               e.INSTRUMENT_STATUS_ID == thisEntity.INSTRUMENT_STATUS_ID &&                                                              
                                                                e.WATER_SURFACE == thisEntity.WATER_SURFACE &&
                                                                e.GROUND_SURFACE == thisEntity.GROUND_SURFACE &&
                                                                e.OFFSET_CORRECTION == thisEntity.OFFSET_CORRECTION);

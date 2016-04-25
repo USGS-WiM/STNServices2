@@ -107,38 +107,38 @@ namespace STNServices2.Handlers
             { return new OperationResult.BadRequest(); }
         }// end HttpMethod.Get
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetCitizenFiles")]
-        public OperationResult GetCitizenFiles()
-        {
-            List<CITIZEN_FILE> FileList = null;
+        //[HttpOperation(HttpMethod.GET, ForUriName = "GetCitizenFiles")]
+        //public OperationResult GetCitizenFiles()
+        //{
+        //    List<CITIZEN_FILE> FileList = null;
 
-            try
-            {
-                //Get basic authentication password
-                using (STNEntities2 aSTNE = GetRDS())
-                {
-                    FileList = aSTNE.FILES.Where(
-                              f => f.SOURCE_ID == 1639).AsEnumerable().Select(
-                               sf => new CITIZEN_FILE
-                               {
-                                   FILE_ID = sf.FILE_ID,
-                                   DESCRIPTION = sf.DESCRIPTION,
-                                   LATITUDE_DD = sf.LATITUDE_DD,
-                                   LONGITUDE_DD = sf.LONGITUDE_DD,
-                                   FILE_DATE = sf.FILE_DATE,
-                                   VALIDATED = sf.VALIDATED,
-                                   DATE_VALIDATED = sf.DATE_VALIDATED,
-                                   VALIDATOR_USERID = sf.VALIDATOR_USERID,
-                                   LOCATOR_TYPE_ID = sf.LOCATOR_TYPE_ID,
-                                   KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, (Int32)sf.FILE_ID)
-                               }).ToList();
-                }//end using
+        //    try
+        //    {
+        //        //Get basic authentication password
+        //        using (STNEntities2 aSTNE = GetRDS())
+        //        {
+        //            FileList = aSTNE.FILES.Where(
+        //                      f => f.SOURCE_ID == 1639).AsEnumerable().Select(
+        //                       sf => new CITIZEN_FILE
+        //                       {
+        //                           FILE_ID = sf.FILE_ID,
+        //                           DESCRIPTION = sf.DESCRIPTION,
+        //                           LATITUDE_DD = sf.LATITUDE_DD,
+        //                           LONGITUDE_DD = sf.LONGITUDE_DD,
+        //                           FILE_DATE = sf.FILE_DATE,
+        //                           VALIDATED = sf.VALIDATED,
+        //                           DATE_VALIDATED = sf.DATE_VALIDATED,
+        //                           VALIDATOR_USERID = sf.VALIDATOR_USERID,
+        //                           LOCATOR_TYPE_ID = sf.LOCATOR_TYPE_ID,
+        //                           KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, (Int32)sf.FILE_ID)
+        //                       }).ToList();
+        //        }//end using
 
-                return new OperationResult.OK { ResponseResource = FileList };
-            }
-            catch
-            { return new OperationResult.BadRequest(); }
-        }// end HttpMethod.Get
+        //        return new OperationResult.OK { ResponseResource = FileList };
+        //    }
+        //    catch
+        //    { return new OperationResult.BadRequest(); }
+        //}// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
@@ -169,48 +169,48 @@ namespace STNServices2.Handlers
             { return new OperationResult.BadRequest(); }
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetCitizenFile")]
-        public OperationResult GetCitizenFile(Int32 fileId)
-        {
-            CITIZEN_FILE aFile;
+        //[HttpOperation(HttpMethod.GET, ForUriName = "GetCitizenFile")]
+        //public OperationResult GetCitizenFile(Int32 fileId)
+        //{
+        //    CITIZEN_FILE aFile;
 
-            //Return BadRequest if there is no ID
-            if (fileId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
+        //    //Return BadRequest if there is no ID
+        //    if (fileId <= 0)
+        //    {
+        //        return new OperationResult.BadRequest();
+        //    }
 
-            try
-            {
-                //Get basic authentication password
-                using (STNEntities2 aSTNE = GetRDS())
-                {
-                    aFile = aSTNE.FILES.Where(
-                              f => f.FILE_ID == fileId && f.SOURCE_ID == 1639).AsEnumerable().Select(
-                               sf => new CITIZEN_FILE
-                               {
-                                   FILE_ID = sf.FILE_ID,
-                                   DESCRIPTION = sf.DESCRIPTION,
-                                   LATITUDE_DD = sf.LATITUDE_DD,
-                                   LONGITUDE_DD = sf.LONGITUDE_DD,
-                                   FILE_DATE = sf.FILE_DATE,
-                                   VALIDATED = sf.VALIDATED,
-                                   DATE_VALIDATED = sf.DATE_VALIDATED,
-                                   VALIDATOR_USERID = sf.VALIDATOR_USERID,
-                                   LOCATOR_TYPE_ID = sf.LOCATOR_TYPE_ID,
-                                   KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, fileId)
-                               }).FirstOrDefault();
+        //    try
+        //    {
+        //        //Get basic authentication password
+        //        using (STNEntities2 aSTNE = GetRDS())
+        //        {
+        //            aFile = aSTNE.FILES.Where(
+        //                      f => f.FILE_ID == fileId && f.SOURCE_ID == 1639).AsEnumerable().Select(
+        //                       sf => new CITIZEN_FILE
+        //                       {
+        //                           FILE_ID = sf.FILE_ID,
+        //                           DESCRIPTION = sf.DESCRIPTION,
+        //                           LATITUDE_DD = sf.LATITUDE_DD,
+        //                           LONGITUDE_DD = sf.LONGITUDE_DD,
+        //                           FILE_DATE = sf.FILE_DATE,
+        //                           VALIDATED = sf.VALIDATED,
+        //                           DATE_VALIDATED = sf.DATE_VALIDATED,
+        //                           VALIDATOR_USERID = sf.VALIDATOR_USERID,
+        //                           LOCATOR_TYPE_ID = sf.LOCATOR_TYPE_ID,
+        //                           KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, fileId)
+        //                       }).FirstOrDefault();
 
-                    //if (aFile != null)
-                    //  aFile.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
+        //            //if (aFile != null)
+        //            //  aFile.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
 
-                }//end using
+        //        }//end using
 
-                return new OperationResult.OK { ResponseResource = aFile };
-            }
-            catch
-            { return new OperationResult.BadRequest(); }
-        }
+        //        return new OperationResult.OK { ResponseResource = aFile };
+        //    }
+        //    catch
+        //    { return new OperationResult.BadRequest(); }
+        //}
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItem")]
         public OperationResult GetFileItem(Int32 fileId)
@@ -709,117 +709,117 @@ namespace STNServices2.Handlers
             }//end catch
         }//end HttpMethod.POST
 
-        [HttpOperation(HttpMethod.POST, ForUriName = "UploadCitizenFile")]
-        public OperationResult UploadCitizenFile(IEnumerable<IMultipartHttpEntity> entities)
-        {
-            try
-            {
-                //TODO: The stream decoding should really be in a custom Codec
-                using (var memoryStream = new MemoryStream())
-                {
-                    String filename = "";
-                    XmlSerializer serializer;
-                    CITIZEN_FILE uploadFile = null;
+        //[HttpOperation(HttpMethod.POST, ForUriName = "UploadCitizenFile")]
+        //public OperationResult UploadCitizenFile(IEnumerable<IMultipartHttpEntity> entities)
+        //{
+        //    try
+        //    {
+        //        //TODO: The stream decoding should really be in a custom Codec
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            String filename = "";
+        //            XmlSerializer serializer;
+        //            CITIZEN_FILE uploadFile = null;
 
-                    foreach (var entity in entities)
-                    {
-                        //Process Stream
-                        if (!entity.Headers.ContentDisposition.Disposition.ToLower().Equals("form-data"))
-                            return new OperationResult.BadRequest { ResponseResource = "Sent a field that is not declared as form-data, cannot process" };
+        //            foreach (var entity in entities)
+        //            {
+        //                //Process Stream
+        //                if (!entity.Headers.ContentDisposition.Disposition.ToLower().Equals("form-data"))
+        //                    return new OperationResult.BadRequest { ResponseResource = "Sent a field that is not declared as form-data, cannot process" };
 
-                        if (entity.Stream != null && entity.ContentType != null)
-                        {
-                            //Process Stream
-                            if (entity.Headers.ContentDisposition.Name.Equals("File"))
-                            {
-                                entity.Stream.CopyTo(memoryStream);
-                                filename = entity.Headers.ContentDisposition.FileName;
-                            }//end if
-                        }
-                        else
-                        {
-                            //Process Variables
-                            if (entity.Headers.ContentDisposition.Name.Equals("FileEntity"))
-                            {
-                                var mem = new MemoryStream();
-                                entity.Stream.CopyTo(mem);
-                                mem.Position = 0;
+        //                if (entity.Stream != null && entity.ContentType != null)
+        //                {
+        //                    //Process Stream
+        //                    if (entity.Headers.ContentDisposition.Name.Equals("File"))
+        //                    {
+        //                        entity.Stream.CopyTo(memoryStream);
+        //                        filename = entity.Headers.ContentDisposition.FileName;
+        //                    }//end if
+        //                }
+        //                else
+        //                {
+        //                    //Process Variables
+        //                    if (entity.Headers.ContentDisposition.Name.Equals("FileEntity"))
+        //                    {
+        //                        var mem = new MemoryStream();
+        //                        entity.Stream.CopyTo(mem);
+        //                        mem.Position = 0;
 
-                                serializer = new XmlSerializer(typeof(CITIZEN_FILE));
-                                uploadFile = (CITIZEN_FILE)serializer.Deserialize(mem);
-                            }//end if
-                        }//end if
-                    }//next
-                    //Return BadRequest if missing required fields
+        //                        serializer = new XmlSerializer(typeof(CITIZEN_FILE));
+        //                        uploadFile = (CITIZEN_FILE)serializer.Deserialize(mem);
+        //                    }//end if
+        //                }//end if
+        //            }//next
+        //            //Return BadRequest if missing required fields
 
-                    if (uploadFile == null || uploadFile.LATITUDE_DD == null ||
-                        uploadFile.LONGITUDE_DD == null)
-                    {
-                        return new OperationResult.BadRequest { ResponseResource = "Bad, missing, or partial file entity" };
-                    }
-                    //Setup S3 Bucket
-                    S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                    //Storage aStorage = new Storage(AppDomain.CurrentDomain.BaseDirectory);
+        //            if (uploadFile == null || uploadFile.LATITUDE_DD == null ||
+        //                uploadFile.LONGITUDE_DD == null)
+        //            {
+        //                return new OperationResult.BadRequest { ResponseResource = "Bad, missing, or partial file entity" };
+        //            }
+        //            //Setup S3 Bucket
+        //            S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
+        //            //Storage aStorage = new Storage(AppDomain.CurrentDomain.BaseDirectory);
 
-                    //Get basic authentication password
-                    using (STNEntities2 aSTNE = GetRDS())
-                    {
+        //            //Get basic authentication password
+        //            using (STNEntities2 aSTNE = GetRDS())
+        //            {
 
-                        //Upload to S3
-                        aBucket.PutObject("CITIZEN_FILE/" + filename, memoryStream);
-                        //aStorage.PutObject("CITIZEN_FILE/"+filename, memoryStream);
+        //                //Upload to S3
+        //                aBucket.PutObject("CITIZEN_FILE/" + filename, memoryStream);
+        //                //aStorage.PutObject("CITIZEN_FILE/"+filename, memoryStream);
 
-                        FILES newFile = new FILES();
-                        newFile.PATH = filename;
-                        newFile.LATITUDE_DD = uploadFile.LATITUDE_DD.HasValue ? uploadFile.LATITUDE_DD : null;
-                        newFile.LONGITUDE_DD = uploadFile.LONGITUDE_DD.HasValue ? uploadFile.LONGITUDE_DD : null;
-                        newFile.DESCRIPTION = uploadFile.DESCRIPTION != string.Empty ? uploadFile.DESCRIPTION : string.Empty;
-                        newFile.FILE_DATE = uploadFile.FILE_DATE.HasValue ? uploadFile.FILE_DATE : null;
-                        newFile.LOCATOR_TYPE_ID = uploadFile.LOCATOR_TYPE_ID.HasValue ? uploadFile.LOCATOR_TYPE_ID : null;
-                        newFile.FILETYPE_ID = 1;  // photo-type
-                        newFile.SOURCE_ID = 1639; // ASFPM source
-                        newFile.PATH = filename;
-                        newFile.VALIDATED = 0;    //set validated to false
+        //                FILES newFile = new FILES();
+        //                newFile.PATH = filename;
+        //                newFile.LATITUDE_DD = uploadFile.LATITUDE_DD.HasValue ? uploadFile.LATITUDE_DD : null;
+        //                newFile.LONGITUDE_DD = uploadFile.LONGITUDE_DD.HasValue ? uploadFile.LONGITUDE_DD : null;
+        //                newFile.DESCRIPTION = uploadFile.DESCRIPTION != string.Empty ? uploadFile.DESCRIPTION : string.Empty;
+        //                newFile.FILE_DATE = uploadFile.FILE_DATE.HasValue ? uploadFile.FILE_DATE : null;
+        //                newFile.LOCATOR_TYPE_ID = uploadFile.LOCATOR_TYPE_ID.HasValue ? uploadFile.LOCATOR_TYPE_ID : null;
+        //                newFile.FILETYPE_ID = 1;  // photo-type
+        //                newFile.SOURCE_ID = 1639; // ASFPM source
+        //                newFile.PATH = filename;
+        //                newFile.VALIDATED = 0;    //set validated to false
 
 
-                        if (!Exists(aSTNE.FILES, ref newFile))
-                        {
-                            aSTNE.FILES.AddObject(newFile);
-                            aSTNE.SaveChanges();
-                        }//end if
+        //                if (!Exists(aSTNE.FILES, ref newFile))
+        //                {
+        //                    aSTNE.FILES.AddObject(newFile);
+        //                    aSTNE.SaveChanges();
+        //                }//end if
 
-                        if (uploadFile.KEYWORDS != null && uploadFile.KEYWORDS.Count > 0)
-                        {
-                            addKeywords(aSTNE.FILE_KEYWORD, newFile.FILE_ID, uploadFile.KEYWORDS);
-                            aSTNE.SaveChanges();
-                        }//endif
+        //                if (uploadFile.KEYWORDS != null && uploadFile.KEYWORDS.Count > 0)
+        //                {
+        //                    addKeywords(aSTNE.FILE_KEYWORD, newFile.FILE_ID, uploadFile.KEYWORDS);
+        //                    aSTNE.SaveChanges();
+        //                }//endif
 
-                        //refresh uploaded file
-                        uploadFile = new CITIZEN_FILE
-                        {
-                            FILE_ID = newFile.FILE_ID,
-                            DESCRIPTION = newFile.DESCRIPTION,
-                            LATITUDE_DD = newFile.LATITUDE_DD,
-                            LONGITUDE_DD = newFile.LONGITUDE_DD,
-                            FILE_DATE = newFile.FILE_DATE,
-                            VALIDATED = newFile.VALIDATED,
-                            DATE_VALIDATED = newFile.DATE_VALIDATED,
-                            VALIDATOR_USERID = newFile.VALIDATOR_USERID,
-                            LOCATOR_TYPE_ID = newFile.LOCATOR_TYPE_ID,
-                            KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, (Int32)newFile.FILE_ID)
-                        };
+        //                //refresh uploaded file
+        //                uploadFile = new CITIZEN_FILE
+        //                {
+        //                    FILE_ID = newFile.FILE_ID,
+        //                    DESCRIPTION = newFile.DESCRIPTION,
+        //                    LATITUDE_DD = newFile.LATITUDE_DD,
+        //                    LONGITUDE_DD = newFile.LONGITUDE_DD,
+        //                    FILE_DATE = newFile.FILE_DATE,
+        //                    VALIDATED = newFile.VALIDATED,
+        //                    DATE_VALIDATED = newFile.DATE_VALIDATED,
+        //                    VALIDATOR_USERID = newFile.VALIDATOR_USERID,
+        //                    LOCATOR_TYPE_ID = newFile.LOCATOR_TYPE_ID,
+        //                    KEYWORDS = getFileKeywords(aSTNE.FILE_KEYWORD, (Int32)newFile.FILE_ID)
+        //                };
 
-                    }//end using
+        //            }//end using
 
-                    return new OperationResult.OK { ResponseResource = uploadFile };
-                }//end using
-            }//end try
-            catch (IOException ioe)
-            {
-                Log.WriteError("IO Error: " + ioe.Message + " \r\n Inner Exception: " + ioe.InnerException);
-                return new OperationResult.BadRequest { ResponseResource = "Cannot process the request" };
-            }//end catch
-        }//end HttpMethod.POST
+        //            return new OperationResult.OK { ResponseResource = uploadFile };
+        //        }//end using
+        //    }//end try
+        //    catch (IOException ioe)
+        //    {
+        //        Log.WriteError("IO Error: " + ioe.Message + " \r\n Inner Exception: " + ioe.InnerException);
+        //        return new OperationResult.BadRequest { ResponseResource = "Cannot process the request" };
+        //    }//end catch
+        //}//end HttpMethod.POST
 
         #endregion
 
@@ -859,6 +859,8 @@ namespace STNServices2.Handlers
                         updatedFile.LATITUDE_DD = aFile.LATITUDE_DD;
                         updatedFile.LONGITUDE_DD = aFile.LONGITUDE_DD;
                         updatedFile.PATH = aFile.PATH;
+                        updatedFile.PHOTO_DATE = aFile.PHOTO_DATE;
+                        updatedFile.IS_NWIS = aFile.IS_NWIS;
                         updatedFile.PHOTO_DIRECTION = aFile.PHOTO_DIRECTION;
                         updatedFile.SITE_ID = aFile.SITE_ID;
                         updatedFile.SOURCE_ID = aFile.SOURCE_ID;
@@ -877,52 +879,52 @@ namespace STNServices2.Handlers
             { return new OperationResult.BadRequest(); }
         }//end HttpMethod.PUT
 
-        [STNRequiresRole(new string[] { AdminRole, CitizenManagerRole })]
-        [HttpOperation(HttpMethod.PUT)]
-        public OperationResult ValidateCitizenFile(Int32 fileId, string userID, [Optional]CITIZEN_FILE aFile)
-        {
-            FILES updatedFile;
+        //[STNRequiresRole(new string[] { AdminRole, CitizenManagerRole })]
+        //[HttpOperation(HttpMethod.PUT)]
+        //public OperationResult ValidateCitizenFile(Int32 fileId, string userID, [Optional]CITIZEN_FILE aFile)
+        //{
+        //    FILES updatedFile;
 
-            //Return BadRequest if missing required fields
-            if ((fileId < 0) && (string.IsNullOrEmpty(userID)))
-            { return new OperationResult.BadRequest(); }
+        //    //Return BadRequest if missing required fields
+        //    if ((fileId < 0) && (string.IsNullOrEmpty(userID)))
+        //    { return new OperationResult.BadRequest(); }
 
-            try
-            {
-                //Get basic authentication password
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
-                    {
-                        //Grab the file row to update
-                        updatedFile = aSTNE.FILES.SingleOrDefault(
-                                           file => file.FILE_ID == fileId && file.SOURCE_ID == 1639);
+        //    try
+        //    {
+        //        //Get basic authentication password
+        //        using (EasySecureString securedPassword = GetSecuredPassword())
+        //        {
+        //            using (STNEntities2 aSTNE = GetRDS(securedPassword))
+        //            {
+        //                //Grab the file row to update
+        //                updatedFile = aSTNE.FILES.SingleOrDefault(
+        //                                   file => file.FILE_ID == fileId && file.SOURCE_ID == 1639);
 
-                        if (aFile != null)
-                        {
-                            //Update fields
-                            updatedFile.DESCRIPTION = aFile.DESCRIPTION;
-                            updatedFile.LATITUDE_DD = aFile.LATITUDE_DD;
-                            updatedFile.LONGITUDE_DD = aFile.LONGITUDE_DD;
-                            updatedFile.LOCATOR_TYPE_ID = aFile.LOCATOR_TYPE_ID;
-                            updatedFile.FILE_DATE = aFile.FILE_DATE;
-                            updateFileKeywords(aSTNE.FILE_KEYWORD, updatedFile.FILE_ID, aFile.KEYWORDS);
-                        }//end if
+        //                if (aFile != null)
+        //                {
+        //                    //Update fields
+        //                    updatedFile.DESCRIPTION = aFile.DESCRIPTION;
+        //                    updatedFile.LATITUDE_DD = aFile.LATITUDE_DD;
+        //                    updatedFile.LONGITUDE_DD = aFile.LONGITUDE_DD;
+        //                    updatedFile.LOCATOR_TYPE_ID = aFile.LOCATOR_TYPE_ID;
+        //                    updatedFile.FILE_DATE = aFile.FILE_DATE;
+        //                    updateFileKeywords(aSTNE.FILE_KEYWORD, updatedFile.FILE_ID, aFile.KEYWORDS);
+        //                }//end if
 
-                        updatedFile.VALIDATED = 1;
-                        updatedFile.VALIDATOR_USERID = userID;
-                        updatedFile.DATE_VALIDATED = DateTime.Now;
-                        //Save changes
-                        aSTNE.SaveChanges();
-                    }//end using
-                }//end using
+        //                updatedFile.VALIDATED = 1;
+        //                updatedFile.VALIDATOR_USERID = userID;
+        //                updatedFile.DATE_VALIDATED = DateTime.Now;
+        //                //Save changes
+        //                aSTNE.SaveChanges();
+        //            }//end using
+        //        }//end using
 
-                //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = aFile };
-            }
-            catch
-            { return new OperationResult.BadRequest(); }
-        }//end HttpMethod.PUT
+        //        //Return OK instead of created, Flex incorrectly treats 201 as error
+        //        return new OperationResult.OK { ResponseResource = aFile };
+        //    }
+        //    catch
+        //    { return new OperationResult.BadRequest(); }
+        //}//end HttpMethod.PUT
         #endregion
 
         #region DeleteMethods
@@ -1086,6 +1088,7 @@ namespace STNServices2.Handlers
 
                 existingEntity = entityRDS.FirstOrDefault(e => (e.HWM_ID == thisEntity.HWM_ID || thisEntity.HWM_ID <= 0 || thisEntity.HWM_ID == null) &&
                                                                (e.SITE_ID == thisEntity.SITE_ID || thisEntity.SITE_ID <= 0 || thisEntity.SITE_ID == null) &&
+                                                               (e.IS_NWIS == thisEntity.IS_NWIS || thisEntity.IS_NWIS == null) &&
                                                                (e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID || thisEntity.INSTRUMENT_ID <= 0 || thisEntity.INSTRUMENT_ID == null) &&
                                                                (e.DATA_FILE_ID == thisEntity.DATA_FILE_ID || thisEntity.DATA_FILE_ID <= 0 || thisEntity.DATA_FILE_ID == null) &&
                                                                (e.FILETYPE_ID == thisEntity.FILETYPE_ID || thisEntity.FILETYPE_ID <= 0 || thisEntity.FILETYPE_ID == null) &&
@@ -1095,7 +1098,8 @@ namespace STNServices2.Handlers
                                                                (string.Equals(e.PHOTO_DIRECTION.ToUpper(), thisEntity.PHOTO_DIRECTION.ToUpper()) || string.IsNullOrEmpty(thisEntity.PHOTO_DIRECTION)) &&
                                                                (e.LATITUDE_DD == thisEntity.LATITUDE_DD || thisEntity.LATITUDE_DD <= 0 || thisEntity.LATITUDE_DD == null) &&
                                                                (e.LONGITUDE_DD == thisEntity.LONGITUDE_DD || thisEntity.LONGITUDE_DD <= 0 || thisEntity.LONGITUDE_DD == null) &&
-                                                               (DateTime.Equals(e.FILE_DATE.Value, thisEntity.FILE_DATE.Value) || !thisEntity.FILE_DATE.HasValue));
+                                                               (DateTime.Equals(e.FILE_DATE.Value, thisEntity.FILE_DATE.Value) || !thisEntity.FILE_DATE.HasValue) &&
+                                                               (DateTime.Equals(e.PHOTO_DATE.Value, thisEntity.PHOTO_DATE.Value) || !thisEntity.PHOTO_DATE.HasValue));
 
 
                 if (existingEntity == null)
