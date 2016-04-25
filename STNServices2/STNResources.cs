@@ -96,7 +96,6 @@ using Newtonsoft.Json;
 
 #endregion
 
-
 namespace STNServices2
 {
     #region Contexts
@@ -1074,7 +1073,6 @@ namespace STNServices2
         private ObjectSet<PEAK_VIEW> _PEAK_VIEW;
 
         #endregion
-
         #region AddTo Methods
     
         /// <summary>
@@ -1542,7 +1540,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Function Imports
     
         /// <summary>
@@ -1685,12 +1682,10 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
 
     #endregion
-
     
     #region Entities
     
@@ -1716,7 +1711,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -1891,7 +1885,6 @@ namespace STNServices2
         partial void OnPHONEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -1942,7 +1935,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -1967,7 +1959,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -2046,7 +2037,6 @@ namespace STNServices2
         partial void OnAPPROVAL_DATEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -2136,7 +2126,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -2169,7 +2158,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -2500,7 +2488,6 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
-
     
     }
     
@@ -2526,7 +2513,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -2677,7 +2663,6 @@ namespace STNServices2
         partial void OnEMAILChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -2705,7 +2690,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -2732,7 +2716,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -2787,7 +2770,6 @@ namespace STNServices2
         partial void OnTYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -2815,7 +2797,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -2842,7 +2823,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -2969,7 +2949,6 @@ namespace STNServices2
         partial void OnCOUNTY_FIPChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -3013,7 +2992,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -3038,7 +3016,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -3333,7 +3310,6 @@ namespace STNServices2
         partial void OnTIME_ZONEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -3517,7 +3493,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -3542,7 +3517,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -3597,7 +3571,6 @@ namespace STNServices2
         partial void OnPRIORITY_NAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -3625,7 +3598,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -3650,7 +3622,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -3705,7 +3676,6 @@ namespace STNServices2
         partial void OnMETHODChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -3756,7 +3726,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -3781,7 +3750,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -3980,7 +3948,6 @@ namespace STNServices2
         partial void OnEVENT_COORDINATORChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -4171,7 +4138,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -4196,7 +4162,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -4251,7 +4216,6 @@ namespace STNServices2
         partial void OnSTATUSChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -4279,7 +4243,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -4304,7 +4267,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -4359,7 +4321,6 @@ namespace STNServices2
         partial void OnTYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -4387,7 +4348,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -4416,7 +4376,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -4495,7 +4454,6 @@ namespace STNServices2
         partial void OnKEYWORD_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -4578,7 +4536,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -4603,7 +4560,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -4658,7 +4614,6 @@ namespace STNServices2
         partial void OnFILETYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -4686,7 +4641,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -4711,7 +4665,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -5106,54 +5059,6 @@ namespace STNServices2
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.DateTime> DATE_VALIDATED
-        {
-            get
-            {
-                return _DATE_VALIDATED;
-            }
-            set
-            {
-                OnDATE_VALIDATEDChanging(value);
-                ReportPropertyChanging("DATE_VALIDATED");
-                _DATE_VALIDATED = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("DATE_VALIDATED");
-                OnDATE_VALIDATEDChanged();
-            }
-        }
-        private Nullable<global::System.DateTime> _DATE_VALIDATED;
-        partial void OnDATE_VALIDATEDChanging(Nullable<global::System.DateTime> value);
-        partial void OnDATE_VALIDATEDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> VALIDATED
-        {
-            get
-            {
-                return _VALIDATED;
-            }
-            set
-            {
-                OnVALIDATEDChanging(value);
-                ReportPropertyChanging("VALIDATED");
-                _VALIDATED = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("VALIDATED");
-                OnVALIDATEDChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _VALIDATED;
-        partial void OnVALIDATEDChanging(Nullable<global::System.Decimal> value);
-        partial void OnVALIDATEDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Decimal> OBJECTIVE_POINT_ID
         {
             get
@@ -5172,9 +5077,56 @@ namespace STNServices2
         private Nullable<global::System.Decimal> _OBJECTIVE_POINT_ID;
         partial void OnOBJECTIVE_POINT_IDChanging(Nullable<global::System.Decimal> value);
         partial void OnOBJECTIVE_POINT_IDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> PHOTO_DATE
+        {
+            get
+            {
+                return _PHOTO_DATE;
+            }
+            set
+            {
+                OnPHOTO_DATEChanging(value);
+                ReportPropertyChanging("PHOTO_DATE");
+                _PHOTO_DATE = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PHOTO_DATE");
+                OnPHOTO_DATEChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _PHOTO_DATE;
+        partial void OnPHOTO_DATEChanging(Nullable<global::System.DateTime> value);
+        partial void OnPHOTO_DATEChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> IS_NWIS
+        {
+            get
+            {
+                return _IS_NWIS;
+            }
+            set
+            {
+                OnIS_NWISChanging(value);
+                ReportPropertyChanging("IS_NWIS");
+                _IS_NWIS = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IS_NWIS");
+                OnIS_NWISChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _IS_NWIS;
+        partial void OnIS_NWISChanging(Nullable<global::System.Decimal> value);
+        partial void OnIS_NWISChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -5514,7 +5466,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -5539,7 +5490,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -5594,7 +5544,6 @@ namespace STNServices2
         partial void OnHCOLLECT_METHODChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -5668,7 +5617,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -5693,7 +5641,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -5772,7 +5719,6 @@ namespace STNServices2
         partial void OnDATUM_ABBREVIATIONChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -5823,7 +5769,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -5850,7 +5795,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -5905,7 +5849,6 @@ namespace STNServices2
         partial void OnTYPE_NAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -5956,7 +5899,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -5985,7 +5927,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -6616,7 +6557,6 @@ namespace STNServices2
         partial void OnSURVEY_MEMBER_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -7151,7 +7091,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -7176,7 +7115,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -7231,7 +7169,6 @@ namespace STNServices2
         partial void OnHWM_QUALITYChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -7259,7 +7196,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -7284,7 +7220,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -7339,7 +7274,6 @@ namespace STNServices2
         partial void OnHWM_TYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -7367,7 +7301,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -7394,7 +7327,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -7860,7 +7792,6 @@ namespace STNServices2
         partial void OnPEAK_SUMMARY_IDChanged();
 
         #endregion
-
     
     }
     
@@ -7888,7 +7819,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -7943,7 +7873,6 @@ namespace STNServices2
         partial void OnCONDITIONChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -7971,7 +7900,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -7996,7 +7924,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -8315,7 +8242,6 @@ namespace STNServices2
         partial void OnVENTEDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -8662,7 +8588,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -8687,7 +8612,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -8958,7 +8882,6 @@ namespace STNServices2
         partial void OnVDATUM_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -9142,7 +9065,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -9169,7 +9091,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -9224,7 +9145,6 @@ namespace STNServices2
         partial void OnWORDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -9252,7 +9172,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -9277,7 +9196,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -9548,7 +9466,6 @@ namespace STNServices2
         partial void OnTITLEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -9576,7 +9493,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -9603,7 +9519,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -9658,7 +9573,6 @@ namespace STNServices2
         partial void OnLOCATORChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -9686,7 +9600,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -9711,7 +9624,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -9766,7 +9678,6 @@ namespace STNServices2
         partial void OnMARKER1Changed();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -9794,7 +9705,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -9823,7 +9733,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -10094,7 +10003,6 @@ namespace STNServices2
         partial void OnUSERNAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -10384,7 +10292,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -10417,7 +10324,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -10748,7 +10654,6 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
-
     
     }
     
@@ -10774,7 +10679,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -10829,7 +10733,6 @@ namespace STNServices2
         partial void OnNAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -10857,7 +10760,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -10886,7 +10788,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -10965,7 +10866,6 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -11048,7 +10948,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -11073,7 +10972,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -11128,7 +11026,6 @@ namespace STNServices2
         partial void OnNETWORK_TYPE_NAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -11156,7 +11053,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -11185,7 +11081,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -11264,7 +11159,6 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -11347,7 +11241,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -11374,7 +11267,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -11837,7 +11729,6 @@ namespace STNServices2
         partial void OnOP_QUALITY_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -12145,7 +12036,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -12170,7 +12060,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -12225,7 +12114,6 @@ namespace STNServices2
         partial void OnOP_TYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -12253,7 +12141,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -12280,7 +12167,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -12383,7 +12269,6 @@ namespace STNServices2
         partial void OnIDENTIFIER_TYPEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -12427,7 +12312,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -12456,7 +12340,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -12539,54 +12422,6 @@ namespace STNServices2
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> FROM_RP
-        {
-            get
-            {
-                return _FROM_RP;
-            }
-            set
-            {
-                OnFROM_RPChanging(value);
-                ReportPropertyChanging("FROM_RP");
-                _FROM_RP = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("FROM_RP");
-                OnFROM_RPChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _FROM_RP;
-        partial void OnFROM_RPChanging(Nullable<global::System.Decimal> value);
-        partial void OnFROM_RPChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> HANGING_LENGTH
-        {
-            get
-            {
-                return _HANGING_LENGTH;
-            }
-            set
-            {
-                OnHANGING_LENGTHChanging(value);
-                ReportPropertyChanging("HANGING_LENGTH");
-                _HANGING_LENGTH = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("HANGING_LENGTH");
-                OnHANGING_LENGTHChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _HANGING_LENGTH;
-        partial void OnHANGING_LENGTHChanging(Nullable<global::System.Decimal> value);
-        partial void OnHANGING_LENGTHChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Decimal> WATER_SURFACE
         {
             get
@@ -12635,30 +12470,6 @@ namespace STNServices2
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String TYPE
-        {
-            get
-            {
-                return _TYPE;
-            }
-            set
-            {
-                OnTYPEChanging(value);
-                ReportPropertyChanging("TYPE");
-                _TYPE = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("TYPE");
-                OnTYPEChanged();
-            }
-        }
-        private global::System.String _TYPE;
-        partial void OnTYPEChanging(global::System.String value);
-        partial void OnTYPEChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Decimal> OFFSET_CORRECTION
         {
             get
@@ -12679,7 +12490,6 @@ namespace STNServices2
         partial void OnOFFSET_CORRECTIONChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -12762,7 +12572,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -12787,7 +12596,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -12842,7 +12650,6 @@ namespace STNServices2
         partial void OnQUALITYChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -12870,7 +12677,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -12903,7 +12709,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -13342,7 +13147,6 @@ namespace STNServices2
         partial void OnCALC_NOTESChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -13432,7 +13236,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -13457,7 +13260,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -13656,7 +13458,6 @@ namespace STNServices2
         partial void OnSITE_IDChanged();
 
         #endregion
-
     
     }
     
@@ -13690,7 +13491,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -14021,7 +13821,6 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
-
     
     }
     
@@ -14167,7 +13966,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -15686,7 +15484,6 @@ namespace STNServices2
         partial void OnCOMPLETEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -15792,7 +15589,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -15823,7 +15619,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -15926,7 +15721,6 @@ namespace STNServices2
         partial void OnCONTACT_TYPE_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -16048,7 +15842,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -16073,7 +15866,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -16152,7 +15944,6 @@ namespace STNServices2
         partial void OnROLE_DESCRIPTIONChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -16180,7 +15971,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -16205,7 +15995,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -16260,7 +16049,6 @@ namespace STNServices2
         partial void OnBRAND_NAMEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -16288,7 +16076,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -16313,7 +16100,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -16392,7 +16178,6 @@ namespace STNServices2
         partial void OnDEPLOYMENT_TYPE_IDChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -16475,7 +16260,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -16500,7 +16284,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -16555,7 +16338,6 @@ namespace STNServices2
         partial void OnSENSORChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -16606,7 +16388,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -16639,7 +16420,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -17294,7 +17074,6 @@ namespace STNServices2
         partial void OnSENSOR_NOT_APPROPRIATEChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -17655,7 +17434,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -17680,7 +17458,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -17855,7 +17632,6 @@ namespace STNServices2
         partial void OnAMOUNTChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -17938,7 +17714,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -17963,7 +17738,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18090,7 +17864,6 @@ namespace STNServices2
         partial void OnSOURCE_ACCURACYChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -18157,7 +17930,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -18182,7 +17954,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18261,7 +18032,6 @@ namespace STNServices2
         partial void OnSTATE_ABBREVChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -18289,7 +18059,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -18314,7 +18083,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18369,7 +18137,6 @@ namespace STNServices2
         partial void OnSTATUSChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -18397,7 +18164,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -18430,7 +18196,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18761,7 +18526,6 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
-
     
     }
     
@@ -18787,7 +18551,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18842,7 +18605,6 @@ namespace STNServices2
         partial void OnVCOLLECT_METHODChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -18893,7 +18655,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -18918,7 +18679,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -18997,7 +18757,6 @@ namespace STNServices2
         partial void OnDATUM_ABBREVIATIONChanged();
 
         #endregion
-
     
         #region Navigation Properties
     
@@ -19071,7 +18830,6 @@ namespace STNServices2
         }
 
         #endregion
-
     }
     
     /// <summary>
@@ -19104,7 +18862,6 @@ namespace STNServices2
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -19435,11 +19192,9 @@ namespace STNServices2
         partial void OnTIME_STAMPChanged();
 
         #endregion
-
     
     }
 
     #endregion
-
     
 }
