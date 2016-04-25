@@ -259,7 +259,7 @@ namespace STNServices2.Handlers
                         OPToUpdate.OP_TYPE_ID = anObjectivePoint.OP_TYPE_ID;
                         OPToUpdate.UNCERTAINTY = anObjectivePoint.UNCERTAINTY;
                         OPToUpdate.UNQUANTIFIED = anObjectivePoint.UNQUANTIFIED;
-
+                        OPToUpdate.OP_QUALITY_ID = anObjectivePoint.OP_QUALITY_ID;
                         aSTNE.SaveChanges();
 
                     }//end using
@@ -363,6 +363,7 @@ namespace STNServices2.Handlers
                                                                         (r.LATITUDE_DD == thisOP.LATITUDE_DD || thisOP.LATITUDE_DD <= 0 || thisOP.LATITUDE_DD == null) &&
                                                                         (r.LONGITUDE_DD == thisOP.LONGITUDE_DD || thisOP.LONGITUDE_DD <= 0 || thisOP.LONGITUDE_DD == null) &&
                                                                         (r.VDATUM_ID == thisOP.VDATUM_ID || thisOP.VDATUM_ID <= 0 || thisOP.VDATUM_ID == null) &&
+                                                                        (r.OP_QUALITY_ID == thisOP.OP_QUALITY_ID || thisOP.OP_QUALITY_ID <= 0 || thisOP.OP_QUALITY_ID == null) &&
                                                                         (r.HDATUM_ID == thisOP.HDATUM_ID || thisOP.HDATUM_ID <= 0 || thisOP.HDATUM_ID == null) &&
                                                                         (r.VCOLLECT_METHOD_ID == thisOP.VCOLLECT_METHOD_ID || thisOP.VCOLLECT_METHOD_ID <= 0 || thisOP.VCOLLECT_METHOD_ID == null) &&
                                                                         (r.HCOLLECT_METHOD_ID == thisOP.HCOLLECT_METHOD_ID || thisOP.HCOLLECT_METHOD_ID <= 0 || thisOP.HCOLLECT_METHOD_ID == null) &&

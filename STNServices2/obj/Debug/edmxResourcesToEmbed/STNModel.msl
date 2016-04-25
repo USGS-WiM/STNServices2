@@ -138,6 +138,8 @@
     <EntitySetMapping Name="FILES">
       <EntityTypeMapping TypeName="STNModel2.FILES">
         <MappingFragment StoreEntitySet="FILES">
+          <ScalarProperty Name="IS_NWIS" ColumnName="IS_NWIS" />
+          <ScalarProperty Name="PHOTO_DATE" ColumnName="PHOTO_DATE" />
           <ScalarProperty Name="FILE_ID" ColumnName="FILE_ID" />
           <ScalarProperty Name="PATH" ColumnName="PATH" />
           <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
@@ -154,8 +156,6 @@
           <ScalarProperty Name="INSTRUMENT_ID" ColumnName="INSTRUMENT_ID" />
           <ScalarProperty Name="VALIDATOR_USERID" ColumnName="VALIDATOR_USERID" />
           <ScalarProperty Name="LOCATOR_TYPE_ID" ColumnName="LOCATOR_TYPE_ID" />
-          <ScalarProperty Name="DATE_VALIDATED" ColumnName="DATE_VALIDATED" />
-          <ScalarProperty Name="VALIDATED" ColumnName="VALIDATED" />
           <ScalarProperty Name="OBJECTIVE_POINT_ID" ColumnName="OBJECTIVE_POINT_ID" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -419,11 +419,8 @@
           <ScalarProperty Name="OP_MEASUREMENTS_ID" ColumnName="OP_MEASUREMENTS_ID" />
           <ScalarProperty Name="OBJECTIVE_POINT_ID" ColumnName="OBJECTIVE_POINT_ID" />
           <ScalarProperty Name="INSTRUMENT_STATUS_ID" ColumnName="INSTRUMENT_STATUS_ID" />
-          <ScalarProperty Name="FROM_RP" ColumnName="FROM_RP" />
-          <ScalarProperty Name="HANGING_LENGTH" ColumnName="HANGING_LENGTH" />
           <ScalarProperty Name="WATER_SURFACE" ColumnName="WATER_SURFACE" />
           <ScalarProperty Name="GROUND_SURFACE" ColumnName="GROUND_SURFACE" />
-          <ScalarProperty Name="TYPE" ColumnName="TYPE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
