@@ -382,11 +382,8 @@
           <Property Name="op_measurements_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="objective_point_id" Type="int4" Nullable="false" />
           <Property Name="instrument_status_id" Type="int4" Nullable="false" />
-          <Property Name="from_rp" Type="float8" />
-          <Property Name="hanging_length" Type="float8" />
           <Property Name="water_surface" Type="float8" />
           <Property Name="ground_surface" Type="float8" />
-          <Property Name="type" Type="varchar" MaxLength="30" />
           <Property Name="offset_correction" Type="float8" />
         </EntityType>
         <EntityType Name="op_quality">
@@ -1100,11 +1097,8 @@
           <Property Name="op_measurements_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="objective_point_id" Type="Int32" Nullable="false" />
           <Property Name="instrument_status_id" Type="Int32" Nullable="false" />
-          <Property Name="from_rp" Type="Double" />
-          <Property Name="hanging_length" Type="Double" />
           <Property Name="water_surface" Type="Double" />
           <Property Name="ground_surface" Type="Double" />
-          <Property Name="type" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="offset_correction" Type="Double" />
         </EntityType>
         <EntityType Name="op_quality">
@@ -2747,11 +2741,8 @@
                 <ScalarProperty Name="op_measurements_id" ColumnName="op_measurements_id" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
                 <ScalarProperty Name="instrument_status_id" ColumnName="instrument_status_id" />
-                <ScalarProperty Name="from_rp" ColumnName="from_rp" />
-                <ScalarProperty Name="hanging_length" ColumnName="hanging_length" />
                 <ScalarProperty Name="water_surface" ColumnName="water_surface" />
                 <ScalarProperty Name="ground_surface" ColumnName="ground_surface" />
-                <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="offset_correction" ColumnName="offset_correction" />
               </MappingFragment>
             </EntityTypeMapping>
