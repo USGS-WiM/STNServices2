@@ -99,9 +99,6 @@
     <Compile Include="file.cs">
       <DependentUpon>STNEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="file_keyword.cs">
-      <DependentUpon>STNEntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="file_type.cs">
       <DependentUpon>STNEntities.tt</DependentUpon>
     </Compile>
