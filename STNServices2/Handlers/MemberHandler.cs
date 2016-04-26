@@ -416,6 +416,7 @@ namespace STNServices2.Handlers
                             .VerifyPassword(Encoding.UTF8.GetString(Convert.FromBase64String(anEntity.password)), 
                                                                     ObjectToBeUpdated.salt, ObjectToBeUpdated.password))
                         {
+                            ObjectToBeUpdated.salt = Cryptography.CreateSalt();
                             ObjectToBeUpdated.password = Cryptography.GenerateSHA256Hash(Encoding.UTF8
                                 .GetString(Convert.FromBase64String(anEntity.password)), ObjectToBeUpdated.salt);
                             sm(MessageType.info, "Password updated.");

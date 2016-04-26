@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STNDB;
 using WiM.Test;
@@ -13,7 +14,7 @@ namespace STNServices2.Test
     {
         #region Private Fields
         private string host = "http://localhost/";
-        private string basicAuth = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1")
+        private string basicAuth = "Basic " + Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                                 .GetBytes("fradmin:***REMOVED***"));
             
         #endregion
@@ -674,13 +675,13 @@ namespace STNServices2.Test
             member postObj;
             postObj = this.POSTRequest<member>(host + Configuration.memberResource, new member() 
                                                                                       {
-                                                                                          username = "test",
-                                                                                          fname = "test",
-                                                                                          lname="test",
+                                                                                          username = "newUser",
+                                                                                          fname = "New",
+                                                                                          lname="user",
                                                                                           phone="123-456-7890",
                                                                                           email="test@usgs.gov",
                                                                                           agency_id = 1,
-                                                                                          password = "test"
+                                                                                          password = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes("STNDef@u1t"))
                                                                                       }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.member_id.ToString());
 

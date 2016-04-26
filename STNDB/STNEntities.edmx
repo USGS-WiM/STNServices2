@@ -111,14 +111,6 @@
           <Property Name="event_status_id" Type="int4" />
           <Property Name="event_coordinator" Type="int4" />
         </EntityType>
-        <EntityType Name="file_keyword">
-          <Key>
-            <PropertyRef Name="file_keyword_id" />
-          </Key>
-          <Property Name="file_keyword_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="file_id" Type="int4" Nullable="false" />
-          <Property Name="keyword_id" Type="int4" Nullable="false" />
-        </EntityType>
         <EntityType Name="file_type">
           <Key>
             <PropertyRef Name="filetype_id" />
@@ -304,6 +296,7 @@
           <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="salt" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="resetFlag" Type="int4" />
         </EntityType>
         <EntityType Name="network_name">
           <Key>
@@ -542,7 +535,7 @@
           <Property Name="site_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="site_no" Type="varchar" MaxLength="50" />
           <Property Name="site_name" Type="varchar" MaxLength="255" />
-          <Property Name="site_description" Type="varchar" MaxLength="255" />
+          <Property Name="site_description" Type="varchar" MaxLength="1000" />
           <Property Name="address" Type="varchar" MaxLength="100" />
           <Property Name="city" Type="varchar" MaxLength="100" />
           <Property Name="state" Type="varchar" MaxLength="20" />
@@ -619,7 +612,6 @@
           <EntitySet Name="event_status" EntityType="Self.event_status" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="event_type" EntityType="Self.event_type" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="events" EntityType="Self.events" Schema="fradmin" store:Type="Tables" />
-          <EntitySet Name="file_keyword" EntityType="Self.file_keyword" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="file_type" EntityType="Self.file_type" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="files" EntityType="Self.files" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="horizontal_collect_methods" EntityType="Self.horizontal_collect_methods" Schema="fradmin" store:Type="Tables" />
@@ -790,14 +782,6 @@
           <NavigationProperty Name="event_status" Relationship="STNNEWModel.event_statusevents" FromRole="events" ToRole="event_status" />
           <NavigationProperty Name="event_type" Relationship="STNNEWModel.event_typeevents" FromRole="events" ToRole="event_type" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberevents" FromRole="events" ToRole="member" />
-        </EntityType>
-        <EntityType Name="file_keyword">
-          <Key>
-            <PropertyRef Name="file_keyword_id" />
-          </Key>
-          <Property Name="file_keyword_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="file_id" Type="Int32" Nullable="false" />
-          <Property Name="keyword_id" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="file_type">
           <Key>
@@ -1368,7 +1352,6 @@
           <EntitySet Name="event_status" EntityType="Self.event_status" />
           <EntitySet Name="event_type" EntityType="Self.event_type" />
           <EntitySet Name="events" EntityType="STNNEWModel.events" />
-          <EntitySet Name="file_keyword" EntityType="Self.file_keyword" />
           <EntitySet Name="file_type" EntityType="Self.file_type" />
           <EntitySet Name="files" EntityType="Self.file" />
           <EntitySet Name="horizontal_collect_methods" EntityType="Self.horizontal_collect_methods" />
@@ -2270,6 +2253,7 @@
           <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.memberpeak_summary" FromRole="member" ToRole="peak_summary" />
           <NavigationProperty Name="agency" Relationship="STNNEWModel.agencymember" FromRole="member" ToRole="agency" />
           <NavigationProperty Name="role" Relationship="STNNEWModel.rolemember" FromRole="member" ToRole="role" />
+          <Property Name="resetFlag" Type="Int32" />
         </EntityType>
         <Association Name="memberevents">
           <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
@@ -2463,15 +2447,6 @@
                 <ScalarProperty Name="event_type_id" ColumnName="event_type_id" />
                 <ScalarProperty Name="event_status_id" ColumnName="event_status_id" />
                 <ScalarProperty Name="event_coordinator" ColumnName="event_coordinator" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="file_keyword">
-            <EntityTypeMapping TypeName="STNNEWModel.file_keyword">
-              <MappingFragment StoreEntitySet="file_keyword">
-                <ScalarProperty Name="file_keyword_id" ColumnName="file_keyword_id" />
-                <ScalarProperty Name="file_id" ColumnName="file_id" />
-                <ScalarProperty Name="keyword_id" ColumnName="keyword_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2986,6 +2961,7 @@
           <EntitySetMapping Name="members">
             <EntityTypeMapping TypeName="STNNEWModel.member">
               <MappingFragment StoreEntitySet="members">
+                <ScalarProperty Name="resetFlag" ColumnName="resetFlag" />
                 <ScalarProperty Name="salt" ColumnName="salt" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="username" ColumnName="username" />
