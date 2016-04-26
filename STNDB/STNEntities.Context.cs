@@ -36,7 +36,6 @@ namespace STNDB
         public virtual DbSet<event_status> event_status { get; set; }
         public virtual DbSet<event_type> event_type { get; set; }
         public virtual DbSet<events> events { get; set; }
-        public virtual DbSet<file_keyword> file_keyword { get; set; }
         public virtual DbSet<file_type> file_type { get; set; }
         public virtual DbSet<file> files { get; set; }
         public virtual DbSet<horizontal_collect_methods> horizontal_collect_methods { get; set; }

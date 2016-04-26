@@ -9,6 +9,6 @@ namespace STNDB
     public partial class member
     {
         //public bool ShouldSerializepassword() { return false; }
-        public bool ShouldSerializesalt() { return false; }
+        //public bool ShouldSerializesalt() { return false; }
     }
 }
