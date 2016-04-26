@@ -17,11 +17,8 @@ namespace STNDB
         public int op_measurements_id { get; set; }
         public int objective_point_id { get; set; }
         public int instrument_status_id { get; set; }
-        public Nullable<double> from_rp { get; set; }
-        public Nullable<double> hanging_length { get; set; }
         public Nullable<double> water_surface { get; set; }
         public Nullable<double> ground_surface { get; set; }
-        public string type { get; set; }
         public Nullable<double> offset_correction { get; set; }
     }
 }
