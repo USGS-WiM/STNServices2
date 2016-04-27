@@ -48,7 +48,6 @@ namespace STNDB
         public virtual DbSet<instrument> instruments { get; set; }
         public virtual DbSet<instrument_status> instrument_status { get; set; }
         public virtual DbSet<landownercontact> landownercontacts { get; set; }
-        public virtual DbSet<locatortype> locatortypes { get; set; }
         public virtual DbSet<marker> markers { get; set; }
         public virtual DbSet<network_name> network_name { get; set; }
         public virtual DbSet<network_name_site> network_name_site { get; set; }
