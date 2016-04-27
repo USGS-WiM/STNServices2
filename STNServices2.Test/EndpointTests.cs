@@ -609,34 +609,6 @@ namespace STNServices2.Test
             Assert.IsTrue(success);
         }//end method
         [TestMethod]
-        public void LocatorTypeRequest()
-        {
-            //GET LIST
-            List<locatortype> RequestList = this.GETRequest<List<locatortype>>(host + Configuration.locatorTypeResource);
-            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
-
-            //POST
-            locatortype postObj;
-            postObj = this.POSTRequest<locatortype>(host + Configuration.locatorTypeResource, new locatortype()
-            {
-                locator = "Post-Test"
-            }, basicAuth);
-            Assert.IsNotNull(postObj, "ID: " + postObj.locator_type_id.ToString());
-
-            //GET POSTed item
-            locatortype RequestObj = this.GETRequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id);
-            Assert.IsNotNull(RequestObj);
-
-            //PUT POSTed item
-            postObj.locator = "put-test";
-            locatortype putObj = this.PUTRequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id, postObj, basicAuth);
-            Assert.IsNotNull(putObj);
-
-            //Delete POSTed item
-            bool success = this.DELETERequest<locatortype>(host + Configuration.locatorTypeResource + "/" + postObj.locator_type_id, basicAuth);
-            Assert.IsTrue(success);
-        }//end method
-        [TestMethod]
         public void MarkerRequest()
         {
             //GET LIST
