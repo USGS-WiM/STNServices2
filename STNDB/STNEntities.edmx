@@ -123,7 +123,7 @@
             <PropertyRef Name="file_id" />
           </Key>
           <Property Name="file_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="path" Type="varchar" MaxLength="200" />
+          <Property Name="name" Type="varchar" MaxLength="200" />
           <Property Name="description" Type="text" />
           <Property Name="photo_direction" Type="varchar" MaxLength="200" />
           <Property Name="latitude_dd" Type="float8" />
@@ -133,10 +133,9 @@
           <Property Name="site_id" Type="int4" />
           <Property Name="filetype_id" Type="int4" />
           <Property Name="source_id" Type="int4" />
-          <Property Name="file_url" Type="varchar" MaxLength="200" />
+          <Property Name="path" Type="varchar" MaxLength="200" />
           <Property Name="data_file_id" Type="int4" />
           <Property Name="instrument_id" Type="int4" />
-          <Property Name="validator_userid" Type="varchar" MaxLength="20" />
           <Property Name="locator_type_id" Type="int4" />
           <Property Name="photo_date" Type="timestamp" />
           <Property Name="is_nwis" Type="int4" />
@@ -805,10 +804,8 @@
           <Property Name="hwm_id" Type="Int32" />
           <Property Name="filetype_id" Type="Int32" />
           <Property Name="source_id" Type="Int32" />
-          <Property Name="file_url" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="data_file_id" Type="Int32" />
           <Property Name="instrument_id" Type="Int32" />
-          <Property Name="validator_userid" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="locator_type_id" Type="Int32" />
           <Property Name="objective_point_id" Type="Int32" />
           <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
@@ -820,6 +817,7 @@
           <NavigationProperty Name="file_type" Relationship="STNNEWModel.file_typefile" FromRole="file" ToRole="file_type" />
           <Property Name="photo_date" Type="DateTime" Precision="6" />
           <Property Name="is_nwis" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -2461,6 +2459,7 @@
           <EntitySetMapping Name="files">
             <EntityTypeMapping TypeName="STNNEWModel.file">
               <MappingFragment StoreEntitySet="files">
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="is_nwis" ColumnName="is_nwis" />
                 <ScalarProperty Name="photo_date" ColumnName="photo_date" />
                 <ScalarProperty Name="site_id" ColumnName="site_id" />
@@ -2474,10 +2473,8 @@
                 <ScalarProperty Name="hwm_id" ColumnName="hwm_id" />
                 <ScalarProperty Name="filetype_id" ColumnName="filetype_id" />
                 <ScalarProperty Name="source_id" ColumnName="source_id" />
-                <ScalarProperty Name="file_url" ColumnName="file_url" />
                 <ScalarProperty Name="data_file_id" ColumnName="data_file_id" />
                 <ScalarProperty Name="instrument_id" ColumnName="instrument_id" />
-                <ScalarProperty Name="validator_userid" ColumnName="validator_userid" />
                 <ScalarProperty Name="locator_type_id" ColumnName="locator_type_id" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
               </MappingFragment>

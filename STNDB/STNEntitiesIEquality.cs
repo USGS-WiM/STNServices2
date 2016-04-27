@@ -270,7 +270,6 @@ namespace STNDB
                     (!other.filetype_id.HasValue || this.filetype_id == other.filetype_id) &&
                     (!other.source_id.HasValue || this.source_id == other.source_id) &&
                     (string.IsNullOrEmpty(other.path) || string.Equals(this.path, other.path, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrEmpty(other.file_url) ||string.Equals(this.file_url, other.file_url, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.photo_direction) || string.Equals(this.photo_direction, other.photo_direction,StringComparison.OrdinalIgnoreCase)) &&
                     (!other.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
                     (!other.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&

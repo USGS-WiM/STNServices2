@@ -16,7 +16,7 @@
         <EntityTypeShape EntityType="STNNEWModel.event_status" Width="2.125" PointX="0.75" PointY="5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.event_type" Width="2.125" PointX="3" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.file_type" Width="2.125" PointX="3" PointY="2" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.file" Width="2.125" PointX="3" PointY="1" IsExpanded="false" />
+        <EntityTypeShape EntityType="STNNEWModel.file" Width="2.125" PointX="3" PointY="1.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.horizontal_datums" Width="2.125" PointX="3" PointY="3" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.housing_type" Width="2.125" PointX="3" PointY="3.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.hwm_types" Width="2.125" PointX="3" PointY="5" IsExpanded="false" />
