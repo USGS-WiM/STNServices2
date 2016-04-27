@@ -24,7 +24,6 @@
         <EntityTypeShape EntityType="STNNEWModel.instrument" Width="2.125" PointX="5.25" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.instrument_status" Width="2.125" PointX="5.25" PointY="1.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.landownercontact" Width="2.125" PointX="5.25" PointY="2" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.locatortype" Width="2.125" PointX="5.25" PointY="2.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.marker" Width="2.125" PointX="5.25" PointY="3" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.network_name" Width="2.125" PointX="5.25" PointY="4" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.network_name_site" Width="2.125" PointX="5.25" PointY="4.5" IsExpanded="false" />

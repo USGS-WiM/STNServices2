@@ -129,7 +129,6 @@
     <Compile Include="Handlers\InstrumentHandler.cs" />
     <Compile Include="Handlers\InstrumentStatusHandler.cs" />
     <Compile Include="Handlers\MarkerHandler.cs" />
-    <Compile Include="Handlers\LocatorTypeHandler.cs" />
     <Compile Include="Handlers\MemberHandler.cs" />
     <Compile Include="Handlers\NetworkNameHandler.cs" />
     <Compile Include="Handlers\NetworkTypeHandler.cs" />
