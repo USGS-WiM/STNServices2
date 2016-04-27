@@ -132,9 +132,6 @@
     <Compile Include="landownercontact.cs">
       <DependentUpon>STNEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="locatortype.cs">
-      <DependentUpon>STNEntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="marker.cs">
       <DependentUpon>STNEntities.tt</DependentUpon>
     </Compile>

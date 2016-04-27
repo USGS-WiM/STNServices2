@@ -163,7 +163,6 @@ namespace STNServices2
                 AddINSTRUMENT_Resources();
                 AddINSTRUMENT_STATUS_Resources();
                 AddLANDOWNER_CONTACT_Resources();
-                AddLocatorType_Resources();
                 AddMARKER_Resources();
                 AddMEMBER_Resources();
                 AddNETWORK_NAME_Resources();
@@ -759,23 +758,6 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddLANDOWNER_CONTACT_Resources
-        private void AddLocatorType_Resources()
-        {
-            //GET
-            ResourceSpace.Has.ResourcesOfType<List<locatortype>>()
-            .AtUri(locatorTypeResource)
-            .HandledBy<LocatorTypeHandler>()
-            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-            ResourceSpace.Has.ResourcesOfType<locatortype>()
-            .AtUri(locatorTypeResource + "/{entityId}")
-            .HandledBy<LocatorTypeHandler>()
-            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-        }//end AddLocatorType_Resources
         private void AddMARKER_Resources()
         {
             //GET
