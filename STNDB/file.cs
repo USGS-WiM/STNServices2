@@ -26,7 +26,6 @@ namespace STNDB
         public Nullable<int> source_id { get; set; }
         public Nullable<int> data_file_id { get; set; }
         public Nullable<int> instrument_id { get; set; }
-        public Nullable<int> locator_type_id { get; set; }
         public Nullable<int> objective_point_id { get; set; }
         public Nullable<int> site_id { get; set; }
         public Nullable<System.DateTime> photo_date { get; set; }

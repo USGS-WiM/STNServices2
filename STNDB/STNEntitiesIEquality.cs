@@ -535,27 +535,6 @@ namespace STNDB
         }
 
     }
-    public partial class locatortype : IEquatable<locatortype>
-    {
-        public bool Equals(locatortype other)
-        {
-            return string.Equals(this.locator, other.locator, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as locatortype);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.locator.GetHashCode();
-        }
-
-    }
     public partial class marker : IEquatable<marker>
     {
         public bool Equals(marker other)
