@@ -136,7 +136,6 @@
           <Property Name="path" Type="varchar" MaxLength="200" />
           <Property Name="data_file_id" Type="int4" />
           <Property Name="instrument_id" Type="int4" />
-          <Property Name="locator_type_id" Type="int4" />
           <Property Name="photo_date" Type="timestamp" />
           <Property Name="is_nwis" Type="int4" />
           <Property Name="objective_point_id" Type="int4" />
@@ -264,13 +263,6 @@
           <Property Name="secondaryphone" Type="varchar" MaxLength="25" />
           <Property Name="email" Type="varchar" MaxLength="100" />
           <Property Name="title" Type="varchar" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="locatortype">
-          <Key>
-            <PropertyRef Name="locator_type_id" />
-          </Key>
-          <Property Name="locator_type_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="locator" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="markers">
           <Key>
@@ -567,7 +559,6 @@
           <Property Name="source_name" Type="varchar" MaxLength="100" />
           <Property Name="agency_id" Type="int4" />
           <Property Name="source_date" Type="timestamp" />
-          <Property Name="source_accuracy" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="states">
           <Key>
@@ -623,7 +614,6 @@
           <EntitySet Name="instrument" EntityType="Self.instrument" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="instrument_status" EntityType="Self.instrument_status" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="landownercontact" EntityType="Self.landownercontact" Schema="fradmin" store:Type="Tables" />
-          <EntitySet Name="locatortype" EntityType="Self.locatortype" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="markers" EntityType="Self.markers" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="members" EntityType="Self.members" Schema="fradmin" store:Type="Tables" />
           <EntitySet Name="network_name" EntityType="Self.network_name" Schema="fradmin" store:Type="Tables" />
@@ -806,7 +796,6 @@
           <Property Name="source_id" Type="Int32" />
           <Property Name="data_file_id" Type="Int32" />
           <Property Name="instrument_id" Type="Int32" />
-          <Property Name="locator_type_id" Type="Int32" />
           <Property Name="objective_point_id" Type="Int32" />
           <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitefile" FromRole="file" ToRole="site" />
@@ -975,13 +964,6 @@
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="sites" Relationship="STNNEWModel.landownercontactsite" FromRole="landownercontact" ToRole="site" />
-        </EntityType>
-        <EntityType Name="locatortype">
-          <Key>
-            <PropertyRef Name="locator_type_id" />
-          </Key>
-          <Property Name="locator_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="locator" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="marker">
           <Key>
@@ -1299,7 +1281,6 @@
           <Property Name="source_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="agency_id" Type="Int32" />
           <Property Name="source_date" Type="DateTime" Precision="6" />
-          <Property Name="source_accuracy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="agency" Relationship="STNNEWModel.agencysource" FromRole="source" ToRole="agency" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.sourcefile" FromRole="source" ToRole="file" />
         </EntityType>
@@ -1362,7 +1343,6 @@
           <EntitySet Name="instruments" EntityType="Self.instrument" />
           <EntitySet Name="instrument_status" EntityType="Self.instrument_status" />
           <EntitySet Name="landownercontacts" EntityType="Self.landownercontact" />
-          <EntitySet Name="locatortypes" EntityType="Self.locatortype" />
           <EntitySet Name="markers" EntityType="Self.marker" />
           <EntitySet Name="network_name" EntityType="Self.network_name" />
           <EntitySet Name="network_name_site" EntityType="Self.network_name_site" />
@@ -2475,7 +2455,6 @@
                 <ScalarProperty Name="source_id" ColumnName="source_id" />
                 <ScalarProperty Name="data_file_id" ColumnName="data_file_id" />
                 <ScalarProperty Name="instrument_id" ColumnName="instrument_id" />
-                <ScalarProperty Name="locator_type_id" ColumnName="locator_type_id" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2611,14 +2590,6 @@
                 <ScalarProperty Name="secondaryphone" ColumnName="secondaryphone" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="title" ColumnName="title" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="locatortypes">
-            <EntityTypeMapping TypeName="STNNEWModel.locatortype">
-              <MappingFragment StoreEntitySet="locatortype">
-                <ScalarProperty Name="locator_type_id" ColumnName="locator_type_id" />
-                <ScalarProperty Name="locator" ColumnName="locator" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2917,7 +2888,6 @@
                 <ScalarProperty Name="source_name" ColumnName="source_name" />
                 <ScalarProperty Name="agency_id" ColumnName="agency_id" />
                 <ScalarProperty Name="source_date" ColumnName="source_date" />
-                <ScalarProperty Name="source_accuracy" ColumnName="source_accuracy" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
