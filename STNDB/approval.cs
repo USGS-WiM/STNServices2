@@ -29,5 +29,6 @@ namespace STNDB
         public virtual ICollection<hwm> hwms { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<data_file> data_file { get; set; }
+        public virtual member member { get; set; }
     }
 }

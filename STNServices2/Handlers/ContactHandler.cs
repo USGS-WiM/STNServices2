@@ -24,12 +24,14 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
 using STNServices2.Security;
+using STNServices2.Resources;
 using WiM.Security;
 
 namespace STNServices2.Handlers
@@ -42,7 +44,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<contact> contactList = new List<contact>();
+            List<contact> entities = new List<contact>();
             try
             {
                 //Get basic authentication password
@@ -50,11 +52,11 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        contactList = sa.Select<contact>().OrderBy(cl => cl.lname).ToList();
+                        entities = sa.Select<contact>().OrderBy(cl => cl.lname).ToList();
                         sm(sa.Messages);
                     }//end using
                 }
-                return new OperationResult.OK { ResponseResource = contactList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -64,7 +66,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            contact aContact;            
+            contact anEntity;            
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -74,12 +76,13 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        aContact = sa.Select<contact>().SingleOrDefault(rp => rp.contact_id == entityId);
+                        anEntity = sa.Select<contact>().SingleOrDefault(rp => rp.contact_id == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }//end using
                 }
 
-                return new OperationResult.OK { ResponseResource = aContact, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch(Exception ex)
             { return HandleException(ex); }
@@ -90,7 +93,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetReportMetricContactsByType")]
         public OperationResult GetReportMetricContactsByType(Int32 reportMetricsId, Int32 contactTypeId)
         {
-            contact aContacts = null;
+            contact anEntity = null;
             try
             {
                 //Return BadRequest if there is no ID
@@ -101,13 +104,13 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        var rcontact = sa.Select<reportmetric_contact>().FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_id == contactTypeId);
-                        aContacts = rcontact != null ? rcontact.contact : null;
-                     
+                        var rcontact = sa.Select<reportmetric_contact>().FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_type_id == contactTypeId);
+                        anEntity = rcontact != null ? rcontact.contact : null;
+                        if (anEntity == null) throw new NotFoundRequestException(); 
                     }//end using
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aContacts };
+                return new OperationResult.OK { ResponseResource = anEntity };
             }
             catch (Exception)
             {
@@ -119,7 +122,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetReportMetricContacts")]
         public OperationResult GetReportMetricContactsByType(Int32 reportMetricsId)
         {
-            List<contact> reportContacts = null;
+            List<contact> entities = null;
             try
             {
                 //Return BadRequest if there is no ID
@@ -129,72 +132,35 @@ namespace STNServices2.Handlers
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
-                    {
-                        //first get the Contacts that are associated with this report
-                        reportContacts = sa.Select<contact>().Where(c => c.reportmetric_contact.Any(rmc => rmc.reporting_metrics_id == reportMetricsId)).ToList();
+                    { 
+                        //first get the Contacts that are associated with this report 
+                        entities = sa.Select<reportmetric_contact>().Include(b => b.contact).Include(c => c.contact_type).Where(rmc => rmc.reporting_metrics_id == reportMetricsId)
+                        .Select(c => new Contact()
+                        {
+                            contact_id = c.contact_id,
+                            fname = c.contact.fname,
+                            lname = c.contact.lname,
+                            phone = c.contact.phone,
+                            alt_phone = c.contact.alt_phone,
+                            email = c.contact.email,
+                            contactType = c.contact_type
+                        }).ToList<contact>();
+
                         sm(sa.Messages);
                     }//end using
                 }
-                return new OperationResult.OK { ResponseResource = reportContacts, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetContactModelByReport")]
-        public OperationResult GetContactModelByReport(Int32 reportMetricsId)
-        {
-            //List<ReportContactModel> reportContacts = null;
-            //List<contact> contactList = null;
-            //try
-            //{
-            //    //Return BadRequest if there is no ID
-            //    if (reportMetricsId <= 0)
-            //    {
-            //        return new OperationResult.BadRequest();
-            //    }
-            //    //Get basic authentication password
-            //    using (EasySecureString securedPassword = GetSecuredPassword())
-            //    {
-            //        using (STNEntities2 aSTNE = GetRDS(securedPassword))
-            //        {
-
-            //            //first get the Contacts that are associated with this report
-            //            contactList = aSTNE.CONTACT.Where(c => c.REPORTMETRIC_CONTACT.Any(rmc => rmc.REPORTING_METRICS_ID == reportMetricsId)).ToList();
-
-            //            reportContacts = aSTNE.REPORTMETRIC_CONTACT.Where(rmc => rmc.REPORTING_METRICS_ID == reportMetricsId).Select(c => new ReportContactModel
-            //            {
-            //                ContactId = c.CONTACT_ID,
-            //                FNAME = c.CONTACT.FNAME,
-            //                LNAME = c.CONTACT.LNAME,
-            //                PHONE = c.CONTACT.PHONE,
-            //                ALT_PHONE = c.CONTACT.ALT_PHONE,
-            //                EMAIL = c.CONTACT.EMAIL,
-            //                TYPE = c.CONTACT_TYPE.TYPE
-            //            }).ToList();
-
-
-
-            //            if (contactList != null)
-            //                contactList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-            //        }//end using
-            //    }
-            //    return new OperationResult.OK { ResponseResource = reportContacts };
-            //}
-            //catch (Exception)
-            //{
-            //    return new OperationResult.BadRequest();
-            //}
-            return new OperationResult.SeeOther { Description= "Not implemented yet." };
-        }//end HttpMethod.GET
-
+       
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetContactTypeContact")]
         public OperationResult GetContactTypeContacts(Int32 contactTypeId)
         {
-            List<contact> contactList = new List<contact>();
+            List<contact> entities = new List<contact>();
 
             //Get basic authentication password
             try
@@ -204,13 +170,13 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        contactList = sa.Select<contact_type>().FirstOrDefault(ct => ct.contact_type_id == contactTypeId)
+                        entities = sa.Select<contact_type>().FirstOrDefault(ct => ct.contact_type_id == contactTypeId)
                                                                 .reportmetric_contact.Select(c=>c.contact).ToList();
                         sm(sa.Messages);
                     }//end using
                 }
 
-                return new OperationResult.OK { ResponseResource = contactList, Description = this.MessageString};
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

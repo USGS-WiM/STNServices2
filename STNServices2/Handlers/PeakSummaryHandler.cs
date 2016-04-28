@@ -103,7 +103,15 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).peak_summary;
+                    if (Context.User.IsInRole(PublicRole))
+                    {
+                        // return only approved list
+                        anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId && i.approval_id > 0).peak_summary;
+                    }
+                    else
+                    {
+                        anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).peak_summary;
+                    }
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -198,25 +206,26 @@ namespace STNServices2.Handlers
         //public OperationResult GetSitePeakSummarView(Int32 siteId)
         //{
         //    List<peak_view> peakSummaryList = new List<PEAK_VIEW>();
+            //List<peak_summary> entities = null;
+            //try
+            //{
+            //    using (STNAgent sa = new STNAgent())
+            //    {
+            //        entities = sa.Select < peak_summary >
+            //        peakSummaryList = aSTNE.PEAK_VIEW.Where(ps => ps.SITE_ID == siteId).ToList();
 
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            peakSummaryList = aSTNE.PEAK_VIEW.Where(ps => ps.SITE_ID == siteId).ToList();
-                    
-        //            if (peakSummaryList != null)
-        //                peakSummaryList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+            //        if (peakSummaryList != null)
+            //            peakSummaryList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
 
-        //        }//end using
+            //    }//end using
 
-        //        return new OperationResult.OK { ResponseResource = peakSummaryList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end HttpMethod.GET
+             //   return new OperationResult.OK { ResponseResource = peakSummaryList };
+            //}
+            //catch
+            //{
+            //    return new OperationResult.BadRequest();
+            //}
+       // }//end HttpMethod.GET
 
         [HttpOperation(ForUriName = "GetPeakSummariesByStateName")]
         public OperationResult GetPeakSummariesByStateName(string stateName)
