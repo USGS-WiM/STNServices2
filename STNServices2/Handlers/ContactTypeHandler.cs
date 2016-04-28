@@ -68,7 +68,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            contact_type aContacttype;
+            contact_type anEntity;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -76,12 +76,12 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                     using (STNAgent sa = new STNAgent())
                     {
-                        aContacttype = sa.Select<contact_type>().SingleOrDefault(rp => rp.contact_type_id == entityId);
+                        anEntity = sa.Select<contact_type>().SingleOrDefault(rp => rp.contact_type_id == entityId);
                         sm(sa.Messages);
                     }//end using
-              
 
-                return new OperationResult.OK { ResponseResource = aContacttype, Description = this.MessageString };
+
+                    return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -91,7 +91,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetContactsContactType")]
         public OperationResult GetContactsContactType(Int32 contactId)
         {
-            contact_type mcontact_type = null;
+            contact_type anEntity = null;
 
             //Return BadRequest if there is no ID
             if (contactId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -100,11 +100,11 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mcontact_type = sa.Select<reportmetric_contact>().FirstOrDefault(i => i.contact_id == contactId).contact_type;
+                    anEntity = sa.Select<reportmetric_contact>().FirstOrDefault(i => i.contact_id == contactId).contact_type;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mcontact_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

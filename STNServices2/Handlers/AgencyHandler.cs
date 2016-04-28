@@ -94,7 +94,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetMemberAgency")]
         public OperationResult GetMemberAgency(Int32 memberId)
         {
-            agency mAgency = null;
+            agency anEntity = null;
             try
             {
                 //Return BadRequest if there is no ID
@@ -102,11 +102,11 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    mAgency = sa.Select<member>().FirstOrDefault(i => i.member_id == memberId).agency;
+                    anEntity = sa.Select<member>().FirstOrDefault(i => i.member_id == memberId).agency;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mAgency, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -115,7 +115,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetSourceAgency")]
         public OperationResult GetSourceAgency(Int32 sourceId)
         {
-            agency mAgency = null;
+            agency anEntity = null;
 
             //Return BadRequest if there is no ID
             if (sourceId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -124,11 +124,11 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mAgency = sa.Select<source>().FirstOrDefault(i => i.source_id == sourceId).agency;
+                    anEntity = sa.Select<source>().FirstOrDefault(i => i.source_id == sourceId).agency;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mAgency };
+                return new OperationResult.OK { ResponseResource = anEntity };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -75,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<horizontal_collect_methods>().FirstOrDefault(e => e.hcollect_method_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,7 +95,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName="GetHWMHorizontalMethods")]
         public OperationResult GetHWMHorizontalMethods(Int32 hwmId)
         {
-            horizontal_collect_methods mhorizontal_collect_methods = null;
+            horizontal_collect_methods anEntity = null;
 
             //Return BadRequest if there is no ID
             if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -103,12 +104,12 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mhorizontal_collect_methods = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).horizontal_collect_methods;
-                    if (mhorizontal_collect_methods == null) throw new NotFoundRequestException();
+                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).horizontal_collect_methods;
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mhorizontal_collect_methods, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

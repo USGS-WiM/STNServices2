@@ -68,19 +68,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            hwm_qualities entity = null;
+            hwm_qualities anEntity = null;
 
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entity = sa.Select<hwm_qualities>().FirstOrDefault(e => e.hwm_quality_id == entityId);
+                    anEntity = sa.Select<hwm_qualities>().FirstOrDefault(e => e.hwm_quality_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {
@@ -95,19 +96,20 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetHWMQuality")]
         public OperationResult GetHWMQuality(Int32 hwmId)
         {
-            hwm_qualities entity = null;
+            hwm_qualities anEntity = null;
 
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).hwm_qualities;
+                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).hwm_qualities;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {

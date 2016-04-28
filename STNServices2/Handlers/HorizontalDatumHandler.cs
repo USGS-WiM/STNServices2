@@ -75,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<horizontal_datums>().FirstOrDefault(e => e.datum_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,7 +95,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteHdatum")]
         public OperationResult GetSiteHdatum(Int32 siteId)
         {
-            horizontal_datums mhorizontal_datums = null;
+            horizontal_datums anEntity = null;
 
             //Return BadRequest if there is no ID
             if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -103,12 +104,12 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mhorizontal_datums = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).horizontal_datums;
-                    if (mhorizontal_datums == null) throw new NotFoundRequestException();
+                    anEntity = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).horizontal_datums;
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mhorizontal_datums, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
