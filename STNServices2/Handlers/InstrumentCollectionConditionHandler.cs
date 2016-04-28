@@ -75,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instr_collection_conditions>().FirstOrDefault(e => e.id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,17 +95,18 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentCondition")]
         public OperationResult GetInstrumentCondition(Int32 instrumentId)
         {
-            instr_collection_conditions cCondition = null;
+            instr_collection_conditions anEntity = null;
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    cCondition = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).instr_collection_conditions;
+                    anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).instr_collection_conditions;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = cCondition, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

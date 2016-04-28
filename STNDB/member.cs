@@ -21,6 +21,9 @@ namespace STNDB
             this.sites = new HashSet<site>();
             this.data_file = new HashSet<data_file>();
             this.peak_summary = new HashSet<peak_summary>();
+            this.approvals = new HashSet<approval>();
+            this.hwms = new HashSet<hwm>();
+            this.hwms1 = new HashSet<hwm>();
         }
     
         public int member_id { get; set; }
@@ -47,5 +50,11 @@ namespace STNDB
         public virtual ICollection<peak_summary> peak_summary { get; set; }
         public virtual agency agency { get; set; }
         public virtual role role { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<approval> approvals { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hwm> hwms { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hwm> hwms1 { get; set; }
     }
 }

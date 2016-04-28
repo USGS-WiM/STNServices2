@@ -45,6 +45,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
+using STNServices2.Resources;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -60,59 +61,159 @@ namespace STNServices2.Handlers
     {
         #region GetMethods
 
-        //[HttpOperation(HttpMethod.GET)]
-        //public OperationResult Get()
-        //{
-        //    HWMList hWMs = new HWMList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-        //            {
-        //                //they are the general public..only approved ones
-        //                hWMs.HWMs = aSTNE.HWMs.AsEnumerable().Where(hwm => hwm.APPROVAL_ID > 0)
-        //                            .Select(hwm => new SimpleHWM
-        //                            {
-        //                                HWM_ID = Convert.ToInt32(hwm.HWM_ID),
-        //                                LATITUDE_DD = Convert.ToDecimal(hwm.LATITUDE_DD),
-        //                                LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
-        //                                HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION,
-        //                                ELEV_FT = Convert.ToDecimal(hwm.ELEV_FT)
-        //                            }).ToList<SimpleHWM>();
-        //            }
-        //            else
-        //            {
-        //                //they are logged in, give them all
-        //                hWMs.HWMs = aSTNE.HWMs.AsEnumerable()
-        //                     .Select(hwm => new SimpleHWM
-        //                     {
-        //                         HWM_ID = Convert.ToInt32(hwm.HWM_ID),
-        //                         LATITUDE_DD = Convert.ToDecimal(hwm.LATITUDE_DD),
-        //                         LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
-        //                         HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION,
-        //                         ELEV_FT = Convert.ToDecimal(hwm.ELEV_FT)
-        //                     }).ToList<SimpleHWM>();
-        //            }
-
-        //            if (hWMs != null)
-        //                hWMs.HWMs.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = hWMs };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}// end HttpMethod.Get
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMByApproval")]
-        public OperationResult Get(string boolean)
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get()
         {
-            List<hwm> hwms = null;
+            List<hwm> entities = null;
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                    {
+                        entities = sa.Select<hwm>().Where(h => h.approval_id > 0).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+                    } else {
+                        //they are logged in, give them all
+                        entities = sa.Select<hwm>().ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+                    }
+
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get(Int32 entityId)
+        {
+            hwm anEntity;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == entityId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
+
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+        
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventWMs")]
+        public OperationResult GetEventHWMs(Int32 eventId)
+        {
+            List<hwm> entities = null;
+            try
+            {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.event_id == eventId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else 
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages); 
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }// end HttpMethod.Get
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventHWMs")]
+        public OperationResult GetSiteEventHWMs(Int32 siteId, Int32 eventId)
+        {
+            List<hwm> entities = null;
+            try
+            {
+                if (siteId <= 0 || eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.event_id == eventId && h.site_id == siteId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else 
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }// end HttpMethod.Get
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovalHWMs")]
+        public OperationResult GetApprovalHWMs(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
+        {
+            try
+            {
+                List<hwm> entities = null;
+
+                //set defaults
+                bool isApprovedStatus = false;
+                Boolean.TryParse(approved, out isApprovedStatus);
+                string filterState = GetStateByName(state).ToString();
+                Int32 filterMember = (memberId > 0) ? memberId : -1;
+                Int32 filterEvent = (eventId > 0) ? eventId : -1;
+
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<hwm> query;
+                    if (isApprovedStatus)
+                        query = sa.Select<hwm>().Where(h => h.approval_id > 0);
+                    else
+                        query = sa.Select<hwm>().Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);
+
+                    if (filterEvent > 0)
+                        query = query.Where(h => h.event_id == filterEvent);
+
+                    //TODO :: change this to be state_id
+                    if (filterState != State.UNSPECIFIED.ToString())
+                        query = query.Where(h => h.site.state == filterState);
+
+                    if (filterMember > 0)
+                        query = query.Where(h => h.flag_member_id == filterMember || h.survey_member_id == filterMember);
+
+                    entities = query.AsEnumerable().ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                    
+                }//end using
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }// end HttpMethod.GET
+              
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMByApproval")]
+        public OperationResult GetHWMByApproval(string boolean)
+        {
+            List<hwm> entities = null;
             try
             {
                 
@@ -122,15 +223,16 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    if (isApprovedStatus) 
-                        hwms = sa.Select<hwm>().Where(hwm => hwm.approval_id > 0).ToList();
+                    if (isApprovedStatus)
+                        entities = sa.Select<hwm>().Where(hwm => hwm.approval_id > 0).ToList();
                     else//return all non approved hwms
-                        hwms = sa.Select<hwm>().Where(hwm => hwm.approval_id < 0 || !hwm.approval_id.HasValue).ToList();
+                        entities = sa.Select<hwm>().Where(hwm => hwm.approval_id < 0 || !hwm.approval_id.HasValue).ToList();
 
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
                 }//end using
-                return new OperationResult.Created { ResponseResource = hwms, Description = this.MessageString };
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -140,18 +242,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovedHWMs")]
         public OperationResult GetApprovedHWMs(Int32 ApprovalId)
         {
-            List<hwm> hwms = null;
+            List<hwm> entities = null;
             try
             {
                 if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwms = sa.Select<approval>().FirstOrDefault(a => a.approval_id == ApprovalId).hwms.ToList();
+                    entities = sa.Select<approval>().FirstOrDefault(a => a.approval_id == ApprovalId).hwms.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.Created { ResponseResource = hwms, Description = this.MessageString };
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -161,21 +264,24 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteHWMs")]
         public OperationResult GetSiteHWMs(Int32 siteId)
         {
-            IQueryable<hwm> hWMs = null;
+            List<hwm> entities = null;            
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {                    
-                    hWMs = hWMs.Where(h => h.site_id == siteId)
-                        .OrderBy(hwm => hwm.hwm_id);
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.site_id == siteId);
 
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        hWMs = sa.Select<hwm>().Where(h=>h.approval_id > 0);
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else 
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hWMs.ToList(), Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -184,17 +290,24 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetVDatumHWMs")]
         public OperationResult GetVDatumHWMs(Int32 vdatumId)
         {
-            List<hwm> hWMs = null;
+            List<hwm> entities = null;
             try
             {
                 if (vdatumId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hWMs = sa.Select<vertical_datums>().FirstOrDefault(vd => vd.datum_id == vdatumId).hwms.ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.vdatum_id == vdatumId);
+
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+                    
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                }//end using
 
-                return new OperationResult.OK { ResponseResource = hWMs, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -203,17 +316,24 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetVmethodHWMs")]
         public OperationResult GetVmethodHWMs(Int32 vmethodId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (vmethodId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<vertical_collect_methods>().FirstOrDefault(i => i.vcollect_method_id == vmethodId).hwms.ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.vcollect_method_id == vmethodId);
+
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+ 
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -222,17 +342,23 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetMemberHWMs")]
         public OperationResult GetMemberHWMs(Int32 memberId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<hwm>().Where(i => i.flag_member_id == memberId || i.survey_member_id == memberId).ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.flag_member_id == memberId || i.survey_member_id == memberId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -241,17 +367,23 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetHWMQualityHWMs")]
         public OperationResult GetHWMQualityHWMs(Int32 hwmQualityId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (hwmQualityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<hwm_qualities>().FirstOrDefault(i => i.hwm_quality_id == hwmQualityId).hwms.ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hwm_quality_id == hwmQualityId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -260,17 +392,23 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetHWMTypeHWMs")]
         public OperationResult GetHWMTypeHWMs(Int32 hwmTypeId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (hwmTypeId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<hwm_types>().FirstOrDefault(i => i.hwm_type_id == hwmTypeId).hwms.ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hwm_type_id == hwmTypeId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -279,17 +417,23 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetHmethodHWMs")]
         public OperationResult GetHMethodHWMs(Int32 hmethodId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (hmethodId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<horizontal_collect_methods>().FirstOrDefault(i => i.hcollect_method_id == hmethodId).hwms.ToList();
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hcollect_method_id == hmethodId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -298,18 +442,25 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetMarkerHWMs")]
         public OperationResult GetMarkerHWMs(Int32 markerId)
         {
-            List<hwm> hwmList = null;
+            List<hwm> entities = null;
             try
             {
                 if (markerId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    hwmList = sa.Select<marker>().FirstOrDefault(i => i.marker_id == markerId).hwms.ToList();
+
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.marker_id == markerId);
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hwmList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -318,22 +469,24 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetPeakSummaryHWMs")]
         public OperationResult GetPeakSummaryHWMs(Int32 peakSummaryId)
         {
-            IQueryable<hwm> hWMs = null;
+            List<hwm> entities = null;
             try
             {
                 if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-
-                    hWMs = sa.Select<hwm>().Where(hwm => hwm.peak_summary_id == peakSummaryId)
-                                                .OrderBy(hwm => hwm.hwm_id);
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(hwm => hwm.peak_summary_id == peakSummaryId);
 
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        hWMs = hWMs.Where(h => h.approval_id > 0);
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hWMs, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -342,319 +495,179 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetSiteHWMsBySiteNo")]
         public OperationResult GetSiteHWMsBySiteNo(String siteNo)
         {
-            IQueryable<hwm> hWMs = null;
+            List<hwm> entities = null;
             try
             {
                 if (string.IsNullOrEmpty(siteNo)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-
-                    hWMs = sa.Select<hwm>().Include(h=>h.site).Where(h =>string.Equals(h.site.site_no,siteNo,StringComparison.InvariantCultureIgnoreCase))
-                                                .OrderBy(hwm => hwm.hwm_id);
+                    IQueryable<hwm> hWMs = sa.Select<hwm>().Include(h=>h.site).Where(h =>string.Equals(h.site.site_no,siteNo,StringComparison.InvariantCultureIgnoreCase));
 
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        hWMs = hWMs.Where(h => h.approval_id > 0);
+                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
+                    else
+                        entities = hWMs.ToList();
 
                     sm(MessageType.info,"Count :" + hWMs.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = hWMs.ToList(), Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
 
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWM")]
-        public OperationResult Get(Int32 entityId)
-        {
-            hwm aHWM;
-            try
-            {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    aHWM = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == entityId);
-                    sm(sa.Messages);
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = aHWM, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileHWM")]
         public OperationResult GetFileHWM(Int32 fileId)
         {
-            hwm aHWM;
+            hwm anEntity;
             try
             {
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    aHWM = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).hwm;
+                    anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).hwm;
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
+
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aHWM, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetEventSimpleHWMs")]
-        //public OperationResult GetEventSimpleHWMs(Int32 eventId)
-        //{
-        //    HWMList hWMs = new HWMList();
 
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            hWMs.HWMs = aSTNE.HWMs.AsEnumerable().Where(hwm => hwm.EVENT_ID == eventId)
-        //                .Select(hwm => new SimpleHWM
-        //                {
-        //                    HWM_ID = Convert.ToInt32(hwm.HWM_ID),
-        //                    LATITUDE_DD = Convert.ToDecimal(hwm.LATITUDE_DD),
-        //                    LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
-        //                    HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION,
-        //                    ELEV_FT = Convert.ToDecimal(hwm.ELEV_FT)
-        //                }).ToList<SimpleHWM>();
+        [HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
+        public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, Int32 eventStatusID,
+                                                      [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
+                                                      [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
+        {
 
-        //            if (hWMs != null)
-        //                hWMs.HWMs.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+            List<hwm> hwmsList = null;
+            try
+            {
+                char[] delimiterChars = { ';', ',', ' ' };
+                //parse the requests
+                List<decimal> eventIdList = !string.IsNullOrEmpty(eventIds) ? eventIds.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
 
-        //        }//end using
+                List<decimal> hwmTypeIdList = !string.IsNullOrEmpty(hwmTypeIDs) ? hwmTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> hwmQualIdList = !string.IsNullOrEmpty(hwmQualIDs) ? hwmQualIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
 
-        //        return new OperationResult.OK { ResponseResource = hWMs };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}// end HttpMethod.Get
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<hwm> query;
+                    query = sa.Select<hwm>().Where(s => s.hwm_id > 0);
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventHWMs")]
-        //public OperationResult Get(Int32 siteId, Int32 eventId)
-        //{
-        //    HWMList hWMs = new HWMList();
+                    if (eventIdList != null && eventIdList.Count > 0)
+                        query = query.Where(i => i.event_id.HasValue && eventIdList.Contains(i.event_id.Value));
 
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            hWMs.HWMs = aSTNE.HWMs.AsEnumerable().Where(hwm => hwm.EVENT_ID == eventId
-        //                && hwm.SITE_ID == siteId)
-        //                .Select(hwm => new SimpleHWM
-        //                {
-        //                    HWM_ID = Convert.ToInt32(hwm.HWM_ID),
-        //                    LATITUDE_DD = Convert.ToDecimal(hwm.LATITUDE_DD),
-        //                    LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
-        //                    HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION,
-        //                    ELEV_FT = Convert.ToDecimal(hwm.ELEV_FT),
-        //                    SURVEY_DATE = hwm.SURVEY_DATE,
-        //                    FLAG_DATE = hwm.FLAG_DATE
-        //                }).ToList<SimpleHWM>();
+                    if (eventTypeList != null && eventTypeList.Count > 0)
+                        query = query.Where(i => i.@event.event_type_id.HasValue && eventTypeList.Contains(i.@event.event_type_id.Value));
 
-        //            if (hWMs != null)
-        //                hWMs.HWMs.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    if (eventStatusID > 0)
+                        query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == eventStatusID);
 
-        //        }//end using
+                    if (stateList != null && stateList.Count > 0)
+                        query = query.Where(i => stateList.Contains(i.site.state));
 
-        //        return new OperationResult.OK { ResponseResource = hWMs };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}// end HttpMethod.Get
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(i => countyList.Contains(i.site.county));
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetApprovalHWMs")]
-        //public OperationResult GetFilteredHWMs(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
-        //{
-        //    try
-        //    {
-        //        HWMList hWMs = new HWMList();
-        //        //set defaults
-        //        //default to false
-        //        bool isApprovedStatus = false;
-        //        Boolean.TryParse(approved, out isApprovedStatus);
-        //        string filterState = GetStateByName(state).ToString();
-        //        Int32 filterMember = (memberId > 0) ? memberId : -1;
-        //        Int32 filterEvent = (eventId > 0) ? eventId : -1;
+                    if (hwmTypeIdList != null && hwmTypeIdList.Count > 0)
+                        query = query.Where(i => hwmTypeIdList.Contains(i.hwm_type_id));
 
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //Because 'Where' is producing an IQueryable, 
-        //            //the execution is deferred until the ToList so you can chain 'Wheres' together.
-        //            IQueryable<HWM> query;
-        //            if (isApprovedStatus)
-        //                query = aSTNE.HWMs.Where(h => h.APPROVAL_ID > 0);
-        //            else
-        //                query = aSTNE.HWMs.Where(h => h.APPROVAL_ID <= 0 || !h.APPROVAL_ID.HasValue);
+                    if (hwmQualIdList != null && hwmQualIdList.Count > 0)
+                        query = query.Where(i => hwmQualIdList.Contains(i.hwm_quality_id));
 
-        //            if (filterEvent > 0)
-        //                query = query.Where(h => h.EVENT_ID == filterEvent);
+                    if (!string.IsNullOrEmpty(hwmEnvironment))
+                        query = query.Where(i => i.hwm_environment == hwmEnvironment);
 
-        //            if (filterState != State.UNSPECIFIED.ToString())
-        //                query = query.Where(h => h.SITE.STATE == filterState);
+                    if (!string.IsNullOrEmpty(surveyComplete))
+                    {
+                        if (surveyComplete == "True")
+                            query = query.Where(i => i.survey_date.HasValue);
+                        else
+                            query = query.Where(i => !i.survey_date.HasValue);
+                    }
 
-        //            if (filterMember > 0)
-        //                query = query.Where(h => h.FLAG_MEMBER_ID == filterMember || h.SURVEY_MEMBER_ID == filterMember);
+                    //1 = yes, 0 = no
+                    if (!string.IsNullOrEmpty(stillWater))
+                        if (stillWater == "True")
+                            query = query.Where(i => i.stillwater.HasValue && i.stillwater.Value == 1);
+                        else
+                            query = query.Where(i => !i.stillwater.HasValue || i.stillwater.Value == 0);
 
-        //            hWMs.HWMs = query.AsEnumerable().Select(hwm => new SimpleHWM
-        //            {
-        //                HWM_ID = Convert.ToInt32(hwm.HWM_ID),
-        //                LATITUDE_DD = Convert.ToDecimal(hwm.LATITUDE_DD),
-        //                LONGITUDE_DD = Convert.ToDecimal(hwm.LONGITUDE_DD),
-        //                HWM_LOCATIONDESCRIPTION = hwm.HWM_LOCATIONDESCRIPTION != null ? hwm.HWM_LOCATIONDESCRIPTION : "",
-        //                ELEV_FT = hwm.ELEV_FT != null ? Convert.ToDecimal(hwm.ELEV_FT) : 0,
-        //                SITE_ID = Convert.ToInt32(hwm.SITE_ID),
-        //                SITE_NO = hwm.SITE_ID > 0 ? hwm.SITE.SITE_NO : string.Empty
-        //            }).ToList<SimpleHWM>();
-
-        //            if (hWMs != null)
-        //                hWMs.HWMs.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = hWMs };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}// end HttpMethod.Get
-
-        //[HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
-        //public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, Int32 eventStatusID,
-        //                                              [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
-        //                                              [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
-        //{
-        //    //TODO: Add FLAG_MEMBER_ID and remove FLAG_TEAM_ID
-        //    //TODO: Add SURVEY_MEMBER_ID and remove SURVEY_TEAM_ID
-        //    List<HWMDownloadable> hwmsList = new List<HWMDownloadable>();
-        //    try
-        //    {
-        //        char[] delimiterChars = { ';', ',', ' ' };
-        //        //parse the requests
-        //        List<decimal> eventIdList = !string.IsNullOrEmpty(eventIds) ? eventIds.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
-        //        List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
-
-        //        List<decimal> hwmTypeIdList = !string.IsNullOrEmpty(hwmTypeIDs) ? hwmTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<decimal> hwmQualIdList = !string.IsNullOrEmpty(hwmQualIDs) ? hwmQualIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<HWM> query;
-        //            query = aSTNE.HWMs.Where(s => s.HWM_ID > 0);
-
-        //            if (eventIdList != null && eventIdList.Count > 0)
-        //                query = query.Where(i => i.EVENT_ID.HasValue && eventIdList.Contains(i.EVENT_ID.Value));
-
-        //            if (eventTypeList != null && eventTypeList.Count > 0)
-        //                query = query.Where(i => i.EVENT.EVENT_TYPE_ID.HasValue && eventTypeList.Contains(i.EVENT.EVENT_TYPE_ID.Value));
-
-        //            if (eventStatusID > 0)
-        //                query = query.Where(i => i.EVENT.EVENT_STATUS_ID.HasValue && i.EVENT.EVENT_STATUS_ID.Value == eventStatusID);
-
-        //            if (stateList != null && stateList.Count > 0)
-        //                query = query.Where(i => stateList.Contains(i.SITE.STATE));
-
-        //            if (countyList != null && countyList.Count > 0)
-        //                query = query.Where(i => countyList.Contains(i.SITE.COUNTY));
-
-        //            if (hwmTypeIdList != null && hwmTypeIdList.Count > 0)
-        //                query = query.Where(i => hwmTypeIdList.Contains(i.HWM_TYPE_ID));
-
-        //            if (hwmQualIdList != null && hwmQualIdList.Count > 0)
-        //                query = query.Where(i => hwmQualIdList.Contains(i.HWM_QUALITY_ID));
-
-        //            if (!string.IsNullOrEmpty(hwmEnvironment))
-        //                query = query.Where(i => i.HWM_ENVIRONMENT == hwmEnvironment);
-
-        //            if (!string.IsNullOrEmpty(surveyComplete))
-        //            {
-        //                if (surveyComplete == "True")
-        //                    query = query.Where(i => i.SURVEY_DATE.HasValue);
-        //                else
-        //                    query = query.Where(i => !i.SURVEY_DATE.HasValue);
-        //            }
-
-        //            //1 = yes, 0 = no
-        //            if (!string.IsNullOrEmpty(stillWater))
-        //                if (stillWater == "True")
-        //                    query = query.Where(i => i.STILLWATER.HasValue && i.STILLWATER.Value == 1);
-        //                else
-        //                    query = query.Where(i => !i.STILLWATER.HasValue || i.STILLWATER.Value == 0);
-
-        //            hwmsList = query.AsEnumerable().Select(
-        //                hwmD => new HWMDownloadable
-        //                {
-        //                    HWM_ID = hwmD.HWM_ID,
-        //                    WATERBODY = hwmD.WATERBODY,
-        //                    SITE_ID = hwmD.SITE_ID.Value,
-        //                    EVENT_ID = hwmD.EVENT_ID.Value,
-        //                    EVENT = hwmD.EVENT_ID.HasValue ? GetEvent(aSTNE, hwmD.EVENT_ID.Value) : "",
-        //                    HWM_TYPE_ID = hwmD.HWM_TYPE_ID,
-        //                    HWM_TYPE = hwmD.HWM_TYPE_ID > 0 ? GetHWMType(aSTNE, hwmD.HWM_TYPE_ID) : "",
-        //                    HWM_QUALITY_ID = hwmD.HWM_QUALITY_ID,
-        //                    HWM_QUALITY = hwmD.HWM_QUALITY_ID > 0 ? GetHWMQuality(aSTNE, hwmD.HWM_QUALITY_ID) : "",
-        //                    HWM_LOCATION_DESCRIPTION = hwmD.HWM_LOCATIONDESCRIPTION != null ? GetHWMLocation(hwmD.HWM_LOCATIONDESCRIPTION) : "",
-        //                    LATITUDE = hwmD.LATITUDE_DD.Value,
-        //                    LONGITUDE = hwmD.LONGITUDE_DD.Value,
-        //                    ELEV_FT = hwmD.ELEV_FT.HasValue ? hwmD.ELEV_FT.Value : 0,
-        //                    VDATUM_ID = hwmD.VDATUM_ID.HasValue ? hwmD.VDATUM_ID.Value : 0,
-        //                    VERTICAL_DATUM = hwmD.VDATUM_ID.HasValue && hwmD.VDATUM_ID.Value > 0 ? GetVDatum(aSTNE, hwmD.VDATUM_ID.Value) : "",
-        //                    HDATUM_ID = hwmD.HDATUM_ID.HasValue ? hwmD.HDATUM_ID.Value : 0,
-        //                    HORIZONTAL_DATUM = hwmD.HDATUM_ID.HasValue && hwmD.HDATUM_ID.Value > 0 ? GetHDatum(aSTNE, hwmD.HDATUM_ID.Value) : "",
-        //                    VCOLLECT_METHOD_ID = hwmD.VCOLLECT_METHOD_ID.HasValue ? hwmD.VCOLLECT_METHOD_ID.Value : 0,
-        //                    VERTICAL_COLLECT_METHOD = hwmD.VCOLLECT_METHOD_ID.HasValue && hwmD.VCOLLECT_METHOD_ID.Value > 0 ? GetVCollMethod(aSTNE, hwmD.VCOLLECT_METHOD_ID.Value) : "",
-        //                    HCOLLECT_METHOD_ID = hwmD.HCOLLECT_METHOD_ID.HasValue ? hwmD.HCOLLECT_METHOD_ID.Value : 0,
-        //                    HORIZONTAL_COLLECT_METHOD = hwmD.HCOLLECT_METHOD_ID.HasValue && hwmD.HCOLLECT_METHOD_ID.Value > 0 ? GetHCollectMethod(aSTNE, hwmD.HCOLLECT_METHOD_ID.Value) : "",
-        //                    BANK = hwmD.BANK,
-        //                    APPROVAL_ID = hwmD.APPROVAL_ID.HasValue ? hwmD.APPROVAL_ID.Value : 0,
-        //                    APPROVAL_MEMBER = hwmD.APPROVAL_ID.HasValue || hwmD.APPROVAL_ID > 0 ? GetApprovingMember(aSTNE, hwmD.APPROVAL_ID) : "",
-        //                    MARKER_ID = hwmD.MARKER_ID.HasValue ? hwmD.MARKER_ID.Value: 0,
-        //                    MARKER_NAME = hwmD.MARKER_ID.HasValue && hwmD.MARKER_ID > 0 ? GetMarkerName(aSTNE, hwmD.MARKER_ID) : "",
-        //                    HEIGHT_ABV_GND = hwmD.HEIGHT_ABOVE_GND.HasValue ? hwmD.HEIGHT_ABOVE_GND.Value : 0,
-        //                    HWM_NOTES = !string.IsNullOrEmpty(hwmD.HWM_NOTES) ? GetNotes(aSTNE, hwmD.HWM_NOTES) : "",
-        //                    HWM_ENVIRONMENT = !string.IsNullOrEmpty(hwmD.HWM_ENVIRONMENT) ? hwmD.HWM_ENVIRONMENT : "",
-        //                    FLAG_DATE = hwmD.FLAG_DATE.HasValue ? hwmD.FLAG_DATE.Value.ToShortDateString() : "",
-        //                    SURVEY_DATE = hwmD.SURVEY_DATE.HasValue ? hwmD.SURVEY_DATE.Value.ToShortDateString() : "",
-        //                    STILLWATER = hwmD.STILLWATER.HasValue && hwmD.STILLWATER.Value > 0 ? "Yes" : "No",
-        //                    FLAG_MEMBER_ID = hwmD.FLAG_MEMBER_ID.HasValue ? hwmD.FLAG_MEMBER_ID.Value : 0,
-        //                    FLAG_MEMBER_NAME = hwmD.FLAG_MEMBER_ID.HasValue && hwmD.FLAG_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.FLAG_MEMBER_ID) : "",
-        //                    SURVEY_MEMBER_ID = hwmD.SURVEY_MEMBER_ID.HasValue ? hwmD.SURVEY_MEMBER_ID.Value : 0,
-        //                    SURVEY_MEMBER_NAME = hwmD.SURVEY_MEMBER_ID.HasValue && hwmD.SURVEY_MEMBER_ID.Value > 0 ? GetHWMMember(aSTNE, hwmD.SURVEY_MEMBER_ID) : "",
-        //                    PEAK_SUMMARY_ID = hwmD.PEAK_SUMMARY_ID.HasValue ? hwmD.PEAK_SUMMARY_ID.Value : 0,
-        //                    SITE_NO = hwmD.SITE.SITE_NO,
-        //                    DESCRIPTION = hwmD.SITE.SITE_DESCRIPTION != null ? SiteHandler.GetSiteDesc(hwmD.SITE.SITE_DESCRIPTION) : "",
-        //                    NETWORK = SiteHandler.GetSiteNetwork(aSTNE, hwmD.SITE_ID.Value),
-        //                    STATE = hwmD.SITE.STATE,
-        //                    COUNTY = hwmD.SITE.COUNTY,
-        //                    PRIORITY = hwmD.SITE.PRIORITY_ID.HasValue ? SiteHandler.GetSitePriority(aSTNE, hwmD.SITE.PRIORITY_ID.Value) : "",
-        //                    ZONE = hwmD.SITE.ZONE,
-        //                    PERM_HOUSING_INSTALLED = hwmD.SITE.IS_PERMANENT_HOUSING_INSTALLED == null || hwmD.SITE.IS_PERMANENT_HOUSING_INSTALLED == "No" ? "No" : "Yes",
-        //                    SITE_NOTES = !string.IsNullOrEmpty(hwmD.SITE.SITE_NOTES) ? SiteHandler.GetSiteNotes(hwmD.SITE.SITE_NOTES) : ""
+                    hwmsList = query.Include(h => h.hwm_types).Include(h => h.@event).Include(h => h.hwm_qualities).Include(h => h.vertical_datums).Include(h => h.horizontal_datums)
+                        .Include(h => h.vertical_collect_methods).Include(h => h.horizontal_collect_methods).Include(h => h.approval).Include(h => h.marker).Include(h => h.site).AsEnumerable().Select(
+                        hw => new HWMDownloadable 
+                        {
+                             hwm_id = hw.hwm_id,
+                             waterbody = hw.waterbody,
+                             site_id = hw.site_id,
+                             event_id = hw.event_id,
+                             eventName = hw.event_id.HasValue ? hw.@event.event_name : "",
+                             hwm_type_id = hw.hwm_type_id,
+                             hwmTypeName = hw.hwm_type_id != null ? hw.hwm_types.hwm_type : "",
+                             hwm_quality_id = hw.hwm_quality_id,
+                             hwmQualityName = hw.hwm_quality_id != null ? hw.hwm_qualities.hwm_quality : "",
+                             hwm_locationdescription = hw.hwm_locationdescription,
+                             latitude_dd = hw.latitude_dd,
+                             longitude_dd = hw.longitude_dd,
+                             elev_ft = hw.elev_ft,
+                             vdatum_id = hw.vdatum_id,
+                             verticalDatumName = hw.vdatum_id != null ? hw.vertical_datums.datum_name : "",
+                             hdatum_id = hw.hdatum_id,
+                             horizontalDatumName = hw.hdatum_id != null ? hw.horizontal_datums.datum_name : "",
+                             vcollect_method_id = hw.vcollect_method_id,
+                             verticalMethodName = hw.vcollect_method_id.HasValue ? hw.vertical_collect_methods.vcollect_method : "",
+                             hcollect_method_id = hw.hcollect_method_id,
+                             horizontalMethodName = hw.hcollect_method_id.HasValue ? hw.horizontal_collect_methods.hcollect_method : "",
+                             bank = hw.bank,
+                             approval_id = hw.approval_id,
+                             approvalMember = hw.approval_id != null ? hw.approval.member.fname + " " + hw.approval.member.lname : "",                             
+                             marker_id = hw.marker_id,
+                             markerName = hw.marker_id.HasValue ? hw.marker.marker1 : "",
+                             height_above_gnd = hw.height_above_gnd,
+                             hwm_notes = hw.hwm_notes,
+                             hwm_environment = hw.hwm_environment,
+                             flag_date = hw.flag_date,
+                             survey_date = hw.survey_date,
+                             stillwater = hw.stillwater, //.HasValue && hw.stillwater.Value > 0 ? "Yes" : "No",
+                             flag_member_id = hw.flag_member_id,
+                             flagMemberName = hw.flag_member_id.HasValue ? hw.member.fname + " " + hw.member.lname : "",
+                             survey_member_id = hw.survey_member_id,
+                             surveyMemberName = hw.survey_member_id.HasValue ? hw.member.fname + " " + hw.member.lname : "",
+                             peak_summary_id = hw.peak_summary_id,
+                             site_no = hw.site.site_no,
+                             siteDescription = hw.site.site_description,
+                             networkNames = hw.site.network_name_site != null ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x,j) => x + ", " + j) : "",
+                             stateName = hw.site.state,
+                             countyName = hw.site.county,
+                             sitePriorityName = hw.site.priority_id.HasValue ? hw.site.deployment_priority.priority_name : "",
+                             siteZone = hw.site.zone,
+                             sitePermHousing = hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
+                             siteNotes = hw.site.site_notes
+                        }).ToList<hwm>();
 
 
-        //                }).ToList();
+                }//end using
 
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = hwmsList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
+                return new OperationResult.OK { ResponseResource = hwmsList };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+        }
 
         #endregion
         #region PostMethods
@@ -668,8 +681,8 @@ namespace STNServices2.Handlers
             try
             {
                 if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || 
-                    anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <=0 ||
-                    anEntity.flag_member_id <=0 || anEntity.hcollect_method_id <=0)
+                    anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
+                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0)
                         throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -791,196 +804,6 @@ namespace STNServices2.Handlers
         }//end HTTP.DELETE
         #endregion
 
-        //#region Helper Methods
-
-        //private bool PostHWMLayer(HWM aHWM)
-        //{
-        //    Feature flayer;
-        //    Features fLayers;
-        //    AGSServiceAgent agsAgent;
-        //    try
-        //    {
-
-        //        flayer = new Feature(new HWMLayer(aHWM));
-        //        fLayers = new Features();
-
-        //        fLayers.features.Add(flayer);
-
-
-
-        //        agsAgent = new AGSServiceAgent();
-
-        //        return agsAgent.PostFeature(fLayers, "AddHWM/GPServer/AddHWM/execute", "New_HWM=");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return false;
-        //    }
-        //}//end PostHWMLayer
-
-        //#region hwmDownloadable calls
-        //private string MadeIt()
-        //{
-        //    return "2";
-        //}
-        //private string GetEvent(STNEntities2 aSTNE, decimal eventId)
-        //{
-        //    string eventName = string.Empty;
-        //    EVENT ev = aSTNE.EVENTS.Where(x => x.EVENT_ID == eventId).FirstOrDefault();
-        //    if (ev != null)
-        //        eventName = ev.EVENT_NAME;
-
-        //    return eventName;
-        //}
-        //private string GetHWMType(STNEntities2 aSTNE, decimal hwmTypeId)
-        //{
-        //    string hwmType = string.Empty;
-        //    HWM_TYPES ht = aSTNE.HWM_TYPES.Where(x => x.HWM_TYPE_ID == hwmTypeId).FirstOrDefault();
-        //    if (ht != null)
-        //        hwmType = ht.HWM_TYPE;
-
-        //    return hwmType;
-        //}
-        //private string GetHWMQuality(STNEntities2 aSTNE, decimal hwmQualId)
-        //{
-        //    string hwmQual = string.Empty;
-        //    HWM_QUALITIES ht = aSTNE.HWM_QUALITIES.Where(x => x.HWM_QUALITY_ID == hwmQualId).FirstOrDefault();
-        //    if (ht != null)
-        //        hwmQual = ht.HWM_QUALITY;
-
-        //    return hwmQual;
-        //}
-        //private string GetHWMLocation(string desc)
-        //{
-        //    string locDesc = string.Empty;
-        //    if (desc.Length > 100)
-        //    {
-        //        locDesc = desc.Substring(0, 100);
-        //    }
-        //    else
-        //    {
-        //        locDesc = desc;
-        //    }
-
-        //    return locDesc;
-        //}
-        //private string GetVDatum(STNEntities2 aSTNE, decimal? vdID)
-        //{
-        //    string vdName = string.Empty;
-        //    VERTICAL_DATUMS vd = aSTNE.VERTICAL_DATUMS.Where(x => x.DATUM_ID == vdID).FirstOrDefault();
-        //    if (vd != null)
-        //        vdName = vd.DATUM_NAME;
-
-        //    return vdName;
-        //}
-        //private string GetHDatum(STNEntities2 aSTNE, decimal? hdID)
-        //{
-        //    string hdName = string.Empty;
-        //    HORIZONTAL_DATUMS hd = aSTNE.HORIZONTAL_DATUMS.Where(x => x.DATUM_ID == hdID).FirstOrDefault();
-        //    if (hd != null)
-        //        hdName = hd.DATUM_NAME;
-
-        //    return hdName;
-        //}
-        //private string GetVCollMethod(STNEntities2 aSTNE, decimal? vcmID)
-        //{
-        //    string vCollMethod = string.Empty;
-        //    VERTICAL_COLLECT_METHODS vcm = aSTNE.VERTICAL_COLLECT_METHODS.Where(x => x.VCOLLECT_METHOD_ID == vcmID).FirstOrDefault();
-        //    if (vcm != null)
-        //        vCollMethod = vcm.VCOLLECT_METHOD;
-
-        //    return vCollMethod;
-        //}
-        //private string GetHCollectMethod(STNEntities2 aSTNE, decimal? hcmID)
-        //{
-        //    string hCollMethod = string.Empty;
-        //    HORIZONTAL_COLLECT_METHODS hcm = aSTNE.HORIZONTAL_COLLECT_METHODS.Where(x => x.HCOLLECT_METHOD_ID == hcmID).FirstOrDefault();
-        //    if (hcm != null)
-        //        hCollMethod = hcm.HCOLLECT_METHOD;
-
-        //    return hCollMethod;
-        //}
-        //private string GetApprovingMember(STNEntities2 aSTNE, decimal? approveId)
-        //{
-        //    string approveName = string.Empty;
-        //    MEMBER m = aSTNE.MEMBERS.Where(x => x.MEMBER_ID == approveId).FirstOrDefault();
-        //    if (m != null)
-        //        approveName = m.FNAME + " " + m.LNAME;
-
-        //    return approveName;
-        //}
-        //private string GetMarkerName(STNEntities2 aSTNE, decimal? markerId)
-        //{
-        //    string markName = string.Empty;
-        //    MARKER ma = aSTNE.MARKERS.Where(x => x.MARKER_ID == markerId).FirstOrDefault();
-        //    if (ma != null)
-        //        markName = ma.MARKER1;
-
-        //    return markName;
-        //}
-        //private string GetNotes(STNEntities2 aSTNE, string notes)
-        //{
-        //    string n = string.Empty;
-
-        //    if (notes.Length > 100)
-        //    {
-        //        n = notes.Substring(0, 100);
-        //    }
-        //    else
-        //    {
-        //        n = notes;
-        //    }
-
-        //    return n;
-        //}
-        //private string GetHWMMember(STNEntities2 aSTNE, decimal? memberId)
-        //{
-        //    string memberName = string.Empty;
-        //    MEMBER ct = aSTNE.MEMBERS.Where(x => x.MEMBER_ID == memberId).FirstOrDefault();
-        //    if (ct != null)
-        //        memberName = ct.FNAME + " " + ct.LNAME;
-        //    return memberName;
-        //}
-        //private string BuildFilePath(FILES uploadFile, string fileName)
-        //{
-        //    try
-        //    {
-        //        //determine default object name
-        //        // ../SITE/3043/ex.jpg
-        //        List<string> objectName = new List<string>();
-        //        objectName.Add("SITE");
-        //        objectName.Add(uploadFile.SITE_ID.ToString());
-
-        //        if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
-        //        {
-        //            // ../SITE/3043/HWM/7956/ex.jpg
-        //            objectName.Add("HWM");
-        //            objectName.Add(uploadFile.HWM_ID.ToString());
-        //        }
-        //        else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
-        //        {
-        //            // ../SITE/3043/DATA_FILE/7956/ex.txt
-        //            objectName.Add("DATA_FILE");
-        //            objectName.Add(uploadFile.DATA_FILE_ID.ToString());
-        //        }
-        //        else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
-        //        {
-        //            // ../SITE/3043/INSTRUMENT/7956/ex.jpg
-        //            objectName.Add("INSTRUMENT");
-        //            objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
-        //        }
-        //        objectName.Add(fileName);
-
-        //        return string.Join("/", objectName);
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
-        //#endregion hwmDownloadable calls
-
-        //#endregion
     }//end class HWMHandler
 
 }//end namespace
