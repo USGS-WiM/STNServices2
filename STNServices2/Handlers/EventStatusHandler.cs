@@ -64,10 +64,11 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+        
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            event_status mevent_status = null;
+            event_status anEntity = null;
 
             //Return BadRequest if there is no ID
             if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -76,11 +77,12 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mevent_status = sa.Select<event_status>().FirstOrDefault(i => i.event_status_id == entityId);
+                    anEntity = sa.Select<event_status>().FirstOrDefault(i => i.event_status_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mevent_status, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -89,7 +91,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName="GetEventStatus")]
         public OperationResult GetEventStatus(Int32 eventId)
         {
-            event_status mevent_status = null;
+            event_status anEntity = null;
 
             //Return BadRequest if there is no ID
             if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -98,11 +100,12 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mevent_status = sa.Select<events>().FirstOrDefault(i => i.event_id == eventId).event_status;
+                    anEntity = sa.Select<events>().FirstOrDefault(i => i.event_id == eventId).event_status;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mevent_status, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

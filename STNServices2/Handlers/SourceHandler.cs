@@ -39,7 +39,7 @@ namespace STNServices2.Handlers
     public class SourceHandler : STNHandlerBase
     {
         #region GetMethods
-        [STNRequiresRole(new string[] {AdminRole, ManagerRole, FieldRole})]//[RequiresAuthentication]
+        [STNRequiresRole(new string[] {AdminRole, ManagerRole, FieldRole})]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {

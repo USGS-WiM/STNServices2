@@ -63,10 +63,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -79,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<marker>().FirstOrDefault(e => e.marker_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,6 +91,34 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName="GetHWMMarker")]
+        public OperationResult GetHWMMarker(Int32 hwmId)
+        {
+            marker anEntity = null;
+            try
+            {
+                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<hwm>().FirstOrDefault(e => e.hwm_id == hwmId).marker;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+        
         #endregion
         #region PostMethods
         [RequiresRole(AdminRole)]

@@ -250,19 +250,10 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<List<contact>>()
             .AtUri(contactResource)
             .And.AtUri(contactResource+"?ReportMetric={reportMetricsId}").Named("GetReportMetricContacts")
-                //.And.AtUri("/Contacts?ContactModel/{reportMetricsId}").Named("GetContactModelByReport")
             .HandledBy<ContactHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-            //GET
-            //ResourceSpace.Has.ResourcesOfType<List<ReportContactModel>>()
-            //.AtUri("/Contacts?ContactModelByReport={reportMetricsId}").Named("GetContactModelByReport")
-            //.HandledBy<ContactHandler>()
-            //.TranscodedBy<STNXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            //.And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<contact>()
             .AtUri(contactResource+"/{entityId}")
@@ -299,7 +290,7 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<List<county>>()
             .AtUri(countyResource)
-            .And.AtUri(stateResource+"/{stateId}/"+countyResource).Named("GetStateCountiesById")
+            .And.AtUri(stateResource + "/{stateId}/" + countyResource).Named("GetStateCounties")
             .And.AtUri(stateResource+"/"+countyResource+"?StateAbbrev={stateAbbrev}").Named("GetStateCountiesByAbbrev")
             .And.AtUri("/Sites/CountiesByState?StateAbbrev={stateAbbrev}").Named("GetStateSiteCounties")
             .HandledBy<CountyHandler>()
@@ -386,9 +377,9 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<List<events>>()
             .AtUri(eventsResource)
-            .And.AtUri(eventsResource+"?Site={siteId}").Named("GetEventsBySite")
+            .And.AtUri(eventsResource + "?Site={siteId}").Named("GetSiteEvents")
             .And.AtUri(eventtypeResource+"/{eventTypeId}/Events").Named("GetEventTypeEvents")
-            .And.AtUri(eventstatusResource+"/{eventStatusId}/"+eventsResource).Named("GetEventStatusEvents")
+            .And.AtUri(eventstatusResource + "/{eventStatusId}/" + eventsResource).Named("GetEventStatusEvents")
             .And.AtUri(eventsResource+"/FilteredEvents?Date={date}&Type={eventTypeId}&State={stateName}").Named("GetFilteredEvents")
             .HandledBy<EventsHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -559,20 +550,12 @@ namespace STNServices2
 
         }//end AddHOUSING_TYPE_Resources
         private void AddHWM_Resources()
-        {
-            //High water marks
-            //ResourceSpace.Has.ResourcesOfType<HWMList>()
-            //.AtUri("/HWMs")
-            //.And.AtUri("/Events/{eventId}/HWMs").Named("GetEventSimpleHWMs")
-            //.And.AtUri("/Sites/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
-            //.And.AtUri("/HWMS?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
-            //.HandledBy<HWMHandler>()
-            //.TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            //.And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
+        {           
             ResourceSpace.Has.ResourcesOfType<List<hwm>>()
-            .AtUri(hwmResource+"?IsApproved={boolean}").Named("GetHWMByApproval")
+            .AtUri(hwmResource)
+            .And.AtUri("/Events/{eventId}/"+hwmResource).Named("GetEventHWMs")
+            .And.AtUri("/Sites/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
+            .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
             .And.AtUri(approvalResource+"/{ApprovalId}/"+hwmResource).Named("GetApprovedHWMs")
             .And.AtUri(memberResource+"/{memberId}/"+hwmResource).Named("GetMemberHWMs")
             .And.AtUri(hwmqualityResource+"/{hwmQualityId}/" + hwmResource).Named("GetHWMQualityHWMs")
@@ -598,7 +581,7 @@ namespace STNServices2
 //            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<hwm>()
-            .AtUri(hwmResource+"/{entityId}").Named("GetHWM")
+            .AtUri(hwmResource+"/{entityId}")
             .And.AtUri(fileResource+"/{fileId}/HWM").Named("GetFileHWM")
             .HandledBy<HWMHandler>()
             .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
