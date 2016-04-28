@@ -64,6 +64,7 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+        
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
@@ -94,17 +95,17 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetInstrumentDeploymentType")]
         public OperationResult GetInstrumentDeploymentType(Int32 instrumentId)
         {
-            deployment_type mdeployment_type = null;
+            deployment_type anEntity = null;
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    mdeployment_type = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
+                    anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mdeployment_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

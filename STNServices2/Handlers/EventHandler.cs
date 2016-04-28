@@ -92,10 +92,10 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetEventsBySite")]
-        public OperationResult GetEventsBySite(Int32 siteId)
+        [HttpOperation(ForUriName = "GetSiteEvents")]
+        public OperationResult GetSiteEvents(Int32 siteId)
         {
-            List<events> eventList = null;
+            List<events> entities = null;
 
             //Return BadRequest if there is no ID
             if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -104,14 +104,14 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    eventList = sa.Select<events>().Where(e => e.hwms.Any(h => h.site_id == siteId) ||
+                    entities = sa.Select<events>().Where(e => e.hwms.Any(h => h.site_id == siteId) ||
                                                     e.instruments.Any(inst => inst.site_id == siteId))
                                             .ToList();
-                    sm(MessageType.info, "Count: " + eventList.Count);
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = eventList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -120,7 +120,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetEventTypeEvents")]
         public OperationResult GetEventTypeEvents(Int32 eventTypeId)
         {
-            List<events> eventList = null;
+            List<events> entities = null;
 
             //Return BadRequest if there is no ID
             if (eventTypeId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -129,22 +129,22 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    eventList = sa.Select<event_type>().FirstOrDefault(e => e.event_type_id== eventTypeId).events.ToList();
-                                            
-                    sm(MessageType.info, "Count: " + eventList.Count);
+                    entities = sa.Select<event_type>().FirstOrDefault(e => e.event_type_id == eventTypeId).events.ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = eventList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetEventbyStatus")]
-        public OperationResult GetEventbyStatus(Int32 eventStatusId)
+        [HttpOperation(ForUriName = "GetEventStatusEvents")]
+        public OperationResult GetEventStatusEvents(Int32 eventStatusId)
         {
-            List<events> eventList = null;
+            List<events> entities = null;
 
             //Return BadRequest if there is no ID
             if (eventStatusId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -153,13 +153,13 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    eventList = sa.Select<event_status>().FirstOrDefault(e=>e.event_status_id == eventStatusId).events
+                    entities = sa.Select<event_status>().FirstOrDefault(e => e.event_status_id == eventStatusId).events
                                             .ToList();
-                    sm(MessageType.info, "Count: " + eventList.Count);
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = eventList, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -190,7 +190,7 @@ namespace STNServices2.Handlers
         [HttpOperation(ForUriName = "GetInstrumentEvent")]
         public OperationResult GetInstrumentEvent(Int32 instrumentId)
         {
-            events anEvent = null;
+            events entity = null;
 
             //Return BadRequest if there is no ID
             if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -199,11 +199,11 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEvent = sa.Select<instrument>().FirstOrDefault(e => e.instrument_id == instrumentId).@event;
+                    entity = sa.Select<instrument>().FirstOrDefault(e => e.instrument_id == instrumentId).@event;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anEvent, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -213,7 +213,7 @@ namespace STNServices2.Handlers
         public OperationResult GetFilteredEvents([Optional]string date, [Optional]Int32 eventTypeId, [Optional] string stateName)
         {
             IQueryable<events> query;
-            List<events> eventList = new List<events>();
+            List<events> entities = new List<events>();
             DateTime? fromDate;
             try
             {
@@ -233,11 +233,11 @@ namespace STNServices2.Handlers
                         query = query.Where(e => e.hwms.Any(h => h.site.state == stateName));
                     }
 
-                    eventList = query.Distinct().ToList();
+                    entities = query.Distinct().ToList();
 
                 }
 
-                return new OperationResult.OK { ResponseResource = eventList };
+                return new OperationResult.OK { ResponseResource = entities };
             }
             catch (Exception)
             { return new OperationResult.BadRequest(); }
