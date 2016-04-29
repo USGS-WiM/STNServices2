@@ -26,9 +26,11 @@
 using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
+using STNServices2.Resources;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -92,7 +94,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMPeakSummary")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMPeakSummary")]
         public OperationResult GetHWMPeakSummary(Int32 hwmId)
         {
             peak_summary anEntity = null;
@@ -122,7 +124,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetDataFilePeakSummary")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetDataFilePeakSummary")]
         public OperationResult GetDataFilePeakSummary(Int32 dataFileId)
         {
             peak_summary anEntity = null;
@@ -152,7 +154,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }                 
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetEventPeakSummaries")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventPeakSummaries")]
         public OperationResult GetEventPeakSummaries(Int32 eventId)
         {
             List<peak_summary> entities = null;
@@ -177,7 +179,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSitePeakSummaries")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitePeakSummaries")]
         public OperationResult GetSitePeakSummaries(Int32 siteId)
         {
             List<peak_summary> entities = null;
@@ -202,32 +204,29 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        //[HttpOperation(ForUriName = "GetPeakSummaryViewBySite")]
-        //public OperationResult GetSitePeakSummarView(Int32 siteId)
-        //{
-        //    List<peak_view> peakSummaryList = new List<PEAK_VIEW>();
-            //List<peak_summary> entities = null;
-            //try
-            //{
-            //    using (STNAgent sa = new STNAgent())
-            //    {
-            //        entities = sa.Select < peak_summary >
-            //        peakSummaryList = aSTNE.PEAK_VIEW.Where(ps => ps.SITE_ID == siteId).ToList();
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetPeakSummaryViewBySite")]
+        public OperationResult GetSitePeakSummarView(Int32 siteId)
+        {
+           // List<peak_summary> entities = null;
+            List<peak_view> entities = null;
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.getTable<peak_view>(new Object[1] {null}).Where(p => p.site_id == siteId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
 
-            //        if (peakSummaryList != null)
-            //            peakSummaryList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
 
-            //    }//end using
-
-             //   return new OperationResult.OK { ResponseResource = peakSummaryList };
-            //}
-            //catch
-            //{
-            //    return new OperationResult.BadRequest();
-            //}
-       // }//end HttpMethod.GET
-
-        [HttpOperation(ForUriName = "GetPeakSummariesByStateName")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetPeakSummariesByStateName")]
         public OperationResult GetPeakSummariesByStateName(string stateName)
         {
             List<peak_summary> entities = null;
@@ -443,6 +442,8 @@ namespace STNServices2.Handlers
         #endregion
 
         #region Helper Methods
+        
+        
         
 
         #region PeakDownloadable calls
