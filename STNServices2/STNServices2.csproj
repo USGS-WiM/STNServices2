@@ -160,6 +160,7 @@
     <Compile Include="Handlers\HWMTypeHandler.cs" />
     <Compile Include="Handlers\HWMQualityHandler.cs" />
     <Compile Include="Resources\HWMResource.cs" />
+    <Compile Include="Resources\PeakResource.cs" />
     <Compile Include="Resources\ReportResource.cs" />
     <Compile Include="Resources\SensorTypeResource.cs" />
     <Compile Include="Security\STNAuthenticationProvider.cs" />
