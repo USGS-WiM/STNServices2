@@ -63,6 +63,7 @@ using STNServices2;
 using STNServices2.Handlers;
 using STNServices2.PipeLineContributors;
 using STNServices2.Security;
+using STNServices2.Resources;
 
 using OpenRasta.Configuration;
 using OpenRasta.Web.UriDecorators;
@@ -931,6 +932,7 @@ namespace STNServices2
             .AtUri(peakSummaryResource)
             .And.AtUri("/Events/{eventId}/" + peakSummaryResource).Named("GetEventPeakSummaries")
             .And.AtUri("/Sites/{siteId}/"+peakSummaryResource).Named("GetSitePeakSummaries")
+           // .And.AtUri("/Sites/{siteId}/PeakSummaryView").Named("GetPeakSummaryViewBySite")
             .And.AtUri(@peakSummaryResource+"/FilteredPeaks?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&StartDate={startDate}&EndDate={endDate}").Named("GetFilteredPeaks")
             .HandledBy<PeakSummaryHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -946,12 +948,12 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-//            ResourceSpace.Has.ResourcesOfType<PEAK_VIEW>()
-//            .AtUri("/Sites/{siteId}/PeakSummaryView").Named("GetPeakSummaryViewBySite")
-//            .HandledBy<PeakSummaryHandler>()
-            //            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-//            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-//            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            ResourceSpace.Has.ResourcesOfType<peak_view>()
+            .AtUri("/Sites/{siteId}/PeakSummaryView").Named("GetPeakSummaryViewBySite")
+            .HandledBy<PeakSummaryHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddPEAK_SUMMARY_Resources
         private void AddREPORTING_METRICS_Resources()

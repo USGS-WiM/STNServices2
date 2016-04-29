@@ -1101,6 +1101,7 @@
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.peak_summaryhwm" FromRole="peak_summary" ToRole="hwm" />
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.peak_summarydata_file" FromRole="peak_summary" ToRole="data_file" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberpeak_summary" FromRole="peak_summary" ToRole="member" />
+          <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="peak_summary" ToRole="vertical_datums" />
         </EntityType>
         <EntityType Name="reporting_metrics">
           <Key>
@@ -1321,6 +1322,7 @@
           <Property Name="datum_abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.vertical_datumshwm" FromRole="vertical_datums" ToRole="hwm" />
           <NavigationProperty Name="objective_point" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="vertical_datums" ToRole="objective_point" />
+          <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="vertical_datums" ToRole="peak_summary" />
         </EntityType>
         <EntityContainer Name="STNDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="agencies" EntityType="Self.agency" />
@@ -1610,6 +1612,10 @@
           <AssociationSet Name="memberhwm1" Association="STNNEWModel.memberhwm1">
             <End Role="member" EntitySet="members" />
             <End Role="hwm" EntitySet="hwms" />
+          </AssociationSet>
+          <AssociationSet Name="vertical_datumspeak_summary" Association="STNNEWModel.vertical_datumspeak_summary">
+            <End Role="vertical_datums" EntitySet="vertical_datums" />
+            <End Role="peak_summary" EntitySet="peak_summary" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
@@ -2356,6 +2362,18 @@
             </Principal>
             <Dependent Role="hwm">
               <PropertyRef Name="flag_member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vertical_datumspeak_summary">
+          <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+          <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vertical_datums">
+              <PropertyRef Name="datum_id" />
+            </Principal>
+            <Dependent Role="peak_summary">
+              <PropertyRef Name="vdatum_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
