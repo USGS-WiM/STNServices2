@@ -180,7 +180,7 @@ namespace STNServices2.Utilities.ServiceAgent
         }
         #endregion
         #region "Helper Methods"
-        IQueryable<T> getTable<T>(object[] args) where T : class,new()
+        public IQueryable<T> getTable<T>(object[] args) where T : class,new()
         {
             try
             {
@@ -196,7 +196,9 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             string sql = string.Empty;
             switch (type)
-            {                                    
+            {
+                case "peak_view":
+                    return @"SELECT * FROM peak_view;";                           
                 default:
                     throw new Exception("No sql for table " + type);
             }//end switch;
