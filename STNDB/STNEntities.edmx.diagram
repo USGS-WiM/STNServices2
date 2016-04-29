@@ -113,6 +113,7 @@
         <AssociationConnector Association="STNNEWModel.memberapproval" />
         <AssociationConnector Association="STNNEWModel.memberhwm" />
         <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
       </Diagram>
       <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="65" >
         <EntityTypeShape EntityType="STNNEWModel.events" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
@@ -151,6 +152,7 @@
         <AssociationConnector Association="STNNEWModel.memberapproval" />
         <AssociationConnector Association="STNNEWModel.memberhwm" />
         <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
         </Diagram>
       <Diagram DiagramId="e155793f879247bfac992d75a3f9bdeb" Name="site" ZoomLevel="53" >
         <EntityTypeShape EntityType="STNNEWModel.site" Width="1.5" PointX="7.125" PointY="4.125" />
@@ -235,7 +237,7 @@
       </Diagram>
       <Diagram DiagramId="e75a514d7979410e940a6a37a80a07df" Name="peaksummaries" ZoomLevel="62" >
         <EntityTypeShape EntityType="STNNEWModel.peak_summary" Width="1.5" PointX="2.875" PointY="1.25" />
-        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="5.75" PointY="3" />
+        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="5.875" PointY="2.625" />
         <AssociationConnector Association="STNNEWModel.peak_summaryhwm" />
         <EntityTypeShape EntityType="STNNEWModel.data_file" Width="1.5" PointX="8.625" PointY="0.625" />
         <AssociationConnector Association="STNNEWModel.peak_summarydata_file" />
@@ -244,6 +246,9 @@
         <AssociationConnector Association="STNNEWModel.memberpeak_summary" />
         <AssociationConnector Association="STNNEWModel.memberhwm" />
         <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="0.75" PointY="8.875" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumshwm" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
       </Diagram>
       <Diagram DiagramId="a408ea9652564949b88ebea13ce2156d" Name="file" >
         <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="5" PointY="0.625" />

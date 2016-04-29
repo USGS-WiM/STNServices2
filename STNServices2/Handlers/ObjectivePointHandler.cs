@@ -94,7 +94,7 @@ namespace STNServices2.Handlers
                 if (vdatumId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<vertical_datums>().FirstOrDefault(vd => vd.datum_id == vdatumId).objective_point.ToList();
+                    entities = sa.Select<objective_point>().Where(op => op.vdatum_id == vdatumId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -118,7 +118,7 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<objective_point>().Where(rp => rp.site.site_id == siteId).OrderBy(rp => rp.objective_point_id).ToList();
+                    entities = sa.Select<objective_point>().Where(rp => rp.site_id == siteId).OrderBy(rp => rp.objective_point_id).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -145,7 +145,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0)
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -176,7 +176,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (entityId <= 0 || string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0) 
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0) 
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -211,7 +211,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     { 
-                        //delete files associated with this op
+                                                //delete files associated with this op
                         //List<FILES> opFiles = aSTNE.FILES.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
                         //if (opFiles.Count >= 1)
                         //{

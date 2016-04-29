@@ -45,5 +45,6 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<data_file> data_file { get; set; }
         public virtual member member { get; set; }
+        public virtual vertical_datums vertical_datums { get; set; }
     }
 }
