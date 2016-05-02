@@ -317,6 +317,53 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.POST
 
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole })]
+        [HttpOperation(HttpMethod.POST, ForUriName = "ApproveNWISDataFile")]
+        public OperationResult ApproveNWISDataFile(Int32 dataFileId)
+        {
+            APPROVAL aApproval = new APPROVAL();
+
+            try
+            {
+                //Get basic authentication password
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    {
+                        DATA_FILE aDatafile = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == dataFileId);
+                        if (aDatafile == null) return new OperationResult.BadRequest { ResponseResource = "invalid datafileID" };
+
+                        //get event coordinator to set as approver for NWIS datafile
+                        MEMBER eventCoor = aSTNE.MEMBERS.FirstOrDefault(m => m.EVENTs.Any(e => e.EVENT_ID == aDatafile.INSTRUMENT.EVENT_ID));
+
+                        //MEMBER user = aSTNE.MEMBERS.FirstOrDefault(u => String.Equals(u.USERNAME.ToUpper(), Context.User.Identity.Name.ToUpper()));
+                        if (eventCoor == null) return new OperationResult.BadRequest { ResponseResource = "invalid username response" };
+
+                        //set time and user of approval
+                        aApproval.APPROVAL_DATE = DateTime.UtcNow;
+                        aApproval.MEMBER_ID = eventCoor.MEMBER_ID;
+
+                        if (!Exists(aSTNE.APPROVALs, ref aApproval))
+                        {
+                            //save approval
+                            aSTNE.APPROVALs.AddObject(aApproval);
+                            aSTNE.SaveChanges();
+                        }//end if
+                        //set HWM approvalID
+                        aDatafile.APPROVAL_ID = aApproval.APPROVAL_ID;
+                        aSTNE.SaveChanges();
+                    }//end using
+                }//end using
+
+                //Return OK instead of created, Flex incorrectly treats 201 as error
+                return new OperationResult.OK { ResponseResource = aApproval };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.POST
+
         #endregion
 
         #region DeleteMethods

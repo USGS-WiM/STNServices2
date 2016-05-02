@@ -179,6 +179,7 @@ namespace STNServices2
             .AtUri("/Approvals/{entityId}")
             .And.AtUri("/HWMs/{hwmId}/Approve").Named("ApproveHWM")
             .And.AtUri("/DataFiles/{dataFileId}/Approve").Named("ApproveDataFile")
+            .And.AtUri("/DataFiles/{dataFileId}/NWISApprove").Named("ApproveNWISDataFile")
             .And.AtUri("/HWMs/{hwmId}/Unapprove").Named("UnApproveHWM")
             .And.AtUri("/DataFiles/{dataFileId}/Unapprove").Named("UnApproveDataFile")
             .And.AtUri("/DataFiles/{dataFileId}/Approval").Named("GetDataFileApproval")
