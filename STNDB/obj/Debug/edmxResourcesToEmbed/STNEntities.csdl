@@ -1,0 +1,1736 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="STNNEWModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="agency">
+    <Key>
+      <PropertyRef Name="agency_id" />
+    </Key>
+    <Property Name="agency_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="agency_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="city" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="state" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="sources" Relationship="STNNEWModel.agencysource" FromRole="agency" ToRole="source" />
+    <NavigationProperty Name="members" Relationship="STNNEWModel.agencymember" FromRole="agency" ToRole="member" />
+  </EntityType>
+  <EntityType Name="approval">
+    <Key>
+      <PropertyRef Name="approval_id" />
+    </Key>
+    <Property Name="approval_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="member_id" Type="Int32" />
+    <Property Name="approval_date" Type="DateTime" Precision="6" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.approvalhwm" FromRole="approval" ToRole="hwm" />
+    <NavigationProperty Name="data_file" Relationship="STNNEWModel.approvaldata_file" FromRole="approval" ToRole="data_file" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.memberapproval" FromRole="approval" ToRole="member" />
+  </EntityType>
+  <EntityType Name="contact">
+    <Key>
+      <PropertyRef Name="contact_id" />
+    </Key>
+    <Property Name="contact_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="lname" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="alt_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.contactreportmetric_contact" FromRole="contact" ToRole="reportmetric_contact" />
+  </EntityType>
+  <EntityType Name="contact_type">
+    <Key>
+      <PropertyRef Name="contact_type_id" />
+    </Key>
+    <Property Name="contact_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.contact_typereportmetric_contact" FromRole="contact_type" ToRole="reportmetric_contact" />
+  </EntityType>
+  <EntityType Name="county">
+    <Key>
+      <PropertyRef Name="county_id" />
+    </Key>
+    <Property Name="county_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="county_name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="state_id" Type="Int32" Nullable="false" />
+    <Property Name="state_fip" Type="Int32" />
+    <Property Name="county_fip" Type="Int32" />
+    <NavigationProperty Name="state" Relationship="STNNEWModel.statecounty" FromRole="county" ToRole="state" />
+  </EntityType>
+  <EntityType Name="data_file">
+    <Key>
+      <PropertyRef Name="data_file_id" />
+    </Key>
+    <Property Name="data_file_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="start" Type="DateTime" Precision="6" />
+    <Property Name="end" Type="DateTime" Precision="6" />
+    <Property Name="good_start" Type="DateTime" Precision="6" />
+    <Property Name="good_end" Type="DateTime" Precision="6" />
+    <Property Name="processor_id" Type="Int32" />
+    <Property Name="instrument_id" Type="Int32" />
+    <Property Name="approval_id" Type="Int32" />
+    <Property Name="collect_date" Type="DateTime" Precision="6" />
+    <Property Name="peak_summary_id" Type="Int32" />
+    <Property Name="elevation_status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="instrument" Relationship="STNNEWModel.data_fileinstrument" FromRole="data_file" ToRole="instrument" />
+    <NavigationProperty Name="approval" Relationship="STNNEWModel.approvaldata_file" FromRole="data_file" ToRole="approval" />
+    <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.peak_summarydata_file" FromRole="data_file" ToRole="peak_summary" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.data_filefile" FromRole="data_file" ToRole="file" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.memberdata_file" FromRole="data_file" ToRole="member" />
+  </EntityType>
+  <EntityType Name="deployment_priority">
+    <Key>
+      <PropertyRef Name="priority_id" />
+    </Key>
+    <Property Name="priority_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="priority_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="sites" Relationship="STNNEWModel.deployment_prioritysite" FromRole="deployment_priority" ToRole="site" />
+  </EntityType>
+  <EntityType Name="deployment_type">
+    <Key>
+      <PropertyRef Name="deployment_type_id" />
+    </Key>
+    <Property Name="deployment_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="method" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.deployment_typeinstrument" FromRole="deployment_type" ToRole="instrument" />
+    <NavigationProperty Name="sensor_deployment" Relationship="STNNEWModel.deployment_typesensor_deployment" FromRole="deployment_type" ToRole="sensor_deployment" />
+  </EntityType>
+  <EntityType Name="event_status">
+    <Key>
+      <PropertyRef Name="event_status_id" />
+    </Key>
+    <Property Name="event_status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="events" Relationship="STNNEWModel.event_statusevents" FromRole="event_status" ToRole="events" />
+  </EntityType>
+  <EntityType Name="event_type">
+    <Key>
+      <PropertyRef Name="event_type_id" />
+    </Key>
+    <Property Name="event_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="events" Relationship="STNNEWModel.event_typeevents" FromRole="event_type" ToRole="events" />
+  </EntityType>
+  <EntityType Name="events">
+    <Key>
+      <PropertyRef Name="event_id" />
+    </Key>
+    <Property Name="event_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="event_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="event_start_date" Type="DateTime" Precision="6" />
+    <Property Name="event_end_date" Type="DateTime" Precision="6" />
+    <Property Name="event_description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="event_type_id" Type="Int32" />
+    <Property Name="event_status_id" Type="Int32" />
+    <Property Name="event_coordinator" Type="Int32" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.eventhwm" FromRole="event" ToRole="hwm" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.eventinstrument" FromRole="event" ToRole="instrument" />
+    <NavigationProperty Name="event_status" Relationship="STNNEWModel.event_statusevents" FromRole="events" ToRole="event_status" />
+    <NavigationProperty Name="event_type" Relationship="STNNEWModel.event_typeevents" FromRole="events" ToRole="event_type" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.memberevents" FromRole="events" ToRole="member" />
+  </EntityType>
+  <EntityType Name="file_type">
+    <Key>
+      <PropertyRef Name="filetype_id" />
+    </Key>
+    <Property Name="filetype_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="filetype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.file_typefile" FromRole="file_type" ToRole="file" />
+  </EntityType>
+  <EntityType Name="file">
+    <Key>
+      <PropertyRef Name="file_id" />
+    </Key>
+    <Property Name="file_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="path" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="photo_direction" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="latitude_dd" Type="Double" />
+    <Property Name="longitude_dd" Type="Double" />
+    <Property Name="file_date" Type="DateTime" Precision="6" />
+    <Property Name="hwm_id" Type="Int32" />
+    <Property Name="filetype_id" Type="Int32" />
+    <Property Name="source_id" Type="Int32" />
+    <Property Name="data_file_id" Type="Int32" />
+    <Property Name="instrument_id" Type="Int32" />
+    <Property Name="objective_point_id" Type="Int32" />
+    <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.sitefile" FromRole="file" ToRole="site" />
+    <Property Name="site_id" Type="Int32" />
+    <NavigationProperty Name="instrument" Relationship="STNNEWModel.instrumentfile" FromRole="file" ToRole="instrument" />
+    <NavigationProperty Name="data_file" Relationship="STNNEWModel.data_filefile" FromRole="file" ToRole="data_file" />
+    <NavigationProperty Name="source" Relationship="STNNEWModel.sourcefile" FromRole="file" ToRole="source" />
+    <NavigationProperty Name="file_type" Relationship="STNNEWModel.file_typefile" FromRole="file" ToRole="file_type" />
+    <Property Name="photo_date" Type="DateTime" Precision="6" />
+    <Property Name="is_nwis" Type="Int32" />
+    <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="horizontal_collect_methods">
+    <Key>
+      <PropertyRef Name="hcollect_method_id" />
+    </Key>
+    <Property Name="hcollect_method_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="hcollect_method" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.horizontal_collect_methodshwm" FromRole="horizontal_collect_methods" ToRole="hwm" />
+    <NavigationProperty Name="sites" Relationship="STNNEWModel.horizontal_collect_methodssite" FromRole="horizontal_collect_methods" ToRole="site" />
+  </EntityType>
+  <EntityType Name="horizontal_datums">
+    <Key>
+      <PropertyRef Name="datum_id" />
+    </Key>
+    <Property Name="datum_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="datum_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="datum_abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.horizontal_datumshwm" FromRole="horizontal_datums" ToRole="hwm" />
+    <NavigationProperty Name="sites" Relationship="STNNEWModel.horizontal_datumssite" FromRole="horizontal_datums" ToRole="site" />
+  </EntityType>
+  <EntityType Name="housing_type">
+    <Key>
+      <PropertyRef Name="housing_type_id" />
+    </Key>
+    <Property Name="housing_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.housing_typeinstrument" FromRole="housing_type" ToRole="instrument" />
+  </EntityType>
+  <EntityType Name="hwm">
+    <Key>
+      <PropertyRef Name="hwm_id" />
+    </Key>
+    <Property Name="hwm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="waterbody" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="site_id" Type="Int32" />
+    <Property Name="event_id" Type="Int32" />
+    <Property Name="hwm_type_id" Type="Int32" Nullable="false" />
+    <Property Name="hwm_quality_id" Type="Int32" Nullable="false" />
+    <Property Name="hwm_locationdescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="latitude_dd" Type="Double" />
+    <Property Name="longitude_dd" Type="Double" />
+    <Property Name="survey_date" Type="DateTime" Precision="6" />
+    <Property Name="elev_ft" Type="Double" />
+    <Property Name="vdatum_id" Type="Int32" />
+    <Property Name="vcollect_method_id" Type="Int32" />
+    <Property Name="bank" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="approval_id" Type="Int32" />
+    <Property Name="marker_id" Type="Int32" />
+    <Property Name="height_above_gnd" Type="Double" />
+    <Property Name="hcollect_method_id" Type="Int32" />
+    <Property Name="peak_summary_id" Type="Int32" />
+    <Property Name="hwm_notes" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="hwm_environment" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="flag_date" Type="DateTime" Precision="6" />
+    <Property Name="stillwater" Type="Double" />
+    <Property Name="hdatum_id" Type="Int32" />
+    <Property Name="flag_member_id" Type="Int32" />
+    <Property Name="survey_member_id" Type="Int32" />
+    <NavigationProperty Name="hwm_types" Relationship="STNNEWModel.hwm_typeshwm" FromRole="hwm" ToRole="hwm_types" />
+    <NavigationProperty Name="hwm_qualities" Relationship="STNNEWModel.hwm_qualitieshwm" FromRole="hwm" ToRole="hwm_qualities" />
+    <NavigationProperty Name="marker" Relationship="STNNEWModel.markerhwm" FromRole="hwm" ToRole="marker" />
+    <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumshwm" FromRole="hwm" ToRole="vertical_datums" />
+    <NavigationProperty Name="approval" Relationship="STNNEWModel.approvalhwm" FromRole="hwm" ToRole="approval" />
+    <NavigationProperty Name="event" Relationship="STNNEWModel.eventhwm" FromRole="hwm" ToRole="event" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.sitehwm" FromRole="hwm" ToRole="site" />
+    <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.peak_summaryhwm" FromRole="hwm" ToRole="peak_summary" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.hwmfile" FromRole="hwm" ToRole="file" />
+    <NavigationProperty Name="horizontal_datums" Relationship="STNNEWModel.horizontal_datumshwm" FromRole="hwm" ToRole="horizontal_datums" />
+    <NavigationProperty Name="horizontal_collect_methods" Relationship="STNNEWModel.horizontal_collect_methodshwm" FromRole="hwm" ToRole="horizontal_collect_methods" />
+    <NavigationProperty Name="vertical_collect_methods" Relationship="STNNEWModel.vertical_collect_methodshwm" FromRole="hwm" ToRole="vertical_collect_methods" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
+    <NavigationProperty Name="member1" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
+  </EntityType>
+  <EntityType Name="hwm_qualities">
+    <Key>
+      <PropertyRef Name="hwm_quality_id" />
+    </Key>
+    <Property Name="hwm_quality_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="hwm_quality" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.hwm_qualitieshwm" FromRole="hwm_qualities" ToRole="hwm" />
+  </EntityType>
+  <EntityType Name="hwm_types">
+    <Key>
+      <PropertyRef Name="hwm_type_id" />
+    </Key>
+    <Property Name="hwm_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="hwm_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.hwm_typeshwm" FromRole="hwm_types" ToRole="hwm" />
+  </EntityType>
+  <EntityType Name="instr_collection_conditions">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="condition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.instr_collection_conditionsinstrument" FromRole="instr_collection_conditions" ToRole="instrument" />
+  </EntityType>
+  <EntityType Name="instrument">
+    <Key>
+      <PropertyRef Name="instrument_id" />
+    </Key>
+    <Property Name="instrument_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sensor_type_id" Type="Int32" />
+    <Property Name="deployment_type_id" Type="Int32" />
+    <Property Name="location_description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="serial_number" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="housing_serial_number" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="interval" Type="Double" />
+    <Property Name="site_id" Type="Int32" />
+    <Property Name="event_id" Type="Int32" />
+    <Property Name="inst_collection_id" Type="Int32" />
+    <Property Name="housing_type_id" Type="Int32" />
+    <Property Name="sensor_brand_id" Type="Int32" />
+    <Property Name="vented" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.siteinstrument" FromRole="instrument" ToRole="site" />
+    <NavigationProperty Name="sensor_type" Relationship="STNNEWModel.sensor_typeinstrument" FromRole="instrument" ToRole="sensor_type" />
+    <NavigationProperty Name="deployment_type" Relationship="STNNEWModel.deployment_typeinstrument" FromRole="instrument" ToRole="deployment_type" />
+    <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.instrumentinstrument_status" FromRole="instrument" ToRole="instrument_status" />
+    <NavigationProperty Name="event" Relationship="STNNEWModel.eventinstrument" FromRole="instrument" ToRole="event" />
+    <NavigationProperty Name="data_files" Relationship="STNNEWModel.data_fileinstrument" FromRole="instrument" ToRole="data_file" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.instrumentfile" FromRole="instrument" ToRole="file" />
+    <NavigationProperty Name="instr_collection_conditions" Relationship="STNNEWModel.instr_collection_conditionsinstrument" FromRole="instrument" ToRole="instr_collection_conditions" />
+    <NavigationProperty Name="housing_type" Relationship="STNNEWModel.housing_typeinstrument" FromRole="instrument" ToRole="housing_type" />
+    <NavigationProperty Name="sensor_brand" Relationship="STNNEWModel.sensor_brandinstrument" FromRole="instrument" ToRole="sensor_brand" />
+  </EntityType>
+  <EntityType Name="instrument_status">
+    <Key>
+      <PropertyRef Name="instrument_status_id" />
+    </Key>
+    <Property Name="instrument_status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="status_type_id" Type="Int32" />
+    <Property Name="instrument_id" Type="Int32" />
+    <Property Name="time_stamp" Type="DateTime" Precision="6" />
+    <Property Name="notes" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="member_id" Type="Int32" />
+    <Property Name="sensor_elevation" Type="Double" />
+    <Property Name="ws_elevation" Type="Double" />
+    <Property Name="gs_elevation" Type="Double" />
+    <Property Name="vdatum_id" Type="Int32" />
+    <NavigationProperty Name="instrument" Relationship="STNNEWModel.instrumentinstrument_status" FromRole="instrument_status" ToRole="instrument" />
+    <NavigationProperty Name="status_type" Relationship="STNNEWModel.status_typeinstrument_status" FromRole="instrument_status" ToRole="status_type" />
+  </EntityType>
+  <EntityType Name="landownercontact">
+    <Key>
+      <PropertyRef Name="landownercontactid" />
+    </Key>
+    <Property Name="landownercontactid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="lname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="city" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="state" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="primaryphone" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="secondaryphone" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="sites" Relationship="STNNEWModel.landownercontactsite" FromRole="landownercontact" ToRole="site" />
+  </EntityType>
+  <EntityType Name="marker">
+    <Key>
+      <PropertyRef Name="marker_id" />
+    </Key>
+    <Property Name="marker_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="marker1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.markerhwm" FromRole="marker" ToRole="hwm" />
+  </EntityType>
+  <EntityType Name="network_name">
+    <Key>
+      <PropertyRef Name="network_name_id" />
+    </Key>
+    <Property Name="network_name_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="network_name_site" Relationship="STNNEWModel.network_namenetwork_name_site" FromRole="network_name" ToRole="network_name_site" />
+  </EntityType>
+  <EntityType Name="network_name_site">
+    <Key>
+      <PropertyRef Name="networkname_site_id" />
+    </Key>
+    <Property Name="networkname_site_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="network_name_id" Type="Int32" Nullable="false" />
+    <Property Name="site_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.sitenetwork_name_site" FromRole="network_name_site" ToRole="site" />
+    <NavigationProperty Name="network_name" Relationship="STNNEWModel.network_namenetwork_name_site" FromRole="network_name_site" ToRole="network_name" />
+  </EntityType>
+  <EntityType Name="network_type">
+    <Key>
+      <PropertyRef Name="network_type_id" />
+    </Key>
+    <Property Name="network_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="network_type_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="network_type_site" Relationship="STNNEWModel.network_typenetwork_type_site" FromRole="network_type" ToRole="network_type_site" />
+  </EntityType>
+  <EntityType Name="network_type_site">
+    <Key>
+      <PropertyRef Name="networktype_site_id" />
+    </Key>
+    <Property Name="networktype_site_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="network_type_id" Type="Int32" Nullable="false" />
+    <Property Name="site_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="network_type" Relationship="STNNEWModel.network_typenetwork_type_site" FromRole="network_type_site" ToRole="network_type" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.sitenetwork_type_site" FromRole="network_type_site" ToRole="site" />
+  </EntityType>
+  <EntityType Name="objective_point">
+    <Key>
+      <PropertyRef Name="objective_point_id" />
+    </Key>
+    <Property Name="objective_point_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="elev_ft" Type="Double" />
+    <Property Name="date_established" Type="DateTime" Precision="6" />
+    <Property Name="op_is_destroyed" Type="Double" />
+    <Property Name="op_notes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="site_id" Type="Int32" />
+    <Property Name="vdatum_id" Type="Int32" />
+    <Property Name="latitude_dd" Type="Double" />
+    <Property Name="longitude_dd" Type="Double" />
+    <Property Name="hdatum_id" Type="Int32" />
+    <Property Name="hcollect_method_id" Type="Int32" />
+    <Property Name="vcollect_method_id" Type="Int32" />
+    <Property Name="op_type_id" Type="Int32" Nullable="false" />
+    <Property Name="date_recovered" Type="DateTime" Precision="6" />
+    <Property Name="uncertainty" Type="Double" />
+    <Property Name="unquantified" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="op_quality_id" Type="Int32" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.objective_pointsite" FromRole="objective_point" ToRole="site" />
+    <NavigationProperty Name="objective_point_type" Relationship="STNNEWModel.objective_point_typeobjective_point" FromRole="objective_point" ToRole="objective_point_type" />
+    <NavigationProperty Name="op_quality" Relationship="STNNEWModel.op_qualityobjective_point" FromRole="objective_point" ToRole="op_quality" />
+    <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="objective_point" ToRole="vertical_datums" />
+  </EntityType>
+  <EntityType Name="objective_point_type">
+    <Key>
+      <PropertyRef Name="objective_point_type_id" />
+    </Key>
+    <Property Name="objective_point_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="op_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_point_typeobjective_point" FromRole="objective_point_type" ToRole="objective_point" />
+  </EntityType>
+  <EntityType Name="op_control_identifier">
+    <Key>
+      <PropertyRef Name="op_control_identifier_id" />
+    </Key>
+    <Property Name="op_control_identifier_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="objective_point_id" Type="Int32" />
+    <Property Name="identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="identifier_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="op_measurements">
+    <Key>
+      <PropertyRef Name="op_measurements_id" />
+    </Key>
+    <Property Name="op_measurements_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="objective_point_id" Type="Int32" Nullable="false" />
+    <Property Name="instrument_status_id" Type="Int32" Nullable="false" />
+    <Property Name="water_surface" Type="Double" />
+    <Property Name="ground_surface" Type="Double" />
+    <Property Name="offset_correction" Type="Double" />
+  </EntityType>
+  <EntityType Name="op_quality">
+    <Key>
+      <PropertyRef Name="op_quality_id" />
+    </Key>
+    <Property Name="op_quality_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="quality" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="objective_point" Relationship="STNNEWModel.op_qualityobjective_point" FromRole="op_quality" ToRole="objective_point" />
+  </EntityType>
+  <EntityType Name="peak_summary">
+    <Key>
+      <PropertyRef Name="peak_summary_id" />
+    </Key>
+    <Property Name="peak_summary_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="member_id" Type="Int32" />
+    <Property Name="peak_date" Type="DateTime" Precision="6" />
+    <Property Name="is_peak_estimated" Type="Int32" Nullable="false" />
+    <Property Name="is_peak_time_estimated" Type="Int32" Nullable="false" />
+    <Property Name="peak_stage" Type="Double" />
+    <Property Name="is_peak_stage_estimated" Type="Int32" Nullable="false" />
+    <Property Name="peak_discharge" Type="Double" />
+    <Property Name="is_peak_discharge_estimated" Type="Int32" Nullable="false" />
+    <Property Name="vdatum_id" Type="Int32" />
+    <Property Name="height_above_gnd" Type="Double" />
+    <Property Name="is_hag_estimated" Type="Int32" />
+    <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="aep" Type="Double" />
+    <Property Name="aep_lowci" Type="Double" />
+    <Property Name="aep_upperci" Type="Double" />
+    <Property Name="aep_range" Type="Double" />
+    <Property Name="calc_notes" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.peak_summaryhwm" FromRole="peak_summary" ToRole="hwm" />
+    <NavigationProperty Name="data_file" Relationship="STNNEWModel.peak_summarydata_file" FromRole="peak_summary" ToRole="data_file" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.memberpeak_summary" FromRole="peak_summary" ToRole="member" />
+    <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="peak_summary" ToRole="vertical_datums" />
+  </EntityType>
+  <EntityType Name="reporting_metrics">
+    <Key>
+      <PropertyRef Name="reporting_metrics_id" />
+    </Key>
+    <Property Name="reporting_metrics_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="report_date" Type="DateTime" Precision="6" Nullable="false" />
+    <Property Name="event_id" Type="Int32" Nullable="false" />
+    <Property Name="state" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="sw_fieldpers_notacct" Type="Double" Nullable="false" />
+    <Property Name="wq_fieldpers_notacct" Type="Double" Nullable="false" />
+    <Property Name="sw_yest_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="wq_yest_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="sw_tod_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="wq_tod_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="sw_tmw_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="wq_tmw_fieldpers" Type="Double" Nullable="false" />
+    <Property Name="sw_yest_officepers" Type="Double" Nullable="false" />
+    <Property Name="wq_yest_officepers" Type="Double" Nullable="false" />
+    <Property Name="sw_tod_officepers" Type="Double" Nullable="false" />
+    <Property Name="wq_tod_officepers" Type="Double" Nullable="false" />
+    <Property Name="sw_tmw_officepers" Type="Double" Nullable="false" />
+    <Property Name="wq_tmw_officepers" Type="Double" Nullable="false" />
+    <Property Name="sw_autos_depl" Type="Double" Nullable="false" />
+    <Property Name="wq_autos_depl" Type="Double" Nullable="false" />
+    <Property Name="sw_boats_depl" Type="Double" Nullable="false" />
+    <Property Name="wq_boats_depl" Type="Double" Nullable="false" />
+    <Property Name="sw_other_depl" Type="Double" Nullable="false" />
+    <Property Name="wq_other_depl" Type="Double" Nullable="false" />
+    <Property Name="gage_visit" Type="Double" Nullable="false" />
+    <Property Name="gage_down" Type="Double" Nullable="false" />
+    <Property Name="tot_discharge_meas" Type="Double" Nullable="false" />
+    <Property Name="plan_discharge_meas" Type="Double" Nullable="false" />
+    <Property Name="tot_check_meas" Type="Double" Nullable="false" />
+    <Property Name="plan_check_meas" Type="Double" Nullable="false" />
+    <Property Name="plan_indirect_meas" Type="Double" Nullable="false" />
+    <Property Name="rating_extens" Type="Double" Nullable="false" />
+    <Property Name="gage_peak_record" Type="Double" Nullable="false" />
+    <Property Name="plan_rapdepl_gage" Type="Double" Nullable="false" />
+    <Property Name="dep_rapdepl_gage" Type="Double" Nullable="false" />
+    <Property Name="rec_rapdepl_gage" Type="Double" Nullable="false" />
+    <Property Name="lost_rapdepl_gage" Type="Double" Nullable="false" />
+    <Property Name="plan_wtrlev_sensor" Type="Double" Nullable="false" />
+    <Property Name="dep_wtrlev_sensor" Type="Double" Nullable="false" />
+    <Property Name="rec_wtrlev_sensor" Type="Double" Nullable="false" />
+    <Property Name="lost_wtrlev_sensor" Type="Double" Nullable="false" />
+    <Property Name="plan_wv_sens" Type="Double" Nullable="false" />
+    <Property Name="dep_wv_sens" Type="Double" Nullable="false" />
+    <Property Name="rec_wv_sens" Type="Double" Nullable="false" />
+    <Property Name="lost_wv_sens" Type="Double" Nullable="false" />
+    <Property Name="plan_barometric" Type="Double" Nullable="false" />
+    <Property Name="dep_barometric" Type="Double" Nullable="false" />
+    <Property Name="rec_barometric" Type="Double" Nullable="false" />
+    <Property Name="lost_barometric" Type="Double" Nullable="false" />
+    <Property Name="plan_meteorological" Type="Double" Nullable="false" />
+    <Property Name="dep_meteorological" Type="Double" Nullable="false" />
+    <Property Name="rec_meteorological" Type="Double" Nullable="false" />
+    <Property Name="lost_meteorological" Type="Double" Nullable="false" />
+    <Property Name="hwm_flagged" Type="Double" Nullable="false" />
+    <Property Name="hwm_collected" Type="Double" Nullable="false" />
+    <Property Name="qw_gage_visit" Type="Double" Nullable="false" />
+    <Property Name="qw_cont_gagevisit" Type="Double" Nullable="false" />
+    <Property Name="qw_gage_down" Type="Double" Nullable="false" />
+    <Property Name="qw_discr_samples" Type="Double" Nullable="false" />
+    <Property Name="coll_sedsamples" Type="Double" Nullable="false" />
+    <Property Name="notes" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+    <Property Name="member_id" Type="Double" Nullable="false" />
+    <Property Name="complete" Type="Double" />
+    <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.reporting_metricsreportmetric_contact" FromRole="reporting_metrics" ToRole="reportmetric_contact" />
+  </EntityType>
+  <EntityType Name="reportmetric_contact">
+    <Key>
+      <PropertyRef Name="reportmetric_contact_id" />
+    </Key>
+    <Property Name="reportmetric_contact_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="reporting_metrics_id" Type="Int32" Nullable="false" />
+    <Property Name="contact_id" Type="Int32" Nullable="false" />
+    <Property Name="contact_type_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="contact" Relationship="STNNEWModel.contactreportmetric_contact" FromRole="reportmetric_contact" ToRole="contact" />
+    <NavigationProperty Name="reporting_metrics" Relationship="STNNEWModel.reporting_metricsreportmetric_contact" FromRole="reportmetric_contact" ToRole="reporting_metrics" />
+    <NavigationProperty Name="contact_type" Relationship="STNNEWModel.contact_typereportmetric_contact" FromRole="reportmetric_contact" ToRole="contact_type" />
+  </EntityType>
+  <EntityType Name="role">
+    <Key>
+      <PropertyRef Name="role_id" />
+    </Key>
+    <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="role_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="role_description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="members" Relationship="STNNEWModel.rolemember" FromRole="role" ToRole="member" />
+  </EntityType>
+  <EntityType Name="sensor_brand">
+    <Key>
+      <PropertyRef Name="sensor_brand_id" />
+    </Key>
+    <Property Name="sensor_brand_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="brand_name" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.sensor_brandinstrument" FromRole="sensor_brand" ToRole="instrument" />
+  </EntityType>
+  <EntityType Name="sensor_deployment">
+    <Key>
+      <PropertyRef Name="sensor_deployment_id" />
+    </Key>
+    <Property Name="sensor_deployment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sensor_type_id" Type="Int32" />
+    <Property Name="deployment_type_id" Type="Int32" />
+    <NavigationProperty Name="deployment_type" Relationship="STNNEWModel.deployment_typesensor_deployment" FromRole="sensor_deployment" ToRole="deployment_type" />
+    <NavigationProperty Name="sensor_type" Relationship="STNNEWModel.sensor_typesensor_deployment" FromRole="sensor_deployment" ToRole="sensor_type" />
+  </EntityType>
+  <EntityType Name="sensor_type">
+    <Key>
+      <PropertyRef Name="sensor_type_id" />
+    </Key>
+    <Property Name="sensor_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sensor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.sensor_typeinstrument" FromRole="sensor_type" ToRole="instrument" />
+    <NavigationProperty Name="sensor_deployment" Relationship="STNNEWModel.sensor_typesensor_deployment" FromRole="sensor_type" ToRole="sensor_deployment" />
+  </EntityType>
+  <EntityType Name="site_housing">
+    <Key>
+      <PropertyRef Name="site_housing_id" />
+    </Key>
+    <Property Name="site_housing_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="site_id" Type="Int32" />
+    <Property Name="housing_type_id" Type="Int32" />
+    <Property Name="length" Type="Double" />
+    <Property Name="material" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="notes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="amount" Type="Double" />
+    <NavigationProperty Name="site" Relationship="STNNEWModel.sitesite_housing" FromRole="site_housing" ToRole="site" />
+  </EntityType>
+  <EntityType Name="site">
+    <Key>
+      <PropertyRef Name="site_id" />
+    </Key>
+    <Property Name="site_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="site_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="site_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="site_description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="city" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="state" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="zip" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="other_sid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="county" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="waterbody" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="latitude_dd" Type="Double" Nullable="false" />
+    <Property Name="longitude_dd" Type="Double" Nullable="false" />
+    <Property Name="hdatum_id" Type="Int32" Nullable="false" />
+    <Property Name="drainage_area_sqmi" Type="Double" />
+    <Property Name="landownercontact_id" Type="Int32" />
+    <Property Name="priority_id" Type="Int32" />
+    <Property Name="zone" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+    <Property Name="is_permanent_housing_installed" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="usgs_sid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="noaa_sid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="hcollect_method_id" Type="Int32" />
+    <Property Name="site_notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="safety_notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="access_granted" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="member_id" Type="Int32" />
+    <Property Name="sensor_not_appropriate" Type="Int32" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.sitehwm" FromRole="site" ToRole="hwm" />
+    <NavigationProperty Name="horizontal_datums" Relationship="STNNEWModel.horizontal_datumssite" FromRole="site" ToRole="horizontal_datums" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.sitefile" FromRole="site" ToRole="file" />
+    <NavigationProperty Name="instruments" Relationship="STNNEWModel.siteinstrument" FromRole="site" ToRole="instrument" />
+    <NavigationProperty Name="deployment_priority" Relationship="STNNEWModel.deployment_prioritysite" FromRole="site" ToRole="deployment_priority" />
+    <NavigationProperty Name="landownercontact" Relationship="STNNEWModel.landownercontactsite" FromRole="site" ToRole="landownercontact" />
+    <NavigationProperty Name="horizontal_collect_methods" Relationship="STNNEWModel.horizontal_collect_methodssite" FromRole="site" ToRole="horizontal_collect_methods" />
+    <NavigationProperty Name="objective_points" Relationship="STNNEWModel.objective_pointsite" FromRole="site" ToRole="objective_point" />
+    <NavigationProperty Name="site_housing" Relationship="STNNEWModel.sitesite_housing" FromRole="site" ToRole="site_housing" />
+    <NavigationProperty Name="network_type_site" Relationship="STNNEWModel.sitenetwork_type_site" FromRole="site" ToRole="network_type_site" />
+    <NavigationProperty Name="network_name_site" Relationship="STNNEWModel.sitenetwork_name_site" FromRole="site" ToRole="network_name_site" />
+    <NavigationProperty Name="member" Relationship="STNNEWModel.membersite" FromRole="site" ToRole="member" />
+  </EntityType>
+  <EntityType Name="source">
+    <Key>
+      <PropertyRef Name="source_id" />
+    </Key>
+    <Property Name="source_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="source_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="agency_id" Type="Int32" />
+    <Property Name="source_date" Type="DateTime" Precision="6" />
+    <NavigationProperty Name="agency" Relationship="STNNEWModel.agencysource" FromRole="source" ToRole="agency" />
+    <NavigationProperty Name="files" Relationship="STNNEWModel.sourcefile" FromRole="source" ToRole="file" />
+  </EntityType>
+  <EntityType Name="state">
+    <Key>
+      <PropertyRef Name="state_id" />
+    </Key>
+    <Property Name="state_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="state_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="state_abbrev" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="counties" Relationship="STNNEWModel.statecounty" FromRole="state" ToRole="county" />
+  </EntityType>
+  <EntityType Name="status_type">
+    <Key>
+      <PropertyRef Name="status_type_id" />
+    </Key>
+    <Property Name="status_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.status_typeinstrument_status" FromRole="status_type" ToRole="instrument_status" />
+  </EntityType>
+  <EntityType Name="vertical_collect_methods">
+    <Key>
+      <PropertyRef Name="vcollect_method_id" />
+    </Key>
+    <Property Name="vcollect_method_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="vcollect_method" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.vertical_collect_methodshwm" FromRole="vertical_collect_methods" ToRole="hwm" />
+  </EntityType>
+  <EntityType Name="vertical_datums">
+    <Key>
+      <PropertyRef Name="datum_id" />
+    </Key>
+    <Property Name="datum_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="datum_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="datum_abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.vertical_datumshwm" FromRole="vertical_datums" ToRole="hwm" />
+    <NavigationProperty Name="objective_point" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="vertical_datums" ToRole="objective_point" />
+    <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="vertical_datums" ToRole="peak_summary" />
+  </EntityType>
+  <EntityContainer Name="STNDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="agencies" EntityType="Self.agency" />
+    <EntitySet Name="approvals" EntityType="Self.approval" />
+    <EntitySet Name="contacts" EntityType="Self.contact" />
+    <EntitySet Name="contact_type" EntityType="Self.contact_type" />
+    <EntitySet Name="counties" EntityType="Self.county" />
+    <EntitySet Name="data_file" EntityType="Self.data_file" />
+    <EntitySet Name="deployment_priority" EntityType="Self.deployment_priority" />
+    <EntitySet Name="deployment_type" EntityType="Self.deployment_type" />
+    <EntitySet Name="event_status" EntityType="Self.event_status" />
+    <EntitySet Name="event_type" EntityType="Self.event_type" />
+    <EntitySet Name="events" EntityType="STNNEWModel.events" />
+    <EntitySet Name="file_type" EntityType="Self.file_type" />
+    <EntitySet Name="files" EntityType="Self.file" />
+    <EntitySet Name="horizontal_collect_methods" EntityType="Self.horizontal_collect_methods" />
+    <EntitySet Name="horizontal_datums" EntityType="Self.horizontal_datums" />
+    <EntitySet Name="housing_type" EntityType="Self.housing_type" />
+    <EntitySet Name="hwms" EntityType="Self.hwm" />
+    <EntitySet Name="hwm_qualities" EntityType="Self.hwm_qualities" />
+    <EntitySet Name="hwm_types" EntityType="Self.hwm_types" />
+    <EntitySet Name="instr_collection_conditions" EntityType="Self.instr_collection_conditions" />
+    <EntitySet Name="instruments" EntityType="Self.instrument" />
+    <EntitySet Name="instrument_status" EntityType="Self.instrument_status" />
+    <EntitySet Name="landownercontacts" EntityType="Self.landownercontact" />
+    <EntitySet Name="markers" EntityType="Self.marker" />
+    <EntitySet Name="network_name" EntityType="Self.network_name" />
+    <EntitySet Name="network_name_site" EntityType="Self.network_name_site" />
+    <EntitySet Name="network_type" EntityType="Self.network_type" />
+    <EntitySet Name="network_type_site" EntityType="Self.network_type_site" />
+    <EntitySet Name="objective_point" EntityType="Self.objective_point" />
+    <EntitySet Name="objective_point_type" EntityType="Self.objective_point_type" />
+    <EntitySet Name="op_control_identifier" EntityType="Self.op_control_identifier" />
+    <EntitySet Name="op_measurements" EntityType="Self.op_measurements" />
+    <EntitySet Name="op_quality" EntityType="Self.op_quality" />
+    <EntitySet Name="peak_summary" EntityType="Self.peak_summary" />
+    <EntitySet Name="reporting_metrics" EntityType="Self.reporting_metrics" />
+    <EntitySet Name="reportmetric_contact" EntityType="Self.reportmetric_contact" />
+    <EntitySet Name="roles" EntityType="Self.role" />
+    <EntitySet Name="sensor_brand" EntityType="Self.sensor_brand" />
+    <EntitySet Name="sensor_deployment" EntityType="Self.sensor_deployment" />
+    <EntitySet Name="sensor_type" EntityType="Self.sensor_type" />
+    <EntitySet Name="site_housing" EntityType="Self.site_housing" />
+    <EntitySet Name="sites" EntityType="Self.site" />
+    <EntitySet Name="sources" EntityType="Self.source" />
+    <EntitySet Name="states" EntityType="Self.state" />
+    <EntitySet Name="status_type" EntityType="Self.status_type" />
+    <EntitySet Name="vertical_collect_methods" EntityType="Self.vertical_collect_methods" />
+    <EntitySet Name="vertical_datums" EntityType="Self.vertical_datums" />
+    <AssociationSet Name="hwm_typeshwm" Association="STNNEWModel.hwm_typeshwm">
+      <End Role="hwm_types" EntitySet="hwm_types" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="hwm_qualitieshwm" Association="STNNEWModel.hwm_qualitieshwm">
+      <End Role="hwm_qualities" EntitySet="hwm_qualities" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="markerhwm" Association="STNNEWModel.markerhwm">
+      <End Role="marker" EntitySet="markers" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="vertical_datumshwm" Association="STNNEWModel.vertical_datumshwm">
+      <End Role="vertical_datums" EntitySet="vertical_datums" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="approvalhwm" Association="STNNEWModel.approvalhwm">
+      <End Role="approval" EntitySet="approvals" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="eventhwm" Association="STNNEWModel.eventhwm">
+      <End Role="event" EntitySet="events" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="sitehwm" Association="STNNEWModel.sitehwm">
+      <End Role="site" EntitySet="sites" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="peak_summaryhwm" Association="STNNEWModel.peak_summaryhwm">
+      <End Role="peak_summary" EntitySet="peak_summary" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="hwmfile" Association="STNNEWModel.hwmfile">
+      <End Role="hwm" EntitySet="hwms" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="horizontal_datumshwm" Association="STNNEWModel.horizontal_datumshwm">
+      <End Role="horizontal_datums" EntitySet="horizontal_datums" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="horizontal_collect_methodshwm" Association="STNNEWModel.horizontal_collect_methodshwm">
+      <End Role="horizontal_collect_methods" EntitySet="horizontal_collect_methods" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="vertical_collect_methodshwm" Association="STNNEWModel.vertical_collect_methodshwm">
+      <End Role="vertical_collect_methods" EntitySet="vertical_collect_methods" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="horizontal_datumssite" Association="STNNEWModel.horizontal_datumssite">
+      <End Role="horizontal_datums" EntitySet="horizontal_datums" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="sitefile" Association="STNNEWModel.sitefile">
+      <End Role="site" EntitySet="sites" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="siteinstrument" Association="STNNEWModel.siteinstrument">
+      <End Role="site" EntitySet="sites" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="deployment_prioritysite" Association="STNNEWModel.deployment_prioritysite">
+      <End Role="deployment_priority" EntitySet="deployment_priority" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="landownercontactsite" Association="STNNEWModel.landownercontactsite">
+      <End Role="landownercontact" EntitySet="landownercontacts" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="horizontal_collect_methodssite" Association="STNNEWModel.horizontal_collect_methodssite">
+      <End Role="horizontal_collect_methods" EntitySet="horizontal_collect_methods" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="objective_pointsite" Association="STNNEWModel.objective_pointsite">
+      <End Role="objective_point" EntitySet="objective_point" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="sitesite_housing" Association="STNNEWModel.sitesite_housing">
+      <End Role="site" EntitySet="sites" />
+      <End Role="site_housing" EntitySet="site_housing" />
+    </AssociationSet>
+    <AssociationSet Name="network_typenetwork_type_site" Association="STNNEWModel.network_typenetwork_type_site">
+      <End Role="network_type" EntitySet="network_type" />
+      <End Role="network_type_site" EntitySet="network_type_site" />
+    </AssociationSet>
+    <AssociationSet Name="sitenetwork_type_site" Association="STNNEWModel.sitenetwork_type_site">
+      <End Role="site" EntitySet="sites" />
+      <End Role="network_type_site" EntitySet="network_type_site" />
+    </AssociationSet>
+    <AssociationSet Name="sitenetwork_name_site" Association="STNNEWModel.sitenetwork_name_site">
+      <End Role="site" EntitySet="sites" />
+      <End Role="network_name_site" EntitySet="network_name_site" />
+    </AssociationSet>
+    <AssociationSet Name="network_namenetwork_name_site" Association="STNNEWModel.network_namenetwork_name_site">
+      <End Role="network_name" EntitySet="network_name" />
+      <End Role="network_name_site" EntitySet="network_name_site" />
+    </AssociationSet>
+    <AssociationSet Name="sensor_typeinstrument" Association="STNNEWModel.sensor_typeinstrument">
+      <End Role="sensor_type" EntitySet="sensor_type" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="deployment_typeinstrument" Association="STNNEWModel.deployment_typeinstrument">
+      <End Role="deployment_type" EntitySet="deployment_type" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="deployment_typesensor_deployment" Association="STNNEWModel.deployment_typesensor_deployment">
+      <End Role="deployment_type" EntitySet="deployment_type" />
+      <End Role="sensor_deployment" EntitySet="sensor_deployment" />
+    </AssociationSet>
+    <AssociationSet Name="sensor_typesensor_deployment" Association="STNNEWModel.sensor_typesensor_deployment">
+      <End Role="sensor_type" EntitySet="sensor_type" />
+      <End Role="sensor_deployment" EntitySet="sensor_deployment" />
+    </AssociationSet>
+    <AssociationSet Name="instrumentinstrument_status" Association="STNNEWModel.instrumentinstrument_status">
+      <End Role="instrument" EntitySet="instruments" />
+      <End Role="instrument_status" EntitySet="instrument_status" />
+    </AssociationSet>
+    <AssociationSet Name="status_typeinstrument_status" Association="STNNEWModel.status_typeinstrument_status">
+      <End Role="status_type" EntitySet="status_type" />
+      <End Role="instrument_status" EntitySet="instrument_status" />
+    </AssociationSet>
+    <AssociationSet Name="eventinstrument" Association="STNNEWModel.eventinstrument">
+      <End Role="event" EntitySet="events" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="data_fileinstrument" Association="STNNEWModel.data_fileinstrument">
+      <End Role="data_file" EntitySet="data_file" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="instrumentfile" Association="STNNEWModel.instrumentfile">
+      <End Role="instrument" EntitySet="instruments" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="instr_collection_conditionsinstrument" Association="STNNEWModel.instr_collection_conditionsinstrument">
+      <End Role="instr_collection_conditions" EntitySet="instr_collection_conditions" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="housing_typeinstrument" Association="STNNEWModel.housing_typeinstrument">
+      <End Role="housing_type" EntitySet="housing_type" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="sensor_brandinstrument" Association="STNNEWModel.sensor_brandinstrument">
+      <End Role="sensor_brand" EntitySet="sensor_brand" />
+      <End Role="instrument" EntitySet="instruments" />
+    </AssociationSet>
+    <AssociationSet Name="approvaldata_file" Association="STNNEWModel.approvaldata_file">
+      <End Role="approval" EntitySet="approvals" />
+      <End Role="data_file" EntitySet="data_file" />
+    </AssociationSet>
+    <AssociationSet Name="peak_summarydata_file" Association="STNNEWModel.peak_summarydata_file">
+      <End Role="peak_summary" EntitySet="peak_summary" />
+      <End Role="data_file" EntitySet="data_file" />
+    </AssociationSet>
+    <AssociationSet Name="data_filefile" Association="STNNEWModel.data_filefile">
+      <End Role="data_file" EntitySet="data_file" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="agencysource" Association="STNNEWModel.agencysource">
+      <End Role="agency" EntitySet="agencies" />
+      <End Role="source" EntitySet="sources" />
+    </AssociationSet>
+    <AssociationSet Name="objective_point_typeobjective_point" Association="STNNEWModel.objective_point_typeobjective_point">
+      <End Role="objective_point_type" EntitySet="objective_point_type" />
+      <End Role="objective_point" EntitySet="objective_point" />
+    </AssociationSet>
+    <AssociationSet Name="op_qualityobjective_point" Association="STNNEWModel.op_qualityobjective_point">
+      <End Role="op_quality" EntitySet="op_quality" />
+      <End Role="objective_point" EntitySet="objective_point" />
+    </AssociationSet>
+    <AssociationSet Name="contactreportmetric_contact" Association="STNNEWModel.contactreportmetric_contact">
+      <End Role="contact" EntitySet="contacts" />
+      <End Role="reportmetric_contact" EntitySet="reportmetric_contact" />
+    </AssociationSet>
+    <AssociationSet Name="reporting_metricsreportmetric_contact" Association="STNNEWModel.reporting_metricsreportmetric_contact">
+      <End Role="reporting_metrics" EntitySet="reporting_metrics" />
+      <End Role="reportmetric_contact" EntitySet="reportmetric_contact" />
+    </AssociationSet>
+    <AssociationSet Name="contact_typereportmetric_contact" Association="STNNEWModel.contact_typereportmetric_contact">
+      <End Role="contact_type" EntitySet="contact_type" />
+      <End Role="reportmetric_contact" EntitySet="reportmetric_contact" />
+    </AssociationSet>
+    <AssociationSet Name="event_statusevents" Association="STNNEWModel.event_statusevents">
+      <End Role="event_status" EntitySet="event_status" />
+      <End Role="events" EntitySet="events" />
+    </AssociationSet>
+    <AssociationSet Name="event_typeevents" Association="STNNEWModel.event_typeevents">
+      <End Role="event_type" EntitySet="event_type" />
+      <End Role="events" EntitySet="events" />
+    </AssociationSet>
+    <AssociationSet Name="sourcefile" Association="STNNEWModel.sourcefile">
+      <End Role="source" EntitySet="sources" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="file_typefile" Association="STNNEWModel.file_typefile">
+      <End Role="file_type" EntitySet="file_type" />
+      <End Role="file" EntitySet="files" />
+    </AssociationSet>
+    <AssociationSet Name="statecounty" Association="STNNEWModel.statecounty">
+      <End Role="state" EntitySet="states" />
+      <End Role="county" EntitySet="counties" />
+    </AssociationSet>
+    <AssociationSet Name="vertical_datumsobjective_point" Association="STNNEWModel.vertical_datumsobjective_point">
+      <End Role="vertical_datums" EntitySet="vertical_datums" />
+      <End Role="objective_point" EntitySet="objective_point" />
+    </AssociationSet>
+    <EntitySet Name="members" EntityType="STNNEWModel.member" />
+    <AssociationSet Name="memberevents" Association="STNNEWModel.memberevents">
+      <End Role="member" EntitySet="members" />
+      <End Role="events" EntitySet="events" />
+    </AssociationSet>
+    <AssociationSet Name="membersite" Association="STNNEWModel.membersite">
+      <End Role="member" EntitySet="members" />
+      <End Role="site" EntitySet="sites" />
+    </AssociationSet>
+    <AssociationSet Name="memberdata_file" Association="STNNEWModel.memberdata_file">
+      <End Role="member" EntitySet="members" />
+      <End Role="data_file" EntitySet="data_file" />
+    </AssociationSet>
+    <AssociationSet Name="memberpeak_summary" Association="STNNEWModel.memberpeak_summary">
+      <End Role="member" EntitySet="members" />
+      <End Role="peak_summary" EntitySet="peak_summary" />
+    </AssociationSet>
+    <AssociationSet Name="agencymember" Association="STNNEWModel.agencymember">
+      <End Role="agency" EntitySet="agencies" />
+      <End Role="member" EntitySet="members" />
+    </AssociationSet>
+    <AssociationSet Name="rolemember" Association="STNNEWModel.rolemember">
+      <End Role="role" EntitySet="roles" />
+      <End Role="member" EntitySet="members" />
+    </AssociationSet>
+    <AssociationSet Name="memberapproval" Association="STNNEWModel.memberapproval">
+      <End Role="member" EntitySet="members" />
+      <End Role="approval" EntitySet="approvals" />
+    </AssociationSet>
+    <AssociationSet Name="memberhwm" Association="STNNEWModel.memberhwm">
+      <End Role="member" EntitySet="members" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="memberhwm1" Association="STNNEWModel.memberhwm1">
+      <End Role="member" EntitySet="members" />
+      <End Role="hwm" EntitySet="hwms" />
+    </AssociationSet>
+    <AssociationSet Name="vertical_datumspeak_summary" Association="STNNEWModel.vertical_datumspeak_summary">
+      <End Role="vertical_datums" EntitySet="vertical_datums" />
+      <End Role="peak_summary" EntitySet="peak_summary" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="hwm_typeshwm">
+    <End Type="STNNEWModel.hwm_types" Role="hwm_types" Multiplicity="1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="hwm_types">
+        <PropertyRef Name="hwm_type_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="hwm_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="hwm_qualitieshwm">
+    <End Type="STNNEWModel.hwm_qualities" Role="hwm_qualities" Multiplicity="1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="hwm_qualities">
+        <PropertyRef Name="hwm_quality_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="hwm_quality_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="markerhwm">
+    <End Type="STNNEWModel.marker" Role="marker" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="marker">
+        <PropertyRef Name="marker_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="marker_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="vertical_datumshwm">
+    <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="vertical_datums">
+        <PropertyRef Name="datum_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="vdatum_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="approvalhwm">
+    <End Type="STNNEWModel.approval" Role="approval" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="approval">
+        <PropertyRef Name="approval_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="approval_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="eventhwm">
+    <End Type="STNNEWModel.events" Role="event" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="event">
+        <PropertyRef Name="event_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="event_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sitehwm">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="peak_summaryhwm">
+    <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="peak_summary">
+        <PropertyRef Name="peak_summary_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="peak_summary_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="hwmfile">
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="hwm">
+        <PropertyRef Name="hwm_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="hwm_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="horizontal_datumshwm">
+    <End Type="STNNEWModel.horizontal_datums" Role="horizontal_datums" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="horizontal_datums">
+        <PropertyRef Name="datum_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="hdatum_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="horizontal_collect_methodshwm">
+    <End Type="STNNEWModel.horizontal_collect_methods" Role="horizontal_collect_methods" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="horizontal_collect_methods">
+        <PropertyRef Name="hcollect_method_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="hcollect_method_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="vertical_collect_methodshwm">
+    <End Type="STNNEWModel.vertical_collect_methods" Role="vertical_collect_methods" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="vertical_collect_methods">
+        <PropertyRef Name="vcollect_method_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="vcollect_method_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="horizontal_datumssite">
+    <End Type="STNNEWModel.horizontal_datums" Role="horizontal_datums" Multiplicity="1" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="horizontal_datums">
+        <PropertyRef Name="datum_id" />
+      </Principal>
+      <Dependent Role="site">
+        <PropertyRef Name="hdatum_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sitefile">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="siteinstrument">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="deployment_prioritysite">
+    <End Type="STNNEWModel.deployment_priority" Role="deployment_priority" Multiplicity="0..1" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="deployment_priority">
+        <PropertyRef Name="priority_id" />
+      </Principal>
+      <Dependent Role="site">
+        <PropertyRef Name="priority_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="landownercontactsite">
+    <End Type="STNNEWModel.landownercontact" Role="landownercontact" Multiplicity="0..1" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="landownercontact">
+        <PropertyRef Name="landownercontactid" />
+      </Principal>
+      <Dependent Role="site">
+        <PropertyRef Name="landownercontact_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="horizontal_collect_methodssite">
+    <End Type="STNNEWModel.horizontal_collect_methods" Role="horizontal_collect_methods" Multiplicity="0..1" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="horizontal_collect_methods">
+        <PropertyRef Name="hcollect_method_id" />
+      </Principal>
+      <Dependent Role="site">
+        <PropertyRef Name="hcollect_method_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="objective_pointsite">
+    <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="*" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="objective_point">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sitesite_housing">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+    <End Type="STNNEWModel.site_housing" Role="site_housing" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="site_housing">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="network_typenetwork_type_site">
+    <End Type="STNNEWModel.network_type" Role="network_type" Multiplicity="1" />
+    <End Type="STNNEWModel.network_type_site" Role="network_type_site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="network_type">
+        <PropertyRef Name="network_type_id" />
+      </Principal>
+      <Dependent Role="network_type_site">
+        <PropertyRef Name="network_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sitenetwork_type_site">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="1" />
+    <End Type="STNNEWModel.network_type_site" Role="network_type_site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="network_type_site">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sitenetwork_name_site">
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="1" />
+    <End Type="STNNEWModel.network_name_site" Role="network_name_site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="site">
+        <PropertyRef Name="site_id" />
+      </Principal>
+      <Dependent Role="network_name_site">
+        <PropertyRef Name="site_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="network_namenetwork_name_site">
+    <End Type="STNNEWModel.network_name" Role="network_name" Multiplicity="1" />
+    <End Type="STNNEWModel.network_name_site" Role="network_name_site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="network_name">
+        <PropertyRef Name="network_name_id" />
+      </Principal>
+      <Dependent Role="network_name_site">
+        <PropertyRef Name="network_name_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sensor_typeinstrument">
+    <End Type="STNNEWModel.sensor_type" Role="sensor_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="sensor_type">
+        <PropertyRef Name="sensor_type_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="sensor_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="deployment_typeinstrument">
+    <End Type="STNNEWModel.deployment_type" Role="deployment_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="deployment_type">
+        <PropertyRef Name="deployment_type_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="deployment_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="deployment_typesensor_deployment">
+    <End Type="STNNEWModel.deployment_type" Role="deployment_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.sensor_deployment" Role="sensor_deployment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="deployment_type">
+        <PropertyRef Name="deployment_type_id" />
+      </Principal>
+      <Dependent Role="sensor_deployment">
+        <PropertyRef Name="deployment_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sensor_typesensor_deployment">
+    <End Type="STNNEWModel.sensor_type" Role="sensor_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.sensor_deployment" Role="sensor_deployment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="sensor_type">
+        <PropertyRef Name="sensor_type_id" />
+      </Principal>
+      <Dependent Role="sensor_deployment">
+        <PropertyRef Name="sensor_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="instrumentinstrument_status">
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="instrument">
+        <PropertyRef Name="instrument_id" />
+      </Principal>
+      <Dependent Role="instrument_status">
+        <PropertyRef Name="instrument_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="status_typeinstrument_status">
+    <End Type="STNNEWModel.status_type" Role="status_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="status_type">
+        <PropertyRef Name="status_type_id" />
+      </Principal>
+      <Dependent Role="instrument_status">
+        <PropertyRef Name="status_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="eventinstrument">
+    <End Type="STNNEWModel.events" Role="event" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="event">
+        <PropertyRef Name="event_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="event_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="data_fileinstrument">
+    <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="instrument">
+        <PropertyRef Name="instrument_id" />
+      </Principal>
+      <Dependent Role="data_file">
+        <PropertyRef Name="instrument_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="instrumentfile">
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="instrument">
+        <PropertyRef Name="instrument_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="instrument_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="instr_collection_conditionsinstrument">
+    <End Type="STNNEWModel.instr_collection_conditions" Role="instr_collection_conditions" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="instr_collection_conditions">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="inst_collection_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="housing_typeinstrument">
+    <End Type="STNNEWModel.housing_type" Role="housing_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="housing_type">
+        <PropertyRef Name="housing_type_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="housing_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sensor_brandinstrument">
+    <End Type="STNNEWModel.sensor_brand" Role="sensor_brand" Multiplicity="0..1" />
+    <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="sensor_brand">
+        <PropertyRef Name="sensor_brand_id" />
+      </Principal>
+      <Dependent Role="instrument">
+        <PropertyRef Name="sensor_brand_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="approvaldata_file">
+    <End Type="STNNEWModel.approval" Role="approval" Multiplicity="0..1" />
+    <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="approval">
+        <PropertyRef Name="approval_id" />
+      </Principal>
+      <Dependent Role="data_file">
+        <PropertyRef Name="approval_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="peak_summarydata_file">
+    <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="0..1" />
+    <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="peak_summary">
+        <PropertyRef Name="peak_summary_id" />
+      </Principal>
+      <Dependent Role="data_file">
+        <PropertyRef Name="peak_summary_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="data_filefile">
+    <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="data_file">
+        <PropertyRef Name="data_file_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="data_file_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="agencysource">
+    <End Type="STNNEWModel.agency" Role="agency" Multiplicity="0..1" />
+    <End Type="STNNEWModel.source" Role="source" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="agency">
+        <PropertyRef Name="agency_id" />
+      </Principal>
+      <Dependent Role="source">
+        <PropertyRef Name="agency_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="objective_point_typeobjective_point">
+    <End Type="STNNEWModel.objective_point_type" Role="objective_point_type" Multiplicity="1" />
+    <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="objective_point_type">
+        <PropertyRef Name="objective_point_type_id" />
+      </Principal>
+      <Dependent Role="objective_point">
+        <PropertyRef Name="op_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="op_qualityobjective_point">
+    <End Type="STNNEWModel.op_quality" Role="op_quality" Multiplicity="0..1" />
+    <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="op_quality">
+        <PropertyRef Name="op_quality_id" />
+      </Principal>
+      <Dependent Role="objective_point">
+        <PropertyRef Name="op_quality_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="contactreportmetric_contact">
+    <End Type="STNNEWModel.contact" Role="contact" Multiplicity="1" />
+    <End Type="STNNEWModel.reportmetric_contact" Role="reportmetric_contact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="contact">
+        <PropertyRef Name="contact_id" />
+      </Principal>
+      <Dependent Role="reportmetric_contact">
+        <PropertyRef Name="contact_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="reporting_metricsreportmetric_contact">
+    <End Type="STNNEWModel.reporting_metrics" Role="reporting_metrics" Multiplicity="1" />
+    <End Type="STNNEWModel.reportmetric_contact" Role="reportmetric_contact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="reporting_metrics">
+        <PropertyRef Name="reporting_metrics_id" />
+      </Principal>
+      <Dependent Role="reportmetric_contact">
+        <PropertyRef Name="reporting_metrics_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="contact_typereportmetric_contact">
+    <End Type="STNNEWModel.contact_type" Role="contact_type" Multiplicity="1" />
+    <End Type="STNNEWModel.reportmetric_contact" Role="reportmetric_contact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="contact_type">
+        <PropertyRef Name="contact_type_id" />
+      </Principal>
+      <Dependent Role="reportmetric_contact">
+        <PropertyRef Name="contact_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="event_statusevents">
+    <End Type="STNNEWModel.event_status" Role="event_status" Multiplicity="0..1" />
+    <End Type="STNNEWModel.events" Role="events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="event_status">
+        <PropertyRef Name="event_status_id" />
+      </Principal>
+      <Dependent Role="events">
+        <PropertyRef Name="event_status_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="event_typeevents">
+    <End Type="STNNEWModel.event_type" Role="event_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.events" Role="events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="event_type">
+        <PropertyRef Name="event_type_id" />
+      </Principal>
+      <Dependent Role="events">
+        <PropertyRef Name="event_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sourcefile">
+    <End Type="STNNEWModel.source" Role="source" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="source">
+        <PropertyRef Name="source_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="source_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="file_typefile">
+    <End Type="STNNEWModel.file_type" Role="file_type" Multiplicity="0..1" />
+    <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="file_type">
+        <PropertyRef Name="filetype_id" />
+      </Principal>
+      <Dependent Role="file">
+        <PropertyRef Name="filetype_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="statecounty">
+    <End Type="STNNEWModel.state" Role="state" Multiplicity="1" />
+    <End Type="STNNEWModel.county" Role="county" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="state">
+        <PropertyRef Name="state_id" />
+      </Principal>
+      <Dependent Role="county">
+        <PropertyRef Name="state_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="vertical_datumsobjective_point">
+    <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+    <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="vertical_datums">
+        <PropertyRef Name="datum_id" />
+      </Principal>
+      <Dependent Role="objective_point">
+        <PropertyRef Name="vdatum_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="member">
+    <Key>
+      <PropertyRef Name="member_id" />
+    </Key>
+    <Property Name="member_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fname" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="lname" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="agency_id" Type="Int32" Nullable="false" />
+    <Property Name="phone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="emergency_contact_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="emergency_contact_phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="role_id" Type="Int32" Nullable="false" />
+    <Property Name="username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="true" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+    <Property Name="salt" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="events" Relationship="STNNEWModel.memberevents" FromRole="member" ToRole="events" />
+    <NavigationProperty Name="sites" Relationship="STNNEWModel.membersite" FromRole="member" ToRole="site" />
+    <NavigationProperty Name="data_file" Relationship="STNNEWModel.memberdata_file" FromRole="member" ToRole="data_file" />
+    <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.memberpeak_summary" FromRole="member" ToRole="peak_summary" />
+    <NavigationProperty Name="agency" Relationship="STNNEWModel.agencymember" FromRole="member" ToRole="agency" />
+    <NavigationProperty Name="role" Relationship="STNNEWModel.rolemember" FromRole="member" ToRole="role" />
+    <Property Name="resetFlag" Type="Int32" />
+    <NavigationProperty Name="approvals" Relationship="STNNEWModel.memberapproval" FromRole="member" ToRole="approval" />
+    <NavigationProperty Name="hwms" Relationship="STNNEWModel.memberhwm" FromRole="member" ToRole="hwm" />
+    <NavigationProperty Name="hwms1" Relationship="STNNEWModel.memberhwm1" FromRole="member" ToRole="hwm" />
+  </EntityType>
+  <Association Name="memberevents">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.events" Role="events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="events">
+        <PropertyRef Name="event_coordinator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="membersite">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.site" Role="site" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="site">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="memberdata_file">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="data_file">
+        <PropertyRef Name="processor_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="memberpeak_summary">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="peak_summary">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="agencymember">
+    <End Type="STNNEWModel.agency" Role="agency" Multiplicity="1" />
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="agency">
+        <PropertyRef Name="agency_id" />
+      </Principal>
+      <Dependent Role="member">
+        <PropertyRef Name="agency_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="rolemember">
+    <End Type="STNNEWModel.role" Role="role" Multiplicity="1" />
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="role">
+        <PropertyRef Name="role_id" />
+      </Principal>
+      <Dependent Role="member">
+        <PropertyRef Name="role_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="memberapproval">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.approval" Role="approval" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="approval">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="memberhwm">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="survey_member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="memberhwm1">
+    <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+    <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="hwm">
+        <PropertyRef Name="flag_member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="vertical_datumspeak_summary">
+    <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+    <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="vertical_datums">
+        <PropertyRef Name="datum_id" />
+      </Principal>
+      <Dependent Role="peak_summary">
+        <PropertyRef Name="vdatum_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
