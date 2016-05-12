@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -101,7 +102,7 @@ namespace STNServices2.Handlers
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<file>().FirstOrDefault(i => i.file_id == fileId).file_type;
+                    anEntity = sa.Select<file>().Include(i=>i.file_type).FirstOrDefault(i => i.file_id == fileId).file_type;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -194,7 +195,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

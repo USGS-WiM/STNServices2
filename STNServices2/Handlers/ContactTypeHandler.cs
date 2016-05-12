@@ -98,7 +98,7 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<reportmetric_contact>().FirstOrDefault(i => i.contact_id == contactId).contact_type;
                     sm(sa.Messages);
@@ -190,7 +190,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -42,7 +42,6 @@ namespace STNServices2.Handlers
         public OperationResult Get()
         {
             List<objective_point> entities = null;
-
             try
             {
                 using (STNAgent sa = new STNAgent())
@@ -245,7 +244,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

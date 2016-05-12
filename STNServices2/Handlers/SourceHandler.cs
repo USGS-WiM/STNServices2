@@ -25,6 +25,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNServices2.Security;
@@ -111,7 +112,7 @@ namespace STNServices2.Handlers
                 if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         entities = sa.Select<agency>().FirstOrDefault(i => i.agency_id == agencyId).sources.ToList();
                         sm(MessageType.info, "Count: " + entities.Count()); 
@@ -127,9 +128,6 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        /// 
-        /// Force the user to provide authentication 
-        /// 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(ForUriName = "GetFileSource")]
         public OperationResult GetFileSource(Int32 fileId)
@@ -143,7 +141,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<file>().FirstOrDefault(i => i.file_id == fileId).source;
+                        anEntity = sa.Select<file>().Include(i=>i.source).FirstOrDefault(i => i.file_id == fileId).source;
                         if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }//end using
@@ -239,7 +237,7 @@ namespace STNServices2.Handlers
         //                sm(sa.Messages);
         //            }//end using
         //        }//end using
-        //        return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+        //        return new OperationResult.OK { Description = this.MessageString };
         //    }
         //    catch (Exception ex)
         //    { return HandleException(ex); }

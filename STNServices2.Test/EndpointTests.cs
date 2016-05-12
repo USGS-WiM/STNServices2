@@ -412,8 +412,8 @@ namespace STNServices2.Test
         public void HWMRequest()
         {
             //GET LIST
-            //List<hwm> RequestList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource);
-            //Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+            List<hwm> RequestList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource);
+            Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
             //POST
             hwm postObj;
@@ -438,7 +438,7 @@ namespace STNServices2.Test
             hwm putObj = this.PUTRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, postObj, basicAuth);
             Assert.IsNotNull(putObj);
 
-            //Delete POSTed item
+            ////Delete POSTed item
             bool success = this.DELETERequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, basicAuth);
             Assert.IsTrue(success);
         }//end method
@@ -697,6 +697,7 @@ namespace STNServices2.Test
             //Delete POSTed item
             bool success = this.DELETERequest<network_name>(host + Configuration.networkNameResource + "/" + postObj.network_name_id, basicAuth);
             Assert.IsTrue(success);
+            
         }//end method
         [TestMethod]
         public void NetworkTypeRequest()
