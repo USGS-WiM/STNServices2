@@ -92,19 +92,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "OPControls")]
         public OperationResult OPControls(Int32 objectivePointId)
         {
-            List<op_control_identifier> anEntity;
+            List<op_control_identifier> entities;
 
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<op_control_identifier>().Where(m => m.objective_point_id == objectivePointId).ToList();
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    entities = sa.Select<op_control_identifier>().Where(m => m.objective_point_id == objectivePointId).ToList();
+                    if (entities == null) throw new NotFoundRequestException();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             {
@@ -197,7 +198,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }
                 }
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

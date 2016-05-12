@@ -66,6 +66,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
+        //returns a list of all the states we have sites in
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteStates")]
         public OperationResult GetSiteStates()
         {
@@ -200,7 +201,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
