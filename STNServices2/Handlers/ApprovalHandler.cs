@@ -26,6 +26,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -38,7 +39,6 @@ namespace STNServices2.Handlers
 {
     public class ApprovalHandler : STNHandlerBase
     {
-
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
@@ -99,9 +99,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).approval;
+                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).approval;
                     sm(sa.Messages);
                 }//end using
 
@@ -122,9 +122,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    anEntity = sa.Select<data_file>().FirstOrDefault(i => i.data_file_id == datafileId).approval;
+                    anEntity = sa.Select<data_file>().FirstOrDefault(df => df.data_file_id == datafileId).approval;
                     sm(sa.Messages);
                 }//end using
 
@@ -223,6 +223,50 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.POST
+
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole })]
+        [HttpOperation(HttpMethod.POST, ForUriName = "ApproveNWISDataFile")]
+        public OperationResult ApproveNWISDataFile(Int32 dataFileId)
+        {
+            data_file aDataFile = null;
+            approval anEntity = null;
+            try
+            {
+                if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                anEntity = new approval();
+
+                //Get basic authentication password
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    {
+                        aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
+                        if (aDataFile == null) throw new BadRequestException("invalid datafileId");
+
+                        //get event coordinator to set as approver for NWIS datafile
+                        member eventCoor = sa.Select<member>().FirstOrDefault(m => m.events.Any(e => e.event_id == aDataFile.instrument.event_id));
+                        if (eventCoor == null) throw new BadRequestException("invalid event coordinator");
+
+                        //set time and user of approval
+                        anEntity.approval_date = DateTime.UtcNow;
+                        anEntity.member_id = eventCoor.member_id;
+
+                        anEntity = sa.Add<approval>(anEntity);
+
+                        //set datafile approvalID
+                        aDataFile.approval_id = anEntity.approval_id;
+                        sa.Update<data_file>(aDataFile);
+                    }//end using
+                }//end using
+
+                //Return OK instead of created, Flex incorrectly treats 201 as error
+                return new OperationResult.OK { ResponseResource = anEntity };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.POST
+
         #endregion
 
         #region DeleteMethods
@@ -241,7 +285,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         anEntity = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
@@ -252,11 +296,12 @@ namespace STNServices2.Handlers
 
                         //delete it
                         sa.Delete<approval>(anEntity);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch
             {
@@ -280,7 +325,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aHWM = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == hwmId);
@@ -289,11 +334,12 @@ namespace STNServices2.Handlers
                         //remove id from hwm
                         aHWM.approval_id = null;
                         sa.Update<hwm>(aHWM);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -315,7 +361,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
@@ -324,11 +370,12 @@ namespace STNServices2.Handlers
                         //remove id from hwm
                         aDataFile.approval_id = null;
                         sa.Update<data_file>(aDataFile);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

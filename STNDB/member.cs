@@ -24,6 +24,7 @@ namespace STNDB
             this.approvals = new HashSet<approval>();
             this.hwms = new HashSet<hwm>();
             this.hwms1 = new HashSet<hwm>();
+            this.instrument_status = new HashSet<instrument_status>();
         }
     
         public int member_id { get; set; }
@@ -56,5 +57,7 @@ namespace STNDB
         public virtual ICollection<hwm> hwms { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hwm> hwms1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<instrument_status> instrument_status { get; set; }
     }
 }

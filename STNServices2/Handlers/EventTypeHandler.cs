@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -70,11 +71,9 @@ namespace STNServices2.Handlers
         {
             event_type anEntity = null;
 
-            //Return BadRequest if there is no ID
-            if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<event_type>().FirstOrDefault(i => i.event_type_id == entityId);
@@ -93,14 +92,12 @@ namespace STNServices2.Handlers
         {
             event_type anEntity = null;
 
-            //Return BadRequest if there is no ID
-            if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-
             try
             {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<events>().FirstOrDefault(i => i.event_id == eventId).event_type;
+                    anEntity = sa.Select<events>().Include(i => i.event_type).FirstOrDefault(i => i.event_id == eventId).event_type;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
@@ -191,7 +188,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
