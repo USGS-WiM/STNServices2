@@ -28,6 +28,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -51,7 +52,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<marker>().OrderBy(e => e.marker_id).ToList();
-
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -99,9 +99,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(e => e.hwm_id == hwmId).marker;
+                    anEntity = sa.Select<hwm>().Include(e=>e.marker).FirstOrDefault(e => e.hwm_id == hwmId).marker;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
@@ -192,7 +192,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

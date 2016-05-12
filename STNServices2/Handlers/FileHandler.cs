@@ -22,16 +22,7 @@
 //     
 
 #region Comments
-// 02.14.13 - JKN - added GetFileItem and created BuildFilePath method for building file paths
-// 02.07.13 - JKN - Added query to get files by eventId and siteID
-// 01.31.13 - JKN - Added GetFilesByStateName and Get(string fromDate, [Optional] string toDate methods
-// 01.28.13 - JKN - Update POST handler to check if table is empty before assigning a key
-// 12.12.12 - TR - Added FILE_URL to be updated
-// 07.03.12 - JKN - Role authorization, and moved context to base class
-// 05.29.12 - JKN - added connection string and delete method
-// 03.14.12 - JB - Added File Put (Update) and upload replacement
-// 03.13.12 - JB - Added File Post and S3 upload
-// 02.03.12 - JB - Created
+// 05.11.16 - JKN - refactored
 #endregion
 
 //using STNServices2.Resources;
@@ -45,6 +36,7 @@ using OpenRasta.Security;
 
 using System;
 using System.Data;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
@@ -79,18 +71,18 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().OrderBy(f => f.file_id)
-                                    .ToList();
+                    entities = sa.Select<file>().OrderBy(f => f.file_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -99,22 +91,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            file aFile;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+            file anEntity;
 
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+
                 using (STNAgent sa = new STNAgent())
                 {
-                    aFile = sa.Select<file>().SingleOrDefault(
-                                f => f.file_id == entityId);
-
+                    anEntity = sa.Select<file>().SingleOrDefault(f => f.file_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aFile, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -124,61 +114,31 @@ namespace STNServices2.Handlers
         public OperationResult GetFileItem(Int32 fileId)
         {
             InMemoryFile fileItem;
-            file aFile = null;
+            file anEntity = null;
             try
             {
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    aFile = sa.Select<file>().SingleOrDefault(f => f.file_id == fileId);
-                    if (aFile == null) throw new BadRequestException("No file exists for given parameter");
+                    anEntity = sa.Select<file>().SingleOrDefault(f => f.file_id == fileId);
+                    if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
 
-                    fileItem = sa.GetFileItem(aFile);                    
-
+                    fileItem = sa.GetFileItem(anEntity);
+                    if (fileItem == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = fileItem, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }
-
-        //get event file items back in zip file
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
-        public OperationResult GetEventFileItems(Int32 eventId)
-        {
-            List<file> files = null;
-            InMemoryFile fileItem = null;
-
-            try
-            {
-
-                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-
-                    files = sa.Select<file>().Where(
-                                    f => f.hwm.event_id == eventId || f.instrument.event_id == eventId ||
-                                        f.data_file.instrument.event_id == eventId)
-                                    .ToList();
-                    sm(MessageType.info, "FileCount:" + files.Count);
-                    fileItem = sa.GetFileItemZip(files);
-
-                    sm(sa.Messages);
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = fileItem, Description =MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET)]
+    
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByDateRange")]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
-            List<file> files = null;
+            List<file> entities = null;
             try
             {
                 DateTime? FromDate = ValidDate(fromDate);
@@ -188,14 +148,13 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(f => f.file_date >= FromDate && f.file_date <= ToDate).OrderBy(f => f.file_date)
-                                    .ToList();
+                    entities = sa.Select<file>().Where(f => f.file_date >= FromDate && f.file_date <= ToDate).OrderBy(f => f.file_date).ToList();
 
-                    sm(MessageType.info, "Count: " + files.Count);
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -206,22 +165,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMFiles")]
         public OperationResult GetHWMFiles(Int32 hwmId)
         {
-            List<file> files = null;
-
+            List<file> entities = null;
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                        f => f.hwm_id == hwmId)
-                                        .ToList();
+                    entities = sa.Select<file>().Where(f => f.hwm_id == hwmId).ToList();
 
-                    sm(MessageType.info, "Count: " + files.Count);
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -230,22 +186,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointFiles")]
         public OperationResult GetObjectivePointFiles(Int32 objectivePointId)
         {
-            List<file> files =null;
+            List<file> entities = null;
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                        file => file.objective_point_id == objectivePointId)
-                                        .ToList();
-
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file>().Where(file => file.objective_point_id == objectivePointId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -254,22 +207,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileTypeFiles")]
         public OperationResult GetFileTypeFiles(Int32 fileTypeId)
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
                 if (fileTypeId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file_type>().FirstOrDefault(
-                                        f => f.filetype_id == fileTypeId).files
-                                        .ToList();
-
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file_type>().Include(f => f.files).FirstOrDefault(f => f.filetype_id == fileTypeId).files.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -278,22 +228,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteFiles")]
         public OperationResult GetSiteFiles(Int32 siteId)
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
                 if (siteId <= 0 ) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                    f => f.site_id == siteId)
-                                    .ToList();
-
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file>().Where(f => f.site_id == siteId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -302,7 +249,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSourceFiles")]
         public OperationResult GetSourceFiles(Int32 sourceId)
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
@@ -310,15 +257,12 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-
-                    files = sa.Select<source>().FirstOrDefault(
-                                    s => s.source_id == sourceId).files
-                                    .ToList();
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<source>().Include(s => s.files).FirstOrDefault(s => s.source_id == sourceId).files.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -327,7 +271,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetDataFileFiles")]
         public OperationResult GetDataFileFiles(Int32 dataFileId)
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
@@ -335,15 +279,12 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<data_file>().FirstOrDefault(
-                                    df => df.data_file_id == dataFileId).files
-                                    .ToList();
-
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<data_file>().Include(df => df.files).FirstOrDefault(df => df.data_file_id == dataFileId).files.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -352,22 +293,19 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentFiles")]
         public OperationResult GetInstrumentFiles(Int32 instrumentId)
         {
-            List<file> files = null;
+            List<file> entities = null;
 
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                    f => f.instrument_id == instrumentId)
-                                    .ToList();
-
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file>().Where(f => f.instrument_id == instrumentId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -376,48 +314,70 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFiles")]
         public OperationResult GetEventFiles(Int32 eventId)
         {
-            List<file> files = null;
+            List<file> entities = null;
             try
             {
                 if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                    f => f.hwm.event_id == eventId || f.instrument.event_id == eventId ||
-                                        f.data_file.instrument.event_id == eventId)
-                                    .ToList();
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
+                                .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetSite")]
-        public OperationResult GetSite(Int32 siteId, Int32 eventId)
+        //get event file items back in zip file - will be adding additional filters on here soon
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
+        public OperationResult GetEventFileItems(Int32 eventId)
         {
-            List<file> files= null;
+            List<file> entities = null;
+            InMemoryFile fileItem = null;
+
+            try
+            {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
+                        .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId).ToList();
+                    sm(MessageType.info, "FileCount:" + entities.Count);
+                    fileItem = sa.GetFileItemZip(entities);
+                    
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventFiles")]
+        public OperationResult GetSiteEventFiles(Int32 siteId, Int32 eventId)
+        {
+            List<file> entities= null;
 
             try
             {
                 if (siteId <= 0 || eventId <= 0) throw new BadRequestException("Invalid input parameters");
-
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                    f => f.site_id == siteId && (f.hwm.event_id == eventId || 
-                                        f.instrument.event_id == eventId ||
-                                        f.data_file.instrument.event_id == eventId))
-                                    .ToList();
+                    entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
+                                    .Where(f => f.site_id == siteId && (f.hwm.event_id == eventId || 
+                                        f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId)).ToList();
 
-                    sm(MessageType.info, "Count: " + files.Count);
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch(Exception ex)
             { return HandleException(ex); }
@@ -426,22 +386,22 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByStateName")]
         public OperationResult GetFilesByStateName(string stateName)
         {
-            List<file> files = new List<file>();
+            List<file> entities = null;
 
             try
             {
+                if (string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    files = sa.Select<file>().Where(
-                                    f => string.Equals(f.hwm.site.state.ToUpper(), stateName.ToUpper()) ||
-                                        string.Equals(f.instrument.site.state.ToUpper(), stateName.ToUpper()) ||
-                                        string.Equals(f.data_file.instrument.site.state.ToUpper(), stateName.ToUpper()))
-                                    .ToList();
-                    sm(MessageType.info, "Count: " + files.Count);
+                    entities = sa.Select<file>().Include("hwm.site").Include("instrument.site").Include("data_file.instrument.site").Where(
+                                    f => string.Equals(f.hwm.site.state, stateName, StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(f.instrument.site.state, stateName, StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(f.data_file.instrument.site.state, stateName, StringComparison.OrdinalIgnoreCase)).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = files, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -457,12 +417,11 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(file anEntity)
         {
-            //Return BadRequest if missing required fields
-            if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue ||
-               anEntity.site_id <= 0)
-                throw new BadRequestException("Invalid input parameters");
             try
-            {
+            { 
+                if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue || anEntity.site_id <= 0)
+                    throw new BadRequestException("Invalid input parameters");
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -558,7 +517,7 @@ namespace STNServices2.Handlers
                         }//end using
                     }//end using
 
-                    return new OperationResult.Created { ResponseResource = uploadFile, Description=MessageString };
+                    return new OperationResult.Created { ResponseResource = uploadFile, Description = this.MessageString };
                 }//end using
             }//end try    
             catch (Exception ex)
@@ -574,22 +533,22 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, file aFile)
-        {
-            if ((aFile.file_id < 0) && (aFile.site_id <= 0)) throw new BadRequestException("Invalid input parameters");
-
+        public OperationResult Put(Int32 entityId, file anEntity)
+        {            
             try
             {
+                if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue || anEntity.site_id <= 0) throw new BadRequestException("Invalid input parameters");
+
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        aFile = sa.Update<file>(entityId, aFile);
+                        anEntity = sa.Update<file>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
 
-                return new OperationResult.Modified { ResponseResource = aFile,Description= MessageString };
+                return new OperationResult.Modified { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -621,7 +580,7 @@ namespace STNServices2.Handlers
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { Description = MessageString};
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -53,8 +53,8 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<network_name>().OrderBy(netType => netType.network_name_id)
-                                    .ToList();
+                    entities = sa.Select<network_name>().OrderBy(netType => netType.network_name_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
@@ -72,8 +72,8 @@ namespace STNServices2.Handlers
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<network_name>().SingleOrDefault(
-                                            netName => netName.network_name_id == entityId);
+                    anEntity = sa.Select<network_name>().SingleOrDefault(nn => nn.network_name_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -90,10 +90,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    entities = sa.Select<network_name_site>().Where(nt => nt.site_id == siteId)
-                                                                        .Select(nt => nt.network_name).ToList();
+                    entities = sa.Select<network_name_site>().Where(nns => nns.site_id == siteId).Select(nn => nn.network_name).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
@@ -105,7 +105,7 @@ namespace STNServices2.Handlers
         #endregion
         #region PostMethods
         [RequiresRole(AdminRole)]
-        [HttpOperation(HttpMethod.POST, ForUriName = "CreateNetworkName")]
+        [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(network_name anEntity)
         {
             try
@@ -125,59 +125,45 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.POST
 
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.POST, ForUriName = "AddSiteNetworkName")]
-        //public OperationResult AddSiteNetworkName(Int32 siteId, network_name aNetworkName)
-        //{
-        //    NETWORK_NAME_SITE aSiteNetworkName = null;
-        //    List<NETWORK_NAME> networkNameList = null;
-        //    //Return BadRequest if missing required fields
-        //    if (siteId <= 0 || String.IsNullOrEmpty(aNetworkName.NAME))
-        //    { return new OperationResult.BadRequest(); }
+        //posts relationship, then returns list of network_names for the anEntity.site_id
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [HttpOperation(HttpMethod.POST, ForUriName = "addSiteNetworkName")]
+        public OperationResult AddNetworkName(Int32 siteId, Int32 networkNameId)
+        {
+            network_name_site anEntity = null;
+            List<network_name> networkNameList = null;
+            try
+            {
+                if (siteId <= 0 || networkNameId <= 0) throw new BadRequestException("Invalid input parameters");
+                
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    {
+                        if (sa.Select<site>().First(s => s.site_id == siteId) == null)
+                            throw new NotFoundRequestException();
 
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNEntities2 aSTNE = GetRDS(securedPassword))
-        //            {
-        //                //check if valid site
-        //                if (aSTNE.SITES.First(s => s.SITE_ID == siteId) == null)
-        //                    return new OperationResult.BadRequest { Description = "Site does not exists" };
+                        if (sa.Select<network_name>().First(n=> n.network_name_id == networkNameId) == null)
+                            throw new NotFoundRequestException();
 
-        //                if (!Exists(aSTNE.NETWORK_NAME, ref aNetworkName))
-        //                {
-        //                    //set ID
-        //                    aSTNE.NETWORK_NAME.AddObject(aNetworkName);
-        //                    aSTNE.SaveChanges();
-        //                }//end if
-
-        //                //add to site
-        //                //first check if site already contains this networktype
-        //                if (aSTNE.NETWORK_NAME_SITE.FirstOrDefault(nt => nt.NETWORK_NAME_ID == aNetworkName.NETWORK_NAME_ID &&
-        //                                                                    nt.SITE_ID == siteId) == null)
-        //                {//create one
-        //                    aSiteNetworkName = new NETWORK_NAME_SITE();
-        //                    aSiteNetworkName.SITE_ID = siteId;
-        //                    aSiteNetworkName.NETWORK_NAME_ID = aNetworkName.NETWORK_NAME_ID;
-        //                    aSTNE.NETWORK_NAME_SITE.AddObject(aSiteNetworkName);
-        //                    aSTNE.SaveChanges();
-        //                }//end if
-
-        //                //return list of network types
-        //                networkNameList = aSTNE.NETWORK_NAME.Where(nt => nt.NETWORK_NAME_SITE.Any(nts => nts.SITE_ID == siteId)).ToList();
-
-        //                if (networkNameList != null)
-        //                    networkNameList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-        //            }//end using
-        //        }//end using
-        //        //return object to verify persistance
-        //        return new OperationResult.OK { ResponseResource = networkNameList };
-        //    }
-        //    catch
-        //    { return new OperationResult.BadRequest(); }
-        //}
+                        if (sa.Select<network_name_site>().FirstOrDefault(nt => nt.network_name_id == networkNameId && nt.site_id == siteId) == null)
+                        {
+                            anEntity = new network_name_site();
+                            anEntity.site_id = siteId;
+                            anEntity.network_name_id = networkNameId;
+                            anEntity = sa.Add<network_name_site>(anEntity);
+                            sm(sa.Messages);
+                        }
+                        //return list of network types
+                        networkNameList = sa.Select<network_name>().Where(nn => nn.network_name_site.Any(nns => nns.site_id == siteId)).ToList();
+                        
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = networkNameList, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
 
         #endregion
         #region PutMethods
@@ -227,45 +213,33 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HTTP.DELETE
 
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.DELETE, ForUriName = "RemoveSiteNetworkName")]
-        //public OperationResult RemoveSiteNetworkName(Int32 siteId, NETWORK_NAME aNetworkName)
-        //{
-        //    //Return BadRequest if missing required fields
-        //    if (siteId <= 0 || String.IsNullOrEmpty(aNetworkName.NAME))
-        //    { return new OperationResult.BadRequest(); }
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [HttpOperation(HttpMethod.DELETE, ForUriName = "RemoveSiteNetworkName")]
+        public OperationResult RemoveNetworkName(Int32 siteId, Int32 networkNameId)
+        {           
+            try
+            {
+                if (siteId <= 0 || networkNameId <= 0) throw new BadRequestException("Invalid input parameters");
+                
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        if (sa.Select<site>().First(s => s.site_id == siteId) == null)
+                            throw new NotFoundRequestException();
 
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNEntities2 aSTNE = GetRDS(securedPassword))
-        //            {
-        //                //check if valid site
-        //                if (aSTNE.SITES.First(s => s.SITE_ID == siteId) == null)
-        //                    return new OperationResult.BadRequest { Description = "Site does not exist" };
-
-        //                //remove from network type
-        //                NETWORK_NAME_SITE thisNetNameSite = aSTNE.NETWORK_NAME_SITE.FirstOrDefault(nts => nts.NETWORK_NAME_ID == aNetworkName.NETWORK_NAME_ID &&
-        //                                                                                     nts.SITE_ID == siteId);
-
-        //                if (thisNetNameSite != null)
-        //                {
-        //                    //remove it
-        //                    aSTNE.NETWORK_NAME_SITE.DeleteObject(thisNetNameSite);
-        //                    aSTNE.SaveChanges();
-        //                }//end if
-        //            }//end using
-        //        }//end using
-
-        //        return new OperationResult.OK { };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
+                        network_name_site ObjectToBeDeleted = sa.Select<network_name_site>().SingleOrDefault(nns => nns.site_id == siteId && nns.network_name_id == networkNameId);
+                      
+                        if (ObjectToBeDeleted == null) throw new NotFoundRequestException();
+                        sa.Delete<network_name_site>(ObjectToBeDeleted);
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.OK { Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
         #endregion
 
     }//end class NetworkTypeHandler

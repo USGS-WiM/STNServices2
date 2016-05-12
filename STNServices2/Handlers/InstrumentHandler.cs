@@ -9,7 +9,7 @@
 // copyright:   2012 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Instrument resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -21,12 +21,7 @@
 //     
 
 #region Comments
-// 02.07.13 - JKN - Added query to get Instruments by eventId and siteID
-// 01.28.13 - JKN - Update POST handler to check if table is empty before assigning a key
-// 07.03.12 - JKN -Added Role Authorization 
-// 06.08.12 - JB - Fixed Instrument Serial Number URI
-// 06.04.12 - jkn -Created
-
+// 03.29.16 - JKN - Major update
 #endregion
 
 using OpenRasta.Web;
@@ -37,6 +32,7 @@ using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNServices2.Security;
+using STNServices2.Resources;
 using WiM.Security;
 using STNDB;
 using WiM.Exceptions;
@@ -58,6 +54,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<instrument>().ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -76,6 +73,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instrument>().SingleOrDefault(inst => inst.instrument_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -93,7 +91,8 @@ namespace STNServices2.Handlers
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).instrument;
+                    anEntity = sa.Select<file>().Include(f=>f.instrument).FirstOrDefault(f => f.file_id == fileId).instrument;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -109,9 +108,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<instrument_status>().FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).instrument;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -127,9 +127,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<data_file>().FirstOrDefault(f => f.data_file_id == dataFileId).instrument;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -147,11 +148,8 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<instrument>().AsEnumerable()
-                                .Where(instr => instr.site_id == siteId)
-                                .OrderBy(instr => instr.instrument_id)
-                                .ToList<instrument>();
-                    
+                    entities = sa.Select<instrument>().AsEnumerable().Where(instr => instr.site_id == siteId).OrderBy(instr => instr.instrument_id).ToList<instrument>();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -160,7 +158,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "SensorTypeInstruments")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSensorTypeInstruments")]
         public OperationResult SensorTypeInstruments(Int32 sensorTypeId)
         {
             List<instrument> entities;
@@ -168,9 +166,10 @@ namespace STNServices2.Handlers
             {
                 if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<sensor_type>().FirstOrDefault(s => s.sensor_type_id == sensorTypeId).instruments.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -179,16 +178,17 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "SensorBrandInstruments")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSensorBrandInstruments")]
         public OperationResult SensorBrandInstruments(Int32 sensorBrandId)
         {
             List<instrument> entities;
             try
             {
                 if (sensorBrandId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<sensor_brand>().FirstOrDefault(s => s.sensor_brand_id == sensorBrandId).instruments.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -204,9 +204,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<deployment_type>().FirstOrDefault(s => s.deployment_type_id == deploymentTypeId).instruments.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -222,9 +223,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<events>().FirstOrDefault(e => e.event_id == eventId).instruments.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -233,6 +235,26 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventInstruments")]
+        public OperationResult GetSiteEventInstruments(Int32 siteId, Int32 eventId)
+        {
+            List<instrument> entities;
+            try
+            {
+                if (siteId <= 0 || eventId <=0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<instrument>().AsEnumerable().Where(instr => instr.site_id == siteId && instr.event_id == eventId).OrderBy(instr => instr.instrument_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        #region sensorViews response
         //[HttpOperation(ForUriName = "GetSensorViews")]
         //public OperationResult GetSensorViews([Optional] Int32 eventId)
         //{
@@ -274,282 +296,231 @@ namespace STNServices2.Handlers
         //        return new OperationResult.BadRequest();
         //    }
         //}//end HttpMethod.GET
+        #endregion sensorViews response
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventInstruments")]
-        public OperationResult GetSiteEventInstruments(Int32 siteId, Int32 eventId)
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredInstruments")]
+        public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] Int32 eventStatusID, [Optional] string states, [Optional] string counties, 
+                                                        [Optional] string statusIDs, [Optional] string collectionConditionIDs, [Optional] string deploymentTypeIDs)
         {
-            List<instrument> entities;
+            List<instrument> entities = null;
             try
             {
-                if (siteId <= 0 || eventId <=0) throw new BadRequestException("Invalid input parameters");
+                char[] delimiterChars = { ';', ',', ' ' }; char[] countydelimiterChars = { ';', ',' };
+                //parse the requests
+                List<decimal> eventIdList = !string.IsNullOrEmpty(eventIds) ? eventIds.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+                List<decimal> statusIdList = !string.IsNullOrEmpty(statusIDs) ? statusIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<instrument>().AsEnumerable()
-                                .Where(instr => instr.site_id == siteId && instr.event_id == eventId)
-                                .OrderBy(instr => instr.instrument_id)
-                                .ToList();
-                        sm(sa.Messages);
-                }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
+                    IQueryable<instrument> query;
+                    query = sa.Select<instrument>().Include(i => i.instrument_status).Include(i => i.@event).Include(i => i.sensor_brand).Include(i => i.sensor_type).Include(i => i.instr_collection_conditions).Include(i => i.site)
+                        .Include("site.deployment_priority").Include(i => i.housing_type).Include(i => i.deployment_type).Include("site.horizontal_datums")
+                        .Include("site.horizontal_collect_methods").Include("site.network_name_site.network_name").Where(s => s.instrument_id > 0);
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredInstruments")]
-        //public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] Int32 eventStatusID,
-        //                                              [Optional] string states, [Optional] string counties, [Optional] string statusIDs,
-        //                                              [Optional] string collectionConditionIDs, [Optional] string deploymentTypeIDs)
-        //{
-        //    List<InstrumentDownloadable> instrumentList = new List<InstrumentDownloadable>();
-        //    try
-        //    {
-        //        char[] delimiterChars = { ';', ',', ' ' };
-        //        //parse the requests
-        //        List<decimal> eventIdList = !string.IsNullOrEmpty(eventIds) ? eventIds.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
-        //        List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
-        //        List<decimal> statusIdList = !string.IsNullOrEmpty(statusIDs) ? statusIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //        List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    if (eventIdList != null && eventIdList.Count > 0)
+                        query = query.Where(i => i.event_id.HasValue && eventIdList.Contains(i.event_id.Value));
 
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<INSTRUMENT> query;
-        //            query = aSTNE.INSTRUMENTs.Where(s => s.INSTRUMENT_ID > 0);
+                    if (eventTypeList != null && eventTypeList.Count > 0)
+                        query = query.Where(i => i.@event.event_type_id.HasValue && eventTypeList.Contains(i.@event.event_type_id.Value));
 
-        //            if (eventIdList != null && eventIdList.Count > 0)
-        //                query = query.Where(i => i.EVENT_ID.HasValue && eventIdList.Contains(i.EVENT_ID.Value));
+                    if (eventStatusID > 0)
+                        query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == eventStatusID);
 
-        //            if (eventTypeList != null && eventTypeList.Count > 0)
-        //                query = query.Where(i => i.EVENT.EVENT_TYPE_ID.HasValue && eventTypeList.Contains(i.EVENT.EVENT_TYPE_ID.Value));
+                    if (stateList != null && stateList.Count > 0)
+                        query = query.Where(i => stateList.Contains(i.site.state));
 
-        //            if (eventStatusID > 0)
-        //                query = query.Where(i => i.EVENT.EVENT_STATUS_ID.HasValue && i.EVENT.EVENT_STATUS_ID.Value == eventStatusID);
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(i => countyList.Contains(i.site.county));
 
-        //            if (stateList != null && stateList.Count > 0)
-        //                query = query.Where(i => stateList.Contains(i.SITE.STATE));
+                    if (collectionConditionIdList != null && collectionConditionIdList.Count > 0)
+                        query = query.Where(i => i.inst_collection_id.HasValue && collectionConditionIdList.Contains(i.inst_collection_id.Value));
 
-        //            if (countyList != null && countyList.Count > 0)
-        //                query = query.Where(i => countyList.Contains(i.SITE.COUNTY));
+                    if (deploymentTypeIdList != null && deploymentTypeIdList.Count > 0)
+                        query = query.Where(i => i.deployment_type_id.HasValue && deploymentTypeIdList.Contains(i.deployment_type_id.Value));
 
-        //            if (collectionConditionIdList != null && collectionConditionIdList.Count > 0)
-        //                query = query.Where(i => i.INST_COLLECTION_ID.HasValue && collectionConditionIdList.Contains(i.INST_COLLECTION_ID.Value));
-
-        //            if (deploymentTypeIdList != null && deploymentTypeIdList.Count > 0)
-        //                query = query.Where(i => i.DEPLOYMENT_TYPE_ID.HasValue && deploymentTypeIdList.Contains(i.DEPLOYMENT_TYPE_ID.Value));
-
-        //            if (statusIdList != null && statusIdList.Count > 0)
-        //                query = query.AsEnumerable().Where(i => (i.INSTRUMENT_STATUS == null || i.INSTRUMENT_STATUS.Count <= 0) ? false :
-        //                                                            statusIdList.Contains(i.INSTRUMENT_STATUS.OrderByDescending(insStat => insStat.TIME_STAMP)
-        //                                                            .Where(stat => stat != null).FirstOrDefault().STATUS_TYPE_ID.Value)).AsQueryable();
-
-        //            instrumentList = query.AsEnumerable().Select(
-        //                inst => new InstrumentDownloadable
-        //                {
-        //                    INSTRUMENT_ID = inst.INSTRUMENT_ID,
-        //                    SENSOR_TYPE = inst.SENSOR_TYPE.SENSOR,
-        //                    SENSOR_TYPE_ID = inst.SENSOR_TYPE.SENSOR_TYPE_ID,
-        //                    DEPLOYMENT_TYPE = inst.DEPLOYMENT_TYPE_ID.HasValue ? GetDeploymentType(aSTNE, inst.DEPLOYMENT_TYPE_ID.Value) : "",
-        //                    DEPLOYMENT_TYPE_ID = inst.DEPLOYMENT_TYPE_ID.HasValue ? inst.DEPLOYMENT_TYPE_ID.Value : 0,
-        //                    SERIAL_NUMBER = inst.SERIAL_NUMBER,
-        //                    HOUSING_SERIAL_NUMBER = inst.HOUSING_SERIAL_NUMBER,
-        //                    INTERVAL_IN_SEC = inst.INTERVAL,
-        //                    SITE_ID = inst.SITE_ID,
-        //                    EVENT = inst.EVENT_ID.HasValue ? GetEvent(aSTNE, inst.EVENT_ID.Value) : "",
-        //                    LOCATION_DESCRIPTION = !string.IsNullOrEmpty(inst.LOCATION_DESCRIPTION) ? GetLocationDesc(inst.LOCATION_DESCRIPTION) : "",
-        //                    COLLECTION_CONDITION = inst.INST_COLLECTION_ID.HasValue ? GetCollectConditions(aSTNE, inst.INST_COLLECTION_ID.Value) : "",
-        //                    HOUSING_TYPE = inst.HOUSING_TYPE_ID.HasValue ? GetHouseType(aSTNE, inst.HOUSING_TYPE_ID.Value) : "",
-        //                    VENTED = (inst.VENTED == null || inst.VENTED == "No") ? "No" : "Yes",
-        //                    SENSOR_BRAND = inst.SENSOR_BRAND_ID.HasValue ? GetSensorBrand(aSTNE, inst.SENSOR_BRAND_ID.Value) : "",
-        //                    STATUS = GetSensorStatus(aSTNE, inst.INSTRUMENT_ID),
-        //                    TIMESTAMP = GetSensorStatDate(aSTNE, inst.INSTRUMENT_ID),
-        //                    SITE_NO = inst.SITE.SITE_NO,
-        //                    LATITUDE = inst.SITE.LATITUDE_DD,
-        //                    LONGITUDE = inst.SITE.LONGITUDE_DD,
-        //                    DESCRIPTION = inst.SITE.SITE_DESCRIPTION != null ? SiteHandler.GetSiteDesc(inst.SITE.SITE_DESCRIPTION) : "",
-        //                    NETWORK = inst.SITE_ID.HasValue ? SiteHandler.GetSiteNetwork(aSTNE, inst.SITE_ID.Value) : "",
-        //                    STATE = inst.SITE.STATE,
-        //                    COUNTY = inst.SITE.COUNTY,
-        //                    WATERBODY = inst.SITE.WATERBODY,
-        //                    HORIZONTAL_DATUM = inst.SITE.HDATUM_ID > 0 ? SiteHandler.GetHDatum(aSTNE, inst.SITE.HDATUM_ID) : "",
-        //                    PRIORITY = inst.SITE.PRIORITY_ID.HasValue ? SiteHandler.GetSitePriority(aSTNE, inst.SITE.PRIORITY_ID.Value) : "",
-        //                    ZONE = inst.SITE.ZONE,
-        //                    HORIZONTAL_COLLECT_METHOD = inst.SITE.HCOLLECT_METHOD_ID.HasValue ? SiteHandler.GetHCollMethod(aSTNE, inst.SITE.HCOLLECT_METHOD_ID.Value) : "",
-        //                    PERM_HOUSING_INSTALLED = inst.SITE.IS_PERMANENT_HOUSING_INSTALLED == null || inst.SITE.IS_PERMANENT_HOUSING_INSTALLED == "No" ? "No" : "Yes",
-        //                    SITE_NOTES = !string.IsNullOrEmpty(inst.SITE.SITE_NOTES) ? SiteHandler.GetSiteNotes(inst.SITE.SITE_NOTES) : ""
-
-        //                }).ToList();
-
-
-
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = instrumentList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-
-        [HttpOperation(ForUriName = "GetSiteInstrumentsByInternalId")]
-        public OperationResult GetSiteInstrumentsByInternalId(String siteNo)
-        {
-            List<instrument> entities;
-            try
-            {
-                if (string.IsNullOrEmpty(siteNo)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    entities = sa.Select<instrument>().Include(i=>i.site)
-                                .Where(inst => inst.site.site_no == siteNo)
-                                .OrderBy(inst => inst.instrument_id)
-                                .ToList();
+                    if (statusIdList != null && statusIdList.Count > 0)
+                        query = query.AsEnumerable().Where(i => (i.instrument_status == null || i.instrument_status.Count <= 0) ? false :
+                                                                    statusIdList.Contains(i.instrument_status.OrderByDescending(insStat => insStat.time_stamp)
+                                                                    .Where(stat => stat != null).FirstOrDefault().status_type_id.Value)).AsQueryable();
+                    
+                    entities = query.AsEnumerable().Select(
+                        inst => new InstrumentDownloadable
+                        {
+                            instrument_id =  inst.instrument_id,
+                            sensorType = inst.sensor_type.sensor,
+                            sensor_type_id = inst.sensor_type_id,
+                            deploymentType = inst.deployment_type_id.HasValue ? inst.deployment_type.method : "",
+                            deployment_type_id = inst.deployment_type_id,
+                            serial_number = inst.serial_number,
+                            housing_serial_number = inst.housing_serial_number,
+                            interval = inst.interval,
+                            site_id = inst.site_id,
+                            eventName =  inst.event_id.HasValue ? inst.@event.event_name : "",
+                            location_description = inst.location_description,
+                            collectionCondition = inst.inst_collection_id.HasValue ? inst.instr_collection_conditions.condition : "",
+                            housingType = inst.housing_type_id.HasValue ? inst.housing_type.type_name : "",
+                            vented = inst.vented,
+                            sensorBrand = inst.sensor_brand_id.HasValue ? inst.sensor_brand.brand_name : "",
+                            statusId = inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().status_type_id,
+                            timeStamp = inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().time_stamp,
+                            site_no =  inst.site.site_no,
+                            latitude = inst.site.latitude_dd,
+                            longitude = inst.site.longitude_dd,
+                            siteDescription = inst.site.site_description,
+                            networkNames =  inst.site.network_name_site.Count > 0 ? (inst.site.network_name_site.Where(ns => ns.site_id == inst.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
+                            stateName = inst.site.state,
+                            countyName = inst.site.county,
+                            siteWaterbody =  inst.site.waterbody,
+                            siteHDatum =  inst.site.hdatum_id > 0 ? inst.site.horizontal_datums.datum_name : "", //inst.site.horizontal_datums is coming back null even though there's a hdatum_id...
+                            sitePriorityName = inst.site.priority_id.HasValue && inst.site.priority_id > 0 ? inst.site.deployment_priority.priority_name : "",
+                            siteZone = inst.site.zone,
+                            siteHCollectMethod = inst.site.hcollect_method_id.HasValue && inst.site.hcollect_method_id > 0 ? inst.site.horizontal_collect_methods.hcollect_method : "",
+                            sitePermHousing = inst.site.is_permanent_housing_installed == null || inst.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
+                            siteNotes = inst.site.site_notes
+                        }).ToList<instrument>();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
-        }//end HttpMethod.GET
+        }
+        
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFullInstruments")]
+        public OperationResult GetFullInstruments(Int32 instrumentId)
+        {
+            //get the instrument and all instrument_stats together for an instrument
+            FullInstrument anEntity = null;
+           
+            try
+            {
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<instrument> instrument = sa.Select<instrument>().Include(i => i.sensor_type).Include(i => i.deployment_type).Include(i => i.instr_collection_conditions)
+                        .Include(i => i.housing_type).Include(i => i.sensor_brand).Include(i => i.instrument_status).Include("instrument_status.status_type").Include("instrument_status.vertical_datums")
+                        .Where(inst => inst.instrument_id == instrumentId);
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "SerialNumbers")]
-        //public OperationResult GetInstrumentSerialNumbers()
-        //{
-        //    InstrumentSerialNumberList instList = new InstrumentSerialNumberList();
+                    anEntity = instrument.AsEnumerable().Select(
+                        inst => new FullInstrument
+                        {
+                            instrument_id = inst.instrument_id,
+                            sensor_type_id = inst.sensor_type_id,
+                            sensorType = inst.sensor_type_id != null ? inst.sensor_type.sensor : "",
+                            deployment_type_id = inst.deployment_type_id != null && inst.deployment_type_id != 0 ? inst.deployment_type_id.Value : 0,
+                            deploymentType = inst.deployment_type_id != null && inst.deployment_type_id != 0 ? inst.deployment_type.method : "",
+                            serial_number = inst.serial_number,
+                            housing_serial_number = inst.housing_serial_number,
+                            interval = inst.interval != null ? inst.interval.Value : 0,
+                            site_id = inst.site_id != null ? inst.site_id.Value : 0,
+                            event_id = inst.event_id != null ? inst.event_id.Value : 0,                                
+                            location_description = inst.location_description,
+                            inst_collection_id = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.inst_collection_id.Value : 0,
+                            instCollection = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.instr_collection_conditions.condition : "",
+                            housing_type_id = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type_id.Value : 0,
+                            housingType = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type.type_name : "",
+                            vented = inst.vented,
+                            sensor_brand_id = inst.sensor_brand_id != null ? inst.sensor_brand_id.Value : 0,
+                            sensorBrand = inst.sensor_brand_id != null ? inst.sensor_brand.brand_name : "",
+                            instrument_status = inst.instrument_status.OrderByDescending(instStat => instStat.time_stamp)
+                                .Select(i => new Instrument_Status
+                                {
+                                    instrument_status_id = i.instrument_status_id,
+                                    status_type_id = i.status_type_id,
+                                    status = i.status_type_id != null ? i.status_type.status : "",
+                                    instrument_id = i.instrument_id,
+                                    time_stamp = i.time_stamp.Value,
+                                    time_zone = i.time_zone,
+                                    notes = i.notes,
+                                    member_id = i.member_id != null ? i.member_id.Value : 0,
+                                    sensor_elevation = i.sensor_elevation,
+                                    ws_elevation = i.ws_elevation,
+                                    gs_elevation = i.gs_elevation,
+                                    vdatum_id = i.vdatum_id,
+                                    vdatum = i.vdatum_id.HasValue && i.vdatum_id > 0 ? i.vertical_datums.datum_name : ""
+                                }).ToList<instrument_status>()
+                        }).FirstOrDefault();
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);                
+                }//end using
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end Get        
 
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            instList.Instruments = aSTNE.INSTRUMENTs.AsEnumerable().Select(
-        //                inst => new BaseInstrument
-        //                {
-        //                    ID = Convert.ToInt32(inst.INSTRUMENT_ID),
-        //                    SerialNumber = inst.SERIAL_NUMBER
-        //                }
-        //            ).ToList<BaseInstrument>();
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteFullInstrumentList")]
+        public OperationResult GetSiteFullInstrumentList(Int32 siteId)
+        {
+            //get list of instrument and all instrument_stats together for a site
+            List<FullInstrument> entities = null; 
 
-        //        }//end using
+            try
+            {
+                if (siteId <= 0)
+                    throw new BadRequestException("Invalid input parameters");
 
-        //        return new OperationResult.OK { ResponseResource = instList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<instrument> instrumentList = sa.Select<instrument>().Include(i => i.sensor_type).Include(i => i.deployment_type).Include(i => i.instr_collection_conditions)
+                        .Include(i => i.housing_type).Include(i => i.sensor_brand).Include(i => i.instrument_status).Include("instrument_status.status_type").Include("instrument_status.vertical_datums")
+                        .Where(instr => instr.site_id == siteId);
 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetFullInstruments")]
-        //public OperationResult GetFullInstruments(Int32 instrumentId)
-        //{
-        //    //get the instrument and all instrument_stats together for an instrument
-        //    FullInstrument fullInstrument;
+                    entities = instrumentList.AsEnumerable().Select(
+                        inst => new FullInstrument
+                        {
+                            instrument_id = inst.instrument_id,
+                            sensor_type_id = inst.sensor_type_id,
+                            sensorType = inst.sensor_type_id != null ? inst.sensor_type.sensor : "",
+                            deployment_type_id = inst.deployment_type_id != null && inst.deployment_type_id != 0 ? inst.deployment_type_id.Value : 0,
+                            deploymentType = inst.deployment_type_id != null && inst.deployment_type_id != 0 ? inst.deployment_type.method : "",
+                            serial_number = inst.serial_number,
+                            housing_serial_number = inst.housing_serial_number,
+                            interval = inst.interval != null ? inst.interval.Value : 0,
+                            site_id = inst.site_id != null ? inst.site_id.Value : 0,
+                            event_id = inst.event_id != null ? inst.event_id.Value : 0,
+                            location_description = inst.location_description,
+                            inst_collection_id = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.inst_collection_id.Value : 0,
+                            instCollection = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.instr_collection_conditions.condition : "",
+                            housing_type_id = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type_id.Value : 0,
+                            housingType = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type.type_name : "",
+                            vented = inst.vented,
+                            sensor_brand_id = inst.sensor_brand_id != null ? inst.sensor_brand_id.Value : 0,
+                            sensorBrand = inst.sensor_brand_id != null ? inst.sensor_brand.brand_name : "",
+                            instrument_status = inst.instrument_status.OrderByDescending(instStat => instStat.time_stamp)
+                                .Select(i => new Instrument_Status
+                                {
+                                    instrument_status_id = i.instrument_status_id,
+                                    status_type_id = i.status_type_id,
+                                    status = i.status_type_id != null ? i.status_type.status : "",
+                                    instrument_id = i.instrument_id,
+                                    time_stamp = i.time_stamp.Value,
+                                    time_zone = i.time_zone,
+                                    notes = i.notes,
+                                    member_id = i.member_id != null ? i.member_id.Value : 0,
+                                    sensor_elevation = i.sensor_elevation,
+                                    ws_elevation = i.ws_elevation,
+                                    gs_elevation = i.gs_elevation,
+                                    vdatum_id = i.vdatum_id,
+                                    vdatum = i.vdatum_id.HasValue && i.vdatum_id > 0 ? i.vertical_datums.datum_name : ""
+                                }).ToList<instrument_status>()
+                        }).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
 
-        //    //Return BadRequest if there is no ID
-        //    if (instrumentId <= 0)
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<INSTRUMENT> instrument = aSTNE.INSTRUMENTs.Where(inst => inst.INSTRUMENT_ID == instrumentId);
-
-        //            fullInstrument = instrument.AsEnumerable().Select(
-        //                inst => new FullInstrument
-        //                {
-        //                    Instrument = new Instrument
-        //                    {
-        //                        INSTRUMENT_ID = inst.INSTRUMENT_ID,
-        //                        SENSOR_TYPE_ID = inst.SENSOR_TYPE_ID != null ? inst.SENSOR_TYPE_ID.Value : 0,
-        //                        Sensor_Type = inst.SENSOR_TYPE_ID != null ? inst.SENSOR_TYPE.SENSOR : "",
-        //                        DEPLOYMENT_TYPE_ID = inst.DEPLOYMENT_TYPE_ID != null && inst.DEPLOYMENT_TYPE_ID != 0 ? inst.DEPLOYMENT_TYPE_ID.Value : 0,
-        //                        Deployment_Type = inst.DEPLOYMENT_TYPE_ID != null && inst.DEPLOYMENT_TYPE_ID != 0 ? inst.DEPLOYMENT_TYPE.METHOD : "",
-        //                        SERIAL_NUMBER = inst.SERIAL_NUMBER,
-        //                        HOUSING_SERIAL_NUMBER = inst.HOUSING_SERIAL_NUMBER,
-        //                        INTERVAL = inst.INTERVAL != null ? inst.INTERVAL.Value : 0,
-        //                        SITE_ID = inst.SITE_ID != null ? inst.SITE_ID.Value : 0,
-        //                        EVENT_ID = inst.EVENT_ID != null ? inst.EVENT_ID.Value : 0,
-        //                        LOCATION_DESCRIPTION = inst.LOCATION_DESCRIPTION,
-        //                        INST_COLLECTION_ID = inst.INST_COLLECTION_ID != null ? inst.INST_COLLECTION_ID.Value : 0,
-        //                        Inst_Collection = inst.INST_COLLECTION_ID != null ? inst.INSTR_COLLECTION_CONDITIONS.CONDITION : "",
-        //                        HOUSING_TYPE_ID = inst.HOUSING_TYPE_ID != null ? inst.HOUSING_TYPE_ID.Value : 0,
-        //                        Housing_Type = inst.HOUSING_TYPE_ID != null ? inst.HOUSING_TYPE.TYPE_NAME : "",
-        //                        VENTED = inst.VENTED,
-        //                        SENSOR_BRAND_ID = inst.SENSOR_BRAND_ID != null ? inst.SENSOR_BRAND_ID.Value : 0,
-        //                        Sensor_Brand = inst.SENSOR_BRAND_ID != null ? inst.SENSOR_BRAND.BRAND_NAME : ""
-        //                    },
-        //                    InstrumentStats = getInstStats(inst.INSTRUMENT_ID)
-        //                }).FirstOrDefault();
-        //        }//end using            
-
-        //        return new OperationResult.OK { ResponseResource = fullInstrument };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end Get        
-
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetFullInstrumentList")]
-        //public OperationResult GetFullInstrumentList(Int32 siteId)
-        //{
-        //    //get list of instrument and all instrument_stats together for a site
-        //    List<FullInstrument> fullInstrumentList;
-
-        //    //Return BadRequest if there is no ID
-        //    if (siteId <= 0)
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<INSTRUMENT> instrumentList = aSTNE.INSTRUMENTs.Where(instr => instr.SITE_ID == siteId);
-
-        //            fullInstrumentList = instrumentList.AsEnumerable().Select(
-        //                inst => new FullInstrument
-        //                {
-        //                    Instrument = new Instrument
-        //                    {
-        //                        INSTRUMENT_ID = inst.INSTRUMENT_ID,
-        //                        SENSOR_TYPE_ID = inst.SENSOR_TYPE_ID != null ? inst.SENSOR_TYPE_ID.Value : 0,
-        //                        Sensor_Type = inst.SENSOR_TYPE_ID != null ? inst.SENSOR_TYPE.SENSOR : "",
-        //                        DEPLOYMENT_TYPE_ID = inst.DEPLOYMENT_TYPE_ID != null && inst.DEPLOYMENT_TYPE_ID != 0 ? inst.DEPLOYMENT_TYPE_ID.Value : 0,
-        //                        Deployment_Type = inst.DEPLOYMENT_TYPE_ID != null && inst.DEPLOYMENT_TYPE_ID != 0 ? inst.DEPLOYMENT_TYPE.METHOD : "",
-        //                        SERIAL_NUMBER = inst.SERIAL_NUMBER,
-        //                        HOUSING_SERIAL_NUMBER = inst.HOUSING_SERIAL_NUMBER,
-        //                        INTERVAL = inst.INTERVAL != null ? inst.INTERVAL.Value : 0,
-        //                        SITE_ID = inst.SITE_ID != null ? inst.SITE_ID.Value : 0,
-        //                        EVENT_ID = inst.EVENT_ID != null ? inst.EVENT_ID.Value : 0,
-        //                        LOCATION_DESCRIPTION = inst.LOCATION_DESCRIPTION,
-        //                        INST_COLLECTION_ID = inst.INST_COLLECTION_ID != null && inst.INST_COLLECTION_ID > 0 ? inst.INST_COLLECTION_ID.Value : 0,
-        //                        Inst_Collection = inst.INST_COLLECTION_ID != null && inst.INST_COLLECTION_ID > 0 ? inst.INSTR_COLLECTION_CONDITIONS.CONDITION : "",
-        //                        HOUSING_TYPE_ID = inst.HOUSING_TYPE_ID != null && inst.HOUSING_TYPE_ID > 0 ? inst.HOUSING_TYPE_ID.Value : 0,
-        //                        Housing_Type = inst.HOUSING_TYPE_ID != null && inst.HOUSING_TYPE_ID > 0 ? inst.HOUSING_TYPE.TYPE_NAME : "",
-        //                        VENTED = inst.VENTED,
-        //                        SENSOR_BRAND_ID = inst.SENSOR_BRAND_ID != null ? inst.SENSOR_BRAND_ID.Value : 0,
-        //                        Sensor_Brand = inst.SENSOR_BRAND_ID != null ? inst.SENSOR_BRAND.BRAND_NAME : ""
-        //                    },
-        //                    InstrumentStats = getInstStats(inst.INSTRUMENT_ID)
-        //                }).ToList();
-        //        }//end using            
-
-        //        return new OperationResult.OK { ResponseResource = fullInstrumentList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end Get       
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end Get       
 
         #endregion
 
@@ -680,157 +651,7 @@ namespace STNServices2.Handlers
         #endregion
 
         #region Helper Methods
-      
-
-        //#region methods for instrumentDownloadable
-
-        //private decimal getValue(System.Data.Objects.DataClasses.EntityCollection<INSTRUMENT_STATUS> entityCollection)
-        //{
-        //    var x = entityCollection.AsEnumerable().OrderByDescending(insStat => insStat.TIME_STAMP).ToList();
-        //    var y = x.FirstOrDefault().STATUS_TYPE_ID.Value;
-        //    return y;
-        //}//end HttpMethod.GET
-
-        //private List<Instrument_Status> getInstStats(decimal instrumentId)
-        //{
-        //    List<Instrument_Status> instrumentStatusList = new List<Instrument_Status>();
-
-        //    using (STNEntities2 aSTNE = GetRDS())
-        //    {
-        //        try
-        //        {
-        //            instrumentStatusList = aSTNE.INSTRUMENT_STATUS.AsEnumerable()
-        //                                 .Where(instStat => instStat.INSTRUMENT_ID == instrumentId)
-        //                                 .OrderByDescending(instStat => instStat.TIME_STAMP)
-        //                                 .Select(i => new Instrument_Status
-        //                                 {
-        //                                     INSTRUMENT_STATUS_ID = i.INSTRUMENT_STATUS_ID,
-        //                                     STATUS_TYPE_ID = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE_ID.Value : 0,
-        //                                     Status = i.STATUS_TYPE_ID != null ? i.STATUS_TYPE.STATUS : "",
-        //                                     INSTRUMENT_ID = i.INSTRUMENT_ID != null ? i.INSTRUMENT_ID.Value : 0,
-        //                                     TIME_STAMP = i.TIME_STAMP.Value,
-        //                                     TIME_ZONE = i.TIME_ZONE,
-        //                                     NOTES = i.NOTES,
-        //                                     MEMBER_ID = i.MEMBER_ID != null ? i.MEMBER_ID.Value : 0,
-        //                                     SENSOR_ELEVATION = i.SENSOR_ELEVATION,
-        //                                     WS_ELEVATION = i.WS_ELEVATION,
-        //                                     GS_ELEVATION = i.GS_ELEVATION,
-        //                                     VDATUM_ID = i.VDATUM_ID,
-        //                                     VDatum = i.VDATUM_ID.HasValue && i.VDATUM_ID > 0 ? i.VERTICAL_DATUMS.DATUM_ABBREVIATION : ""
-        //                                 }).ToList();
-        //        }
-        //        catch
-        //        {
-        //            return instrumentStatusList;
-        //        }
-
-        //    }
-        //    return instrumentStatusList;
-        //}
-
-        //private string GetDeploymentType(STNEntities2 aSTNE, decimal depTypeId)
-        //{
-        //    string depName = string.Empty;
-        //    if (depTypeId > 0)
-        //    {
-        //        DEPLOYMENT_TYPE thisDp = aSTNE.DEPLOYMENT_TYPE.Where(x => x.DEPLOYMENT_TYPE_ID == depTypeId).FirstOrDefault();
-        //        if (thisDp != null)
-        //            depName = thisDp.METHOD;
-
-
-        //    }
-        //    return depName;
-        //}
-        //private string GetEvent(STNEntities2 aSTNE, decimal eventId)
-        //{
-        //    string eventName = string.Empty;
-        //    if (eventId > 0)
-        //    {
-        //        EVENT ev = aSTNE.EVENTS.Where(x => x.EVENT_ID == eventId).FirstOrDefault();
-        //        if (ev != null)
-        //            eventName = ev.EVENT_NAME;
-        //    }
-        //    return eventName;
-        //}
-        //private string GetLocationDesc(string desc)
-        //{
-        //    string locDesc = string.Empty;
-
-        //    if (desc.Length > 100)
-        //    {
-        //        locDesc = desc.Substring(0, 100);
-        //    }
-        //    else
-        //    {
-        //        locDesc = desc;
-        //    }
-
-        //    return locDesc;
-        //}
-        //private string GetCollectConditions(STNEntities2 aSTNE, decimal cc)
-        //{
-        //    string collCond = string.Empty;
-        //    INSTR_COLLECTION_CONDITIONS icc = aSTNE.INSTR_COLLECTION_CONDITIONS.Where(x => x.ID == cc).FirstOrDefault();
-        //    if (icc != null)
-        //        collCond = icc.CONDITION;
-
-        //    return collCond;
-        //}
-        //private string GetHouseType(STNEntities2 aSTNE, decimal houseType)
-        //{
-        //    string htName = string.Empty;
-        //    HOUSING_TYPE ht = aSTNE.HOUSING_TYPE.Where(x => x.HOUSING_TYPE_ID == houseType).FirstOrDefault();
-        //    if (ht != null)
-        //        htName = ht.TYPE_NAME;
-
-        //    return htName;
-        //}
-        //private string GetSensorBrand(STNEntities2 aSTNE, decimal sb)
-        //{
-        //    string sensName = string.Empty;
-        //    SENSOR_BRAND hb = aSTNE.SENSOR_BRAND.Where(x => x.SENSOR_BRAND_ID == sb).FirstOrDefault();
-        //    if (hb != null)
-        //        sensName = hb.BRAND_NAME;
-
-        //    return sensName;
-        //}
-        //private string GetSensorStatus(STNEntities2 aSTNE, decimal instId)
-        //{
-        //    string stat = string.Empty;
-        //    INSTRUMENT_STATUS instrStat = aSTNE.INSTRUMENT_STATUS.Where(x => x.INSTRUMENT_ID == instId).OrderByDescending(y => y.TIME_STAMP).FirstOrDefault();
-        //    if (instrStat != null)
-        //    {
-        //        switch (Convert.ToInt32(instrStat.STATUS_TYPE_ID.Value))
-        //        {
-        //            case 1:
-        //                stat = "Deployed";
-        //                break;
-        //            case 2:
-        //                stat = "Retrieved";
-        //                break;
-        //            case 3:
-        //                stat = "Lost";
-        //                break;
-        //            default:
-        //                stat = "Proposed";
-        //                break;
-        //        }
-        //    }
-        //    return stat;
-        //}
-        //private string GetSensorStatDate(STNEntities2 aSTNE, decimal instId)
-        //{
-        //    string dt = string.Empty;
-        //    INSTRUMENT_STATUS instrStat = aSTNE.INSTRUMENT_STATUS.Where(x => x.INSTRUMENT_ID == instId).OrderByDescending(y => y.TIME_STAMP).FirstOrDefault();
-        //    if (instrStat != null)
-        //    {
-        //        if (instrStat.TIME_STAMP != null)
-        //        {
-        //            dt = ((DateTime)(instrStat.TIME_STAMP)).ToString() + " " + instrStat.TIME_ZONE;
-        //        }
-        //    }
-        //    return dt;
-        //}
+       
         //private string BuildFilePath(FILES uploadFile, string fileName)
         //{
         //    try
@@ -868,7 +689,6 @@ namespace STNServices2.Handlers
         //        return null;
         //    }
         //}
-        //#endregion
 
         #endregion
     }//end class InstrumentHandler
