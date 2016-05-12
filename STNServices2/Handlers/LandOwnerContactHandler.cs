@@ -109,7 +109,7 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
                     {
                         mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
                         if (mlandownercontact == null) throw new NotFoundRequestException();
@@ -201,7 +201,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

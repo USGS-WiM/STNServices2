@@ -162,6 +162,7 @@
     <Compile Include="Resources\HWMResource.cs" />
     <Compile Include="Resources\PeakResource.cs" />
     <Compile Include="Resources\ReportResource.cs" />
+    <Compile Include="Resources\SensorResource.cs" />
     <Compile Include="Resources\SensorTypeResource.cs" />
     <Compile Include="Security\STNAuthenticationProvider.cs" />
     <Compile Include="Security\STNAuthorizerContributer.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Handlers\HousingTypeHandler.cs" />
     <Compile Include="PipeLineContributers\STNHyperMediaPipelineContributor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="testing\xmlEntityCodec.cs" />
     <Compile Include="Utilities\ServiceAgent\STNAgent.cs" />
   </ItemGroup>
   <ItemGroup>

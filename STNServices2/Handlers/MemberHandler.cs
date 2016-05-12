@@ -36,6 +36,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using System.Text;
@@ -50,115 +51,30 @@ namespace STNServices2.Handlers
 {
     public class MemberHandler : STNHandlerBase
     {
-
         #region GetMethods
 
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<member> memberList = null;
-
+            List<member> entities = null;
             try
             {
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        memberList = sa.Select<member>().OrderBy(m => m.member_id)
-                                     .ToList();
+                        entities = sa.Select<member>().OrderBy(m => m.member_id).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = memberList, Description = this.MessageString };
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }// end HttpMethod.Get
-
-        //[RequiresAuthentication]
-        //[HttpOperation(ForUriName = "GetEventMembers")]
-        //public OperationResult GetEventMembers(Int32 eventId)
-        //{
-        //    List<member> memberList = null;
-
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNEntities2 aSTNE = GetRDS(securedPassword))
-        //            {
-        //                //give me all members that deployed sensor or did hwm for this event
-        //                memberList = aSTNE.MEMBERS.Where(m => m.HWMs.Any(h => h.EVENT_ID == eventId) ||
-        //                    m.INSTRUMENT_STATUS.Any(inst => inst.INSTRUMENT.EVENT_ID == eventId)).ToList();
-
-        //                //memberList = aSTNE.MEMBERS.Where(mt => mt.COLLECT_TEAM.HWMs.Any(h => h.EVENT_ID == eventId) ||
-        //                //                                            mt.COLLECT_TEAM.INSTRUMENT_STATUS.Any(instS => instS.INSTRUMENT.EVENT_ID == eventId))
-        //                //                                    .Select(m => m.MEMBER).Distinct().OrderBy(m => m.MEMBER_ID).ToList();
-
-        //                if (memberList != null)
-        //                    memberList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //            }//end using
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = memberList };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end HttpMethod.GET       
-
-        [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetAgencyMembers")]
-        public OperationResult GetAgencyMembers(Int32 agencyId)
-        {
-            List<member> memberList = null;
-            try
-            {
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
-                    {
-
-                        memberList = sa.Select<agency>().FirstOrDefault(a => a.agency_id == agencyId).members.ToList();
-                        sm(MessageType.info, "Count: " + memberList.Count());
-                        sm(sa.Messages);
-
-                    }//end using
-                }//end using
-                return new OperationResult.Created { ResponseResource = memberList, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
-        [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetRoleMembers")]
-        public OperationResult GetRoleMembers(Int32 roleId)
-        {
-            List<member> memberList = null;
-            try
-            {
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
-                    {
-
-                        memberList = sa.Select<role>().FirstOrDefault(a => a.role_id == roleId).members.ToList();
-                        sm(MessageType.info, "Count: " + memberList.Count());
-                        sm(sa.Messages);
-
-                    }//end using
-                }//end using
-                return new OperationResult.Created { ResponseResource = memberList, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
+ 
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
@@ -173,6 +89,7 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Select<member>().FirstOrDefault(e => e.member_id == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -185,6 +102,54 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [RequiresAuthentication]
+        [HttpOperation(ForUriName = "GetAgencyMembers")]
+        public OperationResult GetAgencyMembers(Int32 agencyId)
+        {
+            List<member> entities = null;
+            try
+            {
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    {
+
+                        entities = sa.Select<agency>().FirstOrDefault(a => a.agency_id == agencyId).members.ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [RequiresAuthentication]
+        [HttpOperation(ForUriName = "GetRoleMembers")]
+        public OperationResult GetRoleMembers(Int32 roleId)
+        {
+            List<member> entities = null;
+            try
+            {
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    {
+
+                        entities = sa.Select<role>().FirstOrDefault(a => a.role_id == roleId).members.ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+               
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventCoordinator")]
         public OperationResult GetEventCoordinator(Int32 eventId)
@@ -198,7 +163,8 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<events>().FirstOrDefault(e => e.event_id == eventId).member;
+                        anEntity = sa.Select<events>().Include(e=> e.member).FirstOrDefault(e => e.event_id == eventId).member;
+                        if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
 
                     }//end using
@@ -211,56 +177,21 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        //[RequiresAuthentication]
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetByUserName")]
-        //public OperationResult Get(string userName)
-        //{
-        //    MEMBER aMember;
-
-        //    //Return BadRequest if there is no ID
-        //    if (userName == null)
-        //    { return new OperationResult.BadRequest(); }
-
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNEntities2 aSTNE = GetRDS(securedPassword))
-        //            {
-        //                aMember = aSTNE.MEMBERS.SingleOrDefault(
-        //                          m => String.Equals(m.USERNAME.ToUpper(), userName.ToUpper()));
-
-        //                if (aMember != null)
-        //                    aMember.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-
-        //            }//end using
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = aMember };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end HttpMethod.GET
-
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovingOfficial")]
         public OperationResult GetApprovalOfficial(Int32 ApprovalId)
         {            
             member anEntity = null;
-
             try
             {
                 if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
-                        anEntity = sa.Select<events>().FirstOrDefault(e => e.event_id == ApprovalId).member;
+                        anEntity = sa.Select<approval>().FirstOrDefault(e => e.approval_id == ApprovalId).member;
+                        if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
-
                     }//end using
                 }//end using
 
@@ -277,17 +208,16 @@ namespace STNServices2.Handlers
         public OperationResult GetDataFileProcessor(Int32 dataFileId)
         {
             member anEntity = null;
-
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         anEntity = sa.Select<data_file>().FirstOrDefault(e => e.data_file_id == dataFileId).member;
+                        if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
-
                     }//end using
                 }//end using
 
@@ -304,17 +234,16 @@ namespace STNServices2.Handlers
         public OperationResult GetPeakSummaryProcessor(Int32 peakSummaryId)
         {
             member anEntity = null;
-
             try
             {
                 if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         anEntity = sa.Select<peak_summary>().FirstOrDefault(e => e.peak_summary_id == peakSummaryId).member;
+                        if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
-
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -324,6 +253,34 @@ namespace STNServices2.Handlers
                 return HandleException(ex);
             }
         }//end HttpMethod.GET
+
+        //returns list of members who have deployed sensor or hwm for this event
+        [RequiresAuthentication]
+        [HttpOperation(ForUriName = "GetEventMembers")]
+        public OperationResult GetEventMembers(Int32 eventId)
+        {
+            List<member> entities = null;
+            try
+            {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                //Get basic authentication password
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        //give me all members that deployed sensor or did hwm for this event
+                        entities = sa.Select<member>().Include(m => m.hwms).Include("instrument_status.instrument").Where(m => m.hwms.Any(h => h.event_id == eventId) ||
+                            m.instrument_status.Any(inst => inst.instrument.event_id == eventId)).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET       
+
         #endregion
 
         #region PostMethods
@@ -331,7 +288,7 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "AddMember")]
+        [HttpOperation(HttpMethod.POST)]
         public OperationResult POST(member anEntity)
         {
             try
@@ -387,8 +344,6 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-
-
                         //fetch the object to be updated (assuming that it exists)
                         member ObjectToBeUpdated = sa.Select<member>().SingleOrDefault(m => m.member_id == entityId);
                         if (ObjectToBeUpdated == null) throw new NotFoundRequestException("Requested member not found.");
@@ -462,7 +417,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

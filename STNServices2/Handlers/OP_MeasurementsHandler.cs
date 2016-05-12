@@ -144,8 +144,8 @@ namespace STNServices2.Handlers
         #region PostMethods
 
         [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "AddInstrumentStatOPMeasurements")]
-        public OperationResult AddInstrumentStatOPMeasurements(op_measurements anEntity)
+        [HttpOperation(HttpMethod.POST)]
+        public OperationResult POST(op_measurements anEntity)
         {            
             try
             {
@@ -222,7 +222,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
