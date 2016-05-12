@@ -950,6 +950,8 @@
           <Property Name="vdatum_id" Type="Int32" />
           <NavigationProperty Name="instrument" Relationship="STNNEWModel.instrumentinstrument_status" FromRole="instrument_status" ToRole="instrument" />
           <NavigationProperty Name="status_type" Relationship="STNNEWModel.status_typeinstrument_status" FromRole="instrument_status" ToRole="status_type" />
+          <NavigationProperty Name="member" Relationship="STNNEWModel.memberinstrument_status" FromRole="instrument_status" ToRole="member" />
+          <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsinstrument_status" FromRole="instrument_status" ToRole="vertical_datums" />
         </EntityType>
         <EntityType Name="landownercontact">
           <Key>
@@ -1323,6 +1325,7 @@
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.vertical_datumshwm" FromRole="vertical_datums" ToRole="hwm" />
           <NavigationProperty Name="objective_point" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="vertical_datums" ToRole="objective_point" />
           <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="vertical_datums" ToRole="peak_summary" />
+          <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.vertical_datumsinstrument_status" FromRole="vertical_datums" ToRole="instrument_status" />
         </EntityType>
         <EntityContainer Name="STNDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="agencies" EntityType="Self.agency" />
@@ -1617,6 +1620,14 @@
             <End Role="vertical_datums" EntitySet="vertical_datums" />
             <End Role="peak_summary" EntitySet="peak_summary" />
           </AssociationSet>
+          <AssociationSet Name="memberinstrument_status" Association="STNNEWModel.memberinstrument_status">
+            <End Role="member" EntitySet="members" />
+            <End Role="instrument_status" EntitySet="instrument_status" />
+          </AssociationSet>
+          <AssociationSet Name="vertical_datumsinstrument_status" Association="STNNEWModel.vertical_datumsinstrument_status">
+            <End Role="vertical_datums" EntitySet="vertical_datums" />
+            <End Role="instrument_status" EntitySet="instrument_status" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
           <End Type="STNNEWModel.hwm_types" Role="hwm_types" Multiplicity="1" />
@@ -1715,8 +1726,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="hwmfile">
-          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="0..1" />
-          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" >
+          </End>
           <ReferentialConstraint>
             <Principal Role="hwm">
               <PropertyRef Name="hwm_id" />
@@ -1775,7 +1789,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="sitefile">
-          <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+          <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" >
+          </End>
           <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="site">
@@ -2256,6 +2271,7 @@
           <NavigationProperty Name="approvals" Relationship="STNNEWModel.memberapproval" FromRole="member" ToRole="approval" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.memberhwm" FromRole="member" ToRole="hwm" />
           <NavigationProperty Name="hwms1" Relationship="STNNEWModel.memberhwm1" FromRole="member" ToRole="hwm" />
+          <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.memberinstrument_status" FromRole="member" ToRole="instrument_status" />
         </EntityType>
         <Association Name="memberevents">
           <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
@@ -2373,6 +2389,30 @@
               <PropertyRef Name="datum_id" />
             </Principal>
             <Dependent Role="peak_summary">
+              <PropertyRef Name="vdatum_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberinstrument_status">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="instrument_status">
+              <PropertyRef Name="member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vertical_datumsinstrument_status">
+          <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vertical_datums">
+              <PropertyRef Name="datum_id" />
+            </Principal>
+            <Dependent Role="instrument_status">
               <PropertyRef Name="vdatum_id" />
             </Dependent>
           </ReferentialConstraint>

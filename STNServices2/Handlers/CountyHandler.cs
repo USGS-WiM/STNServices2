@@ -95,13 +95,13 @@ namespace STNServices2.Handlers
             try
             {
                 if (stateId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<state>().FirstOrDefault(i => i.state_id == stateId).counties.ToList();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entities, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception)
             { return new OperationResult.BadRequest(); }
@@ -115,14 +115,14 @@ namespace STNServices2.Handlers
             {
                 //Return BadRequest if there is no ID
                 if (string.IsNullOrEmpty(stateAbbrev)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<state>().FirstOrDefault(i => i.state_abbrev == stateAbbrev).counties.ToList();
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entities, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -137,7 +137,7 @@ namespace STNServices2.Handlers
             {
                 if (stateAbbrev == null) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     thisState = sa.Select<state>().FirstOrDefault(st => st.state_abbrev == stateAbbrev);
                     List<site> allSitesInThisState = sa.Select<site>().Where(p => p.state == stateAbbrev).ToList();
@@ -146,7 +146,7 @@ namespace STNServices2.Handlers
                     SiteCounties = sa.Select<county>().Where(co => uniqueCoList.Contains(co.county_name) && co.state_id == thisState.state_id).ToList();
                 }//end using            
                 sm(MessageType.info, "Count:" + SiteCounties.Count);
-                return new OperationResult.OK { ResponseResource = SiteCounties, Description=MessageString };
+                return new OperationResult.OK { ResponseResource = SiteCounties, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -238,7 +238,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

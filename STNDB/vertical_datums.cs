@@ -20,6 +20,7 @@ namespace STNDB
             this.hwms = new HashSet<hwm>();
             this.objective_point = new HashSet<objective_point>();
             this.peak_summary = new HashSet<peak_summary>();
+            this.instrument_status = new HashSet<instrument_status>();
         }
     
         public int datum_id { get; set; }
@@ -32,5 +33,7 @@ namespace STNDB
         public virtual ICollection<objective_point> objective_point { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<peak_summary> peak_summary { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<instrument_status> instrument_status { get; set; }
     }
 }
