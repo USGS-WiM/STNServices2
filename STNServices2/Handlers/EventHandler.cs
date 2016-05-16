@@ -93,7 +93,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSiteEvents")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEvents")]
         public OperationResult GetSiteEvents(Int32 siteId)
         {
             List<events> entities = null;
@@ -114,7 +114,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetEventTypeEvents")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventTypeEvents")]
         public OperationResult GetEventTypeEvents(Int32 eventTypeId)
         {
             List<events> entities = null;
@@ -136,7 +136,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetEventStatusEvents")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventStatusEvents")]
         public OperationResult GetEventStatusEvents(Int32 eventStatusId)
         {
             List<events> entities = null;
@@ -157,7 +157,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMEvent")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMEvent")]
         public OperationResult GetHWMEvent(Int32 hwmId)
         {
             events anEntity = null;
@@ -178,7 +178,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentEvent")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentEvent")]
         public OperationResult GetInstrumentEvent(Int32 instrumentId)
         {
             events anEntity = null;

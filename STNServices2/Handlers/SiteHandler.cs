@@ -21,15 +21,17 @@
 
 #region Comments
 // 04.07.16 - TR - Created
-//#endregion
+#endregion
 using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using STNServices2.Utilities.ServiceAgent;
 using STNServices2.Security;
+using STNServices2.Resources;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -40,8 +42,8 @@ namespace STNServices2.Handlers
     public class SiteHandler : STNHandlerBase
     {
         #region GetMethods
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetAllSites")]
-        public OperationResult GetAllSites()
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get()
         {
             List<site> entities = null;
 
@@ -64,557 +66,6 @@ namespace STNServices2.Handlers
             }
         }//end httpMethod.GET
 
-        #region siteList and sitelocationquery
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetDetailSites")]
-        //public OperationResult GetDetailSites()
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.SITES.AsEnumerable().Select(
-        //                site => new DetailSite
-        //                {
-        //                    SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                    siteDetail = site,
-        //                    hWMDetail = aSTNE.HWMs.AsEnumerable()
-        //                        .Where(hwm => hwm.SITE_ID == site.SITE_ID)
-        //                        .ToList<HWM>()
-        //                }
-        //            ).ToList<SiteBase>();
-
-        //            if (sites != null)
-        //                sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }//end using 
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
-
-        //[HttpOperation(ForUriName = "GetPoints")]
-        //public OperationResult GetPoints()
-        //{
-        //    SiteList sites = new SiteList();
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.SITES.AsEnumerable().Select(
-        //                site => new SitePoint { 
-        //                    SITE_ID = Convert.ToInt32(site.SITE_ID), 
-        //                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "", 
-        //                    latitude = site.LATITUDE_DD, 
-        //                    longitude = site.LONGITUDE_DD 
-        //                }
-        //            ).ToList<SiteBase>();
-        //        }
-
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-        //[HttpOperation(ForUriName = "GetHWMLocationSites")]
-        //public OperationResult GetHWMLocationSites()
-        //{
-        //    List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //Site with no sensor deployments AND
-        //            //Site with no proposed sensors AND 
-        //            //(Site does not have permanent housing installed OR
-        //            //  Site has had HWM collected at it in the past OR
-        //            //  Site has “Sensor not appropriate” box checked)
-
-        //            IQueryable<SITE> query = aSTNE.SITES.Where(s => !s.INSTRUMENTs.Any() &&
-        //                    ((s.IS_PERMANENT_HOUSING_INSTALLED == "No" || s.IS_PERMANENT_HOUSING_INSTALLED == null) || s.HWMs.Any() || s.SENSOR_NOT_APPROPRIATE == 1));
-
-
-        //            sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
-        //            {
-        //                SITE_ID = site.SITE_ID,
-        //                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                Description = site.SITE_DESCRIPTION,
-        //                County = site.COUNTY,
-        //                State = site.STATE,
-        //                Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
-        //                RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.OBJECTIVE_POINT_ID).FirstOrDefault(),
-        //                Events = site.INSTRUMENTs.Where(i => i.EVENT_ID != null && i.DATA_FILE.Count() > 0).Select(e => e.EVENT).Distinct().ToList<EVENT>()
-        //            }).ToList<SiteLocationQuery>();
-        //        }
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-        //[HttpOperation(ForUriName = "GetSensorLocationSites")]
-        //public OperationResult GetSensorLocationSites()
-        //{
-        //    List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //Site with previous sensor deployment  
-        //            //OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
-        //            //OR Site with proposed sensor indicated of any type
-
-        //            IQueryable<SITE> query = aSTNE.SITES.Where(s => s.IS_PERMANENT_HOUSING_INSTALLED == "Yes" ||
-        //                    s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID > 0 && h.HOUSING_TYPE_ID < 5) || s.INSTRUMENTs.Any());
-
-
-        //            sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
-        //            {
-        //                SITE_ID = site.SITE_ID,
-        //                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                County = site.COUNTY,
-        //                State = site.STATE,
-        //                Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
-        //                RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.DATE_ESTABLISHED).FirstOrDefault(),
-        //                Events = site.INSTRUMENTs.Where(i => i.EVENT_ID != null && i.DATA_FILE.Count() > 0).Select(e => e.EVENT).Distinct().ToList<EVENT>()
-        //            }).ToList<SiteLocationQuery>();
-        //        }
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-        //[HttpOperation(ForUriName = "GetRDGLocationSites")]
-        //public OperationResult GetRDGLocationSites()
-        //{
-        //    List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //Site with previous RDG sensor type deployed
-        //            //OR Site with RDG housing type listed (type 5) 
-        //            //OR Site with RDG checked as a proposed sensor
-
-        //            IQueryable<SITE> query = aSTNE.SITES.Where(s => s.INSTRUMENTs.Any(inst => inst.SENSOR_TYPE_ID == 5) ||
-        //                    s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID == 5));
-
-
-        //            sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
-        //            {
-        //                SITE_ID = site.SITE_ID,
-        //                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                County = site.COUNTY,
-        //                State = site.STATE,
-        //                Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
-        //                RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.DATE_ESTABLISHED).FirstOrDefault(),
-        //                Events = aSTNE.EVENTS.Where(e => e.HWMs.Any(h => h.SITE_ID == site.SITE_ID) || e.INSTRUMENTs.Any(inst => inst.SITE_ID == site.SITE_ID)).ToList()
-        //            }).ToList<SiteLocationQuery>();
-        //        }
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-        //[HttpOperation(ForUriName = "GetFilteredSites")]
-        //public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
-        //{
-        //    try
-        //    {
-        //        List<SiteLocationQuery> sites = new List<SiteLocationQuery>();
-                
-        //        List<string> states = new List<string>();
-        //        char[] delimiter = { ',' };
-        //        //stateNames will be a list that is comma separated. Need to parse out
-        //        if (!string.IsNullOrEmpty(stateNames))
-        //        {
-        //            states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
-        //        }
-
-        //        Int32 filterEvent = (eventId > 0) ? eventId : -1;
-        //        Int32 filterSensorType = (sensorTypeId > 0) ? sensorTypeId : -1;
-        //        Int32 filternetworkname = (networkNameId > 0) ? networkNameId : -1;
-        //        Boolean OPhasBeenDefined = opDefined > 0 ? true : false;
-        //        Boolean hwmOnly = hwmOnlySites > 0 ? true : false;
-        //        Boolean sensorOnly = sensorOnlySites > 0 ? true : false;
-        //        Boolean rdgOnly = rdgOnlySites > 0 ? true : false;
-
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<SITE> query;
-
-        //            //query = aSTNE.SITES.Where(s => s.SITE_ID > 0);
-        //            query = aSTNE.SITES;
-
-        //            if (filterEvent > 0)
-        //                query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == filterEvent) || s.HWMs.Any(h => h.EVENT_ID == filterEvent));
-
-        //            if (states.Count >= 2)
-        //            {
-        //                //multiple STATES
-        //                query = from q in query where states.Any(s => q.STATE.Contains(s.Trim())) select q;
-        //            }
-        //            if (states.Count == 1)
-        //            {
-        //                string thisState = states[0];
-        //                thisState = GetStateByName(thisState).ToString();
-        //                query = query.Where(r => string.Equals(r.STATE.ToUpper(), thisState.ToUpper()));
-        //            }
-        //            if (OPhasBeenDefined)
-        //                query = query.Where(s => s.OBJECTIVE_POINT.Any());
-
-        //            if (filterSensorType > 0)
-        //                query = query.Where(s => s.INSTRUMENTs.Any(i => i.SENSOR_TYPE_ID == filterSensorType));
-
-        //            if (filternetworkname > 0)
-        //                query = query.Where(s => s.NETWORK_NAME_SITE.Any(i => i.NETWORK_NAME_ID == filternetworkname));
-
-
-        //            if (hwmOnly)
-        //            {
-        //                //Site with no sensor deployments AND Site with no proposed sensors AND 
-        //                //(Site does not have permanent housing installed OR Site has had HWM collected at it in the past OR Site has “Sensor not appropriate” box checked)
-        //                query = query.Where(s => !s.INSTRUMENTs.Any() && ((s.IS_PERMANENT_HOUSING_INSTALLED == "No" || s.IS_PERMANENT_HOUSING_INSTALLED == null) || s.HWMs.Any() || s.SENSOR_NOT_APPROPRIATE == 1));
-        //            }
-
-        //            if (sensorOnly)
-        //            {
-        //                //Site with previous sensor deployment OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
-        //                //OR Site with proposed sensor indicated of any type
-        //                query = query.Where(s => s.IS_PERMANENT_HOUSING_INSTALLED == "Yes" || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID > 0 && h.HOUSING_TYPE_ID < 5) || s.INSTRUMENTs.Any());
-        //            }
-
-        //            if (rdgOnly)
-        //            {
-        //                //Site with previous RDG sensor type deployed OR Site with RDG housing type listed (type 5) OR Site with RDG checked as a proposed sensor
-        //                query = query.Where(s => s.INSTRUMENTs.Any(inst => inst.SENSOR_TYPE_ID == 5) || s.SITE_HOUSING.Any(h => h.HOUSING_TYPE_ID == 5));
-        //            }
-
-        //            sites = query.Distinct().AsEnumerable().Select(site => new SiteLocationQuery
-        //                    {
-        //                        SITE_ID = site.SITE_ID,
-        //                        Description = site.SITE_DESCRIPTION,
-        //                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                        latitude = site.LATITUDE_DD,
-        //                        longitude = site.LONGITUDE_DD,
-        //                        County = site.COUNTY,
-        //                        State = site.STATE,
-        //                        Networks = site.NETWORK_NAME_SITE.Select(n => n.NETWORK_NAME).ToList<NETWORK_NAME>(),
-        //                        RecentOP = site.OBJECTIVE_POINT.OrderByDescending(x => x.DATE_ESTABLISHED).FirstOrDefault(),
-        //                        Events = aSTNE.EVENTS.Where(e => e.HWMs.Any(h => h.SITE_ID == site.SITE_ID) || e.INSTRUMENTs.Any(inst => inst.SITE_ID == site.SITE_ID)).ToList()
-        //                    }).ToList<SiteLocationQuery>();
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //}//end HttpMethod.Get
-
-        //[HttpOperation(HttpMethod.GET)]
-        //public OperationResult GetSitesByStateName(string stateName)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.SITES.Where(s => string.Equals(s.STATE.ToUpper(),
-        //                                            stateName.ToUpper())).AsEnumerable()
-        //                                        .Select(
-        //                                        site => new SimpleSite
-        //                                        {
-        //                                            SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                            SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : ""
-        //                                        }
-        //                                        ).ToList<SiteBase>();
-
-        //            if (sites != null)
-        //                sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }// end using
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
-
-        //[HttpOperation(HttpMethod.GET)]
-        //public OperationResult GetSites(Int32 eventId, Int32 sensorTypeId, Int32 deploymentTypeId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.SITES.Where(s => s.INSTRUMENTs.Any(ins => ins.SENSOR_TYPE_ID == sensorTypeId &&
-        //                                                                        ins.DEPLOYMENT_TYPE_ID == deploymentTypeId &&
-        //                                                                        ins.EVENT_ID == eventId))
-        //                                        .AsEnumerable()
-        //                                        .Select(
-        //                                        site => new SimpleSite
-        //                                        {
-        //                                            SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                            SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : ""
-        //                                        }
-        //                                        ).ToList<SiteBase>();
-
-        //            if (sites != null)
-        //                sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-
-        //        }// end using
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
-
-        //[HttpOperation(ForUriName = "GetSitesByLatLong")]
-        //public OperationResult GetSitesByLatLong(decimal latitude, decimal longitude, [Optional]decimal buffer)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.SITES.Where(s => (s.LATITUDE_DD >= latitude - buffer && s.LATITUDE_DD <= latitude + buffer) &&
-        //                                                    (s.LONGITUDE_DD >= longitude - buffer && s.LONGITUDE_DD <= longitude + buffer))
-        //                                        .AsEnumerable()
-        //                                        .Select(
-        //                                        site => new SitePoint
-        //                                        {
-        //                                            SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                            SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                                            latitude = site.LATITUDE_DD,
-        //                                            longitude = site.LONGITUDE_DD
-        //                                        }).ToList<SiteBase>();
-
-        //            if (sites != null)
-        //                sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        }// end using
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
- 
-        //[HttpOperation(HttpMethod.GET, ForUriName = "getNetworkTypeSites")]
-        //public OperationResult getNetworkTypeSites(Int32 networkTypeId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    //Return BadRequest if there is no ID
-        //    if (networkTypeId <= 0)
-        //    { return new OperationResult.BadRequest(); }
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //give me all the sites that have this network type sites = from all sites ==> look at networktypesite table, where siteId 
-        //            //matches and network type id matches
-        //            sites.Sites = aSTNE.SITES.AsEnumerable().Where(s => s.NETWORK_TYPE_SITE.Any(i => i.NETWORK_TYPE_ID == networkTypeId))
-        //                                                    .Select(site => new SitePoint
-        //                                                    {
-        //                                                        SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                                                        latitude = site.LATITUDE_DD,
-        //                                                        longitude = site.LONGITUDE_DD
-        //                                                    }).ToList<SiteBase>();
-        //        }
-
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
-
-        //[HttpOperation(HttpMethod.GET, ForUriName = "getNetworkNameSites")]
-        //public OperationResult getNetworkNameSites(Int32 networkNameId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    //Return BadRequest if there is no ID
-        //    if (networkNameId <= 0)
-        //    { return new OperationResult.BadRequest(); }
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            //give me all the sites that have this network type sites = from all sites ==> look at networktypesite table, where siteId 
-        //            //matches and network type id matches
-        //            sites.Sites = aSTNE.SITES.AsEnumerable().Where(s => s.NETWORK_NAME_SITE.Any(i => i.NETWORK_NAME_ID == networkNameId))
-        //                                                    .Select(site => new SitePoint
-        //                                                    {
-        //                                                        SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                                        SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                                                        latitude = site.LATITUDE_DD,
-        //                                                        longitude = site.LONGITUDE_DD
-        //                                                    }).ToList<SiteBase>();
-        //        }
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}
- 
-        //[HttpOperation(ForUriName = "GetEventSites")]
-        //public OperationResult GetEventSites(Int32 eventId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            IQueryable<SITE> query;
-        //            query = aSTNE.SITES;
-
-        //            query = query.Where(s => s.INSTRUMENTs.Any(i => i.EVENT_ID == eventId) || s.HWMs.Any(h => h.EVENT_ID == eventId));
-
-        //            sites.Sites = query.AsEnumerable().Select(site => new SitePoint
-        //            {
-        //                SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                latitude = site.LATITUDE_DD,
-        //                longitude = site.LONGITUDE_DD
-        //            }).ToList<SiteBase>();
-                    
-        //        }
-
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end httpMethod.GET
- 
-        //[HttpOperation(ForUriName = "GetHDatumSites")]
-        //public OperationResult GetHDatumSites(Int32 hdatumId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.HORIZONTAL_DATUMS.FirstOrDefault(hd => hd.DATUM_ID == hdatumId).SITEs
-        //                                .Select(site => new SitePoint
-        //                                {
-        //                                    SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                                    latitude = site.LATITUDE_DD,
-        //                                    longitude = site.LONGITUDE_DD
-        //                                })
-        //                                .ToList<SiteBase>();
-        //        }
-
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //}//end httpMethod.GET
- 
-        //[HttpOperation(ForUriName = "GetLandOwnserSites")]
-        //public OperationResult GetLandOwnserSites(Int32 landOwnerId)
-        //{
-        //    SiteList sites = new SiteList();
-
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            sites.Sites = aSTNE.LANDOWNERCONTACTs.FirstOrDefault(l => l.LANDOWNERCONTACTID == landOwnerId).SITES
-        //                                .Select(site => new SitePoint
-        //                                {
-        //                                    SITE_ID = Convert.ToInt32(site.SITE_ID),
-        //                                    SITE_NO = (site.SITE_NO != null) ? site.SITE_NO : "",
-        //                                    latitude = site.LATITUDE_DD,
-        //                                    longitude = site.LONGITUDE_DD
-        //                                })
-        //                                .ToList<SiteBase>();
-        //        }
-
-        //        if (sites != null)
-        //            sites.Sites.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-        //        return new OperationResult.OK { ResponseResource = sites };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-
-        //}//end httpMethod.GET
-
-        #endregion siteList and sitelocationquery
-        
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
@@ -625,7 +76,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<site>().FirstOrDefault(e => e.site_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using
@@ -638,102 +89,7 @@ namespace STNServices2.Handlers
             }
         }
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetOPSite")]
-        public OperationResult GetOPSite(Int32 objectivePointId)
-        {
-            site anEntity = null;
-            
-            try
-            {
-                if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<objective_point>().FirstOrDefault(op => op.objective_point_id == objectivePointId).site;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-                }
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentSite")]
-        public OperationResult GetInstrumentSite(Int32 instrumentId)
-        {
-            site anEntity = null;
-            
-            try
-            {
-                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).site;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "getHWMSite")]
-        public OperationResult getHWMSite(Int32 hwmId)
-        {
-            site anEntity = null;
-
-            try
-            {
-                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).site;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-           
-        [HttpOperation(ForUriName = "GetFileSite")]
-        public OperationResult GetFileSite(Int32 fileId)
-        {
-            site anEntity = null;            
-
-            try
-            {
-                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).site;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }//end httpMethod.GET
-
-        [HttpOperation(ForUriName = "GetSiteBySiteNo")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteBySearch")]
         public OperationResult GetSiteBySiteNo([Optional] String siteNo, [Optional] String siteName, [Optional] String siteId)
         {
             site anEntity = null;
@@ -745,13 +101,13 @@ namespace STNServices2.Handlers
                     //only one will be provided
                     if (!string.IsNullOrEmpty(siteNo))
                     {
-                        anEntity = sa.Select<site>().SingleOrDefault(s => string.Equals(s.site_no, siteNo, StringComparison.OrdinalIgnoreCase));
+                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_no.Equals(siteNo, StringComparison.OrdinalIgnoreCase));
                         if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
                     if (!string.IsNullOrEmpty(siteName))
                     {
-                        anEntity = sa.Select<site>().SingleOrDefault(s => string.Equals(s.site_name, siteName, StringComparison.OrdinalIgnoreCase));
+                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_name.Equals(siteName, StringComparison.OrdinalIgnoreCase));
                         if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
@@ -772,6 +128,378 @@ namespace STNServices2.Handlers
                 return HandleException(ex);
             }                
         }//end httpMethod.GET             
+        
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFileSite")]
+        public OperationResult GetFileSite(Int32 fileId)
+        {
+            site anEntity = null;            
+
+            try
+            {
+                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<file>().Include(f => f.site).FirstOrDefault(f => f.file_id == fileId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+ 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetOPSite")]
+        public OperationResult GetOPSite(Int32 objectivePointId)
+        {
+            site anEntity = null;
+            
+            try
+            {
+                if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<objective_point>().Include(op => op.site).FirstOrDefault(op => op.objective_point_id == objectivePointId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+                }
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "getHWMSite")]
+        public OperationResult getHWMSite(Int32 hwmId)
+        {
+            site anEntity = null;
+
+            try
+            {
+                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<hwm>().Include(h=>h.site).FirstOrDefault(h => h.hwm_id == hwmId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentSite")]
+        public OperationResult GetInstrumentSite(Int32 instrumentId)
+        {
+            site anEntity = null;
+            
+            try
+            {
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<instrument>().Include(i=>i.site).FirstOrDefault(i => i.instrument_id == instrumentId).site;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+ 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventSites")]
+        public OperationResult GetEventSites(Int32 eventId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {                
+                    entities = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Where(s => s.instruments.Any(i => i.event_id == eventId) || s.hwms.Any(h => h.event_id == eventId)).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "getNetworkTypeSites")]
+        public OperationResult getNetworkTypeSites(Int32 networkTypeId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (networkTypeId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                { 
+                    //give me all the sites that have this network type sites
+                    entities = sa.Select<site>().Include(s => s.network_type_site).Where(s => s.network_type_site.Any(i => i.network_type_id == networkTypeId)).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "getNetworkNameSites")]
+        public OperationResult getNetworkNameSites(Int32 networkNameId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (networkNameId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                { 
+                    //give me all the sites that have this network type sites 
+                    entities = sa.Select<site>().Include(s => s.network_name_site).Where(s => s.network_name_site.Any(i => i.network_name_id == networkNameId)).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitesByStateName")]
+        public OperationResult GetSitesByStateName(string stateAbbrev)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (string.IsNullOrEmpty(stateAbbrev)) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<site>().Where(s => s.state.Equals(stateAbbrev, StringComparison.OrdinalIgnoreCase)).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitesByLatLong")]
+        public OperationResult GetSitesByLatLong(double latitude, double longitude, [Optional]double buffer)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (latitude <= 0 || longitude >= 0) throw new BadRequestException("Invalid input parameters");
+                
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<site>().Where(s => (s.latitude_dd >= latitude - buffer && s.latitude_dd <= latitude + buffer) &&
+                                                            (s.longitude_dd >= longitude - buffer && s.longitude_dd <= longitude + buffer)).ToList();
+
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHDatumSites")]
+        public OperationResult GetHDatumSites(Int32 hdatumId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (hdatumId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<horizontal_datums>().Include(hd => hd.sites).FirstOrDefault(hd => hd.datum_id == hdatumId).sites.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetLandOwnserSites")]
+        public OperationResult GetLandOwnserSites(Int32 landOwnerId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (landOwnerId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<landownercontact>().Include(l => l.sites).FirstOrDefault(l => l.landownercontactid == landOwnerId).sites.ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end httpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredSites")]
+        public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
+        {
+            try
+            {
+                List<SiteLocationQuery> sites = null;
+
+                List<string> states = new List<string>();
+                char[] delimiter = { ',' };
+                //stateNames will be a list that is comma separated. Need to parse out
+                if (!string.IsNullOrEmpty(stateNames))
+                {
+                    states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+
+                Int32 filterEvent = (eventId > 0) ? eventId : -1;
+                Int32 filterSensorType = (sensorTypeId > 0) ? sensorTypeId : -1;
+                Int32 filternetworkname = (networkNameId > 0) ? networkNameId : -1;
+                Boolean OPhasBeenDefined = opDefined > 0 ? true : false;
+                Boolean hwmOnly = hwmOnlySites > 0 ? true : false;
+                Boolean sensorOnly = sensorOnlySites > 0 ? true : false;
+                Boolean rdgOnly = rdgOnlySites > 0 ? true : false;
+
+                using (STNAgent sa = new STNAgent(true))
+                {
+                    IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Include(s => s.objective_points).Include("network_name_site.network_name").Include(s => s.site_housing)
+                        .Include("hwms.event").Include("instruments.event");
+
+                    if (filterEvent > 0)
+                        query = query.Where(s => s.instruments.Any(i =>i.event_id == filterEvent) || s.hwms.Any(h => h.event_id == filterEvent));
+
+                    if (states.Count >= 2)
+                    {
+                        //multiple STATES
+                        query = from q in query where states.Any(s => q.state.Contains(s.Trim())) select q;
+                    }
+                    if (states.Count == 1)
+                    {
+                        string thisState = states[0];
+                        thisState = GetStateByName(thisState).ToString();
+                        query = query.Where(r => r.state.Equals(thisState, StringComparison.OrdinalIgnoreCase));
+                    }
+                    if (OPhasBeenDefined)
+                        query = query.Where(s => s.objective_points.Any());
+
+                    if (filterSensorType > 0)
+                        query = query.Where(s => s.instruments.Any(i => i != null && i.sensor_type_id == filterSensorType));
+
+                    if (filternetworkname > 0)
+                        query = query.Where(s => s.network_name_site.Any(i => i.network_name_id == filternetworkname));
+
+
+                    if (hwmOnly)
+                    {
+                        //Site with no sensor deployments AND Site with no proposed sensors AND 
+                        //(Site does not have permanent housing installed OR Site has had HWM collected at it in the past OR Site has “Sensor not appropriate” box checked)
+                        query = query.Where(s => !s.instruments.Any() && ((s.is_permanent_housing_installed == "No" || s.is_permanent_housing_installed == null) || s.hwms.Any() || s.sensor_not_appropriate == 1));
+                    }
+
+                    if (sensorOnly)
+                    {
+                        //Site with previous sensor deployment OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
+                        //OR Site with proposed sensor indicated of any type
+                        query = query.Where(s => s.is_permanent_housing_installed == "Yes" || s.site_housing.Any(h => h.housing_type_id > 0 && h.housing_type_id < 5) || s.instruments.Any());
+                    }
+
+                    if (rdgOnly)
+                    {
+                        //Site with previous RDG sensor type deployed OR Site with RDG housing type listed (type 5) OR Site with RDG checked as a proposed sensor
+                        query = query.Where(s => s.instruments.Any(inst => inst.sensor_type_id == 5) || s.site_housing.Any(h => h.housing_type_id == 5));
+                    }
+
+                    sites = query.Distinct().AsEnumerable().Select(s => new SiteLocationQuery
+                            {
+                                site_id = s.site_id,
+                                site_no = s.site_no,
+                                site_name = s.site_name,
+                                site_description = s.site_description,
+                                address = s.address,
+                                city = s.city,
+                                state = s.state,
+                                zip = s.zip,
+                                county= s.county,
+                                waterbody = s.waterbody,
+                                latitude_dd = s.latitude_dd,
+                                longitude_dd = s.longitude_dd,
+                                hdatum_id = s.hdatum_id,
+                                drainage_area_sqmi = s.drainage_area_sqmi,
+                                landownercontact_id = s.landownercontact_id,
+                                priority_id = s.priority_id,
+                                zone = s.zone,
+                                is_permanent_housing_installed =s.is_permanent_housing_installed,
+                                usgs_sid = s.usgs_sid,
+                                other_sid = s.other_sid,
+                                noaa_sid = s.noaa_sid,
+                                hcollect_method_id = s.hcollect_method_id,
+                                site_notes = s.site_notes,
+                                safety_notes = s.safety_notes,
+                                access_granted = s.access_granted,
+                                member_id = s.member_id,
+                                networkNames = s.network_name_site.Count > 0 ? s.network_name_site.Where(ns => ns.site_id == s.site_id).Select(x => x.network_name.name).Distinct().ToList() : new List<string>(),
+                                RecentOP = s.objective_points.Count > 0 ? s.objective_points.OrderByDescending(x => x.date_established).FirstOrDefault().name: "",
+                                Events = getSiteEvents(s)
+                            }).ToList();
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = sites };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+
+        }//end HttpMethod.Get
+       
         #endregion
 
         #region PostMethods
@@ -883,28 +611,24 @@ namespace STNServices2.Handlers
                         //Delete all site-related stuff too
                         //  Files, DataFiles, 
                         #region site files to delete
-                        //List<file> deleteFiles = sa.Select<file>().Where(f => f.site_id == entityId).ToList();
-                        //List<data_file> deleteDFs = null;
-                        ////foreach file, get datafile if exists, and peak summary
-                        //foreach (file f in deleteFiles)
-                        //{
-                        //    if (f.data_file_id.HasValue)
-                        //    {
-                        //        data_file df = sa.Select<data_file>().SingleOrDefault(dataf => dataf.data_file_id == f.data_file_id);
-                        //        if (df.peak_summary_id.HasValue)
-                        //        {
-                        //            peak_summary pk = sa.Select<peak_summary>().SingleOrDefault(p => p.peak_summary_id == df.peak_summary_id);
-                        //            sa.Delete<peak_summary>(pk);
-                        //        }
-                                
-                        //        sa.Delete<data_file>(df);
-                        //    }
-                        //    sa. aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                            
-                        //    aBucket.DeleteObject(BuildFilePath(f, f.PATH));
-                        //    aSTNE.FILES.DeleteObject(f);
-                        //}
-                        //aSTNE.SaveChanges();
+                        List<file> deleteFiles = sa.Select<file>().Where(f => f.site_id == entityId).ToList();
+                        //foreach file, get datafile if exists, and peak summary
+                        foreach (file f in deleteFiles)
+                        {
+                            if (f.data_file_id.HasValue)
+                            {
+                                data_file df = sa.Select<data_file>().SingleOrDefault(dataf => dataf.data_file_id == f.data_file_id);
+                                if (df.peak_summary_id.HasValue)
+                                {
+                                    peak_summary pk = sa.Select<peak_summary>().SingleOrDefault(p => p.peak_summary_id == df.peak_summary_id);
+                                    sa.Delete<peak_summary>(pk);
+                                }
+
+                                sa.Delete<data_file>(df);
+                            }
+                            sa.Delete<file>(f);
+                            sm(sa.Messages);
+                        }
                         #endregion
                        
                         //HWMs 
@@ -1002,132 +726,23 @@ namespace STNServices2.Handlers
 
             return siteNo;
         }
-        //private bool PostSiteLayer(SITE aSite)
-        //{
-        //    Feature flayer;
-        //    Features fLayers;
-        //    AGSServiceAgent agsAgent;
-        //    try
-        //    {
-        //        flayer = new Feature(new SiteLayer(aSite));
 
-        //        fLayers = new Features();
-        //        fLayers.features.Add(flayer);
+        private List<string> getSiteEvents(site se)
+        {
+            List<string> eventNames = new List<string>();
+            if (se.hwms.Count >= 1)
+            {
+                eventNames.AddRange(se.hwms.Where(h => h.event_id != null).Select(h => h.@event.event_name).ToList());
+            }
+            if (se.instruments.Count >= 1)
+            {
+                eventNames.AddRange(se.instruments.Where(i => i.event_id != null).Select(i => i.@event.event_name).ToList());
+            }
 
-        //        agsAgent = new AGSServiceAgent();
-        //        return agsAgent.PostFeature(fLayers, "AddSite/GPServer/AddSite/execute", "New_SITE=");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return false;
-        //    }
-        //}//end PostHWMLayer
+            return eventNames.Distinct().ToList();
+        }
+        #endregion
        
-        //public static string GetSiteDesc(string desc)
-        //{
-        //    string siteDesc = string.Empty;
-        //    if (desc.Length > 100)
-        //    {
-        //        siteDesc = desc.Substring(0, 100);
-        //    }
-        //    else
-        //    {
-        //        siteDesc = desc;
-        //    }
-
-        //    return siteDesc;
-        //}
-        //public static string GetSiteNetwork(STNEntities2 aSTNE, decimal siteId)
-        //{
-        //    string netName = string.Empty;
-        //    List<NETWORK_NAME_SITE> allSiteNets = aSTNE.NETWORK_NAME_SITE.Where(x => x.SITE_ID == siteId).ToList();
-        //    string delimiter = ", ";
-        //    //comma separate fancy way
-        //    if (allSiteNets.Count >= 1)
-        //        netName = allSiteNets.Select(x => x.NETWORK_NAME.NAME).Distinct().Aggregate((x, j) => x + delimiter + j);
-
-        //    return netName;
-        //}
-        //public static string GetHDatum(STNEntities2 aSTNE, decimal hdatumId)
-        //{
-        //    string hd = string.Empty;
-        //    HORIZONTAL_DATUMS hdatum = aSTNE.HORIZONTAL_DATUMS.Where(x => x.DATUM_ID == hdatumId).FirstOrDefault();
-        //    if (hdatum != null)
-        //        hd = hdatum.DATUM_NAME;
-
-        //    return hd;
-        //}
-        //public static string GetSitePriority(STNEntities2 aSTNE, decimal priorityID)
-        //{
-        //    string sitePriority = string.Empty;
-        //    DEPLOYMENT_PRIORITY dp = aSTNE.DEPLOYMENT_PRIORITY.Where(x => x.PRIORITY_ID == priorityID).FirstOrDefault();
-        //    if (dp != null)
-        //        sitePriority = dp.PRIORITY_NAME;
-
-        //    return sitePriority;
-        //}
-        //public static string GetHCollMethod(STNEntities2 aSTNE, decimal hcollectID)
-        //{
-        //    string hcolmethod = string.Empty;
-        //    HORIZONTAL_COLLECT_METHODS hcm = aSTNE.HORIZONTAL_COLLECT_METHODS.Where(x => x.HCOLLECT_METHOD_ID == hcollectID).FirstOrDefault();
-        //    if (hcm != null)
-        //        hcolmethod = hcm.HCOLLECT_METHOD;
-
-        //    return hcolmethod;
-        //}
-        //public static string GetSiteNotes(string notes)
-        //{
-        //    string siteNotes = string.Empty;
-        //    if (notes.Length > 100)
-        //    {
-        //        siteNotes = notes.Substring(0, 100);
-        //    }
-        //    else
-        //    {
-        //        siteNotes = notes;
-        //    }
-
-        //    return siteNotes;
-        //}
-        //private string BuildFilePath(FILES uploadFile, string fileName)
-        //{
-        //    try
-        //    {
-        //        //determine default object name
-        //        // ../SITE/3043/ex.jpg
-        //        List<string> objectName = new List<string>();
-        //        objectName.Add("SITE");
-        //        objectName.Add(uploadFile.SITE_ID.ToString());
-
-        //        if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
-        //        {
-        //            // ../SITE/3043/HWM/7956/ex.jpg
-        //            objectName.Add("HWM");
-        //            objectName.Add(uploadFile.HWM_ID.ToString());
-        //        }
-        //        else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
-        //        {
-        //            // ../SITE/3043/DATA_FILE/7956/ex.txt
-        //            objectName.Add("DATA_FILE");
-        //            objectName.Add(uploadFile.DATA_FILE_ID.ToString());
-        //        }
-        //        else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
-        //        {
-        //            // ../SITE/3043/INSTRUMENT/7956/ex.jpg
-        //            objectName.Add("INSTRUMENT");
-        //            objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
-        //        }
-        //        objectName.Add(fileName);
-
-        //        return string.Join("/", objectName);
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
-        #endregion
-        #endregion
     }//end class SiteHandler
 
 }//end namespace

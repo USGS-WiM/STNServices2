@@ -93,8 +93,8 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
-        
-        [HttpOperation(ForUriName = "GetHWMQuality")]
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMQuality")]
         public OperationResult GetHWMQuality(Int32 hwmId)
         {
             hwm_qualities anEntity = null;

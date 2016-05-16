@@ -103,7 +103,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetAgencyMembers")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetAgencyMembers")]
         public OperationResult GetAgencyMembers(Int32 agencyId)
         {
             List<member> entities = null;
@@ -127,7 +127,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetRoleMembers")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetRoleMembers")]
         public OperationResult GetRoleMembers(Int32 roleId)
         {
             List<member> entities = null;
@@ -256,7 +256,7 @@ namespace STNServices2.Handlers
 
         //returns list of members who have deployed sensor or hwm for this event
         [RequiresAuthentication]
-        [HttpOperation(ForUriName = "GetEventMembers")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventMembers")]
         public OperationResult GetEventMembers(Int32 eventId)
         {
             List<member> entities = null;

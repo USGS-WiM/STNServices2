@@ -90,7 +90,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(ForUriName = "GetReportMetricContactsByType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetReportMetricContactsByType")]
         public OperationResult GetReportMetricContactsByType(Int32 reportMetricsId, Int32 contactTypeId)
         {
             contact anEntity = null;

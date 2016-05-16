@@ -88,7 +88,7 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetContactsContactType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetContactsContactType")]
         public OperationResult GetContactsContactType(Int32 contactId)
         {
             contact_type anEntity = null;
