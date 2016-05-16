@@ -82,7 +82,7 @@ namespace STNServices2.Handlers
             }            
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "SiteHousing")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteSiteHousing")]
         public OperationResult SiteHousings(Int32 siteId)
         {
             List<site_housing> entities = null;

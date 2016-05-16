@@ -102,7 +102,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(ForUriName = "GetAgencySources")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetAgencySources")]
         public OperationResult GetAgencySources(Int32 agencyId)
         {
             List<source> entities = null;
@@ -129,7 +129,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(ForUriName = "GetFileSource")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFileSource")]
         public OperationResult GetFileSource(Int32 fileId)
         {
             source anEntity = null;

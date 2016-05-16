@@ -88,7 +88,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMVerticalMethod")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMVerticalMethod")]
         public OperationResult GetHWMVerticalMethod(Int32 hwmId)
         {
             vertical_collect_methods anEntity;

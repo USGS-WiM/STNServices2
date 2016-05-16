@@ -94,7 +94,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentSensorType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentSensorType")]
         public OperationResult GetInstrumentSensorType(Int32 instrumentId)
         {
             sensor_type anEntity = null;
@@ -118,7 +118,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetDeploymentSensorType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetDeploymentSensorType")]
         public OperationResult GetDeploymentSensorType(Int32 deploymentTypeId)
         {
             sensor_type anEntity = null;
