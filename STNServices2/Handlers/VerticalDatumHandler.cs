@@ -84,7 +84,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "getOPVDatum")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "getOPVDatum")]
         public OperationResult getOPVDatum(Int32 objectivePointId)
         {
             vertical_datums anEntity = null;
@@ -107,7 +107,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMVDatum")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMVDatum")]
         public OperationResult GetHWMVDatum(Int32 hwmId)
         {
             vertical_datums anEntity = null;

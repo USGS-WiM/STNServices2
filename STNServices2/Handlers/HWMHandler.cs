@@ -218,7 +218,7 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
 
-         [HttpOperation(ForUriName = "GetMemberHWMs")]
+         [HttpOperation(HttpMethod.GET, ForUriName = "GetMemberHWMs")]
         public OperationResult GetMemberHWMs(Int32 memberId)
         {
             List<hwm> entities = null;
@@ -243,7 +243,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMQualityHWMs")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMQualityHWMs")]
         public OperationResult GetHWMQualityHWMs(Int32 hwmQualityId)
         {
             List<hwm> entities = null;
@@ -268,7 +268,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMTypeHWMs")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMTypeHWMs")]
         public OperationResult GetHWMTypeHWMs(Int32 hwmTypeId)
         {
             List<hwm> entities = null;
@@ -293,7 +293,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHmethodHWMs")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHmethodHWMs")]
         public OperationResult GetHMethodHWMs(Int32 hmethodId)
         {
             List<hwm> entities = null;
@@ -317,8 +317,8 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-        
-        [HttpOperation(ForUriName = "GetVmethodHWMs")]
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetVmethodHWMs")]
         public OperationResult GetVmethodHWMs(Int32 vmethodId)
         {
             List<hwm> entities = null;
@@ -396,7 +396,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetMarkerHWMs")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetMarkerHWMs")]
         public OperationResult GetMarkerHWMs(Int32 markerId)
         {
             List<hwm> entities = null;
@@ -686,42 +686,40 @@ namespace STNServices2.Handlers
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
 
                         sa.Delete<hwm>(ObjectToBeDeleted);
+                        sm(sa.Messages);
                         #region Cascadedelete?
-                        //sm(sa.Messages);
+                        
 
                         ////see if it has approval to delete
-                        //if (ObjectToBeDeleted.APPROVAL_ID.HasValue)
-                        //{
-                        //    //remove the approval
-                        //    APPROVAL thisAppr = aSTNE.APPROVALs.Where(x => x.APPROVAL_ID == ObjectToBeDeleted.APPROVAL_ID).FirstOrDefault();
-                        //    aSTNE.APPROVALs.DeleteObject(thisAppr);
-                        //    aSTNE.SaveChanges();
-                        //}
+                        if (ObjectToBeDeleted.approval_id.HasValue)
+                        {
+                            //remove the approval
+                            approval thisAppr = sa.Select<approval>().Where(x => x.approval_id == ObjectToBeDeleted.approval_id).FirstOrDefault();
+                            sa.Delete<approval>(thisAppr);
+                            sm(sa.Messages);
+                        }
                         ////see if there's a peak to delete
-                        //if (ObjectToBeDeleted.PEAK_SUMMARY != null)
-                        //{
-                        //    PEAK_SUMMARY thisPeak = aSTNE.PEAK_SUMMARY.Where(x => x.PEAK_SUMMARY_ID == ObjectToBeDeleted.PEAK_SUMMARY_ID).FirstOrDefault();
-                        //    aSTNE.PEAK_SUMMARY.DeleteObject(thisPeak);
-                        //    aSTNE.SaveChanges();
-                        //}
+                        if (ObjectToBeDeleted.peak_summary != null)
+                        {
+                            peak_summary thisPeak = sa.Select<peak_summary>().Where(x => x.peak_summary_id == ObjectToBeDeleted.peak_summary_id).FirstOrDefault();
+                            sa.Delete<peak_summary>(thisPeak);
+                            sm(sa.Messages);
+                        }
 
                         ////see if there's any files to delete
-                        //List<FILES> HWMFiles = aSTNE.FILES.Where(x => x.HWM_ID == hwmId).ToList();
-                        //if (HWMFiles.Count >= 1)
-                        //{
-                        //    foreach (FILES f in HWMFiles)
-                        //    {
-                        //        //delete the file item from s3
-                        //        S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                        //        aBucket.DeleteObject(BuildFilePath(f, f.PATH));
-                        //        //delete the file
-                        //        aSTNE.DeleteObject(f);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
+                        List<file> HWMFiles = sa.Select<file>().Where(x => x.hwm_id == entityId).ToList();
+                        if (HWMFiles.Count >= 1)
+                        {
+                            foreach (file f in HWMFiles)
+                            {
+                                //delete the file
+                                sa.Delete<file>(f);
+                                sm(sa.Messages);
+                            }
+                        }
                         ////delete HWM now
-                        //aSTNE.HWMs.DeleteObject(ObjectToBeDeleted);
-                        //aSTNE.SaveChanges();
+                        sa.Delete(ObjectToBeDeleted);
+                        sm(sa.Messages);
                         #endregion
                     }// end using
                 } //end using

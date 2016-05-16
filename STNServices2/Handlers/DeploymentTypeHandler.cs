@@ -93,7 +93,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentDeploymentType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentDeploymentType")]
         public OperationResult GetInstrumentDeploymentType(Int32 instrumentId)
         {
             deployment_type anEntity = null;
@@ -112,7 +112,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSensorDeploymentTypes")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSensorDeploymentTypes")]
         public OperationResult GetSensorDeploymentTypes(Int32 sensorTypeId)
         {
             List<deployment_type> deployment_typeList = null;

@@ -604,40 +604,34 @@ namespace STNServices2.Handlers
                         instrument ObjectToBeDeleted = sa.Select<instrument>().SingleOrDefault(c => c.instrument_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        sa.Delete<instrument>(ObjectToBeDeleted);
                         #region Cascadedelete?
                         ////delete files associated with this sensor
-                        //List<FILES> opFiles = aSTNE.FILES.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
-                        //if (opFiles.Count >= 1)
-                        //{
-                        //    foreach (FILES f in opFiles)
-                        //    {
-                        //        //delete data files to this file
-                        //        if (f.DATA_FILE_ID.HasValue)
-                        //        {
-                        //            DATA_FILE df = aSTNE.DATA_FILE.Where(x => x.DATA_FILE_ID == f.DATA_FILE_ID).FirstOrDefault();
-                        //            aSTNE.DATA_FILE.DeleteObject(df);
-                        //            aSTNE.SaveChanges();
-                        //        }
-                        //        //delete the file item from s3
-                        //        S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                        //        aBucket.DeleteObject(BuildFilePath(f, f.PATH));
-                        //        //delete the file
-                        //        aSTNE.FILES.DeleteObject(f);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
+                        List<file> opFiles = sa.Select<file>().Where(x => x.instrument_id == entityId).ToList();
+                        if (opFiles.Count >= 1)
+                        {
+                            foreach (file f in opFiles)
+                            {
+                                //delete data files to this file
+                                if (f.data_file_id.HasValue)
+                                {
+                                    data_file df = sa.Select<data_file>().Where(x => x.data_file_id == f.data_file_id).FirstOrDefault();
+                                    sa.Delete<data_file>(df);
+                                    sm(sa.Messages);
+                                }
+                                //delete the file
+                                sa.Delete<file>(f);
+                                sm(sa.Messages);
+                            }
+                        }
                         ////first delete the INSTRUMENT_STATUSes for this INSTRUMENT, then delete the INSTRUMENT
-                        //List<INSTRUMENT_STATUS> stats = aSTNE.INSTRUMENT_STATUS.Where(x => x.INSTRUMENT_ID == instrumentId).ToList();
+                        List<instrument_status> stats = sa.Select<instrument_status>().Where(x => x.instrument_id == entityId).ToList();
 
-                        //stats.ForEach(s => aSTNE.INSTRUMENT_STATUS.DeleteObject(s));
-                        //aSTNE.SaveChanges();
+                        stats.ForEach(s => sa.Delete<instrument_status>(s));
+                        sm(sa.Messages);
 
-                        ////now delete the instrument
-                        //INSTRUMENT ObjectToBeDeleted = aSTNE.INSTRUMENTs.SingleOrDefault(instr => instr.INSTRUMENT_ID == instrumentId);
-                        ////delete it
-                        //aSTNE.INSTRUMENTs.DeleteObject(ObjectToBeDeleted);
-
+                        //delete instrument
+                        sa.Delete<instrument>(ObjectToBeDeleted);
+                        sm(sa.Messages);
                         #endregion
                     }// end using
                 } //end using
