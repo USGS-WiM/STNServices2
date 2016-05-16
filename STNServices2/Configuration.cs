@@ -217,7 +217,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<List<approval>>()
             .AtUri(approvalResource)
             .HandledBy<ApprovalHandler>()
-            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
@@ -231,7 +231,7 @@ namespace STNServices2
             .And.AtUri(datafileResource+"/{dataFileId}/Approval").Named("GetDataFileApproval")
             .And.AtUri(hwmResource+"/{hwmId}/Approval").Named("GetHWMApproval")
             .HandledBy<ApprovalHandler>()
-            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
@@ -952,9 +952,8 @@ namespace STNServices2
             .AtUri(reportMetricResource+"/{entityId}")
             .And.AtUri(reportMetricResource+"/DailyReportTotals?Date={date}&Event={eventId}&State={stateName}").Named("GetDailyReportTotals")
             .HandledBy<ReportingMetricsHandler>()
-            //.TranscodedBy<WiMTest.Codecs.xml.UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<List<reporting_metrics>>()
@@ -966,7 +965,7 @@ namespace STNServices2
             .And.AtUri(reportMetricResource+"/FilteredReports?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReports")
             .HandledBy<ReportingMetricsHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
             
         } //end AddREPORTING_METRICS_Resources
@@ -982,7 +981,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<role>()
             .AtUri(roleResource+"/{entityId}")
-            .And.AtUri("/Members/{memberId}/Role").Named("GetMemberRole")
+            .And.AtUri(memberResource+"/{memberId}/Role").Named("GetMemberRole")
             .HandledBy<RoleHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1000,7 +999,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<sensor_brand>()
             .AtUri(sensorBrandResource+"/{entityId}")
-            .And.AtUri("/Instruments/{instrumentId}/SensorBrand").Named("GetInstrumentSensorBrand")
+            .And.AtUri(instrumentsResource+"/{instrumentId}/SensorBrand").Named("GetInstrumentSensorBrand")
             .HandledBy<SensorBrandHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1012,14 +1011,14 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<List<sensor_type>>()
             .AtUri(sensorTypeResource)
             .HandledBy<SensorTypeHandler>()
-            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<sensor_type>()
             .AtUri(sensorTypeResource+"/{entityId}")
-            .And.AtUri("/Instruments/{instrumentId}/SensorType").Named("GetInstrumentSensorType")
-            .And.AtUri("/DeploymentTypes/{deploymentTypeId}/SensorType").Named("GetDeploymentSensorType")
+            .And.AtUri(instrumentsResource+"/{instrumentId}/SensorType").Named("GetInstrumentSensorType")
+            .And.AtUri(deploymenttypeResource+"/{deploymentTypeId}/SensorType").Named("GetDeploymentSensorType")
             .HandledBy<SensorTypeHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1030,52 +1029,45 @@ namespace STNServices2
         private void AddSITE_Resources()
         {
             //GET
-            //ResourceSpace.Has.ResourcesOfType<SiteList>()
-            //.AtUri("/Sites/points").Named("GetPoints")
-            //.And.AtUri("/Events/{eventId}/Sites").Named("GetEventSites")
-            //.And.AtUri("/NetworkTypes/{networkTypeId}/Sites").Named("getNetworkTypeSites")
-            //.And.AtUri("/NetworkNames/{networkNameId}/Sites").Named("getNetworkNameSites")
-            //.And.AtUri("/Sites?State={stateName}").Named("GetSitesByStateName")
-            //.And.AtUri("/Sites?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
-            //.And.AtUri("HorizontalDatums/{hdatumId}/Sites").Named("GetHDatumSites")
-            //.And.AtUri("LandOwners/{landOwnerId}/Sites").Named("GetLandOwnserSites")
-            //.HandledBy<SiteHandler>()
-            //.TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            //.And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
+            ResourceSpace.Has.ResourcesOfType<List<site>>()
+            .AtUri(siteResource)
+            .And.AtUri(eventsResource+"/{eventId}/"+siteResource).Named("GetEventSites")
+            .And.AtUri(networkTypeResource+"/{networkTypeId}/" + siteResource).Named("getNetworkTypeSites")
+            .And.AtUri(networkNameResource+"/{networkNameId}/" + siteResource).Named("getNetworkNameSites")
+            .And.AtUri(stateResource + "/{stateAbbrev}/" + siteResource).Named("GetSitesByStateName") //was "/sites?State={stateName}"
+            .And.AtUri(siteResource+"?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
+            .And.AtUri(horizontaldatumResource+"/{hdatumId}/"+siteResource).Named("GetHDatumSites")
+            .And.AtUri(landOwnerResource+"/{landOwnerId}/"+siteResource).Named("GetLandOwnserSites")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            
             ResourceSpace.Has.ResourcesOfType<site>()
             .AtUri(siteResource+"/{entityId}")
-            .And.AtUri(siteResource+"?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySiteNo")
-            .And.AtUri("/Files/{fileId}/Site").Named("GetFileSite")
-            .And.AtUri("/ObjectivePoints/{objectivePointId}/Site").Named("GetOPSite")
-            .And.AtUri("/HWMs/{hwmId}/Site").Named("getHWMSite")
-            .And.AtUri("/Instruments/{instrumentId}/Site").Named("GetInstrumentSite")
+            .And.AtUri(siteResource+"/Search?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySearch")
+            .And.AtUri(fileResource+"/{fileId}/Site").Named("GetFileSite")
+            .And.AtUri(objectivePointResource+"/{objectivePointId}/Site").Named("GetOPSite")
+            .And.AtUri(hwmResource+"/{hwmId}/Site").Named("getHWMSite")
+            .And.AtUri(instrumentsResource+"/{instrumentId}/Site").Named("GetInstrumentSite")
             .HandledBy<SiteHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-            ResourceSpace.Has.ResourcesOfType<List<site>>()
-            .AtUri("/FullSites").Named("GetAllSites")
-            .HandledBy<SiteHandler>()
-            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
-           // ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
-           //.AtUri("/Sites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
-           // .HandledBy<SiteHandler>()
-           // .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-           // .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-           // .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-
+            ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
+           .AtUri(siteResource+"?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
+           .HandledBy<SiteHandler>()
+           .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+           .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+           .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+           
         }//end AddSITE_Resources                 
         private void AddSITE_HOUSING_Resources()
         {
             ResourceSpace.Has.ResourcesOfType<List<site_housing>>()
             .AtUri(siteHousingResource)
-            .And.AtUri("Sites/{siteId}/"+siteHousingResource).Named("GetSiteSiteHousing")
+            .And.AtUri(siteResource+"/{siteId}/"+siteHousingResource).Named("GetSiteSiteHousing")
             .HandledBy<Site_HousingHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1083,7 +1075,6 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<site_housing>()
             .AtUri(siteHousingResource+"/{entityId}")
-            //.And.AtUri("Site/{siteId}/AddSiteSiteHousing").Named("AddSiteSiteHousing") -- just use regular post and apply siteId before sending object
             .HandledBy<Site_HousingHandler>()
              .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1095,7 +1086,7 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<List<source>>()
             .AtUri(sourceResource)
-            .And.AtUri("Agencies/{agencyId}/"+sourceResource).Named("GetAgencySources")
+            .And.AtUri(agencyResource+"/{agencyId}/"+sourceResource).Named("GetAgencySources")
             .HandledBy<SourceHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1115,7 +1106,7 @@ namespace STNServices2
             //GET
             ResourceSpace.Has.ResourcesOfType<List<state>>()
             .AtUri(stateResource).Named("GetAllStates")
-            .And.AtUri("/Sites/"+stateResource).Named("GetSiteStates")
+            .And.AtUri(siteResource+"/"+stateResource).Named("GetSiteStates")
             .HandledBy<StateHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1141,7 +1132,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<status_type>()
             .AtUri(statusTypeResource+"/{entityId}")
-            .And.AtUri("/InstrumentStatus/{instrumentStatusId}/Status").Named("GetInstrumentStatusStatus")
+            .And.AtUri(instrumentStatusResource+"/{instrumentStatusId}/Status").Named("GetInstrumentStatusStatus")
             .HandledBy<StatusTypeHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1160,7 +1151,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<vertical_collect_methods>()
             .AtUri(verticalCollectMethodResource+"/{entityId}")
-            .And.AtUri("/HWMs/{hwmId}/VerticalMethod").Named("GetHWMVerticalMethod")
+            .And.AtUri(hwmResource+"/{hwmId}/VerticalMethod").Named("GetHWMVerticalMethod")
             .HandledBy<VerticalCollectionMethodsHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -1179,8 +1170,8 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<vertical_datums>()
             .AtUri(verticalDatumResource+"/{entityId}")
-            .And.AtUri("/HWMs/{hwmId}/vDatum").Named("GetHWMVDatum")
-            .And.AtUri("/ObjectivePoints/{objectivePointId}/vDatum").Named("getOPVDatum")
+            .And.AtUri(hwmResource+"/{hwmId}/vDatum").Named("GetHWMVDatum")
+            .And.AtUri(objectivePointResource+"/{objectivePointId}/vDatum").Named("getOPVDatum")
             .HandledBy<VerticalDatumHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")

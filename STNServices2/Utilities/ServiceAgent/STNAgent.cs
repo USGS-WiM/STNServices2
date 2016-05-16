@@ -86,10 +86,19 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             try
             {
-                file ObjectToBeDeleted = this.Select<file>().SingleOrDefault(f => f.file_id == fileID);
-
+                file ObjectToBeDeleted = this.Select<file>().Include(f => f.hwm).Include(f => f.hwm.@event).Include(f => f.instrument).Include(f => f.instrument.@event)
+                    .SingleOrDefault(f => f.file_id == fileID);
+                
+                decimal eventId = 0;
+                if (ObjectToBeDeleted.hwm_id.HasValue) 
+                {
+                    eventId = ObjectToBeDeleted.hwm.@event.event_id; 
+                } else if (ObjectToBeDeleted.instrument_id.HasValue)
+                {
+                    eventId = ObjectToBeDeleted.instrument.@event.event_id;
+                }
                 S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"],"","");
-                aBucket.DeleteObject(BuildFilePath(ObjectToBeDeleted, ObjectToBeDeleted.path));
+                aBucket.DeleteObject(BuildNewpath(ObjectToBeDeleted, eventId));
                 sm(MessageType.info, fileID + ": Deleted from storage");
                 this.Delete<file>(ObjectToBeDeleted);
                 sm(MessageType.info, fileID + ": Deleted from DB");
@@ -106,10 +115,18 @@ namespace STNServices2.Utilities.ServiceAgent
             try
             {
                 this.Add<file>(uploadFile);
-                
+                decimal eventId = 0;
+                if (uploadFile.hwm_id.HasValue)
+                {
+                    eventId = uploadFile.hwm.@event.event_id;
+                }
+                else if (uploadFile.instrument_id.HasValue)
+                {
+                    eventId = uploadFile.instrument.@event.event_id;
+                }
                 //Upload to S3
                 aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
-                aBucket.PutObject(BuildFilePath(uploadFile, uploadFile.path), memoryStream);
+                aBucket.PutObject(BuildNewpath(uploadFile, eventId), memoryStream);
                 sm(MessageType.info, uploadFile.path + ": added");
             }
             catch (Exception ex)
@@ -123,20 +140,28 @@ namespace STNServices2.Utilities.ServiceAgent
         }
         internal InMemoryFile GetFileItem(file afile)
         {
-            file aFile = null;
+            //file aFile = null;
             S3Bucket aBucket = null;
             InMemoryFile fileItem = null;
             try
             {
-                    if (aFile == null || aFile.path == null || String.IsNullOrEmpty(aFile.path)) throw new WiM.Exceptions.NotFoundRequestException();
-
+                if (afile == null || afile.path == null || String.IsNullOrEmpty(afile.path)) throw new WiM.Exceptions.NotFoundRequestException();
+                    decimal eventId = 0;
+                    if (afile.hwm_id.HasValue)
+                    {
+                        eventId = afile.hwm.@event.event_id;
+                    }
+                    else if (afile.instrument_id.HasValue)
+                    {
+                        eventId = afile.instrument.@event.event_id;
+                    }
                     string directoryName = string.Empty;
                     aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
-                    directoryName = BuildFilePath(aFile, aFile.path);
+                    directoryName = BuildNewpath(afile, eventId);
 
 
                     fileItem = new InMemoryFile(aBucket.GetObject(directoryName));
-                    fileItem.ContentType = GetContentType(aFile.path);
+                    fileItem.ContentType = GetContentType(afile.path);
                     return fileItem;
             }
             catch (Exception ex)
@@ -204,35 +229,30 @@ namespace STNServices2.Utilities.ServiceAgent
             }//end switch;
         
         }
-        private string BuildFilePath(file uploadFile, string fileName)
+        private static string BuildNewpath(file FileItem, decimal eventId)
         {
+            //SITES
+            //  -SITE_123
+            //      *contains all site 123 specific files, such as site sketch etc, images etc. 
+            //EVENTS
+            //  -EVENT_123
+            //      -SITE_456
+            //          * contains all event 123 specific files for site 456, such as hwm, data, and image files etc.
             try
             {
-                //determine default object name
-                // ../SITE/3043/ex.jpg
                 List<string> objectName = new List<string>();
-                objectName.Add("SITE");
-                objectName.Add(uploadFile.site_id.ToString());
-
-                if (uploadFile.hwm_id != null && uploadFile.hwm_id > 0)
+                if (eventId > 0)
                 {
                     // ../SITE/3043/HWM/7956/ex.jpg
-                    objectName.Add("HWM");
-                    objectName.Add(uploadFile.hwm_id.ToString());
+                    objectName.Add("EVENTS");
+                    objectName.Add("EVENT_" + eventId);
+                    objectName.Add("SITE_" + FileItem.site_id);
                 }
-                else if (uploadFile.data_file_id != null && uploadFile.data_file_id > 0)
+                else
                 {
-                    // ../SITE/3043/DATA_FILE/7956/ex.txt
-                    objectName.Add("DATA_FILE");
-                    objectName.Add(uploadFile.data_file_id.ToString());
+                    objectName.Add("SITES");
+                    objectName.Add("SITE_" + FileItem.site_id);
                 }
-                else if (uploadFile.instrument_id != null && uploadFile.instrument_id > 0)
-                {
-                    // ../SITE/3043/INSTRUMENT/7956/ex.jpg
-                    objectName.Add("INSTRUMENT");
-                    objectName.Add(uploadFile.instrument_id.ToString());
-                }
-                objectName.Add(fileName);
 
                 return string.Join("/", objectName);
             }
@@ -241,6 +261,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 return null;
             }
         }
+
         private MediaType GetContentType(string path)
         {
             string theExtension = System.IO.Path.GetExtension(path);
