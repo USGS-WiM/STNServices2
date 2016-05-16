@@ -121,7 +121,8 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<file>().SingleOrDefault(f => f.file_id == fileId);
+                    //use include statements for stnagent's GetFileItem to find the event this file is on
+                    anEntity = sa.Select<file>().Include(f => f.hwm).Include(f => f.hwm.@event).Include(f => f.instrument).Include(f => f.instrument.@event).SingleOrDefault(f => f.file_id == fileId);
                     if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
 
                     fileItem = sa.GetFileItem(anEntity);
@@ -508,7 +509,7 @@ namespace STNServices2.Handlers
                     //Get basic authentication password
                     using (EasySecureString securedPassword = GetSecuredPassword())
                     {
-                        using (STNAgent sa = new STNAgent(username, securedPassword))
+                        using (STNAgent sa = new STNAgent(username, securedPassword, true))
                         {
                             //Update path
                             uploadFile.path = filename;

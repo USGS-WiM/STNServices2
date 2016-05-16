@@ -88,7 +88,7 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetStateCounties")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetStateCounties")]
         public OperationResult GetStateCounties(Int32 stateId)
         {
             List<county> entities = null;
@@ -107,7 +107,7 @@ namespace STNServices2.Handlers
             { return new OperationResult.BadRequest(); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetStateCountiesByAbbrev")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetStateCountiesByAbbrev")]
         public OperationResult GetStateCountiesByAbbrev(string stateAbbrev)
         {
             List<county> entities = null;

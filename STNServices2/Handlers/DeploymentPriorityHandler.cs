@@ -93,7 +93,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSitePriority")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitePriority")]
         public OperationResult GetSitePriority(Int32 siteId)
         {
             deployment_priority anEntity = null;

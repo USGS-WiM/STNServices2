@@ -107,7 +107,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSiteObjectivePoints")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteObjectivePoints")]
         public OperationResult GetSiteObjectivePoints(Int32 siteId)
         {
             List<objective_point> entities = null;
@@ -210,32 +210,27 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     { 
-                                                //delete files associated with this op
-                        //List<FILES> opFiles = aSTNE.FILES.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
-                        //if (opFiles.Count >= 1)
-                        //{
-                        //    foreach (FILES f in opFiles)
-                        //    {
-
-                        //        //delete the file item from s3
-                        //        S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                        //        aBucket.DeleteObject(BuildFilePath(f, f.PATH));
-
-                        //        //delete the file
-                        //        aSTNE.FILES.DeleteObject(f);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
-                        ////delete op_control_identifiers for this op
-                        //List<OP_CONTROL_IDENTIFIER> opci = aSTNE.OP_CONTROL_IDENTIFIER.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
-                        //if (opci.Count >= 1)
-                        //{
-                        //    foreach (OP_CONTROL_IDENTIFIER o in opci)
-                        //    {
-                        //        aSTNE.OP_CONTROL_IDENTIFIER.DeleteObject(o);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
+                        //delete files associated with this op
+                        List<file> opFiles = sa.Select<file>().Where(x => x.objective_point_id == entityId).ToList();
+                        if (opFiles.Count >= 1)
+                        {
+                            foreach (file f in opFiles)
+                            {
+                                //delete the file
+                                sa.Delete<file>(f);
+                                sm(sa.Messages);
+                            }
+                        }
+                        //delete op_control_identifiers for this op
+                        List<op_control_identifier> opci = sa.Select<op_control_identifier>().Where(x => x.objective_point_id == entityId).ToList();
+                        if (opci.Count >= 1)
+                        {
+                            foreach (op_control_identifier o in opci)
+                            {
+                                sa.Delete<op_control_identifier>(o);
+                                sm(sa.Messages);
+                            }
+                        }
 
                         anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
