@@ -83,7 +83,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetObjectivePointQuality")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointQuality")]
         public OperationResult GetObjectivePointQuality(Int32 objectivePointId)
         {
             op_quality anEntity;

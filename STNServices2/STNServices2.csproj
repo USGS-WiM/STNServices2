@@ -116,8 +116,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
     </Reference>
-    <Reference Include="WiMServices, Version=1.0.5952.25246, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WiMServices.1.0.5952.25246\lib\net45\WiMServices.dll</HintPath>
+    <Reference Include="WiMServices, Version=1.0.5976.15521, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMServices.1.0.5976.15521\lib\net45\WiMServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WiMServices.Test, Version=1.0.5947.24028, Culture=neutral, processorArchitecture=MSIL">
@@ -164,6 +164,7 @@
     <Compile Include="Resources\ReportResource.cs" />
     <Compile Include="Resources\SensorResource.cs" />
     <Compile Include="Resources\SensorTypeResource.cs" />
+    <Compile Include="Resources\SiteResource.cs" />
     <Compile Include="Security\STNAuthenticationProvider.cs" />
     <Compile Include="Security\STNAuthorizerContributer.cs" />
     <Compile Include="Security\STNRequiresRoleAttribute.cs" />

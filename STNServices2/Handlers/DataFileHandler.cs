@@ -209,8 +209,8 @@ namespace STNServices2.Handlers
             catch( Exception ex)
             { return HandleException(ex); }
         }// end HttpMethod.Get
-    
-        [HttpOperation(ForUriName = "GetInstrumentDataFiles")]
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentDataFiles")]
         public OperationResult GetInstrumentDataFiles(Int32 instrumentId)
         {
             List<data_file> entities = null;

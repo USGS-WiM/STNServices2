@@ -93,8 +93,8 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
-        
-        [HttpOperation(ForUriName = "GetMemberAgency")]
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetMemberAgency")]
         public OperationResult GetMemberAgency(Int32 memberId)
         {
             agency anEntity = null;
@@ -116,7 +116,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSourceAgency")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSourceAgency")]
         public OperationResult GetSourceAgency(Int32 sourceId)
         {
             agency anEntity = null;
