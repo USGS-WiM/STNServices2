@@ -8,8 +8,8 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
-//              Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //              
 //  
 //   purpose:   Handles InstrumentStatus resources through the HTTP uniform interface.

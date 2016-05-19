@@ -878,8 +878,8 @@
           <NavigationProperty Name="horizontal_datums" Relationship="STNNEWModel.horizontal_datumshwm" FromRole="hwm" ToRole="horizontal_datums" />
           <NavigationProperty Name="horizontal_collect_methods" Relationship="STNNEWModel.horizontal_collect_methodshwm" FromRole="hwm" ToRole="horizontal_collect_methods" />
           <NavigationProperty Name="vertical_collect_methods" Relationship="STNNEWModel.vertical_collect_methodshwm" FromRole="hwm" ToRole="vertical_collect_methods" />
-          <NavigationProperty Name="member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
-          <NavigationProperty Name="member1" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
+          <NavigationProperty Name="survey_member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
+          <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
