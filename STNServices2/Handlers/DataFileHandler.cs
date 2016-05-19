@@ -6,7 +6,7 @@
 // copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -284,7 +284,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || anEntity.collect_date.HasValue || 
+                if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue || 
                     (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0))
                     throw new BadRequestException("Invalid input parameters");
 
@@ -321,7 +321,7 @@ namespace STNServices2.Handlers
         {            
             try
             {
-                if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || anEntity.collect_date.HasValue ||
+                if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue ||
                     (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0)) 
                     throw new BadRequestException("Invalid input parameters");
 

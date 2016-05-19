@@ -47,7 +47,7 @@ namespace STNServices2.Handlers
 
         #region GetMethods
 
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName="GetAllPeaks")]
         public OperationResult Get()
         {
             List<peak_summary> entities = null;

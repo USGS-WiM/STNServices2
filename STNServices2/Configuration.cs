@@ -201,8 +201,7 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<agency>()
-            .AtUri(agencyResource)
-            .And.AtUri(agencyResource+"/{entityId}")
+            .AtUri(agencyResource+"/{entityId}")
             .And.AtUri(memberResource+"/{memberId}/"+agencyResource).Named("GetMemberAgency")
             .And.AtUri(sourceResource+"/{sourceId}/"+agencyResource).Named("GetSourceAgency")
             .HandledBy<AgencyHandler>()
@@ -374,7 +373,7 @@ namespace STNServices2
         {
             //GET
             ResourceSpace.Has.ResourcesOfType<List<events>>()
-            .AtUri(eventsResource)
+            .AtUri(eventsResource).Named("GetAllEvents")
             .And.AtUri(eventsResource + "?Site={siteId}").Named("GetSiteEvents")
             .And.AtUri(eventtypeResource+"/{eventTypeId}/"+eventsResource).Named("GetEventTypeEvents")
             .And.AtUri(eventstatusResource + "/{eventStatusId}/" + eventsResource).Named("GetEventStatusEvents")
@@ -630,7 +629,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<instr_collection_conditions>()
             .AtUri(instrcollectionResource+"/{entityId}")
-            .And.AtUri("/Instruments/{instrumentId}/CollectCondition").Named("GetInstrumentCondition")
+            .And.AtUri(instrumentsResource+"/{instrumentId}/CollectCondition").Named("GetInstrumentCondition")
             .HandledBy<InstrumentCollectionConditionHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -663,12 +662,12 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
             
             ResourceSpace.Has.ResourcesOfType<List<instrument>>()
-               .AtUri(instrumentsResource)
+               .AtUri(instrumentsResource).Named("GetAllInstruments")
                .And.AtUri(siteResource+"/{siteId}/" + instrumentsResource).Named("GetSiteInstruments")
                .And.AtUri(sensorBrandResource + "/{sensorBrandId}/" + instrumentsResource).Named("GetSensorBrandInstruments")
                .And.AtUri(sensorTypeResource + "/{sensorTypeId}/" + instrumentsResource).Named("GetSensorTypeInstruments")
                .And.AtUri(deploymenttypeResource+"/{deploymentTypeId}/" + instrumentsResource).Named("GetDeploymentTypeInstruments")
-               .And.AtUri(@"/Instruments/?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
+               .And.AtUri(@"/Instruments/FilteredInstruments?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}
                                 &States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}
                                 &DeploymentType={deploymentTypeIDs}").Named("GetFilteredInstruments")
                .And.AtUri(eventsResource+"/{eventId}/" + instrumentsResource).Named("GetEventInstruments")
@@ -906,7 +905,7 @@ namespace STNServices2
         {
             //GET
             ResourceSpace.Has.ResourcesOfType<List<peak_summary>>()
-            .AtUri(peakSummaryResource)
+            .AtUri(peakSummaryResource).Named("GetAllPeaks")
             .And.AtUri(eventsResource+"/{eventId}/" + peakSummaryResource).Named("GetEventPeakSummaries")
             .And.AtUri(siteResource+"/{siteId}/"+peakSummaryResource).Named("GetSitePeakSummaries")
             .And.AtUri(@"/PeakSummaries/FilteredPeaks?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&StartDate={startDate}&EndDate={endDate}").Named("GetFilteredPeaks")
@@ -958,10 +957,10 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<List<reporting_metrics>>()
             .AtUri(reportMetricResource)
-            .And.AtUri("/Members/{memberId}/Reports").Named("GetMemberReports")
+            .And.AtUri(memberResource+"/{memberId}/Reports").Named("GetMemberReports")
             .And.AtUri(reportMetricResource+"/ReportsByDate?Date={aDate}").Named("GetReportsByDate")
             .And.AtUri(reportMetricResource+"?Event={eventId}&State={stateName}").Named("GetReportsByEventAndState")
-            .And.AtUri("/Events/{eventId}/Reports").Named("GetEventReports")
+            .And.AtUri(eventsResource+"/{eventId}/Reports").Named("GetEventReports")
             .And.AtUri(reportMetricResource+"/FilteredReports?Event={eventId}&States={stateNames}&Date={aDate}").Named("GetFilteredReports")
             .HandledBy<ReportingMetricsHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -1027,10 +1026,10 @@ namespace STNServices2
 
         }//end AddSENSOR_TYPE_Resources
         private void AddSITE_Resources()
-        {
+        {            
             //GET
             ResourceSpace.Has.ResourcesOfType<List<site>>()
-            .AtUri(siteResource)
+            .AtUri(siteResource).Named("GetAllSites")
             .And.AtUri(eventsResource+"/{eventId}/"+siteResource).Named("GetEventSites")
             .And.AtUri(networkTypeResource+"/{networkTypeId}/" + siteResource).Named("getNetworkTypeSites")
             .And.AtUri(networkNameResource+"/{networkNameId}/" + siteResource).Named("getNetworkNameSites")
@@ -1056,11 +1055,13 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
-           .AtUri(siteResource+"?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("GetFilteredSites")
+           .AtUri(@"/Sites/FilteredSites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}
+                    &SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("FilteredSites")
            .HandledBy<SiteHandler>()
            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            
            
         }//end AddSITE_Resources                 
         private void AddSITE_HOUSING_Resources()
@@ -1094,7 +1095,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<source>()
             .AtUri(sourceResource+"/{entityId}")
-            .And.AtUri("Files/{fileId}/Source").Named("GetFileSource")
+            .And.AtUri(fileResource+"/{fileId}/Source").Named("GetFileSource")
             .HandledBy<SourceHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")

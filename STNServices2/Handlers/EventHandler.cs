@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -38,7 +38,7 @@ namespace STNServices2.Handlers
     public class EventsHandler : STNHandlerBase
     {
         #region GetMethods
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName="GetAllEvents")]
         public OperationResult Get()
         {
             List<events> entities = null;

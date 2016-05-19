@@ -42,7 +42,7 @@ namespace STNServices2.Handlers
     public class SiteHandler : STNHandlerBase
     {
         #region GetMethods
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetAllSites")]
         public OperationResult Get()
         {
             List<site> entities = null;
@@ -385,8 +385,9 @@ namespace STNServices2.Handlers
             }
         }//end httpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredSites")]
-        public OperationResult GetFilteredSites([Optional]Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
+        [HttpOperation(HttpMethod.GET, ForUriName = "FilteredSites")]
+        public OperationResult GetFilteredSites([Optional] Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, 
+                                                    [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
         {
             try
             {
