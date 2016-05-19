@@ -9,7 +9,7 @@
 // copyright:   2012 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles LocatorType resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
