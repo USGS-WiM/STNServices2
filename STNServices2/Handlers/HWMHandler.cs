@@ -492,11 +492,11 @@ namespace STNServices2.Handlers
                 List<decimal> hwmTypeIdList = !string.IsNullOrEmpty(hwmTypeIDs) ? hwmTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> hwmQualIdList = !string.IsNullOrEmpty(hwmQualIDs) ? hwmQualIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     IQueryable<hwm> query;
-                    query = sa.Select<hwm>().Include(h => h.hwm_types).Include(h => h.@event).Include(h => h.hwm_qualities).Include(h => h.vertical_datums).Include(h => h.horizontal_datums).Include(h => h.member)
-                        .Include(h => h.vertical_collect_methods).Include(h => h.horizontal_collect_methods).Include(h => h.approval).Include(h => h.marker).Include(h => h.site)
+                    query = sa.Select<hwm>().Include(h => h.hwm_types).Include(h => h.@event).Include(h => h.hwm_qualities).Include(h => h.vertical_datums).Include(h => h.horizontal_datums).Include(h => h.survey_member)
+                        .Include(h => h.flag_member).Include(h => h.vertical_collect_methods).Include(h => h.horizontal_collect_methods).Include(h => h.approval).Include("approval.member").Include(h => h.marker).Include(h => h.site)
                         .Include("site.network_name_site.network_name").Include("site.deployment_priority").Where(s => s.hwm_id > 0);
 
                     if (eventIdList != null && eventIdList.Count > 0)
@@ -564,7 +564,7 @@ namespace STNServices2.Handlers
                              horizontalMethodName = hw.hcollect_method_id.HasValue && hw.hcollect_method_id > 0 ? hw.horizontal_collect_methods.hcollect_method : "",
                              bank = hw.bank,
                              approval_id = hw.approval_id,
-                             approvalMember = hw.approval_id.HasValue && hw.approval_id > 0 ? hw.approval.member.fname + " " + hw.approval.member.lname : "",                             
+                             approvalMember = hw.approval_id.HasValue && hw.approval_id > 0 ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
                              marker_id = hw.marker_id,
                              markerName = hw.marker_id.HasValue && hw.marker_id > 0 ? hw.marker.marker1 : "",
                              height_above_gnd = hw.height_above_gnd,
@@ -574,13 +574,13 @@ namespace STNServices2.Handlers
                              survey_date = hw.survey_date,
                              stillwater = hw.stillwater,
                              flag_member_id = hw.flag_member_id,
-                             flagMemberName = hw.flag_member_id.HasValue && hw.flag_member_id > 0 ? hw.member.fname + " " + hw.member.lname : "",
+                             flagMemberName = hw.flag_member_id.HasValue && hw.flag_member_id > 0 ? hw.flag_member.fname + " " + hw.flag_member.lname : "",
                              survey_member_id = hw.survey_member_id,
-                             surveyMemberName = hw.survey_member_id.HasValue && hw.survey_member_id > 0 ? hw.member.fname + " " + hw.member.lname : "",
+                             surveyMemberName = hw.survey_member_id.HasValue && hw.survey_member_id > 0 ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
                              peak_summary_id = hw.peak_summary_id,
                              site_no = hw.site.site_no,
                              siteDescription = hw.site.site_description,
-                             networkNames = hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x,j) => x + ", " + j) : "",
+                             networkNames = hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
                              stateName = hw.site.state,
                              countyName = hw.site.county,
                              sitePriorityName = hw.site.priority_id.HasValue && hw.site.priority_id > 0 ? hw.site.deployment_priority.priority_name : "",
@@ -598,7 +598,11 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-      
+        private string getFlagMember(hwm h)
+        {
+            string memberName = "help";
+            return memberName;
+        }
         #endregion
         #region PostMethods
         /// 
@@ -684,9 +688,7 @@ namespace STNServices2.Handlers
                         //fetch the object to be updated (assuming that it exists)
                         hwm ObjectToBeDeleted = sa.Select<hwm>().SingleOrDefault(c => c.hwm_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
-
-                        sa.Delete<hwm>(ObjectToBeDeleted);
-                        sm(sa.Messages);
+                                                
                         #region Cascadedelete?
                         
 
