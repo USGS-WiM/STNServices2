@@ -117,7 +117,7 @@
         <AssociationConnector Association="STNNEWModel.memberinstrument_status" />
         <AssociationConnector Association="STNNEWModel.vertical_datumsinstrument_status" />
       </Diagram>
-      <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="65" >
+      <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="85" >
         <EntityTypeShape EntityType="STNNEWModel.events" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.horizontal_collect_methods" Width="2.25" PointX="8.25" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="6.625" PointY="5" />

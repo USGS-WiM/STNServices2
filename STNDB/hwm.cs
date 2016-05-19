@@ -60,7 +60,7 @@ namespace STNDB
         public virtual horizontal_datums horizontal_datums { get; set; }
         public virtual horizontal_collect_methods horizontal_collect_methods { get; set; }
         public virtual vertical_collect_methods vertical_collect_methods { get; set; }
-        public virtual member member { get; set; }
-        public virtual member member1 { get; set; }
+        public virtual member survey_member { get; set; }
+        public virtual member flag_member { get; set; }
     }
 }

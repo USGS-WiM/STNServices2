@@ -46,7 +46,7 @@ namespace STNServices2.Handlers
     {
 
         #region GetMethods
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName="GetAllInstruments")]
         public OperationResult Get()
         {
             List<instrument> entities = null;
@@ -537,7 +537,8 @@ namespace STNServices2.Handlers
                 if (!anEntity.sensor_type_id.HasValue || anEntity.sensor_type_id <= 0 ||
                     !anEntity.sensor_brand_id.HasValue || anEntity.sensor_brand_id <= 0 ||
                     !anEntity.event_id.HasValue || anEntity.event_id <= 0 ||
-                    !anEntity.site_id.HasValue || anEntity.site_id <= 0)
+                    !anEntity.site_id.HasValue || anEntity.site_id <= 0 ||
+                    string.IsNullOrEmpty(anEntity.serial_number))
                         throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
