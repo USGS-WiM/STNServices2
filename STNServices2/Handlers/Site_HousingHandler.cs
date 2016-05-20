@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -48,7 +48,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<site_housing>().OrderBy(e => e.site_housing_id).ToList();
-
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }
@@ -83,7 +82,7 @@ namespace STNServices2.Handlers
             }            
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "SiteHousing")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteSiteHousing")]
         public OperationResult SiteHousings(Int32 siteId)
         {
             List<site_housing> entities = null;
@@ -190,7 +189,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

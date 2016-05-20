@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -87,7 +88,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMVerticalMethod")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMVerticalMethod")]
         public OperationResult GetHWMVerticalMethod(Int32 hwmId)
         {
             vertical_collect_methods anEntity;
@@ -97,7 +98,7 @@ namespace STNServices2.Handlers
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).vertical_collect_methods;
+                    anEntity = sa.Select<hwm>().Include(h=>h.vertical_collect_methods).FirstOrDefault(h => h.hwm_id == hwmId).vertical_collect_methods;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
@@ -190,7 +191,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -9,7 +9,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -26,6 +26,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -38,7 +39,6 @@ namespace STNServices2.Handlers
 {
     public class ApprovalHandler : STNHandlerBase
     {
-
         #region GetMethods
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
@@ -92,20 +92,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMApproval")]
         public OperationResult GetHWMApproval(Int32 hwmId)
         {
-            approval thisEntity;
+            approval anEntity;
 
             //Return BadRequest if there is no ID
             if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    thisEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).approval;
+                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).approval;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = thisEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -115,20 +115,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetDataFileApproval")]
         public OperationResult GetDataFileApproval(Int32 datafileId)
         {
-            approval thisEntity;
+            approval anEntity;
 
             //Return BadRequest if there is no ID
             if (datafileId <= 0) throw new BadRequestException("Invalid input parameters");
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    thisEntity = sa.Select<data_file>().FirstOrDefault(i => i.data_file_id == datafileId).approval;
+                    anEntity = sa.Select<data_file>().FirstOrDefault(df => df.data_file_id == datafileId).approval;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = thisEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -141,12 +141,12 @@ namespace STNServices2.Handlers
         public OperationResult ApproveHWM(Int32 hwmId)
         {
             hwm aHWM = null;
-            approval anApproval = null;
+            approval anEntity = null;
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                anApproval = new approval();
+                anEntity = new approval();
 
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -161,19 +161,19 @@ namespace STNServices2.Handlers
                         if (user == null) throw new BadRequestException("invalid username response");
 
                         //set time and user of approval
-                        anApproval.approval_date = DateTime.UtcNow;
-                        anApproval.member_id = user.member_id;
+                        anEntity.approval_date = DateTime.UtcNow;
+                        anEntity.member_id = user.member_id;
 
-                        anApproval = sa.Add<approval>(anApproval);
+                        anEntity = sa.Add<approval>(anEntity);
                         
                         //set HWM approvalID
-                        aHWM.approval_id = anApproval.approval_id;
+                        aHWM.approval_id = anEntity.approval_id;
                         sa.Update<hwm>(aHWM);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anApproval };
+                return new OperationResult.OK { ResponseResource = anEntity };
             }
             catch(Exception ex)
             {
@@ -186,12 +186,12 @@ namespace STNServices2.Handlers
         public OperationResult ApproveDataFile(Int32 dataFileId)
         {
             data_file aDataFile = null;
-            approval anApproval = null;
+            approval anEntity = null;
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                anApproval = new approval();
+                anEntity = new approval();
 
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -206,23 +206,67 @@ namespace STNServices2.Handlers
                         if (user == null) throw new BadRequestException("invalid username response");
 
                         //set time and user of approval
-                        anApproval.approval_date = DateTime.UtcNow;
-                        anApproval.member_id = user.member_id;
+                        anEntity.approval_date = DateTime.UtcNow;
+                        anEntity.member_id = user.member_id;
 
-                        anApproval = sa.Add<approval>(anApproval);
+                        anEntity = sa.Add<approval>(anEntity);
 
                         //set HWM approvalID
-                        aDataFile.approval_id = anApproval.approval_id;
+                        aDataFile.approval_id = anEntity.approval_id;
                         sa.Update<data_file>(aDataFile);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anApproval };
+                return new OperationResult.OK { ResponseResource = anEntity };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.POST
+
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole })]
+        [HttpOperation(HttpMethod.POST, ForUriName = "ApproveNWISDataFile")]
+        public OperationResult ApproveNWISDataFile(Int32 dataFileId)
+        {
+            data_file aDataFile = null;
+            approval anEntity = null;
+            try
+            {
+                if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                anEntity = new approval();
+
+                //Get basic authentication password
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    {
+                        aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
+                        if (aDataFile == null) throw new BadRequestException("invalid datafileId");
+
+                        //get event coordinator to set as approver for NWIS datafile
+                        member eventCoor = sa.Select<member>().FirstOrDefault(m => m.events.Any(e => e.event_id == aDataFile.instrument.event_id));
+                        if (eventCoor == null) throw new BadRequestException("invalid event coordinator");
+
+                        //set time and user of approval
+                        anEntity.approval_date = DateTime.UtcNow;
+                        anEntity.member_id = eventCoor.member_id;
+
+                        anEntity = sa.Add<approval>(anEntity);
+
+                        //set datafile approvalID
+                        aDataFile.approval_id = anEntity.approval_id;
+                        sa.Update<data_file>(aDataFile);
+                    }//end using
+                }//end using
+
+                //Return OK instead of created, Flex incorrectly treats 201 as error
+                return new OperationResult.OK { ResponseResource = anEntity };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.POST
+
         #endregion
 
         #region DeleteMethods
@@ -233,7 +277,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE, ForUriName = "Delete")]
         public OperationResult Delete(Int32 approvalId)
         {
-            approval ObjectToBeDeleted = null;
+            approval anEntity = null;
             try
             {
                 if (approvalId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -241,22 +285,23 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        ObjectToBeDeleted = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
+                        anEntity = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
 
                         //remove id from HWM or DF
-                        if (ObjectToBeDeleted.hwms.Count > 0) ObjectToBeDeleted.hwms.ToList().ForEach(x => { x.approval_id = null; sa.Update<hwm>(x); });
-                        if (ObjectToBeDeleted.data_file.Count > 0) ObjectToBeDeleted.data_file.ToList().ForEach(x => { x.approval_id = null; sa.Update<data_file>(x); });
+                        if (anEntity.hwms.Count > 0) anEntity.hwms.ToList().ForEach(x => { x.approval_id = null; sa.Update<hwm>(x); });
+                        if (anEntity.data_file.Count > 0) anEntity.data_file.ToList().ForEach(x => { x.approval_id = null; sa.Update<data_file>(x); });
 
                         //delete it
-                        sa.Delete<approval>(ObjectToBeDeleted);
+                        sa.Delete<approval>(anEntity);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch
             {
@@ -280,7 +325,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aHWM = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == hwmId);
@@ -289,11 +334,12 @@ namespace STNServices2.Handlers
                         //remove id from hwm
                         aHWM.approval_id = null;
                         sa.Update<hwm>(aHWM);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -315,7 +361,7 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
@@ -324,11 +370,12 @@ namespace STNServices2.Handlers
                         //remove id from hwm
                         aDataFile.approval_id = null;
                         sa.Update<data_file>(aDataFile);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

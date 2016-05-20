@@ -23,6 +23,7 @@
 using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
@@ -99,7 +100,7 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<member>().FirstOrDefault(i => i.member_id == memberId).role;
+                    anEntity = sa.Select<member>().Include(i=>i.role).FirstOrDefault(i => i.member_id == memberId).role;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -192,7 +193,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

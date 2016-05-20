@@ -83,7 +83,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetObjectivePointQuality")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointQuality")]
         public OperationResult GetObjectivePointQuality(Int32 objectivePointId)
         {
             op_quality anEntity;
@@ -91,7 +91,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<objective_point>().FirstOrDefault(h => h.objective_point_id == objectivePointId).op_quality;
                     if (anEntity == null) throw new NotFoundRequestException(); 
@@ -186,7 +186,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

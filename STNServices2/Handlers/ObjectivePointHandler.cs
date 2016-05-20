@@ -42,7 +42,6 @@ namespace STNServices2.Handlers
         public OperationResult Get()
         {
             List<objective_point> entities = null;
-
             try
             {
                 using (STNAgent sa = new STNAgent())
@@ -94,7 +93,7 @@ namespace STNServices2.Handlers
                 if (vdatumId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<vertical_datums>().FirstOrDefault(vd => vd.datum_id == vdatumId).objective_point.ToList();
+                    entities = sa.Select<objective_point>().Where(op => op.vdatum_id == vdatumId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -108,7 +107,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSiteObjectivePoints")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteObjectivePoints")]
         public OperationResult GetSiteObjectivePoints(Int32 siteId)
         {
             List<objective_point> entities = null;
@@ -118,7 +117,7 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<objective_point>().Where(rp => rp.site.site_id == siteId).OrderBy(rp => rp.objective_point_id).ToList();
+                    entities = sa.Select<objective_point>().Where(rp => rp.site_id == siteId).OrderBy(rp => rp.objective_point_id).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -145,7 +144,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0)
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -176,7 +175,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (entityId <= 0 || string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0) 
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0) 
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -212,31 +211,26 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     { 
                         //delete files associated with this op
-                        //List<FILES> opFiles = aSTNE.FILES.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
-                        //if (opFiles.Count >= 1)
-                        //{
-                        //    foreach (FILES f in opFiles)
-                        //    {
-
-                        //        //delete the file item from s3
-                        //        S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"]);
-                        //        aBucket.DeleteObject(BuildFilePath(f, f.PATH));
-
-                        //        //delete the file
-                        //        aSTNE.FILES.DeleteObject(f);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
-                        ////delete op_control_identifiers for this op
-                        //List<OP_CONTROL_IDENTIFIER> opci = aSTNE.OP_CONTROL_IDENTIFIER.Where(x => x.OBJECTIVE_POINT_ID == entityId).ToList();
-                        //if (opci.Count >= 1)
-                        //{
-                        //    foreach (OP_CONTROL_IDENTIFIER o in opci)
-                        //    {
-                        //        aSTNE.OP_CONTROL_IDENTIFIER.DeleteObject(o);
-                        //        aSTNE.SaveChanges();
-                        //    }
-                        //}
+                        List<file> opFiles = sa.Select<file>().Where(x => x.objective_point_id == entityId).ToList();
+                        if (opFiles.Count >= 1)
+                        {
+                            foreach (file f in opFiles)
+                            {
+                                //delete the file
+                                sa.Delete<file>(f);
+                                sm(sa.Messages);
+                            }
+                        }
+                        //delete op_control_identifiers for this op
+                        List<op_control_identifier> opci = sa.Select<op_control_identifier>().Where(x => x.objective_point_id == entityId).ToList();
+                        if (opci.Count >= 1)
+                        {
+                            foreach (op_control_identifier o in opci)
+                            {
+                                sa.Delete<op_control_identifier>(o);
+                                sm(sa.Messages);
+                            }
+                        }
 
                         anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
@@ -245,7 +239,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -28,5 +28,7 @@ namespace STNDB
     
         public virtual instrument instrument { get; set; }
         public virtual status_type status_type { get; set; }
+        public virtual member member { get; set; }
+        public virtual vertical_datums vertical_datums { get; set; }
     }
 }

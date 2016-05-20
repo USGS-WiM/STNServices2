@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -64,6 +65,7 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+        
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
@@ -91,33 +93,33 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentDeploymentType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentDeploymentType")]
         public OperationResult GetInstrumentDeploymentType(Int32 instrumentId)
         {
-            deployment_type mdeployment_type = null;
+            deployment_type anEntity = null;
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    mdeployment_type = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
+                    anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mdeployment_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSensorDeploymentTypes")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSensorDeploymentTypes")]
         public OperationResult GetSensorDeploymentTypes(Int32 sensorTypeId)
         {
             List<deployment_type> deployment_typeList = null;
             try
             {
                 if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     deployment_typeList = sa.Select<sensor_deployment>().Where(sd => sd.sensor_type_id == sensorTypeId).Select(s => s.deployment_type).ToList();
                     sm(MessageType.info, "Count: " + deployment_typeList.Count);
@@ -155,6 +157,47 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
 
         }//end HttpMethod.GET
+
+        //post sensor_deployment and return all deployment_types for this sensor_type
+        [RequiresRole(AdminRole)]
+        [HttpOperation(HttpMethod.POST, ForUriName = "AddSensorDeployment")]
+        public OperationResult AddSensorDeployment(Int32 sensorTypeId, Int32 deploymentTypeId)
+        {
+            sensor_deployment anEntity = null;
+            List<deployment_type> deploymentTypeList = null;
+            try
+            {
+                if (sensorTypeId <= 0 || deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        if (sa.Select<sensor_type>().First(s => s.sensor_type_id == sensorTypeId) == null)
+                            throw new NotFoundRequestException();
+
+                        if (sa.Select<deployment_type>().First(n => n.deployment_type_id == deploymentTypeId) == null)
+                            throw new NotFoundRequestException();
+
+                        if (sa.Select<sensor_deployment>().FirstOrDefault(sd => sd.sensor_type_id == sensorTypeId && sd.deployment_type_id == deploymentTypeId) == null)
+                        {
+                            anEntity = new sensor_deployment();
+                            anEntity.sensor_type_id = sensorTypeId;
+                            anEntity.deployment_type_id = deploymentTypeId;
+                            anEntity = sa.Add<sensor_deployment>(anEntity);
+                            sm(sa.Messages);
+                        }
+                        //return list of network types
+                        deploymentTypeList = sa.Select<deployment_type>().Include(dt => dt.sensor_deployment).Where(dt => dt.sensor_deployment.Any(sd => sd.sensor_type_id == sensorTypeId)).ToList();
+
+                    }//end using
+                }//end using
+                return new OperationResult.Created { ResponseResource = deploymentTypeList, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
+
         #endregion
         #region PutMethods
 
@@ -209,13 +252,40 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
 
         }//end HttpMethod.PUT
 
+        [RequiresRole(AdminRole)]
+        [HttpOperation(HttpMethod.DELETE, ForUriName = "RemoveSensorDeployment")]
+        public OperationResult RemoveSensorDeployment(Int32 sensorTypeId, Int32 deploymentTypeId)
+        {
+            try
+            {
+                if (sensorTypeId <= 0 || deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        if (sa.Select<sensor_type>().First(s => s.sensor_type_id == sensorTypeId) == null)
+                            throw new NotFoundRequestException();
+
+                        sensor_deployment ObjectToBeDeleted = sa.Select<sensor_deployment>().SingleOrDefault(sd => sd.sensor_type_id == sensorTypeId && sd.deployment_type_id == deploymentTypeId);
+
+                        if (ObjectToBeDeleted == null) throw new NotFoundRequestException();
+                        sa.Delete<sensor_deployment>(ObjectToBeDeleted);
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.OK { Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
         #endregion
     }//end deployment_typeHandler
 }
