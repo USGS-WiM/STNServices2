@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -75,6 +76,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instr_collection_conditions>().FirstOrDefault(e => e.id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,17 +96,18 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentCondition")]
         public OperationResult GetInstrumentCondition(Int32 instrumentId)
         {
-            instr_collection_conditions cCondition = null;
+            instr_collection_conditions anEntity = null;
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    cCondition = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).instr_collection_conditions;
+                    anEntity = sa.Select<instrument>().Include(i=>i.instr_collection_conditions).FirstOrDefault(i => i.instrument_id == instrumentId).instr_collection_conditions;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = cCondition, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -189,7 +192,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

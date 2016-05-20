@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -75,6 +76,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<housing_type>().FirstOrDefault(e => e.housing_type_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,7 +96,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentHousingType")]
         public OperationResult GetInstrumentHousingType(Int32 instrumentId)
         {
-            housing_type mhousing_type = null;
+            housing_type anEntity = null;
 
             //Return BadRequest if there is no ID
             if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -103,12 +105,12 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    mhousing_type = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).housing_type;
-                    if (mhousing_type == null) throw new NotFoundRequestException();
+                    anEntity = sa.Select<instrument>().Include(i => i.housing_type).FirstOrDefault(i => i.instrument_id == instrumentId).housing_type;
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mhousing_type, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -194,7 +196,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

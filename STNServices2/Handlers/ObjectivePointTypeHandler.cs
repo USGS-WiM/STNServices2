@@ -75,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<objective_point_type>().FirstOrDefault(e => e.objective_point_type_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -92,14 +93,14 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointOPType")]
-        public OperationResult GetInstrumentStatusStatus(Int32 objectivePointId)
+        public OperationResult GetObjectivePointOPType(Int32 objectivePointId)
         {
             objective_point_type anEntity = null;
 
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).objective_point_type;
                     if (anEntity == null) throw new NotFoundRequestException();
@@ -192,7 +193,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

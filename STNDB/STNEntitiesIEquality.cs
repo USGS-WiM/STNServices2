@@ -460,10 +460,13 @@ namespace STNDB
     {
         public bool Equals(instrument other)
         {
-            var t = this.sensor_type_id == other.sensor_type_id &&
-                    ( !other.deployment_type_id.HasValue || other.deployment_type_id.Value <= 0|| this.deployment_type_id.Value == other.deployment_type_id.Value ) &&
-                    (!other.sensor_brand_id.HasValue || other.sensor_brand_id.Value <= 0 || this.sensor_brand_id.Value == other.sensor_brand_id.Value ) &&
+            var t = this.sensor_type_id.Value == other.sensor_type_id.Value &&
+                    ( !other.deployment_type_id.HasValue || other.deployment_type_id <= 0|| this.deployment_type_id == other.deployment_type_id ) &&
+                    (!other.sensor_brand_id.HasValue || other.sensor_brand_id <= 0 || this.sensor_brand_id == other.sensor_brand_id ) &&
                     (!other.interval.HasValue || other.interval <= 0 || this.interval == other.interval ) &&
+                    (!other.site_id.HasValue || other.site_id <= 0 || this.site_id == other.site_id) &&
+                    (!other.inst_collection_id.HasValue || other.inst_collection_id <= 0 || this.inst_collection_id == other.inst_collection_id) &&
+                    (!other.housing_type_id.HasValue || other.housing_type_id <= 0 || this.housing_type_id == other.housing_type_id) &&
                     (!other.event_id.HasValue ||other.event_id <= 0 || this.event_id == other.event_id ) &&
                     (string.IsNullOrEmpty(other.location_description) || string.Equals(this.location_description, other.location_description,StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.serial_number) || string.Equals(this.serial_number, other.serial_number,StringComparison.OrdinalIgnoreCase)) &&

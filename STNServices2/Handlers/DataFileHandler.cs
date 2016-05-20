@@ -6,7 +6,7 @@
 // copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -43,7 +43,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<data_file> dataFiles = null;
+            List<data_file> entities = null;
 
             try
             {
@@ -52,35 +52,107 @@ namespace STNServices2.Handlers
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFiles = sa.Select<data_file>().OrderBy(df => df.data_file_id).Where(df => df.approval_id > 0).ToList();
+                        entities = sa.Select<data_file>().OrderBy(df => df.data_file_id).Where(df => df.approval_id > 0).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
-                        dataFiles = sa.Select<data_file>().OrderBy(df => df.data_file_id).ToList();
+                        entities = sa.Select<data_file>().OrderBy(df => df.data_file_id).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                 }
-
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch(Exception ex)
             { return HandleException(ex); }
         }// end HttpMethod.Get
+ 
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get(Int32 entityId)
+        {
+            data_file anEntity;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    //general public..only approved ones
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                    {
+                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId && df.approval_id > 0);
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    else
+                    {
+                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFileDataFile")]
+        public OperationResult GetFileDataFile(Int32 fileId)
+        {
+            data_file anEntity = null;
+            try
+            {
+                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent(true))
+                {
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                    {
+                        //general public..only approved ones
+                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    else
+                    {
+                        //they are logged in, give them all
+                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    sm(sa.Messages);
+
+                }//end using   
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch(Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovedDataFiles")]
         public OperationResult GetApprovedDataFiles(Int32 ApprovalId)
         {
-            List<data_file> datafileList = new List<data_file>();
+            List<data_file> entities = null;
 
             try
             {
+                if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
+
                 using (STNAgent sa = new STNAgent())
                 {
-                    datafileList = sa.Select<approval>().FirstOrDefault(a => a.approval_id == ApprovalId).data_file.ToList();
+                    entities = sa.Select<data_file>().Where(d => d.approval_id == ApprovalId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = datafileList, Description = MessageString };
+                //this will always be one because each datafile is approved individually
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch
             {
@@ -91,21 +163,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredDataFiles")]
         public OperationResult GetFilteredDataFiles(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
         {
+            List<data_file> entities;
             try
             {
-                List<data_file> dataFileList; ;
+                if (string.IsNullOrEmpty(approved)) throw new BadRequestException("Invalid input parameters");
+               
                 //set defaults
-                //default to false
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
                 Int32 filterMember = (memberId > 0) ? memberId : -1;
                 Int32 filterEvent = (eventId > 0) ? eventId : -1;
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    //Because 'Where' is producing an IQueryable, 
-                    //the execution is deferred until the ToList so you can chain 'Wheres' together.
                     IQueryable<data_file> query;
                     if (isApprovedStatus)
                         query = sa.Select<data_file>().Where(h => h.approval_id > 0);
@@ -122,113 +193,57 @@ namespace STNServices2.Handlers
                         query = query.Where(d => d.processor_id == filterMember);
 
 
-                    dataFileList = query.ToList();
+                    entities = query.ToList();
 
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFileList = dataFileList.Where(d => d.approval_id > 0).ToList();
+                        entities = entities.Where(d => d.approval_id > 0).ToList();
                     }
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFileList, Description= MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch( Exception ex)
             { return HandleException(ex); }
         }// end HttpMethod.Get
 
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
-        {
-            data_file aDataFile;
-            try
-            {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    //general public..only approved ones
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId && df.approval_id > 0);                    
-                    else
-                        aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
-                    
-                    sm(sa.Messages);
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = aDataFile };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult GetFileDataFile(Int32 fileId)
-        {
-            data_file aDataFile = null;
-            try
-            {
-                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {
-                        //general public..only approved ones
-                        aDataFile = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
-                        aDataFile = aDataFile.approval_id > 0 ? aDataFile : null;
-                    }
-                    else
-                    {
-                        //they are logged in, give them all
-                        aDataFile = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
-                    }
-                    sm(sa.Messages);
-
-                }//end using   
-
-                return new OperationResult.OK { ResponseResource = aDataFile, Description=MessageString };
-            }
-            catch(Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
-        [HttpOperation(ForUriName = "GetInstrumentDataFiles")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentDataFiles")]
         public OperationResult GetInstrumentDataFiles(Int32 instrumentId)
         {
-            List<data_file> dataFiles =null;
+            List<data_file> entities = null;
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {//general public..only approved ones
-                        dataFiles = sa.Select<data_file>().AsEnumerable()
-                                .Where(df => df.instrument_id == instrumentId && df.approval_id > 0)
-                                .OrderBy(df => df.data_file_id)
-                                .ToList<data_file>();
+                    {
+                        //general public..only approved ones
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.instrument_id == instrumentId && df.approval_id > 0).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
-                        dataFiles = sa.Select<data_file>().AsEnumerable()
-                                .Where(df => df.instrument_id == instrumentId)
-                                .OrderBy(df => df.data_file_id)
-                                .ToList<data_file>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.instrument_id == instrumentId).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetPeakSummaryDatafiles")]
         public OperationResult GetPeakSummaryDatafiles(Int32 peakSummaryId)
         {
-            List<data_file> dataFiles = null;
+            List<data_file> entities = null;
             try
             {
                 //Return BadRequest if there is no ID
@@ -238,27 +253,23 @@ namespace STNServices2.Handlers
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFiles = sa.Select<data_file>().AsEnumerable()
-                                .Where(df => df.peak_summary_id == peakSummaryId && df.approval_id > 0)
-                                .OrderBy(df => df.data_file_id)
-                                .ToList<data_file>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.peak_summary_id == peakSummaryId && df.approval_id > 0).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
-                        dataFiles = sa.Select<data_file>().AsEnumerable()
-                                .Where(df => df.peak_summary_id == peakSummaryId)
-                                .OrderBy(df => df.data_file_id)
-                                .ToList<data_file>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.peak_summary_id == peakSummaryId).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         #endregion
@@ -268,28 +279,27 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST)] //, ForUriName = "CreateDataFile")]
-        public OperationResult Post(data_file aDataFile)
+        [HttpOperation(HttpMethod.POST)]
+        public OperationResult Post(data_file anEntity)
         {
             try
             {
-                if (!aDataFile.good_start.HasValue || !aDataFile.good_end.HasValue ||aDataFile.collect_date.HasValue||
-                    (!aDataFile.instrument_id.HasValue|| aDataFile.instrument_id <= 0) || 
-                    (!aDataFile.processor_id.HasValue|| aDataFile.processor_id <= 0)
-                    )throw new BadRequestException("Invalid input parameters");
+                if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue || 
+                    (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0))
+                    throw new BadRequestException("Invalid input parameters");
 
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username,securedPassword))
                     {
-                        sa.Add<data_file>(aDataFile);
+                        sa.Add<data_file>(anEntity);
                         sm(sa.Messages);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = aDataFile, Description = MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -299,8 +309,7 @@ namespace STNServices2.Handlers
 
         #region PutMethods
         /*****
-         * Update entity object (single row) in the database by primary key
-         * 
+         * Update entity object (single row) in the database by primary key         
          * Returns: the updated table row entity object
          ****/
         /// 
@@ -308,42 +317,26 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, data_file aDataFile)
-        {
-            data_file DataFileToUpdate = null;
+        public OperationResult Put(Int32 entityId, data_file anEntity)
+        {            
             try
             {
-                if (entityId <=0 || !aDataFile.good_start.HasValue || !aDataFile.good_end.HasValue || aDataFile.collect_date.HasValue ||
-                    (!aDataFile.instrument_id.HasValue || aDataFile.instrument_id <= 0) ||
-                    (!aDataFile.processor_id.HasValue || aDataFile.processor_id <= 0)
-                    ) throw new BadRequestException("Invalid input parameters");
+                if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue ||
+                    (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0)) 
+                    throw new BadRequestException("Invalid input parameters");
+
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //Grab the instrument row to update
-                        DataFileToUpdate = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
-
-                        //Update fields
-                        DataFileToUpdate.start = aDataFile.start;
-                        DataFileToUpdate.end = aDataFile.end;
-                        DataFileToUpdate.good_start = aDataFile.good_start;
-                        DataFileToUpdate.good_end = aDataFile.good_end;
-                        DataFileToUpdate.processor_id = aDataFile.processor_id;
-                        DataFileToUpdate.instrument_id = aDataFile.instrument_id;
-                        DataFileToUpdate.approval_id = aDataFile.approval_id;
-                        DataFileToUpdate.collect_date = aDataFile.collect_date;
-                        DataFileToUpdate.peak_summary_id = aDataFile.peak_summary_id;
-                        DataFileToUpdate.elevation_status = aDataFile.elevation_status;
-
-                        sa.Update<data_file>(entityId, DataFileToUpdate);
-                        sm(sa.Messages);
+                        anEntity = sa.Update<data_file>(entityId, anEntity);
+                        sm(sa.Messages);                       
 
                     }//end using
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aDataFile, Description=MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex);}
@@ -376,7 +369,7 @@ namespace STNServices2.Handlers
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { Description = MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch(Exception ex)
             { return HandleException(ex); }

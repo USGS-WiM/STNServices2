@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -65,7 +65,35 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+  
+        [HttpOperation(HttpMethod.GET)]
+        public OperationResult Get(Int32 entityId)
+        {
+            state anEntity = null;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<state>().FirstOrDefault(e => e.state_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
 
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+
+        //returns a list of all the states we have sites in
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteStates")]
         public OperationResult GetSiteStates()
         {
@@ -97,33 +125,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET        
         
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
-        {
-            state anEntity = null;
-            try
-            {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    anEntity = sa.Select<state>().FirstOrDefault(e => e.state_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException(); 
-                    sm(sa.Messages);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-            finally
-            {
-
-            }//end try
-        }//end HttpMethod.GET
-
+      
         #endregion
         #region PostMethods
 
@@ -200,7 +202,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -88,41 +88,41 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetStateCountiesById")]
-        public OperationResult GetStateCountiesById(Int32 stateId)
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetStateCounties")]
+        public OperationResult GetStateCounties(Int32 stateId)
         {
-            List<county> stateCountyList = null;
+            List<county> entities = null;
             try
             {
                 if (stateId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    stateCountyList = sa.Select<state>().FirstOrDefault(i => i.state_id == stateId).counties.ToList();
+                    entities = sa.Select<state>().FirstOrDefault(i => i.state_id == stateId).counties.ToList();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = stateCountyList, Description=MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception)
             { return new OperationResult.BadRequest(); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetStateCountiesByAbbrev")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetStateCountiesByAbbrev")]
         public OperationResult GetStateCountiesByAbbrev(string stateAbbrev)
         {
-            List<county> stateCountyList = null;
+            List<county> entities = null;
             try
             {
                 //Return BadRequest if there is no ID
                 if (string.IsNullOrEmpty(stateAbbrev)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    stateCountyList = sa.Select<state>().FirstOrDefault(i => i.state_abbrev == stateAbbrev).counties.ToList();
+                    entities = sa.Select<state>().FirstOrDefault(i => i.state_abbrev == stateAbbrev).counties.ToList();
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = stateCountyList, Description=MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -137,7 +137,7 @@ namespace STNServices2.Handlers
             {
                 if (stateAbbrev == null) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     thisState = sa.Select<state>().FirstOrDefault(st => st.state_abbrev == stateAbbrev);
                     List<site> allSitesInThisState = sa.Select<site>().Where(p => p.state == stateAbbrev).ToList();
@@ -146,7 +146,7 @@ namespace STNServices2.Handlers
                     SiteCounties = sa.Select<county>().Where(co => uniqueCoList.Contains(co.county_name) && co.state_id == thisState.state_id).ToList();
                 }//end using            
                 sm(MessageType.info, "Count:" + SiteCounties.Count);
-                return new OperationResult.OK { ResponseResource = SiteCounties, Description=MessageString };
+                return new OperationResult.OK { ResponseResource = SiteCounties, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -161,11 +161,11 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.county_name) || anEntity.state_id <=0||
-                    anEntity.state_fip<=0 || anEntity.county_fip <=0)
+                if (string.IsNullOrEmpty(anEntity.county_name) || anEntity.state_id <= 0 || anEntity.state_fip <= 0 || anEntity.county_fip <= 0)
                     throw new BadRequestException("Invalid input parameters");
-                if (!anEntity.county_name.Contains(" Parish") && !anEntity.county_name.Contains(" County"))
-                    throw new BadRequestException("Invalid county name.... County name must contain: 'Parish' or 'County'.");
+
+                if (!anEntity.county_name.Contains(" Parish") && !anEntity.county_name.Contains(" County") && !anEntity.county_name.Contains(" Municipio"))
+                    throw new BadRequestException("Invalid county name.... County name must contain: 'Parish', 'County' or 'Municipio'.");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -238,7 +238,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

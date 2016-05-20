@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="60778adb855e45cf93d92ffa10cc1252" Name="STNDB" ZoomLevel="112">
+      <Diagram DiagramId="60778adb855e45cf93d92ffa10cc1252" Name="STNDB" ZoomLevel="109">
         <EntityTypeShape EntityType="STNNEWModel.agency" Width="2.125" PointX="0.75" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.approval" Width="2.125" PointX="0.75" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.contact" Width="2.125" PointX="0.75" PointY="1.5" IsExpanded="false" />
@@ -110,11 +110,17 @@
         <AssociationConnector Association="STNNEWModel.memberpeak_summary" />
         <AssociationConnector Association="STNNEWModel.agencymember" />
         <AssociationConnector Association="STNNEWModel.rolemember" />
+        <AssociationConnector Association="STNNEWModel.memberapproval" />
+        <AssociationConnector Association="STNNEWModel.memberhwm" />
+        <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
+        <AssociationConnector Association="STNNEWModel.memberinstrument_status" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumsinstrument_status" />
       </Diagram>
-      <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="65" >
+      <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="85" >
         <EntityTypeShape EntityType="STNNEWModel.events" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.horizontal_collect_methods" Width="2.25" PointX="8.25" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="6.75" PointY="6.75" />
+        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="6.625" PointY="5" />
         <EntityTypeShape EntityType="STNNEWModel.hwm_qualities" Width="1.5" PointX="4.375" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.hwm_types" Width="1.5" PointX="4.375" PointY="7.125" IsExpanded="true" />
         <AssociationConnector Association="STNNEWModel.hwm_typeshwm" />
@@ -123,16 +129,16 @@
         <AssociationConnector Association="STNNEWModel.markerhwm" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="9.125" PointY="8.875" FillColor="0, 122, 204" />
         <AssociationConnector Association="STNNEWModel.vertical_datumshwm" ></AssociationConnector>
-        <EntityTypeShape EntityType="STNNEWModel.approval" Width="1.5" PointX="4.375" PointY="13.25" />
+        <EntityTypeShape EntityType="STNNEWModel.approval" Width="1.5" PointX="3.875" PointY="12.75" />
         <AssociationConnector Association="STNNEWModel.approvalhwm" />
         <AssociationConnector Association="STNNEWModel.eventhwm" />
         <EntityTypeShape EntityType="STNNEWModel.site" Width="1.5" PointX="11.25" PointY="2.375" />
         <AssociationConnector Association="STNNEWModel.sitehwm" />
         <EntityTypeShape EntityType="STNNEWModel.peak_summary" Width="1.5" PointX="17.375" PointY="2.875" />
         <AssociationConnector Association="STNNEWModel.peak_summaryhwm" />
-        <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="14.625" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="14.75" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="STNNEWModel.hwmfile" />
-        <EntityTypeShape EntityType="STNNEWModel.horizontal_datums" Width="1.5" PointX="4.25" PointY="0.875" />
+        <EntityTypeShape EntityType="STNNEWModel.horizontal_datums" Width="1.5" PointX="3.625" PointY="2.375" />
         <AssociationConnector Association="STNNEWModel.horizontal_datumshwm" />
         <AssociationConnector Association="STNNEWModel.horizontal_collect_methodshwm" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_collect_methods" Width="2.25" PointX="1" PointY="10.25" />
@@ -141,6 +147,14 @@
         <AssociationConnector Association="STNNEWModel.horizontal_datumssite" />
         <AssociationConnector Association="STNNEWModel.sitefile" />
         <AssociationConnector Association="STNNEWModel.horizontal_collect_methodssite" />
+        <EntityTypeShape EntityType="STNNEWModel.member" Width="1.5" PointX="0.75" PointY="4.25" />
+        <AssociationConnector Association="STNNEWModel.memberevents" />
+        <AssociationConnector Association="STNNEWModel.membersite" />
+        <AssociationConnector Association="STNNEWModel.memberpeak_summary" />
+        <AssociationConnector Association="STNNEWModel.memberapproval" />
+        <AssociationConnector Association="STNNEWModel.memberhwm" />
+        <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
         </Diagram>
       <Diagram DiagramId="e155793f879247bfac992d75a3f9bdeb" Name="site" ZoomLevel="53" >
         <EntityTypeShape EntityType="STNNEWModel.site" Width="1.5" PointX="7.125" PointY="4.125" />
@@ -179,6 +193,8 @@
         <AssociationConnector Association="STNNEWModel.instrumentfile" />
         <EntityTypeShape EntityType="STNNEWModel.member" Width="1.5" PointX="2.75" PointY="5.375" />
         <AssociationConnector Association="STNNEWModel.membersite" />
+        <AssociationConnector Association="STNNEWModel.memberhwm" />
+        <AssociationConnector Association="STNNEWModel.memberhwm1" />
       </Diagram>
       <Diagram DiagramId="ed8bff13d16c4e4c992d52ed71c7d9ba" Name="sensor" ZoomLevel="37" >
         <EntityTypeShape EntityType="STNNEWModel.instrument" Width="1.5" PointX="6.875" PointY="5.125" />
@@ -219,16 +235,23 @@
         <AssociationConnector Association="STNNEWModel.membersite" />
         <AssociationConnector Association="STNNEWModel.memberdata_file" />
         <AssociationConnector Association="STNNEWModel.memberpeak_summary" />
+        <AssociationConnector Association="STNNEWModel.memberapproval" />
+        <AssociationConnector Association="STNNEWModel.memberinstrument_status" />
       </Diagram>
       <Diagram DiagramId="e75a514d7979410e940a6a37a80a07df" Name="peaksummaries" ZoomLevel="62" >
         <EntityTypeShape EntityType="STNNEWModel.peak_summary" Width="1.5" PointX="2.875" PointY="1.25" />
-        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="5.75" PointY="3" />
+        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="1.5" PointX="5.875" PointY="2.625" />
         <AssociationConnector Association="STNNEWModel.peak_summaryhwm" />
         <EntityTypeShape EntityType="STNNEWModel.data_file" Width="1.5" PointX="8.625" PointY="0.625" />
         <AssociationConnector Association="STNNEWModel.peak_summarydata_file" />
         <EntityTypeShape EntityType="STNNEWModel.member" Width="1.5" PointX="0.5" PointY="2.125" />
         <AssociationConnector Association="STNNEWModel.memberdata_file" />
         <AssociationConnector Association="STNNEWModel.memberpeak_summary" />
+        <AssociationConnector Association="STNNEWModel.memberhwm" />
+        <AssociationConnector Association="STNNEWModel.memberhwm1" />
+        <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="0.75" PointY="8.875" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumshwm" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumspeak_summary" />
       </Diagram>
       <Diagram DiagramId="a408ea9652564949b88ebea13ce2156d" Name="file" >
         <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="5" PointY="0.625" />
@@ -280,6 +303,26 @@
         <EntityTypeShape EntityType="STNNEWModel.objective_point" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="2.75" PointY="0.75" />
         <AssociationConnector Association="STNNEWModel.vertical_datumsobjective_point" />
+      </Diagram>
+      <Diagram DiagramId="821b1cd60f364e75a4db2ebc83b13b89" Name="contact" ZoomLevel="88" >
+        <EntityTypeShape EntityType="STNNEWModel.contact" Width="1.5" PointX="10.75" PointY="3.375" />
+        <EntityTypeShape EntityType="STNNEWModel.contact_type" Width="1.5" PointX="10.875" PointY="8.125" />
+        <EntityTypeShape EntityType="STNNEWModel.reportmetric_contact" Width="2.5" PointX="14" PointY="4.875" />
+        <AssociationConnector Association="STNNEWModel.contactreportmetric_contact" />
+        <AssociationConnector Association="STNNEWModel.contact_typereportmetric_contact" />
+        <EntityTypeShape EntityType="STNNEWModel.reporting_metrics" Width="2.375" PointX="18.125" PointY="3.875" />
+        <AssociationConnector Association="STNNEWModel.reporting_metricsreportmetric_contact" />
+      </Diagram>
+      <Diagram DiagramId="13784d0ef9fa4223bc17efbc41231e09" Name="instrument_status" ZoomLevel="62" >
+        <EntityTypeShape EntityType="STNNEWModel.instrument_status" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="STNNEWModel.member" Width="1.5" PointX="5.75" PointY="1.625" />
+        <EntityTypeShape EntityType="STNNEWModel.instrument" Width="1.5" PointX="0.75" PointY="9" />
+        <AssociationConnector Association="STNNEWModel.instrumentinstrument_status" />
+        <EntityTypeShape EntityType="STNNEWModel.status_type" Width="1.5" PointX="0.75" PointY="2" />
+        <AssociationConnector Association="STNNEWModel.status_typeinstrument_status" />
+        <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="0.75" PointY="5" />
+        <AssociationConnector Association="STNNEWModel.memberinstrument_status" />
+        <AssociationConnector Association="STNNEWModel.vertical_datumsinstrument_status" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
