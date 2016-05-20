@@ -667,6 +667,7 @@
           <Property Name="approval_date" Type="DateTime" Precision="6" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.approvalhwm" FromRole="approval" ToRole="hwm" />
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.approvaldata_file" FromRole="approval" ToRole="data_file" />
+          <NavigationProperty Name="member" Relationship="STNNEWModel.memberapproval" FromRole="approval" ToRole="member" />
         </EntityType>
         <EntityType Name="contact">
           <Key>
@@ -877,6 +878,8 @@
           <NavigationProperty Name="horizontal_datums" Relationship="STNNEWModel.horizontal_datumshwm" FromRole="hwm" ToRole="horizontal_datums" />
           <NavigationProperty Name="horizontal_collect_methods" Relationship="STNNEWModel.horizontal_collect_methodshwm" FromRole="hwm" ToRole="horizontal_collect_methods" />
           <NavigationProperty Name="vertical_collect_methods" Relationship="STNNEWModel.vertical_collect_methodshwm" FromRole="hwm" ToRole="vertical_collect_methods" />
+          <NavigationProperty Name="survey_member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
+          <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -947,6 +950,8 @@
           <Property Name="vdatum_id" Type="Int32" />
           <NavigationProperty Name="instrument" Relationship="STNNEWModel.instrumentinstrument_status" FromRole="instrument_status" ToRole="instrument" />
           <NavigationProperty Name="status_type" Relationship="STNNEWModel.status_typeinstrument_status" FromRole="instrument_status" ToRole="status_type" />
+          <NavigationProperty Name="member" Relationship="STNNEWModel.memberinstrument_status" FromRole="instrument_status" ToRole="member" />
+          <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsinstrument_status" FromRole="instrument_status" ToRole="vertical_datums" />
         </EntityType>
         <EntityType Name="landownercontact">
           <Key>
@@ -1098,6 +1103,7 @@
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.peak_summaryhwm" FromRole="peak_summary" ToRole="hwm" />
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.peak_summarydata_file" FromRole="peak_summary" ToRole="data_file" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberpeak_summary" FromRole="peak_summary" ToRole="member" />
+          <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="peak_summary" ToRole="vertical_datums" />
         </EntityType>
         <EntityType Name="reporting_metrics">
           <Key>
@@ -1318,6 +1324,8 @@
           <Property Name="datum_abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.vertical_datumshwm" FromRole="vertical_datums" ToRole="hwm" />
           <NavigationProperty Name="objective_point" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="vertical_datums" ToRole="objective_point" />
+          <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="vertical_datums" ToRole="peak_summary" />
+          <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.vertical_datumsinstrument_status" FromRole="vertical_datums" ToRole="instrument_status" />
         </EntityType>
         <EntityContainer Name="STNDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="agencies" EntityType="Self.agency" />
@@ -1596,6 +1604,30 @@
             <End Role="role" EntitySet="roles" />
             <End Role="member" EntitySet="members" />
           </AssociationSet>
+          <AssociationSet Name="memberapproval" Association="STNNEWModel.memberapproval">
+            <End Role="member" EntitySet="members" />
+            <End Role="approval" EntitySet="approvals" />
+          </AssociationSet>
+          <AssociationSet Name="memberhwm" Association="STNNEWModel.memberhwm">
+            <End Role="member" EntitySet="members" />
+            <End Role="hwm" EntitySet="hwms" />
+          </AssociationSet>
+          <AssociationSet Name="memberhwm1" Association="STNNEWModel.memberhwm1">
+            <End Role="member" EntitySet="members" />
+            <End Role="hwm" EntitySet="hwms" />
+          </AssociationSet>
+          <AssociationSet Name="vertical_datumspeak_summary" Association="STNNEWModel.vertical_datumspeak_summary">
+            <End Role="vertical_datums" EntitySet="vertical_datums" />
+            <End Role="peak_summary" EntitySet="peak_summary" />
+          </AssociationSet>
+          <AssociationSet Name="memberinstrument_status" Association="STNNEWModel.memberinstrument_status">
+            <End Role="member" EntitySet="members" />
+            <End Role="instrument_status" EntitySet="instrument_status" />
+          </AssociationSet>
+          <AssociationSet Name="vertical_datumsinstrument_status" Association="STNNEWModel.vertical_datumsinstrument_status">
+            <End Role="vertical_datums" EntitySet="vertical_datums" />
+            <End Role="instrument_status" EntitySet="instrument_status" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
           <End Type="STNNEWModel.hwm_types" Role="hwm_types" Multiplicity="1" />
@@ -1694,8 +1726,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="hwmfile">
-          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="0..1" />
-          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" >
+          </End>
           <ReferentialConstraint>
             <Principal Role="hwm">
               <PropertyRef Name="hwm_id" />
@@ -1754,7 +1789,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="sitefile">
-          <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" />
+          <End Type="STNNEWModel.site" Role="site" Multiplicity="0..1" >
+          </End>
           <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="site">
@@ -2232,6 +2268,10 @@
           <NavigationProperty Name="agency" Relationship="STNNEWModel.agencymember" FromRole="member" ToRole="agency" />
           <NavigationProperty Name="role" Relationship="STNNEWModel.rolemember" FromRole="member" ToRole="role" />
           <Property Name="resetFlag" Type="Int32" />
+          <NavigationProperty Name="approvals" Relationship="STNNEWModel.memberapproval" FromRole="member" ToRole="approval" />
+          <NavigationProperty Name="hwms" Relationship="STNNEWModel.memberhwm" FromRole="member" ToRole="hwm" />
+          <NavigationProperty Name="hwms1" Relationship="STNNEWModel.memberhwm1" FromRole="member" ToRole="hwm" />
+          <NavigationProperty Name="instrument_status" Relationship="STNNEWModel.memberinstrument_status" FromRole="member" ToRole="instrument_status" />
         </EntityType>
         <Association Name="memberevents">
           <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
@@ -2302,6 +2342,78 @@
             </Principal>
             <Dependent Role="member">
               <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberapproval">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.approval" Role="approval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="approval">
+              <PropertyRef Name="member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberhwm">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="hwm">
+              <PropertyRef Name="survey_member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberhwm1">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.hwm" Role="hwm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="hwm">
+              <PropertyRef Name="flag_member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vertical_datumspeak_summary">
+          <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+          <End Type="STNNEWModel.peak_summary" Role="peak_summary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vertical_datums">
+              <PropertyRef Name="datum_id" />
+            </Principal>
+            <Dependent Role="peak_summary">
+              <PropertyRef Name="vdatum_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="memberinstrument_status">
+          <End Type="STNNEWModel.member" Role="member" Multiplicity="0..1" />
+          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="member">
+              <PropertyRef Name="member_id" />
+            </Principal>
+            <Dependent Role="instrument_status">
+              <PropertyRef Name="member_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vertical_datumsinstrument_status">
+          <End Type="STNNEWModel.vertical_datums" Role="vertical_datums" Multiplicity="0..1" />
+          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vertical_datums">
+              <PropertyRef Name="datum_id" />
+            </Principal>
+            <Dependent Role="instrument_status">
+              <PropertyRef Name="vdatum_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

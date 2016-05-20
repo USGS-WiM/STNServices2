@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -68,19 +69,20 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            agency entity = null;
+            agency anEntity = null;
 
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entity = sa.Select<agency>().FirstOrDefault(e => e.agency_id == entityId);
+                    anEntity = sa.Select<agency>().FirstOrDefault(e => e.agency_id == entityId);
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {
@@ -91,44 +93,47 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
-        [HttpOperation(ForUriName = "GetMemberAgency")]
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetMemberAgency")]
         public OperationResult GetMemberAgency(Int32 memberId)
         {
-            agency mAgency = null;
+            agency anEntity = null;
             try
             {
                 //Return BadRequest if there is no ID
                 if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    mAgency = sa.Select<member>().FirstOrDefault(i => i.member_id == memberId).agency;
+                    anEntity = sa.Select<member>().FirstOrDefault(m => m.member_id == memberId).agency;
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mAgency, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSourceAgency")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSourceAgency")]
         public OperationResult GetSourceAgency(Int32 sourceId)
         {
-            agency mAgency = null;
+            agency anEntity = null;
 
             //Return BadRequest if there is no ID
             if (sourceId <= 0) throw new BadRequestException("Invalid input parameters");
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    mAgency = sa.Select<source>().FirstOrDefault(i => i.source_id == sourceId).agency;
+                    anEntity = sa.Select<source>().FirstOrDefault(s => s.source_id == sourceId).agency;
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mAgency };
+                return new OperationResult.OK { ResponseResource = anEntity };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -215,7 +220,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

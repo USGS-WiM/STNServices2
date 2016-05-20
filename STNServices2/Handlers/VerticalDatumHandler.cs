@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -24,6 +24,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -83,7 +84,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "getOPVDatum")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "getOPVDatum")]
         public OperationResult getOPVDatum(Int32 objectivePointId)
         {
             vertical_datums anEntity = null;
@@ -93,7 +94,7 @@ namespace STNServices2.Handlers
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;
+                    anEntity = sa.Select<objective_point>().Include(i=>i.vertical_datums).FirstOrDefault(i => i.objective_point_id == objectivePointId).vertical_datums;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -106,7 +107,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetHWMVDatum")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHWMVDatum")]
         public OperationResult GetHWMVDatum(Int32 hwmId)
         {
             vertical_datums anEntity = null;
@@ -120,7 +121,7 @@ namespace STNServices2.Handlers
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
+                    anEntity = sa.Select<hwm>().Include(i=>i.vertical_datums).FirstOrDefault(i => i.hwm_id == hwmId).vertical_datums;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);           
                 }//end using
@@ -215,7 +216,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

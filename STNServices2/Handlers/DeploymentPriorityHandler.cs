@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -93,23 +93,23 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetSitePriority")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitePriority")]
         public OperationResult GetSitePriority(Int32 siteId)
         {
-            deployment_priority mdeployment_priority = null;
+            deployment_priority anEntity = null;
 
             //Return BadRequest if there is no ID
             if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    mdeployment_priority = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).deployment_priority;
+                    anEntity = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).deployment_priority;
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = mdeployment_priority, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -194,7 +194,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

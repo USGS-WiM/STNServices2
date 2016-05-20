@@ -28,6 +28,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Security;
 using STNServices2.Utilities.ServiceAgent;
+using STNServices2.Resources;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -90,29 +91,97 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetReportModel")]
         public OperationResult GetReportModel(Int32 entityId)
         {
-            //ReportResource aReportMetModel;
-            List<reporting_metrics> entities = null;
+            ReportResource anEntity;
             
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<reporting_metrics>().Include("reportmetric_contact").ToList();
+                    anEntity = sa.Select<reporting_metrics>().Include(r => r.reportmetric_contact).Include("reportmetric_contact.contact_type")
+                        .Where(rep => rep.reporting_metrics_id == entityId).Select(rm => new ReportResource
+                        {
+                            reporting_metrics_id = rm.reporting_metrics_id,
+                            event_id = rm.event_id,
+                            sw_fieldpers_notacct = rm.sw_fieldpers_notacct,
+                            wq_fieldpers_notacct = rm.wq_fieldpers_notacct,
+                            sw_yest_fieldpers = rm.sw_yest_fieldpers,
+                            wq_yest_fieldpers = rm.wq_yest_fieldpers,
+                            sw_tod_fieldpers = rm.sw_tod_fieldpers,
+                            wq_tod_fieldpers = rm.wq_tod_fieldpers,
+                            sw_tmw_fieldpers = rm.sw_tmw_fieldpers,
+                            wq_tmw_fieldpers = rm.wq_tmw_fieldpers,
+                            sw_yest_officepers = rm.sw_yest_officepers,
+                            wq_yest_officepers = rm.wq_yest_officepers,
+                            sw_tod_officepers = rm.sw_tod_officepers,
+                            wq_tod_officepers = rm.wq_tod_officepers,
+                            sw_tmw_officepers = rm.sw_tmw_officepers,
+                            wq_tmw_officepers = rm.wq_tmw_officepers,
+                            sw_autos_depl = rm.sw_autos_depl,
+                            wq_autos_depl = rm.wq_autos_depl,
+                            sw_boats_depl = rm.sw_boats_depl,
+                            wq_boats_depl = rm.wq_boats_depl,
+                            sw_other_depl = rm.sw_other_depl,
+                            wq_other_depl = rm.wq_other_depl,
+                            gage_visit = rm.gage_visit,
+                            gage_down = rm.gage_down,
+                            tot_discharge_meas = rm.tot_discharge_meas,
+                            plan_discharge_meas = rm.plan_discharge_meas,
+                            tot_check_meas = rm.tot_check_meas,
+                            plan_check_meas = rm.plan_check_meas,
+                            plan_indirect_meas = rm.plan_indirect_meas,
+                            rating_extens = rm.rating_extens,
+                            gage_peak_record = rm.gage_peak_record,
+                            plan_rapdepl_gage = rm.plan_rapdepl_gage,
+                            dep_rapdepl_gage = rm.dep_rapdepl_gage,
+                            rec_rapdepl_gage = rm.rec_rapdepl_gage,
+                            lost_rapdepl_gage = rm.lost_rapdepl_gage,
+                            plan_wtrlev_sensor = rm.plan_wtrlev_sensor,
+                            dep_wtrlev_sensor = rm.dep_wtrlev_sensor,
+                            rec_wtrlev_sensor = rm.rec_wtrlev_sensor,
+                            lost_wtrlev_sensor = rm.lost_wtrlev_sensor,
+                            plan_wv_sens = rm.plan_wv_sens,
+                            dep_wv_sens = rm.dep_wv_sens,
+                            rec_wv_sens = rm.rec_wv_sens,
+                            lost_wv_sens = rm.lost_wv_sens,
+                            plan_barometric = rm.plan_barometric,
+                            dep_barometric = rm.dep_barometric,
+                            rec_barometric = rm.rec_barometric,
+                            lost_barometric = rm.lost_barometric,
+                            plan_meteorological = rm.plan_meteorological,
+                            dep_meteorological = rm.dep_meteorological,
+                            rec_meteorological = rm.rec_meteorological,
+                            lost_meteorological = rm.lost_meteorological,
+                            hwm_flagged = rm.hwm_flagged,
+                            hwm_collected = rm.hwm_collected,
+                            qw_gage_visit = rm.qw_gage_visit,
+                            qw_cont_gagevisit = rm.qw_cont_gagevisit,
+                            qw_gage_down = rm.qw_gage_down,
+                            qw_discr_samples = rm.qw_discr_samples,
+                            coll_sedsamples = rm.coll_sedsamples,
+                            member_id = rm.member_id,
+                            complete = rm.complete,
+                            notes = rm.notes,
+                            report_date = rm.report_date,
+                            state = rm.state,
+                            ReportContacts = rm.reportmetric_contact.Select(rc => new ReportContactModel
+                            {
+                                 fname = rc.contact.fname,
+                                 lname = rc.contact.lname,
+                                 email = rc.contact.email,
+                                 phone = rc.contact.phone,
+                                 alt_phone = rc.contact.alt_phone,
+                                 contact_id = rc.contact.contact_id,
+                                 type = rc.contact_type.type
+                            }).ToList<ReportContactModel>()
+                        }).FirstOrDefault();
+                                       
 
-                    //aReportMetModel = aSTNE.REPORTING_METRICS.Where(df => df.REPORTING_METRICS_ID == entityId).Select(r => new ReportResource
-                    //{
-                    //    Report = r,
-                    //    ReportContacts = getReportContacts(r)
-                    //}).FirstOrDefault();
-
-                    //if (aReportMet != null)
-                    //    aReportMet.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-                    sm(MessageType.info, "Count: " + entities.Count());
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {
@@ -143,31 +212,7 @@ namespace STNServices2.Handlers
                 return HandleException(ex);
             }
         }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetReportsByEventAndState")]
-        public OperationResult GetReportsByEventAndState(Int32 eventId, string stateName)
-        {
-            List<reporting_metrics> entities = null;
-
-            try
-            {
-                if (eventId <= 0 || string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    entities = sa.Select<reporting_metrics>().Where(mr => mr.event_id == eventId && mr.state == stateName).ToList();
-                    sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }//end HttpMethod.GET
-
+ 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventReports")]
         public OperationResult GetEventReports(Int32 eventId)
         {
@@ -217,6 +262,31 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetReportsByEventAndState")]
+        public OperationResult GetReportsByEventAndState(Int32 eventId, string stateName)
+        {
+            List<reporting_metrics> entities = null;
+
+            try
+            {
+                if (eventId <= 0 || string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.Select<reporting_metrics>().Where(mr => mr.event_id == eventId && mr.state == stateName).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+    
+        //returns a report with just the counts of sensors (dep,rec, lost in all sensor types) and hwms for this date/event/state (<= to date)
         [HttpOperation(HttpMethod.GET, ForUriName = "GetDailyReportTotals")]
         public OperationResult GetDailyReportTotals(string date, Int32 eventId, string stateName)
         {
@@ -232,12 +302,13 @@ namespace STNServices2.Handlers
 
                     //statusType 1 : Deployed, statusType 2 : Retrieved, statusType 3 : lost
 
-                    //query instruments with specified eventid, state (input can handle state name or abbr name)
-                    IQueryable<instrument> sensorQuery = sa.Select<instrument>().Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
+                    //query instruments with specified eventid, state (input can handle state name or abbr name)                    
+                    IQueryable<instrument> sensorQuery = sa.Select<instrument>().Include(i => i.instrument_status).Include(i => i.site).Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
 
                     //query instruments by the date being less than status date
                     List<instrument> sensorList = sensorQuery.AsEnumerable().Where(i => i.instrument_status.OrderByDescending(instStat => instStat.instrument_status_id)
                                                                     .FirstOrDefault().time_stamp.Value <= aDate).ToList();
+
 
                     List<instrument> depINSTs = sensorList.Where(i => i.instrument_status.OrderByDescending(inst => inst.time_stamp).FirstOrDefault().status_type_id == 1).ToList();
                     List<instrument> recINSTs = sensorList.Where(i => i.instrument_status.OrderByDescending(inst => inst.time_stamp).FirstOrDefault().status_type_id == 2).ToList();
@@ -269,7 +340,7 @@ namespace STNServices2.Handlers
                     Int32 LOSTmetCount = lostINSTs.Where(s => s.sensor_type_id == 2).ToList().Count();
 
                     //now go get the HWMs for Flagged and Collected
-                    IQueryable<hwm> hwmQuery = sa.Select<hwm>().Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
+                    IQueryable<hwm> hwmQuery = sa.Select<hwm>().Include(h=> h.site).Include(h =>h.@event).Where(i => i.event_id == eventId && i.site.state.Equals(stateName));
 
                     //query instruments by the date being less than status date
                     hwmQuery = hwmQuery.Where(i => i.@event.event_start_date <= aDate.Date);
@@ -278,6 +349,7 @@ namespace STNServices2.Handlers
                     Int32 hwmCollected = hwmQuery.Where(h => h.elev_ft != null).ToList().Count();
 
                     //now populate the report to pass back
+                    ReportForTotals = new reporting_metrics();
                     ReportForTotals.dep_rapdepl_gage = DEPrapidDeploymentGageCount >= 1 ? DEPrapidDeploymentGageCount : 0;
                     ReportForTotals.rec_rapdepl_gage = RECrapidDeploymentGageCount >= 1 ? RECrapidDeploymentGageCount : 0;
                     ReportForTotals.lost_rapdepl_gage = LOSTrapidDeploymentGageCount >= 1 ? LOSTrapidDeploymentGageCount : 0;
@@ -309,8 +381,9 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.Get
 
+        //returns completed reports that were done on this date, event, state
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredReports")]
-        public OperationResult GetFilteredReports([Optional] int eventId, [Optional] string stateNames, string aDate)
+        public OperationResult GetFilteredReports( string aDate, [Optional] int eventId, [Optional] string stateNames)
         {
             List<reporting_metrics> ReportList = null;
             IQueryable<reporting_metrics> query = null;
@@ -336,14 +409,14 @@ namespace STNServices2.Handlers
                     //get all the reports first to then narrow down
                     query = sa.Select<reporting_metrics>();
 
+                    //query DATE
+                    query = query.Where(e => e.report_date == thisDate.Value);
+
                     //do we have an EVENT?
                     if (eventID > 0)
                     {
-                        query = sa.Select<reporting_metrics>().Where(e => e.event_id == eventID);
-                    }
-
-                    //query DATE
-                    query = query.Where(e => e.report_date == thisDate.Value);
+                        query = query.Where(e => e.event_id == eventID);
+                    }                    
 
                     if (states.Count >= 2)
                     {
@@ -377,15 +450,11 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-
-        [STNRequiresRole(new string[] {AdminRole, ManagerRole, FieldRole})]//[RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredReportsModel")]
         public OperationResult GetFilteredReportModel(int eventId, string aDate, [Optional] string stateNames)
         {
             //this returns only completed reports
-
-            //List<ReportResource> ReportList = null; 
-            List<reporting_metrics> ReportList = null;
+            List<ReportResource> ReportList = null;            
             IQueryable<reporting_metrics> query = null;
 
             try
@@ -397,84 +466,130 @@ namespace STNServices2.Handlers
                 List<string> states = new List<string>();
                 char[] delimiter = { ',' };
                 //stateNames will be a list that is comma separated. Need to parse out
-                if (stateNames != string.Empty)
-                {
+                if (stateNames != null && stateNames != string.Empty)
                     states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
-                }
 
-                Int32 eventID = eventId > 0 ? eventId : -1;
-                
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
-                    { 
-                        //get all the reports first to then narrow down
-                        query = sa.Select<reporting_metrics>();
+                Int32 eventID = eventId > 0 ? eventId : -1;                
+                using (STNAgent sa = new STNAgent())
+                { 
+                    //get all the reports first to then narrow down
+                    query = sa.Select<reporting_metrics>().Include(r => r.reportmetric_contact).Include("reportmetric_contact.contact_type");
 
-                        //do we have an EVENT?
-                        if (eventID > 0)
+                    //do we have an EVENT?
+                    if (eventID > 0)
+                    {
+                        query = sa.Select<reporting_metrics>().Where(e => e.event_id == eventID);
+                    }
+
+                    //query DATE
+                    query = query.Where(e => e.report_date == thisDate.Value);
+
+                    if (states.Count >= 2)
+                    {
+
+                        //multiple STATES
+                        query = from q in query where states.Any(s => q.state.Contains(s.Trim())) select q;
+                    }
+
+                    if (states.Count == 1)
+                    {
+                        if (states[0] != "All States" && states[0] != "0")
                         {
-                            query = sa.Select<reporting_metrics>().Where(e => e.event_id == eventID);
+                            string thisState = states[0];
+                            thisState = GetStateByName(thisState).ToString();
+                            query = query.Where(r => r.state == thisState);
                         }
+                    }
 
-                        //query DATE
-                        query = query.Where(e => e.report_date == thisDate.Value);
-
-                        if (states.Count >= 2)
+                    query = query.Where(x => x.complete == 1);
+                    ReportList = query.Select(rm => new ReportResource
                         {
-
-                            //multiple STATES
-                            query = from q in query where states.Any(s => q.state.Contains(s.Trim())) select q;
-                        }
-
-                        if (states.Count == 1)
-                        {
-                            if (states[0] != "All States" && states[0] != "0")
+                            reporting_metrics_id = rm.reporting_metrics_id,
+                            event_id = rm.event_id,
+                            sw_fieldpers_notacct = rm.sw_fieldpers_notacct,
+                            wq_fieldpers_notacct = rm.wq_fieldpers_notacct,
+                            sw_yest_fieldpers = rm.sw_yest_fieldpers,
+                            wq_yest_fieldpers = rm.wq_yest_fieldpers,
+                            sw_tod_fieldpers = rm.sw_tod_fieldpers,
+                            wq_tod_fieldpers = rm.wq_tod_fieldpers,
+                            sw_tmw_fieldpers = rm.sw_tmw_fieldpers,
+                            wq_tmw_fieldpers = rm.wq_tmw_fieldpers,
+                            sw_yest_officepers = rm.sw_yest_officepers,
+                            wq_yest_officepers = rm.wq_yest_officepers,
+                            sw_tod_officepers = rm.sw_tod_officepers,
+                            wq_tod_officepers = rm.wq_tod_officepers,
+                            sw_tmw_officepers = rm.sw_tmw_officepers,
+                            wq_tmw_officepers = rm.wq_tmw_officepers,
+                            sw_autos_depl = rm.sw_autos_depl,
+                            wq_autos_depl = rm.wq_autos_depl,
+                            sw_boats_depl = rm.sw_boats_depl,
+                            wq_boats_depl = rm.wq_boats_depl,
+                            sw_other_depl = rm.sw_other_depl,
+                            wq_other_depl = rm.wq_other_depl,
+                            gage_visit = rm.gage_visit,
+                            gage_down = rm.gage_down,
+                            tot_discharge_meas = rm.tot_discharge_meas,
+                            plan_discharge_meas = rm.plan_discharge_meas,
+                            tot_check_meas = rm.tot_check_meas,
+                            plan_check_meas = rm.plan_check_meas,
+                            plan_indirect_meas = rm.plan_indirect_meas,
+                            rating_extens = rm.rating_extens,
+                            gage_peak_record = rm.gage_peak_record,
+                            plan_rapdepl_gage = rm.plan_rapdepl_gage,
+                            dep_rapdepl_gage = rm.dep_rapdepl_gage,
+                            rec_rapdepl_gage = rm.rec_rapdepl_gage,
+                            lost_rapdepl_gage = rm.lost_rapdepl_gage,
+                            plan_wtrlev_sensor = rm.plan_wtrlev_sensor,
+                            dep_wtrlev_sensor = rm.dep_wtrlev_sensor,
+                            rec_wtrlev_sensor = rm.rec_wtrlev_sensor,
+                            lost_wtrlev_sensor = rm.lost_wtrlev_sensor,
+                            plan_wv_sens = rm.plan_wv_sens,
+                            dep_wv_sens = rm.dep_wv_sens,
+                            rec_wv_sens = rm.rec_wv_sens,
+                            lost_wv_sens = rm.lost_wv_sens,
+                            plan_barometric = rm.plan_barometric,
+                            dep_barometric = rm.dep_barometric,
+                            rec_barometric = rm.rec_barometric,
+                            lost_barometric = rm.lost_barometric,
+                            plan_meteorological = rm.plan_meteorological,
+                            dep_meteorological = rm.dep_meteorological,
+                            rec_meteorological = rm.rec_meteorological,
+                            lost_meteorological = rm.lost_meteorological,
+                            hwm_flagged = rm.hwm_flagged,
+                            hwm_collected = rm.hwm_collected,
+                            qw_gage_visit = rm.qw_gage_visit,
+                            qw_cont_gagevisit = rm.qw_cont_gagevisit,
+                            qw_gage_down = rm.qw_gage_down,
+                            qw_discr_samples = rm.qw_discr_samples,
+                            coll_sedsamples = rm.coll_sedsamples,
+                            member_id = rm.member_id,
+                            complete = rm.complete,
+                            notes = rm.notes,
+                            report_date = rm.report_date,
+                            state = rm.state,
+                            ReportContacts = rm.reportmetric_contact.Select(rc => new ReportContactModel
                             {
-                                string thisState = states[0];
-                                thisState = GetStateByName(thisState).ToString();
-                                query = query.Where(r => r.state == thisState);
-                            }
-                        }
-
-                        query = query.Where(x => x.complete == 1);
-
-                        ReportList = query.Include("reportmetric_contact").ToList();
-
-                        //only completed reports please
-                        //ReportList = query.AsEnumerable().Where(x => x.complete == 1).Select(x => new ReportResource
-                        //{
-                        //    Report = x,
-                        //    ReportContacts = getReportContacts(x)
-                        //}).ToList();                       
-                        sm(MessageType.info, "Count: " + ReportList.Count());
-                        sm(sa.Messages);
-                    }//end using
-                }
+                                fname = rc.contact.fname,
+                                lname = rc.contact.lname,
+                                email = rc.contact.email,
+                                phone = rc.contact.phone,
+                                alt_phone = rc.contact.alt_phone,
+                                contact_id = rc.contact.contact_id,
+                                type = rc.contact_type.type
+                            }).ToList<ReportContactModel>()
+                        }).ToList();
+                    
+                    sm(MessageType.info, "Count: " + ReportList.Count());
+                    sm(sa.Messages);
+                }//end using
+               
                 return new OperationResult.OK { ResponseResource = ReportList, Description = this.MessageString };
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
-        }
-        
-
-        //private List<ReportContactModel> getReportContacts(REPORTING_METRICS x)
-        //{
-        //    var contactList = x.REPORTMETRIC_CONTACT.Select(c => new ReportContactModel
-        //    {
-        //        ContactId = c.CONTACT_ID,
-        //        FNAME = c.CONTACT.FNAME,
-        //        LNAME = c.CONTACT.LNAME,
-        //        PHONE = c.CONTACT.PHONE,
-        //        ALT_PHONE = c.CONTACT.ALT_PHONE,
-        //        EMAIL = c.CONTACT.EMAIL,
-        //        TYPE = c.CONTACT_TYPE.TYPE
-        //    }).ToList();
-        //    return contactList;
-
-        //}//end HttpMethod.GET        
+        }        
 
         #endregion
 
@@ -483,7 +598,7 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [RequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "PostReportMetrics")]
+        [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(reporting_metrics anEntity)
         {
             try
@@ -556,9 +671,10 @@ namespace STNServices2.Handlers
 
                         sa.Delete<reporting_metrics>(anEntity);
                         sm(sa.Messages);
+                        //TODO:: Delete reportmetric_contact relationship row
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

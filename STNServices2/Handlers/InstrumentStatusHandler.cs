@@ -8,8 +8,8 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
-//              Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //              
 //  
 //   purpose:   Handles InstrumentStatus resources through the HTTP uniform interface.
@@ -27,6 +27,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNServices2.Security;
@@ -52,6 +53,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<instrument_status>().OrderBy(instStat => instStat.instrument_status_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -70,6 +72,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instrument_status>().SingleOrDefault(inst => inst.instrument_status_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -78,6 +81,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
+        //returns all statuses for an instrument in descending order
         [HttpOperation(HttpMethod.GET,ForUriName = "GetInstrumentStatusLog")]
         public OperationResult GetInstrumentStatusLog(Int32 instrumentId)
         {
@@ -87,11 +91,9 @@ namespace STNServices2.Handlers
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<instrument_status>().AsEnumerable()
-                                .Where(instStat => instStat.instrument_id == instrumentId)
-                                .OrderByDescending(instStat => instStat.time_stamp)
-                                .ToList();
-
+                    entities = sa.Select<instrument_status>().AsEnumerable().Where(instStat => instStat.instrument_id == instrumentId)
+                                .OrderByDescending(instStat => instStat.time_stamp).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
@@ -100,6 +102,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET 
 
+        //returns the most recent status for an instrument
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatus")]
         public OperationResult GetInstrumentStatus(Int32 instrumentId)
         {
@@ -109,10 +112,10 @@ namespace STNServices2.Handlers
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument_status>().AsEnumerable()
-                                .Where(instStat => instStat.instrument_id == instrumentId)
+                    anEntity = sa.Select<instrument_status>().AsEnumerable().Where(instStat => instStat.instrument_id == instrumentId)
                                 .OrderByDescending(instStat => instStat.time_stamp).FirstOrDefault();
-
+                    
+                    if (anEntity == null) throw new NotFoundRequestException();                    
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -123,16 +126,14 @@ namespace STNServices2.Handlers
         #endregion
         #region PostMethods
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "CreateInstrumentStatus")]
+        [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(instrument_status anEntity)
         {
             try
             {
-                if (!anEntity.instrument_id.HasValue ||
-                    !anEntity.time_stamp.HasValue ||
-                    !anEntity.status_type_id.HasValue ||
-                    !anEntity.member_id.HasValue ||
-                    string.IsNullOrEmpty(anEntity.time_zone)) throw new BadRequestException("Invalid input parameters");
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                    throw new BadRequestException("Invalid input parameters");
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -156,11 +157,10 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (!anEntity.instrument_id.HasValue ||
-                    !anEntity.time_stamp.HasValue ||
-                    !anEntity.status_type_id.HasValue ||
-                    !anEntity.member_id.HasValue ||
-                    string.IsNullOrEmpty(anEntity.time_zone)) throw new BadRequestException("Invalid input parameters");
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue ||
+                    !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                    throw new BadRequestException("Invalid input parameters");
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
@@ -190,14 +190,12 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        instrument_status ObjectToBeDeleted = sa.Select<instrument_status>()
-                            .SingleOrDefault(instStat => instStat.instrument_status_id == entityId);
+                        instrument_status ObjectToBeDeleted = sa.Select<instrument_status>().SingleOrDefault(instStat => instStat.instrument_status_id == entityId);
 
                         if (ObjectToBeDeleted == null) throw new NotFoundRequestException("Item Not found");
                         sa.Delete<instrument_status>(ObjectToBeDeleted);
 
                         sm(sa.Messages);
-
                     }//end using
                 }//end using
                 return new OperationResult.OK { Description = this.MessageString };

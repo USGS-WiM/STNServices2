@@ -7,7 +7,7 @@
 // copyright:   2014 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles Site resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
+using STNServices2.Security;
 using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
@@ -37,6 +38,7 @@ namespace STNServices2.Handlers
     public class LandOwnerHandler : STNHandlerBase
     {
         #region GetMethods
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
@@ -44,13 +46,15 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent())
+                using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    entities = sa.Select<landownercontact>().OrderBy(e => e.landownercontactid).ToList();
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        entities = sa.Select<landownercontact>().ToList();
 
-                    sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
-
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+                    }
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
@@ -65,6 +69,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
@@ -72,11 +77,14 @@ namespace STNServices2.Handlers
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    anEntity = sa.Select<landownercontact>().FirstOrDefault(e => e.landownercontactid == entityId);
-                    sm(sa.Messages);
-
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        anEntity = sa.Select<landownercontact>().FirstOrDefault(e => e.landownercontactid == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException(); 
+                        sm(sa.Messages);
+                    }
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -91,6 +99,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteLandOwner")]
         public OperationResult GetSiteLandOwner(Int32 siteId)
         {
@@ -98,11 +107,14 @@ namespace STNServices2.Handlers
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
-                    if (mlandownercontact == null) throw new NotFoundRequestException();
-                    sm(sa.Messages);
+                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    {
+                        mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
+                        if (mlandownercontact == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = mlandownercontact, Description = this.MessageString };
@@ -114,7 +126,7 @@ namespace STNServices2.Handlers
         #endregion
         #region PostMethods
 
-        [RequiresRole(AdminRole)]
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST)]
         public OperationResult POST(landownercontact anEntity)
         {
@@ -144,7 +156,7 @@ namespace STNServices2.Handlers
         /// 
         /// Force the user to provide authentication and authorization 
         ///
-        [RequiresRole(AdminRole)]
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, landownercontact anEntity)
         {
@@ -170,7 +182,7 @@ namespace STNServices2.Handlers
 
         #endregion
         #region DeleteMethods
-        [RequiresRole(AdminRole)]
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
@@ -189,7 +201,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

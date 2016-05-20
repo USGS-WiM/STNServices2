@@ -9,7 +9,7 @@
 // copyright:   2012 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
 //   purpose:   Handles LocatorType resources through the HTTP uniform interface.
 //              Equivalent to the controller in MVC.
@@ -28,6 +28,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -51,7 +52,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<marker>().OrderBy(e => e.marker_id).ToList();
-
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
 
@@ -63,10 +63,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -79,6 +75,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<marker>().FirstOrDefault(e => e.marker_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using
@@ -94,6 +91,34 @@ namespace STNServices2.Handlers
 
             }//end try
         }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName="GetHWMMarker")]
+        public OperationResult GetHWMMarker(Int32 hwmId)
+        {
+            marker anEntity = null;
+            try
+            {
+                if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent(true))
+                {
+                    anEntity = sa.Select<hwm>().Include(e=>e.marker).FirstOrDefault(e => e.hwm_id == hwmId).marker;
+                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+        
         #endregion
         #region PostMethods
         [RequiresRole(AdminRole)]
@@ -167,7 +192,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

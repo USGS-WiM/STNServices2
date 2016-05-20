@@ -94,7 +94,7 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentSensorType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentSensorType")]
         public OperationResult GetInstrumentSensorType(Int32 instrumentId)
         {
             sensor_type anEntity = null;
@@ -105,7 +105,7 @@ namespace STNServices2.Handlers
                 {
                      if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
                  
-                     anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).sensor_type;
+                     anEntity = sa.Select<instrument>().Include(i=>i.sensor_type).FirstOrDefault(i => i.instrument_id == instrumentId).sensor_type;
                      if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
@@ -118,7 +118,7 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetDeploymentSensorType")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetDeploymentSensorType")]
         public OperationResult GetDeploymentSensorType(Int32 deploymentTypeId)
         {
             sensor_type anEntity = null;
@@ -130,7 +130,7 @@ namespace STNServices2.Handlers
                     if (deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
 
                     //need the sensor type that this deployment type is connected to.
-                    anEntity = sa.Select<sensor_deployment>().FirstOrDefault(i => i.deployment_type_id == deploymentTypeId).sensor_type;
+                    anEntity = sa.Select<sensor_deployment>().Include(i=>i.sensor_type).FirstOrDefault(i => i.deployment_type_id == deploymentTypeId).sensor_type;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
@@ -223,7 +223,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
