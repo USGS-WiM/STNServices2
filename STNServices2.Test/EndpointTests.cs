@@ -124,13 +124,18 @@ namespace STNServices2.Test
             Assert.IsTrue(repCsuccess);
 
             //GET 'GetReportMetricContacts'
-            List<contact> RMContact = this.GETRequest<List<contact>>(host + Configuration.contactResource + "?ReportMetric=" + rmId, basicAuth);
+            List<contact> RMContact = this.GETRequest<List<contact>>(host + Configuration.contactResource + "?ReportMetric=182", basicAuth);
             Assert.IsNotNull(RMContact, RMContact.Count.ToString());
 
             //POST
             contact postObj;
             postObj = this.POSTRequest<contact>(host + Configuration.contactResource, new contact() { fname = "post", lname="Test", phone ="123" }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.contact_id.ToString());
+
+            //POST reportContact
+            //contact postreportContObj;
+            //postreportContObj = this.POSTRequest<contact>(host + Configuration.contactResource, new contact() { fname = "post", lname = "Test", phone = "123" }, basicAuth);
+            //Assert.IsNotNull(postreportContObj, "ID: " + postreportContObj.contact_id.ToString());
 
             //GET POSTed item
             contact RequestObj = this.GETRequest<contact>(host + Configuration.contactResource + "/" + postObj.contact_id,basicAuth);
@@ -965,6 +970,10 @@ namespace STNServices2.Test
             member RequestObj = this.GETRequest<member>(host + Configuration.memberResource + "/" + postObj.member_id,basicAuth);
             Assert.IsNotNull(RequestObj);
 
+            //GET login
+            member loginM = this.GETRequest<member>(host + "/login", basicAuth);
+            Assert.IsNotNull(loginM);
+
             //GET  GetEventCoordinator 
             member eventCoord = this.GETRequest<member>(host + Configuration.eventsResource + "/8/EventCoordinator", basicAuth);
             Assert.IsNotNull(eventCoord);
@@ -1294,7 +1303,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(evStReps, evStReps.Count.ToString());
 
             //GET GetFilteredReports "/ReportingMetrics/FilteredReports?Event={eventId}&States={stateNames}&Date={aDate}"
-            List<reporting_metrics> filteredReps = this.GETRequest<List<reporting_metrics>>(host + Configuration.reportMetricResource + "/FilteredReports?Event=30&States=SD&Date=05/18/2015");
+            List<reporting_metrics> filteredReps = this.GETRequest<List<reporting_metrics>>(host + Configuration.reportMetricResource + "/FilteredReports?Event=7&States=AL,AK&Date=05/20/2016");
             Assert.IsNotNull(filteredReps, filteredReps.Count.ToString());
 
             //GET GetFilteredReportsModel "/ReportingResource/FilteredReportModel?Event={eventId}&States={stateNames}&Date={aDate}"

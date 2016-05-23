@@ -11,7 +11,7 @@ namespace STNServices2.Resources
     [XmlInclude(typeof(contact))]
     public class Contact : contact
     {
-        public contact_type contactType { get; set; }
+        public string contactType { get; set; }
     }
 
     [XmlInclude(typeof(reporting_metrics))]
