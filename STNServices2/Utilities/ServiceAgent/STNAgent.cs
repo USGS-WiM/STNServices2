@@ -88,17 +88,11 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 file ObjectToBeDeleted = this.Select<file>().Include(f => f.hwm).Include(f => f.hwm.@event).Include(f => f.instrument).Include(f => f.instrument.@event)
                     .SingleOrDefault(f => f.file_id == fileID);
-                
-                decimal eventId = 0;
-                if (ObjectToBeDeleted.hwm_id.HasValue) 
-                {
-                    eventId = ObjectToBeDeleted.hwm.@event.event_id; 
-                } else if (ObjectToBeDeleted.instrument_id.HasValue)
-                {
-                    eventId = ObjectToBeDeleted.instrument.@event.event_id;
-                }
+                                
                 S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"],"","");
-                aBucket.DeleteObject(BuildNewpath(ObjectToBeDeleted, eventId));
+                string directoryName = string.Empty;
+                directoryName = ObjectToBeDeleted.path + "/" + ObjectToBeDeleted.name;// 
+                aBucket.DeleteObject(directoryName);
                 sm(MessageType.info, fileID + ": Deleted from storage");
                 this.Delete<file>(ObjectToBeDeleted);
                 sm(MessageType.info, fileID + ": Deleted from DB");
@@ -116,11 +110,11 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 this.Add<file>(uploadFile);
                 decimal eventId = 0;
-                if (uploadFile.hwm_id.HasValue)
+                if (uploadFile.hwm_id.HasValue && uploadFile.hwm_id > 0)
                 {
                     eventId = uploadFile.hwm.@event.event_id;
                 }
-                else if (uploadFile.instrument_id.HasValue)
+                else if (uploadFile.instrument_id.HasValue && uploadFile.instrument_id > 0)
                 {
                     eventId = uploadFile.instrument.@event.event_id;
                 }
@@ -146,22 +140,13 @@ namespace STNServices2.Utilities.ServiceAgent
             try
             {
                 if (afile == null || afile.path == null || String.IsNullOrEmpty(afile.path)) throw new WiM.Exceptions.NotFoundRequestException();
-                    decimal eventId = 0;
-                    if (afile.hwm_id.HasValue)
-                    {
-                        eventId = afile.hwm.@event.event_id;
-                    }
-                    else if (afile.instrument_id.HasValue)
-                    {
-                        eventId = afile.instrument.@event.event_id;
-                    }
+                    
                     string directoryName = string.Empty;
                     aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
-                    directoryName = BuildNewpath(afile, eventId);
-
-
+                    directoryName = afile.path + "/" + afile.name;// BuildNewpath(afile, eventId);
+                
                     fileItem = new InMemoryFile(aBucket.GetObject(directoryName));
-                    fileItem.ContentType = GetContentType(afile.path);
+                    fileItem.ContentType = GetContentType(afile.name);
                     return fileItem;
             }
             catch (Exception ex)
