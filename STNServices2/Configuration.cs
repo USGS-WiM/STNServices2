@@ -259,7 +259,7 @@ namespace STNServices2
             .AtUri(contactResource + "/{entityId}")
              .And.AtUri(contactResource + "?ReportMetric={reportMetricsId}&ContactType={contactTypeId}").Named("GetReportMetricContactsByType")
              .And.AtUri(contactResource + "/{contactId}/removeReportContact?ReportId={reportMetricsId}").Named("RemoveReportContact")
-             .And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={ReportId}&ContactTypeId={ContactTypeId}").Named("AddReportContact")
+             .And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={reportId}&ContactTypeId={contactTypeId}").Named("AddReportContact")
             .HandledBy<ContactHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
@@ -637,7 +637,7 @@ namespace STNServices2
         }//end INSTR_COLLECTION_CONDITIONS_Resources
         private void AddINSTRUMENT_Resources()
         {           
-            ResourceSpace.Has.ResourcesOfType<FullInstrument>()
+            ResourceSpace.Has.ResourcesOfType<FullInstrument>()                
                 .AtUri(instrumentsResource+"/{instrumentId}/FullInstrument").Named("GetFullInstruments")
                 .HandledBy<InstrumentHandler>()
                 .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -758,6 +758,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<member>()
             .AtUri(memberResource + "/{entityId}")
+            .And.AtUri("/login").Named("GetLoggedUser")
             .And.AtUri(eventsResource+"/{eventId}/EventCoordinator").Named("GetEventCoordinator")
             .And.AtUri(approvalResource+"/{ApprovalId}/ApprovingOfficial").Named("GetApprovingOfficial")
             .And.AtUri(datafileResource+"/{dataFileId}/Processor").Named("GetDataFileProcessor")

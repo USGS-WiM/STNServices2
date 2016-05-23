@@ -143,7 +143,7 @@ namespace STNServices2.Handlers
                             phone = c.contact.phone,
                             alt_phone = c.contact.alt_phone,
                             email = c.contact.email,
-                            contactType = c.contact_type
+                            contactType = c.contact_type.type
                         }).ToList<contact>();
 
                         sm(sa.Messages);
@@ -154,7 +154,11 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-
+        public string GetConType(reportmetric_contact c)
+        {
+            string h = "test";
+            return h;
+        }
         // not finding this in config file anywhere .. even previous version
         //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         //[HttpOperation(HttpMethod.GET, ForUriName = "GetContactTypeContact")]
