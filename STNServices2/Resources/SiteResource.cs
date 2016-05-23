@@ -12,8 +12,15 @@ namespace STNServices2.Resources
     public class SiteLocationQuery : site
     {
        public List<string> networkNames { get; set; }
-       public string RecentOP { get; set; } 
+       public recent_op RecentOP { get; set; }
+//       public string RecentOP { get; set; } 
        public List<string> Events { get; set; }
+    }
+
+    public class recent_op
+    {
+        public string name { get; set;}
+        public DateTime date_established { get; set; }
     }
 }//end namespace
 
