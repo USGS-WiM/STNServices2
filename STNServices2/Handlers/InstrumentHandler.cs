@@ -483,16 +483,16 @@ namespace STNServices2.Handlers
                             deploymentType = inst.deployment_type_id != null && inst.deployment_type_id != 0 ? inst.deployment_type.method : "",
                             serial_number = inst.serial_number,
                             housing_serial_number = inst.housing_serial_number,
-                            interval = inst.interval != null ? inst.interval.Value : 0,
-                            site_id = inst.site_id != null ? inst.site_id.Value : 0,
-                            event_id = inst.event_id != null ? inst.event_id.Value : 0,
+                            interval = inst.interval != null ? inst.interval : 0,
+                            site_id = inst.site_id != null ? inst.site_id : 0,
+                            event_id = inst.event_id != null ? inst.event_id : 0,
                             location_description = inst.location_description,
                             inst_collection_id = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.inst_collection_id.Value : 0,
                             instCollection = inst.inst_collection_id != null && inst.inst_collection_id > 0 ? inst.instr_collection_conditions.condition : "",
                             housing_type_id = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type_id.Value : 0,
                             housingType = inst.housing_type_id != null && inst.housing_type_id > 0 ? inst.housing_type.type_name : "",
                             vented = inst.vented,
-                            sensor_brand_id = inst.sensor_brand_id != null ? inst.sensor_brand_id.Value : 0,
+                            sensor_brand_id = inst.sensor_brand_id != null ? inst.sensor_brand_id : 0,
                             sensorBrand = inst.sensor_brand_id != null ? inst.sensor_brand.brand_name : "",
                             instrument_status = inst.instrument_status.OrderByDescending(instStat => instStat.time_stamp)
                                 .Select(i => new Instrument_Status
@@ -501,7 +501,7 @@ namespace STNServices2.Handlers
                                     status_type_id = i.status_type_id,
                                     status = i.status_type_id != null ? i.status_type.status : "",
                                     instrument_id = i.instrument_id,
-                                    time_stamp = i.time_stamp.Value,
+                                    time_stamp = i.time_stamp,
                                     time_zone = i.time_zone,
                                     notes = i.notes,
                                     member_id = i.member_id != null ? i.member_id.Value : 0,
@@ -521,7 +521,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end Get       
-
+       
         #endregion
 
         #region PostMethods
@@ -529,17 +529,16 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "PostInstrument")]
+        [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(instrument anEntity)
         {
             try
             {
+                //if instrument is being proposed, don't need sensor_brand_id and event_id and serial_number
                 if (!anEntity.sensor_type_id.HasValue || anEntity.sensor_type_id <= 0 ||
-                    !anEntity.sensor_brand_id.HasValue || anEntity.sensor_brand_id <= 0 ||
-                    !anEntity.event_id.HasValue || anEntity.event_id <= 0 ||
-                    !anEntity.site_id.HasValue || anEntity.site_id <= 0 ||
-                    string.IsNullOrEmpty(anEntity.serial_number))
+                    !anEntity.site_id.HasValue || anEntity.site_id <= 0)
                         throw new BadRequestException("Invalid input parameters");
+                
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
