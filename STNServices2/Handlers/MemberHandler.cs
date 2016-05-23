@@ -74,7 +74,33 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }// end HttpMethod.Get
- 
+
+        [RequiresAuthentication]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetLoggedUser")]
+        public OperationResult GetLoggedUser()
+        {
+            member aMember = null;
+            try
+            {
+                //Get basic authentication password
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        List<member> MemberList = sa.Select<member>()
+                                        .Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        aMember = MemberList.First<member>();
+
+                    }//end using
+                }//end using
+                return new OperationResult.OK { ResponseResource = aMember };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.GET
+
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
