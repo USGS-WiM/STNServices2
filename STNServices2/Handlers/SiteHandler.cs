@@ -487,7 +487,7 @@ namespace STNServices2.Handlers
                                 access_granted = s.access_granted,
                                 member_id = s.member_id,
                                 networkNames = s.network_name_site.Count > 0 ? s.network_name_site.Where(ns => ns.site_id == s.site_id).Select(x => x.network_name.name).Distinct().ToList() : new List<string>(),
-                                RecentOP = s.objective_points.Count > 0 ? s.objective_points.OrderByDescending(x => x.date_established).FirstOrDefault().name: "",
+                                RecentOP = getRecentOP(s),// s.objective_points.Count > 0 ? s.objective_points.OrderByDescending(x => x.date_established).FirstOrDefault() : null,
                                 Events = getSiteEvents(s)
                             }).ToList();
                 }//end using
@@ -727,7 +727,20 @@ namespace STNServices2.Handlers
 
             return siteNo;
         }
+        private recent_op getRecentOP(site se)
+        {
+            recent_op recentop = null;
 
+            if (se.objective_points.Count > 0)
+                recentop = se.objective_points.OrderByDescending(x => x.date_established).Select(o => new recent_op
+                {
+                    name = o.name,
+                    date_established = o.date_established.Value
+                }).FirstOrDefault<recent_op>();
+
+            return recentop;
+            
+        }
         private List<string> getSiteEvents(site se)
         {
             List<string> eventNames = new List<string>();
