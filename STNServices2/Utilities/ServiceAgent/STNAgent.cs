@@ -142,8 +142,9 @@ namespace STNServices2.Utilities.ServiceAgent
                 if (afile == null || afile.path == null || String.IsNullOrEmpty(afile.path)) throw new WiM.Exceptions.NotFoundRequestException();
                     
                     string directoryName = string.Empty;
-                    aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
-                    directoryName = afile.path + "/" + afile.name;// BuildNewpath(afile, eventId);
+                    aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"], 
+                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
+                    directoryName = afile.path + "/" + afile.name;
                 
                     fileItem = new InMemoryFile(aBucket.GetObject(directoryName));
                     fileItem.ContentType = GetContentType(afile.name);
