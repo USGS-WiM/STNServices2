@@ -420,7 +420,7 @@ namespace STNServices2.Handlers
         {
             try
             { 
-                if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue || anEntity.site_id <= 0)
+                if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
