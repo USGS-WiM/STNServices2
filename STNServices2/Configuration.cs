@@ -63,6 +63,7 @@ using STNServices2.Handlers;
 using STNServices2.PipeLineContributors;
 using STNServices2.Security;
 using STNServices2.Resources;
+using STNServices2.Codecs.json;
 
 using OpenRasta.Configuration;
 using OpenRasta.Web.UriDecorators;
@@ -235,15 +236,6 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
         }//end AddAPPROVAL_Resources
-//        private void AddAUTHENTICATION_Resources()
-//        {
-//            //Authentication
-//            ResourceSpace.Has.ResourcesOfType<Boolean>()
-//            .AtUri("/login")
-//            .HandledBy<LoginHandler>()
-//            .TranscodedBy<UTF8XmlSerializerCodec>();
-
-//        }//end AddAUTHENTICATION_Resources
         private void AddCONTACT_Resources()
         {
             //GET
@@ -569,7 +561,8 @@ namespace STNServices2
             .HandledBy<HWMHandler>()
             .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
             ResourceSpace.Has.ResourcesOfType<hwm>()
             .AtUri(hwmResource+"/{entityId}")
@@ -577,7 +570,8 @@ namespace STNServices2
             .HandledBy<HWMHandler>()
             .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
         }//end AddHWM_Resources
         private void AddHWM_QUALITY_Resources()
@@ -817,14 +811,18 @@ namespace STNServices2
             .HandledBy<ObjectivePointHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
+
 
             ResourceSpace.Has.ResourcesOfType<objective_point>()
             .AtUri(objectivePointResource+"/{entityId}")
             .HandledBy<ObjectivePointHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
+
 
         }//end AddOBJECTIVE_POINT_Resources
         private void AddOBJECTIVE_POINT_TYPE_Resources()
@@ -1041,7 +1039,9 @@ namespace STNServices2
             .HandledBy<SiteHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
+
             
             ResourceSpace.Has.ResourcesOfType<site>()
             .AtUri(siteResource+"/{entityId}")
@@ -1053,7 +1053,8 @@ namespace STNServices2
             .HandledBy<SiteHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
             ResourceSpace.Has.ResourcesOfType<List<SiteLocationQuery>>()
            .AtUri(@"/Sites/FilteredSites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}
@@ -1061,7 +1062,8 @@ namespace STNServices2
            .HandledBy<SiteHandler>()
            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-           .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+           .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+           .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
             
            
         }//end AddSITE_Resources                 
