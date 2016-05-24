@@ -16,6 +16,12 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# include dist
+!STNServices2/
+!STNServices2/[Dd]ist/*
+!STNServices2/[Dd]ist/[Bb]in/*
+!STNServices2/[Dd]ist/[Bb]in/*.dll
+
 # Roslyn cache directories
 *.ide/
 
