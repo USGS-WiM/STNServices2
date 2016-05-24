@@ -57,10 +57,6 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework6.Npgsql, Version=3.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework6.Npgsql.3.0.7\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
       <Private>True</Private>
@@ -126,11 +122,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\bin\AWSSDK.dll" />
+    <Content Include="dist\bin\EntityFramework.dll" />
+    <Content Include="dist\bin\EntityFramework6.Npgsql.dll" />
+    <Content Include="dist\bin\Ionic.Zip.dll" />
+    <Content Include="dist\bin\Newtonsoft.Json.dll" />
+    <Content Include="dist\bin\Npgsql.dll" />
+    <Content Include="dist\bin\OpenRasta.dll" />
+    <Content Include="dist\bin\OpenRasta.Hosting.AspNet.dll" />
+    <Content Include="dist\bin\RestSharp.dll" />
+    <Content Include="dist\bin\ServiceStack.Text.dll" />
+    <Content Include="dist\bin\STNDB.dll" />
+    <Content Include="dist\bin\STNServices2.dll" />
+    <Content Include="dist\bin\WiMHypermedia.dll" />
+    <Content Include="dist\bin\WiMServices.dll" />
+    <Content Include="dist\bin\WiMServices.Test.dll" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
     <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
     <Compile Include="Handlers\InstrumentStatusHandler.cs" />
@@ -189,7 +201,6 @@
     <Compile Include="Handlers\HousingTypeHandler.cs" />
     <Compile Include="PipeLineContributers\STNHyperMediaPipelineContributor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="testing\xmlEntityCodec.cs" />
     <Compile Include="Utilities\ServiceAgent\STNAgent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,8 +216,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\packages.config" />
+    <Content Include="dist\Web.config" />
     <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
