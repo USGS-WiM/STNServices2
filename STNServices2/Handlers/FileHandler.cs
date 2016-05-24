@@ -502,7 +502,7 @@ namespace STNServices2.Handlers
                     }//next
                     //Return BadRequest if missing required fields
 
-                    if (uploadFile.filetype_id <= 0 || uploadFile.file_date.HasValue ||
+                    if (uploadFile.filetype_id <= 0 || !uploadFile.file_date.HasValue ||
                         uploadFile.site_id <= 0)
                         throw new BadRequestException("Invalid input parameters");
 
@@ -538,7 +538,7 @@ namespace STNServices2.Handlers
         {            
             try
             {
-                if (anEntity.filetype_id <= 0 || anEntity.file_date.HasValue || anEntity.site_id <= 0) throw new BadRequestException("Invalid input parameters");
+                if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0) throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
