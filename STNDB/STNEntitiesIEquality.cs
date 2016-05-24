@@ -243,8 +243,8 @@ namespace STNDB
         public bool Equals(events other)
         {
             return string.Equals(this.event_name, other.event_name) &&
-                                (DateTime.Equals(this.event_start_date.Value, other.event_start_date.Value) || !other.event_start_date.HasValue) &&
-                                (DateTime.Equals(this.event_end_date.Value, other.event_end_date.Value) || !other.event_end_date.HasValue) &&
+                                (!other.event_start_date.HasValue || DateTime.Equals(this.event_start_date.Value, other.event_start_date.Value)) &&
+                                (!other.event_end_date.HasValue || DateTime.Equals(this.event_end_date.Value, other.event_end_date.Value)) &&
                                 (this.event_type_id == other.event_type_id || other.event_type_id <= 0 || other.event_type_id == null);
         }
         public override bool Equals(object obj)
@@ -461,7 +461,7 @@ namespace STNDB
         public bool Equals(instrument other)
         {
             var t = this.sensor_type_id.Value == other.sensor_type_id.Value &&
-                    ( !other.deployment_type_id.HasValue || other.deployment_type_id <= 0|| this.deployment_type_id == other.deployment_type_id ) &&
+                    (!other.deployment_type_id.HasValue || other.deployment_type_id <= 0|| this.deployment_type_id == other.deployment_type_id ) &&
                     (!other.sensor_brand_id.HasValue || other.sensor_brand_id <= 0 || this.sensor_brand_id == other.sensor_brand_id ) &&
                     (!other.interval.HasValue || other.interval <= 0 || this.interval == other.interval ) &&
                     (!other.site_id.HasValue || other.site_id <= 0 || this.site_id == other.site_id) &&
