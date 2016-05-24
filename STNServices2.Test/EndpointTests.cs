@@ -453,9 +453,11 @@ namespace STNServices2.Test
             List<file> RequestList = this.GETRequest<List<file>>(host + Configuration.fileResource);
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
-            //POST
+            //POST{ site_id = 1, description = "post-test" }
             file postObj;
-            postObj = this.POSTRequest<file>(host + Configuration.fileResource, new file() { site_id = 1, description = "post-test" }, basicAuth);
+            postObj = this.POSTRequest<file>(host + Configuration.fileResource, new file() {
+                name = "http://waterdata.usgs.gov/nwis/uv?site_no=", path = "<link>", file_date = Convert.ToDateTime("2016-05-24T20:23:41.617Z"), filetype_id = 2,
+                site_id = 3089, data_file_id = 3694, instrument_id = 7493, is_nwis = 1, description = "test"}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.file_id.ToString());
 
             //GET POSTed item
