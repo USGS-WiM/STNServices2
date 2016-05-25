@@ -511,8 +511,8 @@ namespace STNServices2.Handlers
                     {
                         using (STNAgent sa = new STNAgent(username, securedPassword, true))
                         {
-                            //Update path
-                            uploadFile.path = filename;
+                            //Update path SHOULDN"T THIS BE .name and then in .AddFile, the path will be the SITE_ or EVENT_ path to the s3 bucket
+                            uploadFile.name = filename;
                             sa.AddFile(uploadFile, memoryStream);
                             sm(sa.Messages);
                         }//end using
