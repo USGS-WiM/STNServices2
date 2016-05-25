@@ -249,7 +249,7 @@ namespace STNServices2.Test
             //POST
             data_file postObj;
             postObj = this.POSTRequest<data_file>(host + Configuration.datafileResource, new data_file() { good_start = DateTime.Now.Date, good_end = DateTime.Now.Date, collect_date = DateTime.Now.Date,
-                instrument_id = 5, processor_id = 5 },basicAuth);
+                instrument_id = 7493, processor_id = 1, time_zone= "UTC" },basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.data_file_id.ToString());
 
             //GET POSTed item
