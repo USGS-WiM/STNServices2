@@ -137,14 +137,14 @@ namespace STNDB
         public bool Equals(data_file other)
         {
             return (this.instrument_id == other.instrument_id &&
-            (!other.start.HasValue | DateTime.Equals(this.start.Value, other.start.Value)) &&
-            (!other.end.HasValue | DateTime.Equals(this.end.Value, other.end.Value)) &&
-            (!other.good_start.HasValue | DateTime.Equals(this.good_start.Value, other.good_start.Value)) &&
-            (!other.good_end.HasValue | DateTime.Equals(this.good_end.Value, other.good_end.Value)) &&
-            (!other.collect_date.HasValue | DateTime.Equals(this.collect_date.Value, other.collect_date.Value)) &&
-            (!other.processor_id.HasValue | this.processor_id.Value == other.processor_id.Value || other.processor_id.Value <= 0) &&
-            (!other.peak_summary_id.HasValue | this.peak_summary_id.Value == other.peak_summary_id.Value || other.peak_summary_id.Value <= 0) &&
-            (!other.approval_id.HasValue | this.approval_id.Value == other.approval_id.Value || other.approval_id.Value <= 0));
+            (!other.start.HasValue || DateTime.Equals(this.start.Value, other.start.Value)) &&
+            (!other.end.HasValue || DateTime.Equals(this.end.Value, other.end.Value)) &&
+            (!other.good_start.HasValue || DateTime.Equals(this.good_start.Value, other.good_start.Value)) &&
+            (!other.good_end.HasValue || DateTime.Equals(this.good_end.Value, other.good_end.Value)) &&
+            (!other.collect_date.HasValue || DateTime.Equals(this.collect_date.Value, other.collect_date.Value)) &&
+            (!other.processor_id.HasValue || this.processor_id.Value == other.processor_id.Value || other.processor_id.Value <= 0) &&
+            (!other.peak_summary_id.HasValue || this.peak_summary_id.Value == other.peak_summary_id.Value || other.peak_summary_id.Value <= 0) &&
+            (!other.approval_id.HasValue || this.approval_id.Value == other.approval_id.Value || other.approval_id.Value <= 0));
 
         }
         public override bool Equals(object obj)
