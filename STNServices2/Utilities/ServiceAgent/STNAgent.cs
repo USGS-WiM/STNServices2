@@ -108,15 +108,18 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             S3Bucket aBucket = null;
             try
-            {                
-                decimal eventId = 0;
+            {          
+                
+                int eventId = 0;
                 if (uploadFile.hwm_id.HasValue && uploadFile.hwm_id > 0)
                 {
-                    eventId = uploadFile.hwm.@event.event_id;
+                    eventId = this.Select<hwm>().FirstOrDefault(h => h.hwm_id == uploadFile.hwm_id).event_id.Value;
+                    //eventId = uploadFile.hwm.@event.event_id;
                 }
                 else if (uploadFile.instrument_id.HasValue && uploadFile.instrument_id > 0)
                 {
-                    eventId = uploadFile.instrument.@event.event_id;
+                    eventId = this.Select<instrument>().FirstOrDefault(h => h.instrument_id == uploadFile.instrument_id).event_id.Value;
+                    //eventId = uploadFile.instrument.@event.event_id;
                 }
                 //Upload to S3
                 uploadFile.path = BuildNewpath(uploadFile, eventId);
@@ -262,6 +265,8 @@ namespace STNServices2.Utilities.ServiceAgent
                     return new MediaType("image/jpeg");
                 case ".GIF":
                     return new MediaType("image/gif");
+                case ".PNG":
+                    return new MediaType("image/png");
                 case ".CSV":
                     return new MediaType("text/csv");
                 case ".TXT":
@@ -272,6 +277,8 @@ namespace STNServices2.Utilities.ServiceAgent
                     return new MediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
                 case ".DOTX":
                     return new MediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.template");
+                case ".PDF":
+                    return new MediaType("application/pdf");
                 case ".POTX":
                     return new MediaType("application/vnd.openxmlformats-officedocument.presentationml.template");
                 case ".PPS":
