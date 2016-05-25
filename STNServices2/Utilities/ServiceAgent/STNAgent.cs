@@ -88,8 +88,9 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 file ObjectToBeDeleted = this.Select<file>().Include(f => f.hwm).Include(f => f.hwm.@event).Include(f => f.instrument).Include(f => f.instrument.@event)
                     .SingleOrDefault(f => f.file_id == fileID);
-                                
-                S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"],"","");
+
+                S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
                 string directoryName = string.Empty;
                 directoryName = ObjectToBeDeleted.path + "/" + ObjectToBeDeleted.name;// 
                 aBucket.DeleteObject(directoryName);
@@ -107,8 +108,7 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             S3Bucket aBucket = null;
             try
-            {
-                this.Add<file>(uploadFile);
+            {                
                 decimal eventId = 0;
                 if (uploadFile.hwm_id.HasValue && uploadFile.hwm_id > 0)
                 {
@@ -119,8 +119,12 @@ namespace STNServices2.Utilities.ServiceAgent
                     eventId = uploadFile.instrument.@event.event_id;
                 }
                 //Upload to S3
-                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
-                aBucket.PutObject(BuildNewpath(uploadFile, eventId), memoryStream);
+                uploadFile.path = BuildNewpath(uploadFile, eventId);
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
+
+                aBucket.PutObject(uploadFile.path + "/" + uploadFile.name, memoryStream);
+                this.Add<file>(uploadFile);
                 sm(MessageType.info, uploadFile.path + ": added");
             }
             catch (Exception ex)
@@ -165,7 +169,8 @@ namespace STNServices2.Utilities.ServiceAgent
             MemoryStream ms = null;
             try
             {
-                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], "", "");
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
                 using (ZipFile zip = new ZipFile())
                 {
                     ms = new MemoryStream();
