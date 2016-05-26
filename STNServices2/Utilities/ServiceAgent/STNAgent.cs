@@ -44,7 +44,7 @@ namespace STNServices2.Utilities.ServiceAgent
         internal STNAgent(string username, EasySecureString password, Boolean include = false)
             : base(ConfigurationManager.ConnectionStrings["STNDBEntities"].ConnectionString)
         {
-            this.context = new  STNDBEntities (string.Format(connectionString, username.ToLower(), password.decryptString()));
+            this.context = new STNDBEntities(string.Format(connectionString, "fradmin", new EasySecureString("***REMOVED***").decryptString()));
             this.context.Configuration.ProxyCreationEnabled = include;
         }
         #endregion

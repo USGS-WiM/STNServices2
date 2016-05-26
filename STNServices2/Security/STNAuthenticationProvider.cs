@@ -37,22 +37,19 @@ namespace STNServices2.Security
     public class STNAuthenticationProvider : IAuthenticationProvider
     {
         public Credentials GetByUsername(string username)
-        {
-            using (EasySecureString securedPassword = new EasySecureString("***REMOVED***"))
+        {        
+            using (STNAgent sa = new STNAgent())
             {
-                using (STNAgent sa = new STNAgent("fradmin", securedPassword))
-                {
-                    member user = sa.Select<member>().Include(r=>r.role).AsEnumerable().FirstOrDefault(u=>string.Equals(u.username, username,StringComparison.OrdinalIgnoreCase));
-                    if (user == null) return (null);
-                    return (new WiMCredentials()
-                    {  
-                        Username = user.username, 
-                        salt = user.salt,
-                        Password = user.password,
-                        Roles = new string[] { user.role.role_name }
-                    });
-                }//end using
-            }//end using
+                member user = sa.Select<member>().Include(r=>r.role).AsEnumerable().FirstOrDefault(u=>string.Equals(u.username, username,StringComparison.OrdinalIgnoreCase));
+                if (user == null) return (null);
+                return (new WiMCredentials()
+                {  
+                    Username = user.username, 
+                    salt = user.salt,
+                    Password = user.password,
+                    Roles = new string[] { user.role.role_name }
+                });
+            }//end using            
         }
 
         public bool ValidatePassword(Credentials credentials, string suppliedPassword)
