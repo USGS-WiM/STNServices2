@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
+    <Compile Include="Handlers\GeocoderHandler.cs" />
     <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
     <Compile Include="Handlers\InstrumentStatusHandler.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Handlers\HWMHandler.cs" />
     <Compile Include="Handlers\HWMTypeHandler.cs" />
     <Compile Include="Handlers\HWMQualityHandler.cs" />
+    <Compile Include="Resources\GeocoderResource.cs" />
     <Compile Include="Resources\HWMResource.cs" />
     <Compile Include="Resources\PeakResource.cs" />
     <Compile Include="Resources\ReportResource.cs" />

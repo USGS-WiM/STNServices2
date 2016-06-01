@@ -554,7 +554,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, site anEntity)
         {
-            site updatedSite;
+            //site updatedSite;
             
             try
             {
@@ -568,18 +568,20 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        updatedSite = sa.Select<site>().SingleOrDefault(s => s.site_id == entityId);
-                        updatedSite.site_description = "testing Here";
-                        ////update the site_no if it was changed during edit
-                        //if ((!string.Equals(anEntity.state, updatedSite.state, StringComparison.OrdinalIgnoreCase)) || 
-                        //    (!string.Equals(anEntity.county, updatedSite.county, StringComparison.OrdinalIgnoreCase)))
-                        //    anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
+                        anEntity.state = this.GetStateByName(anEntity.state).ToString();
                         
-                        //update state to be the abbrv. state
-                        //aSite.STATE = this.GetStateByName(aSite.STATE).ToString();
-
-                        anEntity = sa.Update<site>(entityId, updatedSite);
-                        sm(sa.Messages);                        
+                        //updatedSite = sa.Select<site>().SingleOrDefault(s => s.site_id == entityId);
+                        
+                        
+                        //update the site_no if it was changed during edit
+                        //if ((!string.Equals(anEntity.state, updatedSite.state, StringComparison.OrdinalIgnoreCase)) ||
+                        //    (!string.Equals(anEntity.county, updatedSite.county, StringComparison.OrdinalIgnoreCase)))
+                        //{
+                            anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
+                        //}
+                        
+                        anEntity = sa.Update<site>(entityId, anEntity);
+                        sm(sa.Messages);                         
                     }//end using
                 }//end using
 
