@@ -185,11 +185,20 @@ namespace STNServices2
                 AddSTATUS_TYPE_Resources();
                 AddVERTICAL_COLLECTION_METHOD_Resources();
                 AddVERTICAL_DATUM_Resources();
-
+                AddGEOCODER_Resources();
             } //End using OpenRastaConfiguration.Manual
         }
 
         #region Helper methods
+
+        private void AddGEOCODER_Resources()
+        {
+            //GET census.gov geocode for lat/long    
+            ResourceSpace.Has.ResourcesOfType<object>()
+            .AtUri("Geocode/location?Latitude={latitude}&Longitude={longitude}").Named("GetReverseGeocode")
+            .HandledBy<GeocoderHandler>()
+            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
+        }
 
         private void AddAGENCY_Resources()
         {

@@ -1471,7 +1471,7 @@ namespace STNServices2.Test
             //POST
             site postObj;
             postObj = this.POSTRequest<site>(host + Configuration.siteResource, new site() { 
-               site_description = "site_post1", latitude_dd = 45.52, longitude_dd = -89.32, hdatum_id = 1,
+                site_description = "site_post1", latitude_dd = 45.52, longitude_dd = -89.32, hdatum_id = 1,
                 hcollect_method_id = 1, state = "WI", county = "Dane County", waterbody = "test2", member_id = 1}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.site_id.ToString());
 
