@@ -101,6 +101,35 @@ namespace STNServices2.Handlers
             }//end try
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName="GetSourceName")]
+        public OperationResult GetSourceName(Int32 entityId)
+        {
+            //get source name only for unauthorized gets
+            string entityName = null;
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    source anEntity = sa.Select<source>().FirstOrDefault(e => e.source_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    entityName = anEntity.source_name;
+
+                    sm(sa.Messages);
+
+                }//end using
+                return new OperationResult.OK { ResponseResource = entityName, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            finally
+            {
+
+            }//end try
+        }//end HttpMethod.GET
+
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetAgencySources")]
         public OperationResult GetAgencySources(Int32 agencyId)
