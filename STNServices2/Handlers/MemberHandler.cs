@@ -128,6 +128,31 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetMemberName")]
+        public OperationResult GetMemberName(Int32 entityId)
+        {
+            //for unauthorized access to just the member's name and no other info
+            string entityName = null;
+
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    member anEntity = sa.Select<member>().FirstOrDefault(e => e.member_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    entityName = anEntity.fname + " " + anEntity.lname;
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entityName, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+
         [RequiresAuthentication]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetAgencyMembers")]
         public OperationResult GetAgencyMembers(Int32 agencyId)

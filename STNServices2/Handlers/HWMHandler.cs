@@ -89,9 +89,7 @@ namespace STNServices2.Handlers
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == entityId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
+                    anEntity = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == entityId);                    
 
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
