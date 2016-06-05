@@ -17,6 +17,7 @@ namespace STNServices2.Test
         private string host = "http://localhost/";
         private string basicAuth = "Basic " + Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                                 .GetBytes("fradmin:Ij7E9doC"));
+       
             
         #endregion
         #region Constructor
