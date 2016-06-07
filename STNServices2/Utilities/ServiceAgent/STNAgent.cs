@@ -197,6 +197,14 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw;                
             }
         }
+        //public dynamic GetGeocodeLocation(decimal latitudeV, decimal longitudeV)
+        //{
+        //    string uri = ConfigurationManager.AppSettings["GeocoderServer"];
+        //    RestSharp.RestRequest request = getRestRequest(String.Format(uri), wucode, token), getBody(workspaceID, startyear, endyear, "pjson"));
+        //    request.AddHeader("Referer", "Referer: http://streamstats.ags.cr.usgs.gov/streamstats");
+
+        //    return Execute(request);
+        //}
         #endregion
         #region "Helper Methods"
         public IQueryable<T> getTable<T>(object[] args) where T : class,new()
@@ -313,6 +321,24 @@ namespace STNServices2.Utilities.ServiceAgent
             }
         }//end HttpMethod.GET
         #endregion
+        #region Geocoder Helper
+        private string getBody(decimal latitudeVal, decimal longitudeVal)
+        {
+            List<string> body = new List<string>();
+            try
+            {
+                body.Add("vintage=4");
+                body.Add("format=json");
+                body.Add("x=" + longitudeVal);
+                body.Add("y=" + latitudeVal);
+                return string.Join("&", body);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion Geocoder helper
         #region "Structures"
         //A structure is a value type. When a structure is created, the variable to which the struct is assigned holds
         //the struct's actual data. When the struct is assigned to a new variable, it is copied. The new variable and
