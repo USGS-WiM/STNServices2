@@ -626,9 +626,9 @@ namespace STNServices2.Handlers
             }
             catch (Exception ex)
             { return HandleException(ex); }
-        }//end HTTP.DELETE
-        #endregion
+        }
 
+        
         #region Helper Methods
        
         //private string BuildFilePath(FILES uploadFile, string fileName)
