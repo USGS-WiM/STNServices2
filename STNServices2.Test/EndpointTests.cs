@@ -780,6 +780,9 @@ namespace STNServices2.Test
         [TestMethod]
         public void InstrumentRequest()
         {
+            bool test = this.DELETERequest<instrument>(host + Configuration.instrumentsResource + "/" + 3042, basicAuth);
+            Assert.IsTrue(test);
+
             //GET LIST
             List<instrument> RequestList = this.GETRequest<List<instrument>>(host + Configuration.instrumentsResource);
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
