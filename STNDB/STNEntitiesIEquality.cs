@@ -493,7 +493,6 @@ namespace STNDB
         {
             return this.instrument_id == other.instrument_id &&
                    this.status_type_id == other.status_type_id &&
-                   (!other.time_stamp.HasValue || DateTime.Equals(this.time_stamp.Value, other.time_stamp.Value)) &&
                    (!other.member_id.HasValue || this.member_id == other.member_id || other.member_id <= 0) &&
                    (string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone, StringComparison.OrdinalIgnoreCase)) &&
                    (!other.sensor_elevation.HasValue || this.sensor_elevation == other.sensor_elevation) &&

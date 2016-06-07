@@ -185,11 +185,20 @@ namespace STNServices2
                 AddSTATUS_TYPE_Resources();
                 AddVERTICAL_COLLECTION_METHOD_Resources();
                 AddVERTICAL_DATUM_Resources();
-
+                AddGEOCODER_Resources();
             } //End using OpenRastaConfiguration.Manual
         }
 
         #region Helper methods
+
+        private void AddGEOCODER_Resources()
+        {
+            //GET census.gov geocode for lat/long    
+            ResourceSpace.Has.ResourcesOfType<object>()
+            .AtUri("Geocode/location?Latitude={latitude}&Longitude={longitude}").Named("GetReverseGeocode")
+            .HandledBy<GeocoderHandler>()
+            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
+        }
 
         private void AddAGENCY_Resources()
         {
@@ -751,12 +760,18 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<member>()
-            .AtUri(memberResource + "/{entityId}")
+            .AtUri(memberResource + "/{entityId}")            
             .And.AtUri("/login").Named("GetLoggedUser")
             .And.AtUri(eventsResource+"/{eventId}/EventCoordinator").Named("GetEventCoordinator")
             .And.AtUri(approvalResource+"/{ApprovalId}/ApprovingOfficial").Named("GetApprovingOfficial")
             .And.AtUri(datafileResource+"/{dataFileId}/Processor").Named("GetDataFileProcessor")
             .And.AtUri(peakSummaryResource+"/{peakSummaryId}/Processor").Named("GetPeakSummaryProcessor")
+            .HandledBy<MemberHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
+
+            ResourceSpace.Has.ResourcesOfType<string>()
+            .AtUri(memberResource + "/GetMemberName/{entityId}").Named("GetMemberName")
             .HandledBy<MemberHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
@@ -1104,6 +1119,11 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
+            ResourceSpace.Has.ResourcesOfType<string>()
+            .AtUri(sourceResource + "/GetSourceName/{entityId}").Named("GetSourceName")
+            .HandledBy<SourceHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }//end AddSOURCE_Resources        
         private void AddSTATE_Resources()
         {
