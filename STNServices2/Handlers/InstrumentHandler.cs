@@ -601,38 +601,23 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        instrument ObjectToBeDeleted = sa.Select<instrument>().SingleOrDefault(c => c.instrument_id == entityId);
+                        instrument ObjectToBeDeleted = sa.Select<instrument>().Include(df => df.data_files).Include(f => f.files).Include(s => s.instrument_status).SingleOrDefault(c => c.instrument_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
+                                                
+                        //remove files
+                        ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
+                        ObjectToBeDeleted.files.Clear();
 
-                        #region Cascadedelete?
-                        ////delete files associated with this sensor
-                        List<file> opFiles = sa.Select<file>().Where(x => x.instrument_id == entityId).ToList();
-                        if (opFiles.Count >= 1)
-                        {
-                            foreach (file f in opFiles)
-                            {
-                                //delete data files to this file
-                                if (f.data_file_id.HasValue)
-                                {
-                                    data_file df = sa.Select<data_file>().Where(x => x.data_file_id == f.data_file_id).FirstOrDefault();
-                                    sa.Delete<data_file>(df);
-                                    sm(sa.Messages);
-                                }
-                                //delete the file
-                                sa.Delete<file>(f);
-                                sm(sa.Messages);
-                            }
-                        }
-                        ////first delete the INSTRUMENT_STATUSes for this INSTRUMENT, then delete the INSTRUMENT
-                        List<instrument_status> stats = sa.Select<instrument_status>().Where(x => x.instrument_id == entityId).ToList();
+                        //remove datafile
+                        ObjectToBeDeleted.data_files.Clear();
 
-                        stats.ForEach(s => sa.Delete<instrument_status>(s));
-                        sm(sa.Messages);
-
+                        //remove instrument status
+                        ObjectToBeDeleted.instrument_status.Clear();
+                        
                         //delete instrument
                         sa.Delete<instrument>(ObjectToBeDeleted);
                         sm(sa.Messages);
-                        #endregion
+                        
                     }// end using
                 } //end using
 
