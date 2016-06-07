@@ -112,8 +112,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
     </Reference>
-    <Reference Include="WiMServices, Version=1.0.5976.15521, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WiMServices.1.0.5976.15521\lib\net45\WiMServices.dll</HintPath>
+    <Reference Include="WiMServices, Version=1.0.6002.14217, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMServices.1.0.6002.14217\lib\net45\WiMServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WiMServices.Test, Version=1.0.5947.24028, Culture=neutral, processorArchitecture=MSIL">
@@ -122,21 +122,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dist\bin\AWSSDK.dll" />
-    <Content Include="dist\bin\EntityFramework.dll" />
-    <Content Include="dist\bin\EntityFramework6.Npgsql.dll" />
-    <Content Include="dist\bin\Ionic.Zip.dll" />
-    <Content Include="dist\bin\Newtonsoft.Json.dll" />
-    <Content Include="dist\bin\Npgsql.dll" />
-    <Content Include="dist\bin\OpenRasta.dll" />
-    <Content Include="dist\bin\OpenRasta.Hosting.AspNet.dll" />
-    <Content Include="dist\bin\RestSharp.dll" />
-    <Content Include="dist\bin\ServiceStack.Text.dll" />
-    <Content Include="dist\bin\STNDB.dll" />
-    <Content Include="dist\bin\STNServices2.dll" />
-    <Content Include="dist\bin\WiMHypermedia.dll" />
-    <Content Include="dist\bin\WiMServices.dll" />
-    <Content Include="dist\bin\WiMServices.Test.dll" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -218,11 +203,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dist\packages.config" />
-    <Content Include="dist\Web.config" />
     <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="dist\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
