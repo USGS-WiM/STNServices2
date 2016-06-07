@@ -196,7 +196,7 @@
         <AssociationConnector Association="STNNEWModel.memberhwm" />
         <AssociationConnector Association="STNNEWModel.memberhwm1" />
       </Diagram>
-      <Diagram DiagramId="ed8bff13d16c4e4c992d52ed71c7d9ba" Name="sensor" ZoomLevel="37" >
+      <Diagram DiagramId="ed8bff13d16c4e4c992d52ed71c7d9ba" Name="sensor" ZoomLevel="72" >
         <EntityTypeShape EntityType="STNNEWModel.instrument" Width="1.5" PointX="6.875" PointY="5.125" />
         <EntityTypeShape EntityType="STNNEWModel.instrument_status" Width="2" PointX="12.125" PointY="6.125" />
         <EntityTypeShape EntityType="STNNEWModel.sensor_deployment" Width="2.125" PointX="3.875" PointY="6.875" />
