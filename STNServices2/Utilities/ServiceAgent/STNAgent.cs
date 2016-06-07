@@ -46,6 +46,7 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             this.context = new STNDBEntities(string.Format(connectionString, "fradmin", new EasySecureString("***REMOVED***").decryptString()));
             this.context.Configuration.ProxyCreationEnabled = include;
+            
         }
         #endregion
         #region IDisposable Support
@@ -82,25 +83,21 @@ namespace STNServices2.Utilities.ServiceAgent
         #endregion
         #endregion
         #region "Methods"
-        internal void DeleteFile(Int32 fileID)
+        internal void RemoveFileItem(file fileToRemove)
         {
             try
             {
-                file ObjectToBeDeleted = this.Select<file>().Include(f => f.hwm).Include(f => f.hwm.@event).Include(f => f.instrument).Include(f => f.instrument.@event)
-                    .SingleOrDefault(f => f.file_id == fileID);
-
+                
                 S3Bucket aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
                                             ConfigurationManager.AppSettings["AWSSecretKey"]);
                 string directoryName = string.Empty;
-                directoryName = ObjectToBeDeleted.path + "/" + ObjectToBeDeleted.name;// 
+                directoryName = fileToRemove.path + "/" + fileToRemove.name;// 
                 aBucket.DeleteObject(directoryName);
-                sm(MessageType.info, fileID + ": Deleted from storage");
-                this.Delete<file>(ObjectToBeDeleted);
-                sm(MessageType.info, fileID + ": Deleted from DB");
+                sm(MessageType.info, fileToRemove.file_id + ": Deleted from storage");
             }
             catch (Exception ex)
             {
-                sm(MessageType.error, fileID +":"+ ex.Message);
+                sm(MessageType.error, fileToRemove.file_id + ":" + ex.Message);
                 throw ;
             }
         }
