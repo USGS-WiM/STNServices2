@@ -20,5 +20,7 @@ namespace STNDB
         public Nullable<double> water_surface { get; set; }
         public Nullable<double> ground_surface { get; set; }
         public Nullable<double> offset_correction { get; set; }
+    
+        public virtual objective_point objective_point { get; set; }
     }
 }
