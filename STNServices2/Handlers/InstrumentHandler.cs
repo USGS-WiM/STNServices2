@@ -628,9 +628,9 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
 
-        
+        #endregion
         #region Helper Methods
-       
+
         //private string BuildFilePath(FILES uploadFile, string fileName)
         //{
         //    try

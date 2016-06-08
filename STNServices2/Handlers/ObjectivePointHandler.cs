@@ -25,6 +25,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -202,40 +203,24 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            objective_point anEntity = null;
             try
             {
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
-                    { 
-                        //delete files associated with this op
-                        List<file> opFiles = sa.Select<file>().Where(x => x.objective_point_id == entityId).ToList();
-                        if (opFiles.Count >= 1)
-                        {
-                            foreach (file f in opFiles)
-                            {
-                                //delete the file
-                                sa.Delete<file>(f);
-                                sm(sa.Messages);
-                            }
-                        }
+                    {
+                        objective_point ObjectToBeDeleted = sa.Select<objective_point>().Include(i => i.files).Include(i => i.op_control_identifier).FirstOrDefault(i => i.objective_point_id == entityId);
+                        if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
+                                               
+                        //remove files
+                        ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
+                        ObjectToBeDeleted.files.Clear();
+                        
                         //delete op_control_identifiers for this op
-                        List<op_control_identifier> opci = sa.Select<op_control_identifier>().Where(x => x.objective_point_id == entityId).ToList();
-                        if (opci.Count >= 1)
-                        {
-                            foreach (op_control_identifier o in opci)
-                            {
-                                sa.Delete<op_control_identifier>(o);
-                                sm(sa.Messages);
-                            }
-                        }
-
-                        anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == entityId);
-                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
-
-                        sa.Delete<objective_point>(anEntity);
+                        ObjectToBeDeleted.op_control_identifier.Clear();
+                       
+                        sa.Delete<objective_point>(ObjectToBeDeleted);
                         sm(sa.Messages);
                     }//end using
                 }//end using

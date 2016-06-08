@@ -608,12 +608,16 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<site>().FirstOrDefault(i => i.site_id == entityId);
+                        anEntity = sa.Select<site>().Include(s => s.files).FirstOrDefault(s => s.site_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
-                        //Delete all site-related stuff too
+                        //Delete all site-related stuff too TODO>> 
                         //  Files, DataFiles, 
                         #region site files to delete
+                        //remove files
+                        anEntity.files.ToList().ForEach(f => sa.RemoveFileItem(f));
+                        anEntity.files.Clear();
+                       // anEntity.files.Any(f=>f.data_file 
                         List<file> deleteFiles = sa.Select<file>().Where(f => f.site_id == entityId).ToList();
                         //foreach file, get datafile if exists, and peak summary
                         foreach (file f in deleteFiles)
@@ -629,8 +633,8 @@ namespace STNServices2.Handlers
 
                                 sa.Delete<data_file>(df);
                             }
-                            sa.Delete<file>(f);
-                            sm(sa.Messages);
+                           // sa.Delete<file>(f);
+                           // sm(sa.Messages);
                         }
                         #endregion
                        
