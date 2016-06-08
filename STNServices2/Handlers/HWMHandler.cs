@@ -675,6 +675,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
+            Int32? approvalID = null;
             try
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -688,28 +689,21 @@ namespace STNServices2.Handlers
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
                                                 
                         #region Cascadedelete
-                        //see if it has approval to delete (DOESN"T WORK)
-                        //if (ObjectToBeDeleted.approval_id.HasValue)
-                        //{
-                            //remove the approval
-                            //approval thisAppr = sa.Select<approval>().Where(x => x.approval_id == ObjectToBeDeleted.approval_id).FirstOrDefault();
-                            //sa.Delete<approval>(thisAppr);
-                           // sm(sa.Messages);
-                       // }
-                        //see if there's a peak to delete (DOESN"T WORK)
-                       // if (ObjectToBeDeleted.peak_summary != null)
-                       // {
-                          //  peak_summary thisPeak = sa.Select<peak_summary>().Where(x => x.peak_summary_id == ObjectToBeDeleted.peak_summary_id).FirstOrDefault();
-                          //  sa.Delete<peak_summary>(thisPeak);
-                          //  sm(sa.Messages);
-                       // }
+                        approvalID = ObjectToBeDeleted.approval_id;
 
                         //remove files
                         ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        ObjectToBeDeleted.files.Clear();
-                        
+                        ObjectToBeDeleted.files.Clear();                        
                         ////delete HWM now
                         sa.Delete(ObjectToBeDeleted);
+
+                        if (approvalID.HasValue)
+                        {
+                            approval item = sa.Select<approval>().SingleOrDefault(h => h.approval_id == approvalID);
+                            sa.Delete<approval>(item);
+                        }                       
+   
+                        
                         sm(sa.Messages);
                         #endregion
                     }// end using
