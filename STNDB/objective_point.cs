@@ -19,6 +19,7 @@ namespace STNDB
         {
             this.files = new HashSet<file>();
             this.op_control_identifier = new HashSet<op_control_identifier>();
+            this.op_measurements = new HashSet<op_measurements>();
         }
     
         public int objective_point_id { get; set; }
@@ -49,5 +50,7 @@ namespace STNDB
         public virtual ICollection<file> files { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<op_control_identifier> op_control_identifier { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<op_measurements> op_measurements { get; set; }
     }
 }
