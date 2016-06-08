@@ -684,39 +684,30 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        hwm ObjectToBeDeleted = sa.Select<hwm>().SingleOrDefault(c => c.hwm_id == entityId);
+                        hwm ObjectToBeDeleted = sa.Select<hwm>().Include(h => h.files).SingleOrDefault(h => h.hwm_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
                                                 
-                        #region Cascadedelete?
-                        
-
-                        ////see if it has approval to delete
-                        if (ObjectToBeDeleted.approval_id.HasValue)
-                        {
+                        #region Cascadedelete
+                        //see if it has approval to delete (DOESN"T WORK)
+                        //if (ObjectToBeDeleted.approval_id.HasValue)
+                        //{
                             //remove the approval
-                            approval thisAppr = sa.Select<approval>().Where(x => x.approval_id == ObjectToBeDeleted.approval_id).FirstOrDefault();
-                            sa.Delete<approval>(thisAppr);
-                            sm(sa.Messages);
-                        }
-                        ////see if there's a peak to delete
-                        if (ObjectToBeDeleted.peak_summary != null)
-                        {
-                            peak_summary thisPeak = sa.Select<peak_summary>().Where(x => x.peak_summary_id == ObjectToBeDeleted.peak_summary_id).FirstOrDefault();
-                            sa.Delete<peak_summary>(thisPeak);
-                            sm(sa.Messages);
-                        }
+                            //approval thisAppr = sa.Select<approval>().Where(x => x.approval_id == ObjectToBeDeleted.approval_id).FirstOrDefault();
+                            //sa.Delete<approval>(thisAppr);
+                           // sm(sa.Messages);
+                       // }
+                        //see if there's a peak to delete (DOESN"T WORK)
+                       // if (ObjectToBeDeleted.peak_summary != null)
+                       // {
+                          //  peak_summary thisPeak = sa.Select<peak_summary>().Where(x => x.peak_summary_id == ObjectToBeDeleted.peak_summary_id).FirstOrDefault();
+                          //  sa.Delete<peak_summary>(thisPeak);
+                          //  sm(sa.Messages);
+                       // }
 
-                        ////see if there's any files to delete
-                        List<file> HWMFiles = sa.Select<file>().Where(x => x.hwm_id == entityId).ToList();
-                        if (HWMFiles.Count >= 1)
-                        {
-                            foreach (file f in HWMFiles)
-                            {
-                                //delete the file
-                                sa.Delete<file>(f);
-                                sm(sa.Messages);
-                            }
-                        }
+                        //remove files
+                        ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
+                        ObjectToBeDeleted.files.Clear();
+                        
                         ////delete HWM now
                         sa.Delete(ObjectToBeDeleted);
                         sm(sa.Messages);

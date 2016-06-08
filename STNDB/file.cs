@@ -38,5 +38,6 @@ namespace STNDB
         public virtual data_file data_file { get; set; }
         public virtual source source { get; set; }
         public virtual file_type file_type { get; set; }
+        public virtual objective_point objective_point { get; set; }
     }
 }
