@@ -18,5 +18,7 @@ namespace STNDB
         public Nullable<int> objective_point_id { get; set; }
         public string identifier { get; set; }
         public string identifier_type { get; set; }
+    
+        public virtual objective_point objective_point { get; set; }
     }
 }
