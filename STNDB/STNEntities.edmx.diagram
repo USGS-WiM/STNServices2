@@ -43,7 +43,7 @@
         <EntityTypeShape EntityType="STNNEWModel.sensor_type" Width="2.125" PointX="9.75" PointY="1.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.site_housing" Width="2.125" PointX="9.75" PointY="2.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.site" Width="2.125" PointX="9.75" PointY="2" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.source" Width="2.125" PointX="9.75" PointY="3" IsExpanded="false" />
+        <EntityTypeShape EntityType="STNNEWModel.source" Width="2.125" PointX="9.75" PointY="3" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.state" Width="2.125" PointX="9.75" PointY="3.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.status_type" Width="2.125" PointX="9.75" PointY="4" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_collect_methods" Width="2.125" PointX="9.75" PointY="4.5" IsExpanded="false" />
@@ -118,6 +118,7 @@
         <AssociationConnector Association="STNNEWModel.vertical_datumsinstrument_status" />
         <AssociationConnector Association="STNNEWModel.objective_pointfile" />
         <AssociationConnector Association="STNNEWModel.objective_pointop_control_identifier" />
+        <AssociationConnector Association="STNNEWModel.objective_pointop_measurements" />
       </Diagram>
       <Diagram DiagramId="0e3223d83fcc4e5cbc1c81a6b506bad1" Name="hwm" ZoomLevel="85" >
         <EntityTypeShape EntityType="STNNEWModel.events" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
@@ -306,10 +307,12 @@
         <EntityTypeShape EntityType="STNNEWModel.objective_point" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="1.5" PointX="3.875" PointY="0.75" />
         <AssociationConnector Association="STNNEWModel.vertical_datumsobjective_point" />
-        <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="5.125" PointY="3" />
+        <EntityTypeShape EntityType="STNNEWModel.file" Width="1.5" PointX="5.625" PointY="3" />
         <AssociationConnector Association="STNNEWModel.objective_pointfile" />
         <EntityTypeShape EntityType="STNNEWModel.op_control_identifier" Width="2.125" PointX="7.375" PointY="0.75" />
         <AssociationConnector Association="STNNEWModel.objective_pointop_control_identifier" />
+        <EntityTypeShape EntityType="STNNEWModel.op_measurements" Width="1.5" PointX="3.375" PointY="5.375" />
+        <AssociationConnector Association="STNNEWModel.objective_pointop_measurements" />
       </Diagram>
       <Diagram DiagramId="821b1cd60f364e75a4db2ebc83b13b89" Name="contact" ZoomLevel="88" >
         <EntityTypeShape EntityType="STNNEWModel.contact" Width="1.5" PointX="10.75" PointY="3.375" />

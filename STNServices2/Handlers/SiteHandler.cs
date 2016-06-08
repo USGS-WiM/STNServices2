@@ -608,7 +608,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<site>().Include(s => s.files).FirstOrDefault(s => s.site_id == entityId);
+                        anEntity = sa.Select<site>().Include(s => s.files).Include(s => s.instruments).Include(i => i.instruments.Select(inst => inst.instrument_status))
+                            .Include(i => i.instruments.Select(inst => inst.data_files)).Include(s=>s.network_name_site).Include(s=>s.network_type_site)
+                            .Include(s=>s.objective_points).Include(s => s.objective_points.Select(op => op.op_control_identifier))
+                            .Include(s => s.objective_points.Select(op => op.op_measurements)).Include(s=>s.site_housing)
+                            .FirstOrDefault(s => s.site_id == entityId);
+
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
                         //Delete all site-related stuff too TODO>> 
@@ -616,81 +621,47 @@ namespace STNServices2.Handlers
                         #region site files to delete
                         //remove files
                         anEntity.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        anEntity.files.Clear();
-                       // anEntity.files.Any(f=>f.data_file 
-                        List<file> deleteFiles = sa.Select<file>().Where(f => f.site_id == entityId).ToList();
-                        //foreach file, get datafile if exists, and peak summary
-                        foreach (file f in deleteFiles)
-                        {
-                            if (f.data_file_id.HasValue)
-                            {
-                                data_file df = sa.Select<data_file>().SingleOrDefault(dataf => dataf.data_file_id == f.data_file_id);
-                                if (df.peak_summary_id.HasValue)
-                                {
-                                    peak_summary pk = sa.Select<peak_summary>().SingleOrDefault(p => p.peak_summary_id == df.peak_summary_id);
-                                    sa.Delete<peak_summary>(pk);
-                                }
-
-                                sa.Delete<data_file>(df);
-                            }
-                           // sa.Delete<file>(f);
-                           // sm(sa.Messages);
-                        }
+                        anEntity.files.Clear();                                           
                         #endregion
                        
                         //HWMs 
                         #region hwms
-                        List<hwm> deleteHWMs = sa.Select<hwm>().Where(h => h.site_id == entityId).ToList();
-                        foreach (hwm h in deleteHWMs)
-                        {
-                            if (h.peak_summary_id.HasValue)
-                            {
-                                peak_summary pk = sa.Select<peak_summary>().SingleOrDefault(p => p.peak_summary_id == h.peak_summary_id);
-                                sa.Delete<peak_summary>(pk);
-                            }
-                            sa.Delete<hwm>(h);
-                        }
+                        //List<hwm> deleteHWMs = sa.Select<hwm>().Where(h => h.site_id == entityId).ToList();
+                        //foreach (hwm h in deleteHWMs)
+                        //{
+                        //    if (h.peak_summary_id.HasValue)
+                        //    {
+                        //        peak_summary pk = sa.Select<peak_summary>().SingleOrDefault(p => p.peak_summary_id == h.peak_summary_id);
+                        //        sa.Delete<peak_summary>(pk);
+                        //    }
+                        //    sa.Delete<hwm>(h);
+                        //}
                         #endregion
-                        
-                        //Sensors and Sensor statuses
+                        // anEntity.files.Any(f=>f.data_file 
+                        //Sensors and Sensor statuses.... .Include(i => i.data_files.Select(df => df.approval).SingleOrDefault()
                         #region sensors and sensor status
-                        List<instrument> deleteInst = sa.Select<instrument>().Where(i => i.site_id == entityId).ToList();
-                        List<instrument_status> eachStat = null;
-                        foreach (instrument instr in deleteInst)
-                        {
-                            eachStat = sa.Select<instrument_status>().Where(instrStat => instrStat.instrument_id == instr.instrument_id).ToList();
-                            eachStat.ForEach(insSTAT => sa.Delete<instrument_status>(insSTAT));
-                            sa.Delete<instrument>(instr);
-                        }
+                        //List<instrument> deleteInst = sa.Select<instrument>().Include(i => i.instrument_status).Include(i => i.data_files).Where(i => i.site_id == entityId).ToList();
+                        anEntity.instruments.Select(i => i.instrument_status).ToList().Clear();
+                        anEntity.instruments.Select(i => i.data_files).ToList().Clear();
+                        
                         #endregion
 
                         //Network_name_sites, Network_type_sites
                         #region Networks
-                        List<network_name_site> deleteNNS = sa.Select<network_name_site>().Where(nns => nns.site_id == entityId).ToList();
-                        deleteNNS.ForEach(nnsite => sa.Delete<network_name_site>(nnsite));
-                        List<network_type_site> deleteNTS = sa.Select<network_type_site>().Where(nts => nts.site_id == entityId).ToList();
-                        deleteNTS.ForEach(ntsite => sa.Delete<network_type_site>(ntsite));
+                        anEntity.network_name_site.Clear();
+                        anEntity.network_type_site.Clear();
                         #endregion
 
                         //OPs and OP_Control_Identifiers, OP_measurements 
                         #region OP stuff
-                        List<objective_point> deleteOPs = sa.Select<objective_point>().Where(op => op.site_id == entityId).ToList();
-                        foreach (objective_point op in deleteOPs)
-                        {
-                            //get OP_CONTROL_IDENTIFIERS
-                            List<op_control_identifier> opcontrols = sa.Select<op_control_identifier>().Where(opci => opci.objective_point_id == op.objective_point_id).ToList();
-                            opcontrols.ForEach(o => sa.Delete<op_control_identifier>(o));
-                            //get OP_MEASURMENTS
-                            List<op_measurements> opmeasures = sa.Select<op_measurements>().Where(opm => opm.objective_point_id == op.objective_point_id).ToList();
-                            opmeasures.ForEach(opmeas => sa.Delete<op_measurements>(opmeas));
-                            sa.Delete<objective_point>(op);
-                        }
+                        anEntity.objective_points.Clear();
+                        anEntity.objective_points.Select(op => op.op_control_identifier).ToList().Clear();
+                        anEntity.objective_points.Select(op => op.op_measurements).ToList().Clear();
                         #endregion
 
                         //site_housing
                         #region sitehousings
-                        List<site_housing> deleteSH = sa.Select<site_housing>().Where(sh => sh.site_id == entityId).ToList();
-                        deleteSH.ForEach(shouse => sa.Delete<site_housing>(shouse));
+                        anEntity.site_housing.Clear();
                         #endregion
                         
                         //lastly delete the site

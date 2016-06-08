@@ -9,7 +9,7 @@ namespace STNDB.Test
     [TestClass]
     public class STNDBTest
     {
-        private string connectionString = "metadata=res://*/STNEntities.csdl|res://*/STNEntities.ssdl|res://*/STNEntities.msl;provider=Npgsql;provider connection string=';Database=STNNEW;Host=stnnewtst.ck2zppz9pgsw.us-east-1.rds.amazonaws.com;Username=fradmin;PASSWORD={0};Application Name=STN';";
+        private string connectionString = "metadata=res://*/STNEntities.csdl|res://*/STNEntities.ssdl|res://*/STNEntities.msl;provider=Npgsql;provider connection string=';Database=stnnew;Host=stnnewtst.ck2zppz9pgsw.us-east-1.rds.amazonaws.com;Username=fradmin;PASSWORD={0};Application Name=STN';";
         private string password = "***REMOVED***";
 
         [TestMethod]

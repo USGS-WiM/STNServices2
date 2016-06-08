@@ -1045,6 +1045,7 @@
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="objective_point" ToRole="vertical_datums" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.objective_pointfile" FromRole="objective_point" ToRole="file" />
           <NavigationProperty Name="op_control_identifier" Relationship="STNNEWModel.objective_pointop_control_identifier" FromRole="objective_point" ToRole="op_control_identifier" />
+          <NavigationProperty Name="op_measurements" Relationship="STNNEWModel.objective_pointop_measurements" FromRole="objective_point" ToRole="op_measurements" />
         </EntityType>
         <EntityType Name="objective_point_type">
           <Key>
@@ -1074,6 +1075,7 @@
           <Property Name="water_surface" Type="Double" />
           <Property Name="ground_surface" Type="Double" />
           <Property Name="offset_correction" Type="Double" />
+          <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_pointop_measurements" FromRole="op_measurements" ToRole="objective_point" />
         </EntityType>
         <EntityType Name="op_quality">
           <Key>
@@ -1639,6 +1641,10 @@
           <AssociationSet Name="objective_pointop_control_identifier" Association="STNNEWModel.objective_pointop_control_identifier">
             <End Role="objective_point" EntitySet="objective_point" />
             <End Role="op_control_identifier" EntitySet="op_control_identifier" />
+          </AssociationSet>
+          <AssociationSet Name="objective_pointop_measurements" Association="STNNEWModel.objective_pointop_measurements">
+            <End Role="objective_point" EntitySet="objective_point" />
+            <End Role="op_measurements" EntitySet="op_measurements" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
@@ -2449,6 +2455,18 @@
               <PropertyRef Name="objective_point_id" />
             </Principal>
             <Dependent Role="op_control_identifier">
+              <PropertyRef Name="objective_point_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="objective_pointop_measurements">
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="1" />
+          <End Type="STNNEWModel.op_measurements" Role="op_measurements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="objective_point">
+              <PropertyRef Name="objective_point_id" />
+            </Principal>
+            <Dependent Role="op_measurements">
               <PropertyRef Name="objective_point_id" />
             </Dependent>
           </ReferentialConstraint>
