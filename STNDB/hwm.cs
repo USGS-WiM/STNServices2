@@ -46,6 +46,7 @@ namespace STNDB
         public Nullable<int> hdatum_id { get; set; }
         public Nullable<int> flag_member_id { get; set; }
         public Nullable<int> survey_member_id { get; set; }
+        public Nullable<double> uncertainty { get; set; }
     
         public virtual hwm_types hwm_types { get; set; }
         public virtual hwm_qualities hwm_qualities { get; set; }
