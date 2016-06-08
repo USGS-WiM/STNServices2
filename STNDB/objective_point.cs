@@ -14,6 +14,13 @@ namespace STNDB
     
     public partial class objective_point
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public objective_point()
+        {
+            this.files = new HashSet<file>();
+            this.op_control_identifier = new HashSet<op_control_identifier>();
+        }
+    
         public int objective_point_id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
@@ -38,5 +45,9 @@ namespace STNDB
         public virtual objective_point_type objective_point_type { get; set; }
         public virtual op_quality op_quality { get; set; }
         public virtual vertical_datums vertical_datums { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<file> files { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<op_control_identifier> op_control_identifier { get; set; }
     }
 }

@@ -808,6 +808,7 @@
           <Property Name="photo_date" Type="DateTime" Precision="6" />
           <Property Name="is_nwis" Type="Int32" />
           <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_pointfile" FromRole="file" ToRole="objective_point" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -1041,6 +1042,8 @@
           <NavigationProperty Name="objective_point_type" Relationship="STNNEWModel.objective_point_typeobjective_point" FromRole="objective_point" ToRole="objective_point_type" />
           <NavigationProperty Name="op_quality" Relationship="STNNEWModel.op_qualityobjective_point" FromRole="objective_point" ToRole="op_quality" />
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="objective_point" ToRole="vertical_datums" />
+          <NavigationProperty Name="files" Relationship="STNNEWModel.objective_pointfile" FromRole="objective_point" ToRole="file" />
+          <NavigationProperty Name="op_control_identifier" Relationship="STNNEWModel.objective_pointop_control_identifier" FromRole="objective_point" ToRole="op_control_identifier" />
         </EntityType>
         <EntityType Name="objective_point_type">
           <Key>
@@ -1058,6 +1061,7 @@
           <Property Name="objective_point_id" Type="Int32" />
           <Property Name="identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="identifier_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_pointop_control_identifier" FromRole="op_control_identifier" ToRole="objective_point" />
         </EntityType>
         <EntityType Name="op_measurements">
           <Key>
@@ -1627,6 +1631,14 @@
           <AssociationSet Name="vertical_datumsinstrument_status" Association="STNNEWModel.vertical_datumsinstrument_status">
             <End Role="vertical_datums" EntitySet="vertical_datums" />
             <End Role="instrument_status" EntitySet="instrument_status" />
+          </AssociationSet>
+          <AssociationSet Name="objective_pointfile" Association="STNNEWModel.objective_pointfile">
+            <End Role="objective_point" EntitySet="objective_point" />
+            <End Role="file" EntitySet="files" />
+          </AssociationSet>
+          <AssociationSet Name="objective_pointop_control_identifier" Association="STNNEWModel.objective_pointop_control_identifier">
+            <End Role="objective_point" EntitySet="objective_point" />
+            <End Role="op_control_identifier" EntitySet="op_control_identifier" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="hwm_typeshwm">
@@ -2414,6 +2426,30 @@
             </Principal>
             <Dependent Role="instrument_status">
               <PropertyRef Name="vdatum_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="objective_pointfile">
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" />
+          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="objective_point">
+              <PropertyRef Name="objective_point_id" />
+            </Principal>
+            <Dependent Role="file">
+              <PropertyRef Name="objective_point_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="objective_pointop_control_identifier">
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" />
+          <End Type="STNNEWModel.op_control_identifier" Role="op_control_identifier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="objective_point">
+              <PropertyRef Name="objective_point_id" />
+            </Principal>
+            <Dependent Role="op_control_identifier">
+              <PropertyRef Name="objective_point_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

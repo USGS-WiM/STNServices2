@@ -576,7 +576,7 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         file ObjectToBeDeleted = sa.Select<file>().SingleOrDefault(c => c.file_id == entityId);
-                        if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
+                        if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();                        
                         sa.RemoveFileItem(ObjectToBeDeleted);
                         sa.Delete<file>(ObjectToBeDeleted);
                         sm(sa.Messages);
