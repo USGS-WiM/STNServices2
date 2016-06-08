@@ -192,6 +192,7 @@
           <Property Name="hdatum_id" Type="int4" />
           <Property Name="flag_member_id" Type="int4" />
           <Property Name="survey_member_id" Type="int4" />
+          <Property Name="uncertainty" Type="float8" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -558,7 +559,6 @@
           <Property Name="source_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="source_name" Type="varchar" MaxLength="100" />
           <Property Name="agency_id" Type="int4" />
-          <Property Name="source_date" Type="timestamp" />
         </EntityType>
         <EntityType Name="states">
           <Key>
@@ -881,6 +881,7 @@
           <NavigationProperty Name="vertical_collect_methods" Relationship="STNNEWModel.vertical_collect_methodshwm" FromRole="hwm" ToRole="vertical_collect_methods" />
           <NavigationProperty Name="survey_member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
           <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
+          <Property Name="uncertainty" Type="Double" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -1292,7 +1293,6 @@
           <Property Name="source_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="source_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="agency_id" Type="Int32" />
-          <Property Name="source_date" Type="DateTime" Precision="6" />
           <NavigationProperty Name="agency" Relationship="STNNEWModel.agencysource" FromRole="source" ToRole="agency" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.sourcefile" FromRole="source" ToRole="file" />
         </EntityType>
@@ -2653,6 +2653,7 @@
           <EntitySetMapping Name="hwms">
             <EntityTypeMapping TypeName="STNNEWModel.hwm">
               <MappingFragment StoreEntitySet="hwm">
+                <ScalarProperty Name="uncertainty" ColumnName="uncertainty" />
                 <ScalarProperty Name="hwm_id" ColumnName="hwm_id" />
                 <ScalarProperty Name="waterbody" ColumnName="waterbody" />
                 <ScalarProperty Name="site_id" ColumnName="site_id" />
@@ -3053,7 +3054,6 @@
                 <ScalarProperty Name="source_id" ColumnName="source_id" />
                 <ScalarProperty Name="source_name" ColumnName="source_name" />
                 <ScalarProperty Name="agency_id" ColumnName="agency_id" />
-                <ScalarProperty Name="source_date" ColumnName="source_date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

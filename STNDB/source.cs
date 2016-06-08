@@ -23,7 +23,6 @@ namespace STNDB
         public int source_id { get; set; }
         public string source_name { get; set; }
         public Nullable<int> agency_id { get; set; }
-        public Nullable<System.DateTime> source_date { get; set; }
     
         public virtual agency agency { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
