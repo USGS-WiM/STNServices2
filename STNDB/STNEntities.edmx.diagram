@@ -43,7 +43,7 @@
         <EntityTypeShape EntityType="STNNEWModel.sensor_type" Width="2.125" PointX="9.75" PointY="1.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.site_housing" Width="2.125" PointX="9.75" PointY="2.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.site" Width="2.125" PointX="9.75" PointY="2" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.source" Width="2.125" PointX="9.75" PointY="3" IsExpanded="false" />
+        <EntityTypeShape EntityType="STNNEWModel.source" Width="2.125" PointX="9.75" PointY="3" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.state" Width="2.125" PointX="9.75" PointY="3.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.status_type" Width="2.125" PointX="9.75" PointY="4" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.vertical_collect_methods" Width="2.125" PointX="9.75" PointY="4.5" IsExpanded="false" />
