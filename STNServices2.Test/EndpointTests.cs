@@ -659,7 +659,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(peakHWMList, peakHWMList.Count.ToString());
 
             //GET filteredHWMs "/HWMs/FilteredHWMs?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&HWMType={hwmTypeIDs}&HWMQuality={hwmQualIDs}&HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}"
-            List<hwm> filteredHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "/FilteredHWMs.json?Event=8&EventType=&EventStatus=0&States=FL&County=&HWMType=&HWMQuality=&HWMEnvironment=&SurveyComplete=&StillWater=", basicAuth);
+            List<hwm> filteredHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "/FilteredHWMs.json?Event=7&EventStatus=0", basicAuth);
             Assert.IsNotNull(filteredHWMList, filteredHWMList.Count.ToString());  //HWMs/FilteredHWMs.json?Event=8&EventType=&EventStatus=0&States=FL&County=&HWMType=&HWMQuality=&HWMEnvironment=&SurveyComplete=&StillWater=
 
             //POST
@@ -815,7 +815,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(siteEvInstrList, siteEvInstrList.Count.ToString());
 
             //GetFilteredInstruments "/Instruments/FilteredInstruments?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}&DeploymentType={deploymentTypeIDs}
-            List<instrument> filtInstrList = this.GETRequest<List<instrument>>(host + Configuration.instrumentsResource + "/FilteredInstruments?Event=8&States=FL&CollectionCondition=4&DeploymentType=3");
+            List<instrument> filtInstrList = this.GETRequest<List<instrument>>(host + Configuration.instrumentsResource + "/FilteredInstruments?Event=&EventType=2&EventStatus=0&States=&CollectionCondition=&DeploymentType=");
             Assert.IsNotNull(filtInstrList, filtInstrList.Count.ToString());
 
             //GetSiteFullInstrumentList "/Sites/{siteId}/SiteFullInstrumentList"

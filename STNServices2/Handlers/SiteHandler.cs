@@ -477,7 +477,7 @@ namespace STNServices2.Handlers
                                 landownercontact_id = s.landownercontact_id,
                                 priority_id = s.priority_id,
                                 zone = s.zone,
-                                is_permanent_housing_installed =s.is_permanent_housing_installed,
+                                is_permanent_housing_installed = s.is_permanent_housing_installed,
                                 usgs_sid = s.usgs_sid,
                                 other_sid = s.other_sid,
                                 noaa_sid = s.noaa_sid,
@@ -608,62 +608,25 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<site>().Include(s => s.files).Include(s=>s.site_housing).FirstOrDefault(s => s.site_id == entityId);
+                        anEntity = sa.Select<site>().Include(s => s.files).Include(s=>s.instruments).Include(s=>s.hwms).Include(s=>s.objective_points)
+                            .Include(s => s.network_name_site).Include(s => s.network_type_site).Include(s => s.site_housing)
+                            .FirstOrDefault(s => s.site_id == entityId);
 
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
-                        
-                        #region site files to delete
-                        //remove files
-                        anEntity.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        anEntity.files.Clear();                                           
-                        #endregion
-
-                        #region sitehousings
-                        anEntity.site_housing.Clear();
-                        #endregion
-                        
-                        //now delete the site so that the rest can be marked as deleted
-                        sa.Delete<site>(anEntity);
-                         
-                        #region hwms
-                        List<Int32> appIds = new List<Int32>();
-                        List<hwm> deleteHWMs = sa.Select<hwm>().Where(h => h.site_id == entityId).ToList();
-                        foreach (hwm dhwm in deleteHWMs)
+                        //check and see if it has anything related (Can't delete if so)
+                        if (anEntity.objective_points != null || anEntity.files != null || anEntity.instruments != null || anEntity.hwms != null)
                         {
-                            if (dhwm.approval_id.HasValue)
-                                appIds.Add(dhwm.approval_id.Value);
+                            sm(MessageType.error, "Related Entities");
+                            throw new BadRequestException("Please remove attached entities first.");
                         }
-                        deleteHWMs.Clear();
-                        foreach (Int32 aId in appIds)
+                        else
                         {
-                            approval item = sa.Select<approval>().SingleOrDefault(h => h.approval_id == aId);
-                            sa.Delete<approval>(item);
+                            anEntity.site_housing.Clear();
+                            anEntity.network_type_site.Clear();
+                            anEntity.network_type_site.Clear();
+                            sa.Delete<site>(anEntity);
+                            sm(sa.Messages);
                         }
-                        #endregion                        
-                        
-                        #region sensors and sensor status
-                        List<instrument> deleteInst = sa.Select<instrument>().Include(i => i.instrument_status).Include(i => i.data_files).Where(i => i.site_id == entityId).ToList();
-                        deleteInst.Select(i => i.instrument_status).ToList().Clear();
-                        deleteInst.Select(i => i.data_files).ToList().Clear();
-                        deleteInst.Clear();
-                        #endregion
-
-                        #region Networks
-                        List<network_name_site> deleteNNS = sa.Select<network_name_site>().Where(nns => nns.site_id == entityId).ToList();
-                        deleteNNS.Clear();
-                        List<network_type_site> deleteNTS = sa.Select<network_type_site>().Where(nts => nts.site_id == entityId).ToList();
-                        deleteNTS.Clear();
-                        #endregion
-
-                        #region OP stuff
-                        List<objective_point> deleteOPs = sa.Select<objective_point>().Include(op=> op.op_control_identifier).Include(op => op.op_measurements).Where(op => op.site_id == entityId).ToList();
-
-                        deleteOPs.Select(op => op.op_control_identifier).ToList().Clear();
-                        deleteOPs.Select(op => op.op_measurements).ToList().Clear();
-                        deleteOPs.Clear();
-                        #endregion
-                        
-                        sm(sa.Messages);
                     }//end using
                 }//end using
                 return new OperationResult.OK { Description = this.MessageString };

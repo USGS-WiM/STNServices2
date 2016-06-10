@@ -354,32 +354,32 @@ namespace STNServices2.Handlers
                             instrument_id =  inst.instrument_id,
                             sensorType = inst.sensor_type.sensor,
                             sensor_type_id = inst.sensor_type_id,
-                            deploymentType = inst.deployment_type_id.HasValue ? inst.deployment_type.method : "",
+                            deploymentType =  inst.deployment_type != null ? inst.deployment_type.method : "",
                             deployment_type_id = inst.deployment_type_id,
                             serial_number = inst.serial_number,
                             housing_serial_number = inst.housing_serial_number,
                             interval = inst.interval,
                             site_id = inst.site_id,
-                            eventName =  inst.event_id.HasValue ? inst.@event.event_name : "",
+                            eventName = inst.@event != null ? inst.@event.event_name : "",
                             location_description = inst.location_description,
-                            collectionCondition = inst.inst_collection_id.HasValue ? inst.instr_collection_conditions.condition : "",
-                            housingType = inst.housing_type_id.HasValue ? inst.housing_type.type_name : "",
+                            collectionCondition = inst.instr_collection_conditions != null ? inst.instr_collection_conditions.condition : "",
+                            housingType = inst.housing_type != null ? inst.housing_type.type_name : "",
                             vented = inst.vented,
-                            sensorBrand = inst.sensor_brand_id.HasValue ? inst.sensor_brand.brand_name : "",
-                            statusId = inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().status_type_id,
-                            timeStamp = inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().time_stamp,
-                            site_no =  inst.site.site_no,
+                            sensorBrand = inst.sensor_brand != null ? inst.sensor_brand.brand_name : "",
+                            statusId = inst.instrument_status != null ? inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().status_type_id : null,
+                            timeStamp = inst.instrument_status != null ? inst.instrument_status.OrderByDescending(y=>y.time_stamp).FirstOrDefault().time_stamp: null,
+                            site_no = inst.site.site_no,
                             latitude = inst.site.latitude_dd,
                             longitude = inst.site.longitude_dd,
                             siteDescription = inst.site.site_description,
                             networkNames =  inst.site.network_name_site.Count > 0 ? (inst.site.network_name_site.Where(ns => ns.site_id == inst.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
                             stateName = inst.site.state,
                             countyName = inst.site.county,
-                            siteWaterbody =  inst.site.waterbody,
-                            siteHDatum =  inst.site.hdatum_id > 0 ? inst.site.horizontal_datums.datum_name : "", //inst.site.horizontal_datums is coming back null even though there's a hdatum_id...
-                            sitePriorityName = inst.site.priority_id.HasValue && inst.site.priority_id > 0 ? inst.site.deployment_priority.priority_name : "",
+                            siteWaterbody = inst.site.waterbody,
+                            siteHDatum =  inst.site.horizontal_datums != null ? inst.site.horizontal_datums.datum_name : "", //inst.site.horizontal_datums is coming back null even though there's a hdatum_id...
+                            sitePriorityName = inst.site.deployment_priority != null ? inst.site.deployment_priority.priority_name : "",
                             siteZone = inst.site.zone,
-                            siteHCollectMethod = inst.site.hcollect_method_id.HasValue && inst.site.hcollect_method_id > 0 ? inst.site.horizontal_collect_methods.hcollect_method : "",
+                            siteHCollectMethod = inst.site.horizontal_collect_methods != null ? inst.site.horizontal_collect_methods.hcollect_method : "",
                             sitePermHousing = inst.site.is_permanent_housing_installed == null || inst.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
                             siteNotes = inst.site.site_notes
                         }).ToList<instrument>();
@@ -392,7 +392,8 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-        
+
+                
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFullInstruments")]
         public OperationResult GetFullInstruments(Int32 instrumentId)
         {

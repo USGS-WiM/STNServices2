@@ -543,28 +543,28 @@ namespace STNServices2.Handlers
                              waterbody = hw.waterbody,
                              site_id = hw.site_id,
                              event_id = hw.event_id,
-                             eventName =  hw.event_id.HasValue ? hw.@event.event_name : "",
+                             eventName = hw.event_id.HasValue ? hw.@event.event_name : "",
                              hwm_type_id = hw.hwm_type_id,
-                             hwmTypeName = hw.hwm_type_id > 0 ? hw.hwm_types.hwm_type : "",
+                             hwmTypeName = hw.hwm_types != null ? hw.hwm_types.hwm_type : "",
                              hwm_quality_id = hw.hwm_quality_id,
-                             hwmQualityName = hw.hwm_quality_id > 0 ? hw.hwm_qualities.hwm_quality : "",
+                             hwmQualityName = hw.hwm_qualities != null ? hw.hwm_qualities.hwm_quality : "",
                              hwm_locationdescription = hw.hwm_locationdescription,
                              latitude_dd = hw.latitude_dd,
                              longitude_dd = hw.longitude_dd,
                              elev_ft = hw.elev_ft,
                              vdatum_id = hw.vdatum_id,
-                             verticalDatumName = hw.vdatum_id.HasValue && hw.vdatum_id > 0 ? hw.vertical_datums.datum_name : "",
+                             verticalDatumName = hw.vertical_datums != null ? hw.vertical_datums.datum_name : "",
                              hdatum_id = hw.hdatum_id,
-                             horizontalDatumName = hw.hdatum_id.HasValue && hw.hdatum_id > 0 ? hw.horizontal_datums.datum_name : "",
+                             horizontalDatumName = hw.horizontal_datums != null ? hw.horizontal_datums.datum_name : "",
                              vcollect_method_id = hw.vcollect_method_id,
-                             verticalMethodName = hw.vcollect_method_id.HasValue && hw.vcollect_method_id > 0 ? hw.vertical_collect_methods.vcollect_method : "",
+                             verticalMethodName = hw.vertical_collect_methods != null ? hw.vertical_collect_methods.vcollect_method : "",
                              hcollect_method_id = hw.hcollect_method_id,
-                             horizontalMethodName = hw.hcollect_method_id.HasValue && hw.hcollect_method_id > 0 ? hw.horizontal_collect_methods.hcollect_method : "",
+                             horizontalMethodName = hw.horizontal_collect_methods != null ? hw.horizontal_collect_methods.hcollect_method : "",
                              bank = hw.bank,
                              approval_id = hw.approval_id,
-                             approvalMember = hw.approval_id.HasValue && hw.approval_id > 0 ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
+                             approvalMember = hw.approval != null ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
                              marker_id = hw.marker_id,
-                             markerName = hw.marker_id.HasValue && hw.marker_id > 0 ? hw.marker.marker1 : "",
+                             markerName = hw.marker != null ? hw.marker.marker1 : "",
                              height_above_gnd = hw.height_above_gnd,
                              hwm_notes = hw.hwm_notes,
                              hwm_environment = hw.hwm_environment,
@@ -572,16 +572,16 @@ namespace STNServices2.Handlers
                              survey_date = hw.survey_date,
                              stillwater = hw.stillwater,
                              flag_member_id = hw.flag_member_id,
-                             flagMemberName = hw.flag_member_id.HasValue && hw.flag_member_id > 0 ? hw.flag_member.fname + " " + hw.flag_member.lname : "",
+                             flagMemberName = hw.flag_member != null ? hw.flag_member.fname + " " + hw.flag_member.lname : "",
                              survey_member_id = hw.survey_member_id,
-                             surveyMemberName = hw.survey_member_id.HasValue && hw.survey_member_id > 0 ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
+                             surveyMemberName = hw.survey_member != null ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
                              peak_summary_id = hw.peak_summary_id,
                              site_no = hw.site.site_no,
                              siteDescription = hw.site.site_description,
                              networkNames = hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
                              stateName = hw.site.state,
                              countyName = hw.site.county,
-                             sitePriorityName = hw.site.priority_id.HasValue && hw.site.priority_id > 0 ? hw.site.deployment_priority.priority_name : "",
+                             sitePriorityName = hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
                              siteZone = hw.site.zone,
                              sitePermHousing = hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
                              siteNotes = hw.site.site_notes
@@ -595,6 +595,12 @@ namespace STNServices2.Handlers
             }
             catch (Exception ex)
             { return HandleException(ex); }
+        }
+
+        private string getTest(string p)
+        {
+            string test = "Hello";
+            return test;
         }
         private string getFlagMember(hwm h)
         {
