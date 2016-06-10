@@ -618,7 +618,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || 
+                if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                     anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
                     anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0)
                         throw new BadRequestException("Invalid input parameters");
@@ -650,7 +650,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (anEntity.site_id <= 0 || anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 ||
+                if (anEntity.site_id <= 0 || anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                    anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
