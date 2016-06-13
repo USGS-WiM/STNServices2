@@ -1,152 +1,158 @@
 ﻿//------------------------------------------------------------------------------
-//----- DataFileHandler -----------------------------------------------------------
-//------------------------------------------------------------------------------
-
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2012 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
-//              
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //  
-//   purpose:   Handles Data file resources through the HTTP uniform interface.
-//              Equivalent to the controller in MVC.`````````
+//   purpose:   Handles Site resources through the HTTP uniform interface.
+//              Equivalent to the controller in MVC.
 //
-//discussion:   Handlers are objects which handle all interaction with resources in 
-//              this case the resources are POCO classes derived from the EF. 
+//discussion:   Handlers are objects which handle all interaction with resources. 
 //              https://github.com/openrasta/openrasta/wiki/Handlers
 //
 //     
 
 #region Comments
-// 01.30.13 - JKN - added Get(string boolean) method to return approved or nonapproved datafiles
-// 01.28.13 - JKN - Update POST handler to check if table is empty before assigning a key
-// 07.09.12 - JKN -Created
-
+// 03.23.16 - JKN - Created
 #endregion
-
-using STNServices2.Resources;
-using STNServices2.Authentication;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Reflection;
-using System.Web;
 using System.Runtime.InteropServices;
+using STNServices2.Utilities.ServiceAgent;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
+
+using STNServices2.Security;
+using WiM.Security;
+
 
 
 namespace STNServices2.Handlers
 {
-    public class DataFileHandler : HandlerBase
+    public class DataFileHandler : STNHandlerBase
     {
-
-        #region Properties
-        public override string entityName
-        {
-            get { return "DATAFILES"; }
-        }
-        #endregion
-        #region Routed Methods
-
         #region GetMethods
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<DATA_FILE> dataFiles = new List<DATA_FILE>();
+            List<data_file> entities = null;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                 using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFiles = aSTNE.DATA_FILE.OrderBy(df => df.DATA_FILE_ID).Where(df => df.APPROVAL_ID > 0).ToList();
+                        entities = sa.Select<data_file>().OrderBy(df => df.data_file_id).Where(df => df.approval_id > 0).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
-                        dataFiles = aSTNE.DATA_FILE.OrderBy(df => df.DATA_FILE_ID).ToList();
+                        entities = sa.Select<data_file>().OrderBy(df => df.data_file_id).ToList();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
-
-                    if (dataFiles != null)
-                        dataFiles.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
                 }
-
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch(Exception ex)
+            { return HandleException(ex); }
         }// end HttpMethod.Get
-
-        /// I don't think this one is used anywhere
+ 
         [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(string boolean)
+        public OperationResult Get(Int32 entityId)
         {
+            data_file anEntity;
             try
             {
-                List<DATA_FILE> dataFiles = new List<DATA_FILE>();
-                //default to false
-                bool isApprovedStatus = false;
-                Boolean.TryParse(boolean, out isApprovedStatus);
-
-                using (STNEntities2 aSTNE = GetRDS())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    if (isApprovedStatus)
+                    //general public..only approved ones
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable().Where(df => df.APPROVAL_ID > 0).ToList();
+                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId && df.approval_id > 0);
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
                     }
                     else
                     {
-                        //return all non approved hwms
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable().Where(df => df.APPROVAL_ID < 0 || !df.APPROVAL_ID.HasValue).ToList();
+                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
                     }
-
-                    if (dataFiles != null)
-                        dataFiles.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFileDataFile")]
+        public OperationResult GetFileDataFile(Int32 fileId)
+        {
+            data_file anEntity = null;
+            try
             {
-                return new OperationResult.BadRequest();
+                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent(true))
+                {
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                    {
+                        //general public..only approved ones
+                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    else
+                    {
+                        //they are logged in, give them all
+                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        if (anEntity == null) throw new NotFoundRequestException();
+                        sm(sa.Messages);
+                    }
+                    sm(sa.Messages);
+
+                }//end using   
+
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-        }// end HttpMethod.Get
+            catch(Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovedDataFiles")]
         public OperationResult GetApprovedDataFiles(Int32 ApprovalId)
         {
-            List<DATA_FILE> datafileList = new List<DATA_FILE>();
+            List<data_file> entities = null;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (STNAgent sa = new STNAgent())
                 {
-                    datafileList = aSTNE.APPROVALs.FirstOrDefault(a => a.APPROVAL_ID == ApprovalId).DATA_FILE.ToList();
-
-                    if (datafileList != null)
-                        datafileList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
+                    entities = sa.Select<data_file>().Where(d => d.approval_id == ApprovalId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = datafileList };
+                //this will always be one because each datafile is approved individually
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch
             {
@@ -157,222 +163,113 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredDataFiles")]
         public OperationResult GetFilteredDataFiles(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
         {
+            List<data_file> entities;
             try
             {
-                List<DATA_FILE> dataFileList; ;
+                if (string.IsNullOrEmpty(approved)) throw new BadRequestException("Invalid input parameters");
+               
                 //set defaults
-                //default to false
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
                 Int32 filterMember = (memberId > 0) ? memberId : -1;
                 Int32 filterEvent = (eventId > 0) ? eventId : -1;
 
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent(true))
                 {
-                    //Because 'Where' is producing an IQueryable, 
-                    //the execution is deferred until the ToList so you can chain 'Wheres' together.
-                    IQueryable<DATA_FILE> query;
+                    IQueryable<data_file> query;
                     if (isApprovedStatus)
-                        query = aSTNE.DATA_FILE.Where(h => h.APPROVAL_ID > 0);
+                        query = sa.Select<data_file>().Where(h => h.approval_id > 0);
                     else
-                        query = aSTNE.DATA_FILE.Where(h => h.APPROVAL_ID <= 0 || !h.APPROVAL_ID.HasValue);
+                        query = sa.Select<data_file>().Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);
 
                     if (filterEvent > 0)
-                        query = query.Where(d => d.INSTRUMENT.EVENT_ID == filterEvent);
+                        query = query.Where(d => d.instrument.event_id == filterEvent);
 
                     if (filterState != State.UNSPECIFIED.ToString())
-                        query = query.Where(d => d.INSTRUMENT.SITE.STATE == filterState);
+                        query = query.Where(d => d.instrument.site.state == filterState);
 
                     if (filterMember > 0)
-                        query = query.Where(d => d.PROCESSOR_ID == filterMember);
+                        query = query.Where(d => d.processor_id == filterMember);
 
 
-                    dataFileList = query.ToList();
+                    entities = query.ToList();
 
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFileList = dataFileList.Where(d => d.APPROVAL_ID > 0).ToList();
+                        entities = entities.Where(d => d.approval_id > 0).ToList();
                     }
-
-
-                    if (dataFileList != null)
-                        dataFileList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFileList };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch( Exception ex)
+            { return HandleException(ex); }
         }// end HttpMethod.Get
 
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
-        {
-            DATA_FILE aDataFile;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
-            try
-            {
-                using (STNEntities2 aSTNE = GetRDS())
-                {
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {
-                        //they are the general public..only approved ones
-                        aDataFile = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == entityId && df.APPROVAL_ID > 0);
-                    }
-                    else
-                    {
-                        //they are logged in, give them all
-                        aDataFile = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == entityId);
-                    }
-
-                    if (aDataFile != null)
-                        aDataFile.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = aDataFile };
-            }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(HttpMethod.GET)]
-        public OperationResult GetFileDataFile(Int32 fileId)
-        {
-            DATA_FILE aDataFile;
-
-            //Return BadRequest if there is no ID
-            if (fileId <= 0)
-            { return new OperationResult.BadRequest(); }
-
-            try
-            {
-                using (STNEntities2 aSTNE = GetRDS())
-                {
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {
-                        //they are the general public..only approved ones
-                        aDataFile = aSTNE.FILES.FirstOrDefault(f => f.FILE_ID == fileId).DATA_FILE;
-                        aDataFile = aDataFile.APPROVAL_ID > 0 ? aDataFile : null;
-                    }
-                    else
-                    {
-                        //they are logged in, give them all
-                        aDataFile = aSTNE.FILES.FirstOrDefault(f => f.FILE_ID == fileId).DATA_FILE;
-                    }
-
-                }//end using   
-
-                return new OperationResult.OK { ResponseResource = aDataFile };
-            }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
-        }//end HttpMethod.GET
-
-        [HttpOperation(ForUriName = "GetInstrumentDataFiles")]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentDataFiles")]
         public OperationResult GetInstrumentDataFiles(Int32 instrumentId)
         {
-            List<DATA_FILE> dataFiles = new List<DATA_FILE>();
-
-            //Return BadRequest if there is no ID
-            if (instrumentId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            List<data_file> entities = null;
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
-                        //they are the general public..only approved ones
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable()
-                                .Where(df => df.INSTRUMENT_ID == instrumentId && df.APPROVAL_ID > 0)
-                                .OrderBy(df => df.DATA_FILE_ID)
-                                .ToList<DATA_FILE>();
+                        //general public..only approved ones
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.instrument_id == instrumentId && df.approval_id > 0).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
-                        //they are logged in, give them all
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable()
-                                .Where(df => df.INSTRUMENT_ID == instrumentId)
-                                .OrderBy(df => df.DATA_FILE_ID)
-                                .ToList<DATA_FILE>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.instrument_id == instrumentId).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
-
-                    if (dataFiles != null)
-                        dataFiles.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetPeakSummaryDatafiles")]
         public OperationResult GetPeakSummaryDatafiles(Int32 peakSummaryId)
         {
-            List<DATA_FILE> dataFiles = new List<DATA_FILE>();
-
-            //Return BadRequest if there is no ID
-            if (peakSummaryId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            List<data_file> entities = null;
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                //Return BadRequest if there is no ID
+                if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable()
-                                .Where(df => df.PEAK_SUMMARY_ID == peakSummaryId && df.APPROVAL_ID > 0)
-                                .OrderBy(df => df.DATA_FILE_ID)
-                                .ToList<DATA_FILE>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.peak_summary_id == peakSummaryId && df.approval_id > 0).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
-                        dataFiles = aSTNE.DATA_FILE.AsEnumerable()
-                                .Where(df => df.PEAK_SUMMARY_ID == peakSummaryId)
-                                .OrderBy(df => df.DATA_FILE_ID)
-                                .ToList<DATA_FILE>();
+                        entities = sa.Select<data_file>().AsEnumerable().Where(df => df.peak_summary_id == peakSummaryId).OrderBy(df => df.data_file_id).ToList<data_file>();
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
                     }
-
-                    if (dataFiles != null)
-                        dataFiles.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = dataFiles };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
         #endregion
@@ -382,44 +279,37 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST)] //, ForUriName = "CreateDataFile")]
-        public OperationResult Post(DATA_FILE aDataFile)
+        [HttpOperation(HttpMethod.POST)]
+        public OperationResult Post(data_file anEntity)
         {
-            //Return BadRequest if missing required fields
-            if ((aDataFile.INSTRUMENT_ID <= 0 || !aDataFile.INSTRUMENT_ID.HasValue) || (aDataFile.PROCESSOR_ID <= 0 || !aDataFile.PROCESSOR_ID.HasValue)) //.DATA_FILE_ID <= 0))
-            { return new OperationResult.BadRequest(); }
-
             try
             {
+                if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue || 
+                    (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0))
+                    throw new BadRequestException("Invalid input parameters");
+
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username,securedPassword))
                     {
-                        if (!Exists(aSTNE.DATA_FILE, ref aDataFile))
-                        {
-                            aSTNE.DATA_FILE.AddObject(aDataFile);
-                            aSTNE.SaveChanges();
-                        }//end if
-
+                        sa.Add<data_file>(anEntity);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = aDataFile };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.POST
 
         #endregion
 
         #region PutMethods
         /*****
-         * Update entity object (single row) in the database by primary key
-         * 
+         * Update entity object (single row) in the database by primary key         
          * Returns: the updated table row entity object
          ****/
         /// 
@@ -427,48 +317,29 @@ namespace STNServices2.Handlers
         ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, DATA_FILE aDataFile)
-        {
-            DATA_FILE DataFileToUpdate = null;
-            //Return BadRequest if missing required fields
-            if (aDataFile.DATA_FILE_ID <= 0 || entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+        public OperationResult Put(Int32 entityId, data_file anEntity)
+        {            
             try
             {
+                if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue ||
+                    (!anEntity.instrument_id.HasValue || anEntity.instrument_id <= 0) || (!anEntity.processor_id.HasValue || anEntity.processor_id <= 0)) 
+                    throw new BadRequestException("Invalid input parameters");
+
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //Grab the instrument row to update
-                        DataFileToUpdate = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == entityId);
-
-                        //Update fields
-                        DataFileToUpdate.START = aDataFile.START;
-                        DataFileToUpdate.END = aDataFile.END;
-                        DataFileToUpdate.GOOD_START = aDataFile.GOOD_START;
-                        DataFileToUpdate.GOOD_END = aDataFile.GOOD_END;
-                        DataFileToUpdate.PROCESSOR_ID = aDataFile.PROCESSOR_ID;
-                        DataFileToUpdate.INSTRUMENT_ID = aDataFile.INSTRUMENT_ID;
-                        DataFileToUpdate.APPROVAL_ID = aDataFile.APPROVAL_ID;
-                        DataFileToUpdate.COLLECT_DATE = aDataFile.COLLECT_DATE;
-                        DataFileToUpdate.PEAK_SUMMARY_ID = aDataFile.PEAK_SUMMARY_ID;
-                        DataFileToUpdate.ELEVATION_STATUS = aDataFile.ELEVATION_STATUS;
-
-                        aSTNE.SaveChanges();
+                        anEntity = sa.Update<data_file>(entityId, anEntity);
+                        sm(sa.Messages);                       
 
                     }//end using
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = aDataFile };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex);}
         }//end HttpMethod.PUT
 
         #endregion
@@ -481,73 +352,29 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
-            //Return BadRequest if missing required fields
-            if (entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        DATA_FILE ObjectToBeDeleted = aSTNE.DATA_FILE.SingleOrDefault(df => df.DATA_FILE_ID == entityId);
+                        data_file ObjectToBeDeleted = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
                         //delete it
-                        aSTNE.DATA_FILE.DeleteObject(ObjectToBeDeleted);
-
-                        aSTNE.SaveChanges();
-
+                        sa.Delete(ObjectToBeDeleted);
+                        sm(sa.Messages);
                     }// end using
                 } //end using
 
                 //Return object to verify persisitance
-                return new OperationResult.OK { };
+                return new OperationResult.OK { Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch(Exception ex)
+            { return HandleException(ex); }
         }//end HTTP.DELETE
         #endregion
 
-        #endregion
-        #region Helper Methods
-        private bool Exists(ObjectSet<DATA_FILE> entityRDS, ref DATA_FILE anEntity)
-        {
-            DATA_FILE existingEntity;
-            DATA_FILE thisEntity = anEntity;
-            //check if it exists
-            try
-            {
-
-                existingEntity = entityRDS.FirstOrDefault(e => e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID &&
-                                                              (!thisEntity.START.HasValue | DateTime.Equals(e.START.Value, thisEntity.START.Value)) &&
-                                                              (!thisEntity.END.HasValue | DateTime.Equals(e.END.Value, thisEntity.END.Value)) &&
-                                                              (!thisEntity.GOOD_START.HasValue | DateTime.Equals(e.GOOD_START.Value, thisEntity.GOOD_START.Value)) &&
-                                                              (!thisEntity.GOOD_END.HasValue | DateTime.Equals(e.GOOD_END.Value, thisEntity.GOOD_END.Value)) &&
-                                                              (!thisEntity.COLLECT_DATE.HasValue | DateTime.Equals(e.COLLECT_DATE.Value, thisEntity.COLLECT_DATE.Value)) &&
-                                                              (!thisEntity.PROCESSOR_ID.HasValue | e.PROCESSOR_ID.Value == thisEntity.PROCESSOR_ID.Value || thisEntity.PROCESSOR_ID.Value <= 0) &&
-                                                              (!thisEntity.PEAK_SUMMARY_ID.HasValue | e.PEAK_SUMMARY_ID.Value == thisEntity.PEAK_SUMMARY_ID.Value || thisEntity.PEAK_SUMMARY_ID.Value <= 0) &&
-                                                              (!thisEntity.APPROVAL_ID.HasValue | e.APPROVAL_ID.Value == thisEntity.APPROVAL_ID.Value || thisEntity.APPROVAL_ID.Value <= 0));
-
-
-                if (existingEntity == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingEntity;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-        #endregion
     }//end class DataFileHandler
 }//end namespace
