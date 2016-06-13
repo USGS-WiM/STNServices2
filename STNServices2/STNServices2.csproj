@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,13 +13,20 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>STNServices2</RootNamespace>
     <AssemblyName>STNServices2</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +36,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,41 +46,60 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK">
-      <HintPath>..\packages\AWSSDK.2.3.54.0\lib\net35\AWSSDK.dll</HintPath>
+    <Reference Include="AWSSDK, Version=2.3.55.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.2.3.55.0\lib\net45\AWSSDK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Ionic.Zip">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.3.0.7\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Oracle.DataAccess, Version=4.112.3.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_64\Oracle.DataAccess\v4.0_4.112.3.0__89b483f429c47342\Oracle.DataAccess.dll</HintPath>
+    <Reference Include="Npgsql, Version=3.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.0.7\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\libs\RestSharp.dll</HintPath>
+    <Reference Include="OpenRasta, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\openrasta-core.2.5.63\lib\net40\OpenRasta.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.4.0.36\lib\net40\ServiceStack.Text.dll</HintPath>
+    <Reference Include="OpenRasta.Hosting.AspNet, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\openrasta-hosting-aspnet.2.5.25\lib\net40\OpenRasta.Hosting.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.56\lib\net40\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -80,44 +107,32 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WiMHypermedia, Version=1.0.5938.14288, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
+    </Reference>
+    <Reference Include="WiMServices, Version=1.0.6002.14217, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMServices.1.0.6002.14217\lib\net45\WiMServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WiMServices.Test, Version=1.0.5947.24028, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WiMServices.Test.1.0.5947.24028\lib\net45\WiMServices.Test.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\EasySecureString.cs" />
-    <Compile Include="Authentication\STNBasicAuthentication.cs" />
-    <Compile Include="Authentication\STNRequiresRoleAttribute.cs" />
-    <Compile Include="Authentication\STNRequiresRoleInterceptor.cs" />
-    <Compile Include="Codecs\application\csv\CsvDotNetCodec.cs" />
-    <Compile Include="Codecs\application\json\JsonDotNetCodec.cs" />
-    <Compile Include="Codecs\application\xml\SimpleUTF8XmlSerializerCodec.cs" />
-    <Compile Include="Codecs\application\xml\STNXmlSerializerCodec.cs" />
-    <Compile Include="Codecs\application\xml\UTF8XmlCodec.cs" />
-    <Compile Include="Codecs\application\xml\UTF8XmlSerializerCodec.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Handlers\ApprovalHandler.cs" />
-    <Compile Include="Handlers\ContactHandler.cs" />
-    <Compile Include="Handlers\KeywordHandler.cs" />
-    <Compile Include="Handlers\DataFileHandler.cs" />
-    <Compile Include="Handlers\EntityObjectsHandler.cs" />
-    <Compile Include="Handlers\FileHandler.cs" />
-    <Compile Include="Handlers\HandlerBase.cs" />
-    <Compile Include="Handlers\HWMHandler.cs" />
+    <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
+    <Compile Include="Handlers\GeocoderHandler.cs" />
+    <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
-    <Compile Include="Handlers\LocatorTypeHandler.cs" />
     <Compile Include="Handlers\InstrumentStatusHandler.cs" />
-    <Compile Include="Handlers\LoginHandler.cs" />
+    <Compile Include="Handlers\MarkerHandler.cs" />
     <Compile Include="Handlers\MemberHandler.cs" />
     <Compile Include="Handlers\NetworkNameHandler.cs" />
     <Compile Include="Handlers\NetworkTypeHandler.cs" />
@@ -126,69 +141,72 @@
     <Compile Include="Handlers\OP_MeasurementsHandler.cs" />
     <Compile Include="Handlers\PeakSummaryHandler.cs" />
     <Compile Include="Handlers\ReportingMetricsHandler.cs" />
-    <Compile Include="Handlers\Site_HousingHandler.cs" />
+    <Compile Include="Handlers\RoleHandler.cs" />
     <Compile Include="Handlers\SiteHandler.cs" />
+    <Compile Include="Handlers\Site_HousingHandler.cs" />
     <Compile Include="Handlers\StateHandler.cs" />
-    <Compile Include="Hypermedia.cs" />
-    <Compile Include="PipeLineContributors\CrossDomainPipelineContributor.cs" />
-    <Compile Include="PipeLineContributors\ErrorCheckingContributor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\FeatureResource.cs" />
-    <Compile Include="Resources\FileResource.cs" />
+    <Compile Include="Handlers\SourceHandler.cs" />
+    <Compile Include="Handlers\SensorTypeHandler.cs" />
+    <Compile Include="Handlers\SensorBrandHandler.cs" />
+    <Compile Include="Handlers\ObjectivePointTypeHandler.cs" />
+    <Compile Include="Handlers\StatusTypeHandler.cs" />
+    <Compile Include="Handlers\ObjectivePointQualityHandler .cs" />
+    <Compile Include="Handlers\VerticalCollectionMethodsHandler.cs" />
+    <Compile Include="Handlers\VerticalDatumHandler.cs" />
+    <Compile Include="Handlers\InstrumentCollectionConditionHandler.cs" />
+    <Compile Include="Handlers\HWMHandler.cs" />
+    <Compile Include="Handlers\HWMTypeHandler.cs" />
+    <Compile Include="Handlers\HWMQualityHandler.cs" />
+    <Compile Include="Resources\GeocoderResource.cs" />
     <Compile Include="Resources\HWMResource.cs" />
-    <Compile Include="Resources\Instrument.cs" />
-    <Compile Include="Resources\InstrumentResource.cs" />
     <Compile Include="Resources\PeakResource.cs" />
-    <Compile Include="Resources\RSSItem.cs" />
-    <Compile Include="Resources\SiteResource.cs" />
-    <Compile Include="Resources\RSSChannel.cs" />
     <Compile Include="Resources\ReportResource.cs" />
-    <Compile Include="Resources\RSSFeed.cs" />
-    <Compile Include="STNModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>STNModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="STNResources.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>STNResources.tt</DependentUpon>
-    </Compile>
-    <Compile Include="STNResourcesPartial.cs" />
-    <Compile Include="Utilities\S3Bucket.cs" />
-    <Compile Include="Utilities\ServiceAgent.cs" />
-    <Compile Include="Utilities\Storage.cs" />
+    <Compile Include="Resources\SensorResource.cs" />
+    <Compile Include="Resources\SensorTypeResource.cs" />
+    <Compile Include="Resources\SiteResource.cs" />
+    <Compile Include="Security\STNAuthenticationProvider.cs" />
+    <Compile Include="Security\STNAuthorizerContributer.cs" />
+    <Compile Include="Security\STNRequiresRoleAttribute.cs" />
+    <Compile Include="Security\STNRequiresRoleInterceptor.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Handlers\AgencyHandler.cs" />
+    <Compile Include="Handlers\ApprovalHandler.cs" />
+    <Compile Include="Handlers\ContactHandler.cs" />
+    <Compile Include="Handlers\ContactTypeHandler.cs" />
+    <Compile Include="Handlers\CountyHandler.cs" />
+    <Compile Include="Handlers\DeploymentPriorityHandler.cs" />
+    <Compile Include="Handlers\DeploymentTypeHandler.cs" />
+    <Compile Include="Handlers\EventHandler.cs" />
+    <Compile Include="Handlers\EventStatusHandler.cs" />
+    <Compile Include="Handlers\EventTypeHandler.cs" />
+    <Compile Include="Handlers\FileTypeHandler.cs" />
+    <Compile Include="Handlers\HorizontalCollectionMethodHandler.cs" />
+    <Compile Include="Handlers\HorizontalDatumHandler.cs" />
+    <Compile Include="Handlers\DataFileHandler.cs" />
+    <Compile Include="Handlers\FileHandler.cs" />
+    <Compile Include="Handlers\STNHandlerBase.cs" />
+    <Compile Include="Handlers\HousingTypeHandler.cs" />
+    <Compile Include="PipeLineContributers\STNHyperMediaPipelineContributor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ServiceAgent\STNAgent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="STNModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>STNModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
+    <ProjectReference Include="..\STNDB\STNDB.csproj">
+      <Project>{d984786e-68f6-430d-a16b-8b3028a51621}</Project>
+      <Name>STNDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="STNResources.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>STNResources.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\openrasta-2.1\src\openrasta-aspnet\src\OpenRasta.Hosting.AspNet\OpenRasta.Hosting.AspNet.csproj">
-      <Project>{FE290BB8-9CB4-454E-89BE-E047674BB34F}</Project>
-      <Name>OpenRasta.Hosting.AspNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\openrasta-2.1\src\openrasta-core\src\OpenRasta\OpenRasta.csproj">
-      <Project>{C3ED9CCE-A140-4D0F-AE00-FBBF4CD27647}</Project>
-      <Name>OpenRasta</Name>
-    </ProjectReference>
+    <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dist\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -215,6 +233,17 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
