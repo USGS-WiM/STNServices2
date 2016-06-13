@@ -8,8 +8,8 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
-//              Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//              Tonia Roddick USGS Wisconsin Internet Mapping
 //              
 //  
 //   purpose:   Handles InstrumentStatus resources through the HTTP uniform interface.
@@ -20,341 +20,189 @@
 //              https://github.com/openrasta/openrasta/wiki/Handlers
 //
 //     
-
 #region Comments
-// 01.28.13 - JKN - Update POST handler to check if table is empty before assigning a key
-// 08.02.12 - JKN - Created
+// 04.18.16 - JKN - updated and adapted from original STNServices
 #endregion
-
-using STNServices2.Resources;
-using STNServices2.Authentication;
-
 using OpenRasta.Web;
-using OpenRasta.Security;
-using OpenRasta.Diagnostics;
-
 using System;
-using System.Data;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
-using System.Data.Objects;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Reflection;
-using System.Web;
+using System.Data.Entity;
+using System.Runtime.InteropServices;
+using STNServices2.Utilities.ServiceAgent;
+using STNServices2.Security;
+using STNDB;
+using WiM.Exceptions;
+using WiM.Resources;
+
+using WiM.Security;
 
 namespace STNServices2.Handlers
 {
-    public class InstrumentStatusHandler : HandlerBase
+    public class InstrumentStatusHandler : STNHandlerBase
     {
-        #region Properties
-        public override string entityName
-        {
-            get { return "INSTRUMENTSTATUS"; }
-        }
-        #endregion
-        #region Routed Methods
-
         #region GetMethods
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
-            List<INSTRUMENT_STATUS> instrumentStatusList = new List<INSTRUMENT_STATUS>();
+            List<instrument_status> entities;
 
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                using (STNAgent sa = new STNAgent())
                 {
-                    instrumentStatusList = aSTNE.INSTRUMENT_STATUS.OrderBy(instStat => instStat.INSTRUMENT_STATUS_ID).ToList();
-
-                    if (instrumentStatusList != null)
-                        instrumentStatusList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
+                    entities = sa.Select<instrument_status>().OrderBy(instStat => instStat.instrument_status_id).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
                 }//end using
-
-                return new OperationResult.OK { ResponseResource = instrumentStatusList };
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get(Int32 entityId)
         {
-            INSTRUMENT_STATUS anInstrumentStatus;
-
-            //Return BadRequest if there is no ID
-            if (entityId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            instrument_status anEntity;
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    anInstrumentStatus = aSTNE.INSTRUMENT_STATUS.SingleOrDefault(inst => inst.INSTRUMENT_STATUS_ID == entityId);
-
-                    if (anInstrumentStatus != null)
-                        anInstrumentStatus.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-
+                    anEntity = sa.Select<instrument_status>().SingleOrDefault(inst => inst.instrument_status_id == entityId);
+                    if (anEntity == null) throw new NotFoundRequestException();
+                    sm(sa.Messages);
                 }//end using
-
-                return new OperationResult.OK { ResponseResource = anInstrumentStatus };
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(ForUriName = "GetInstrumentStatusLog")]
+        //returns all statuses for an instrument in descending order
+        [HttpOperation(HttpMethod.GET,ForUriName = "GetInstrumentStatusLog")]
         public OperationResult GetInstrumentStatusLog(Int32 instrumentId)
         {
-            List<INSTRUMENT_STATUS> instrumentStatusList = new List<INSTRUMENT_STATUS>();
-
-            //Return BadRequest if there is no ID
-            if (instrumentId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            List<instrument_status> entities;
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    instrumentStatusList = aSTNE.INSTRUMENT_STATUS.AsEnumerable()
-                                .Where(instStat => instStat.INSTRUMENT_ID == instrumentId)
-                                .OrderByDescending(instStat => instStat.TIME_STAMP)
-                                .ToList<INSTRUMENT_STATUS>();
-
-                    instrumentStatusList.ForEach(x => x.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_group));
-
-                }//end using            
-
-                return new OperationResult.OK { ResponseResource = instrumentStatusList };
+                    entities = sa.Select<instrument_status>().AsEnumerable().Where(instStat => instStat.instrument_id == instrumentId)
+                                .OrderByDescending(instStat => instStat.time_stamp).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
-        }//end HttpMethod.GET       
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET 
 
-
-        [HttpOperation(ForUriName = "GetInstrumentStatus")]
+        //returns the most recent status for an instrument
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatus")]
         public OperationResult GetInstrumentStatus(Int32 instrumentId)
         {
-            INSTRUMENT_STATUS instrumentStatus;
-
-            //Return BadRequest if there is no ID
-            if (instrumentId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
+            instrument_status anEntity;
             try
             {
-                using (STNEntities2 aSTNE = GetRDS())
+                if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
                 {
-                    instrumentStatus = aSTNE.INSTRUMENT_STATUS.AsEnumerable()
-                                .Where(instStat => instStat.INSTRUMENT_ID == instrumentId)
-                                .OrderByDescending(instStat => instStat.TIME_STAMP).FirstOrDefault();
-
-                    instrumentStatus.LoadLinks(Context.ApplicationBaseUri.AbsoluteUri, linkType.e_individual);
-
+                    anEntity = sa.Select<instrument_status>().AsEnumerable().Where(instStat => instStat.instrument_id == instrumentId)
+                                .OrderByDescending(instStat => instStat.time_stamp).FirstOrDefault();
+                    
+                    if (anEntity == null) throw new NotFoundRequestException();                    
+                    sm(sa.Messages);
                 }//end using
-
-                return new OperationResult.OK { ResponseResource = instrumentStatus };
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.GET
         #endregion
-
         #region PostMethods
-        /// 
-        /// Force the user to provide authentication and authorization 
-        /// 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST, ForUriName = "CreateInstrumentStatus")]
-        public OperationResult Post(INSTRUMENT_STATUS anInstrumentStatus)
+        [HttpOperation(HttpMethod.POST)]
+        public OperationResult Post(instrument_status anEntity)
         {
-            //Return BadRequest if missing required fields
-            if (anInstrumentStatus.INSTRUMENT_ID <= 0 || !anInstrumentStatus.INSTRUMENT_ID.HasValue ||
-                anInstrumentStatus.STATUS_TYPE_ID <= 0 || !anInstrumentStatus.STATUS_TYPE_ID.HasValue)
-            {
-                return new OperationResult.BadRequest();
-            }
-
             try
             {
-                //Get basic authentication password
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                    throw new BadRequestException("Invalid input parameters");
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        if (!Exists(aSTNE.INSTRUMENT_STATUS, ref anInstrumentStatus))
-                        {
-                            aSTNE.INSTRUMENT_STATUS.AddObject(anInstrumentStatus);
-                            aSTNE.SaveChanges();
-                        }//end if
+                        anEntity = sa.Add<instrument_status>(anEntity);                        
+                        sm(sa.Messages);
 
                     }//end using
                 }//end using
-
-                //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anInstrumentStatus };
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.POST
 
         #endregion
-
         #region PutMethods
-        /*****
-         * Update entity object (single row) in the database by primary key
-         * 
-         * Returns: the updated table row entity object
-         ****/
-        /// 
-        /// Force the user to provide authentication and authorization 
-        ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
-        public OperationResult Put(Int32 entityId, INSTRUMENT_STATUS anInstrumentStatus)
+        public OperationResult Put(Int32 entityId, instrument_status anEntity)
         {
-
-            INSTRUMENT_STATUS instrumentStatusToUpdate = null;
-            //Return BadRequest if missing required fields
-            if (anInstrumentStatus.INSTRUMENT_STATUS_ID <= 0 || entityId <= 0)
-            { return new OperationResult.BadRequest(); }
-
             try
             {
-                //Get basic authentication password
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue ||
+                    !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                    throw new BadRequestException("Invalid input parameters");
+                
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-
-                        //Grab the instrument row to update
-                        instrumentStatusToUpdate = aSTNE.INSTRUMENT_STATUS.SingleOrDefault(
-                                           instrumentStat => instrumentStat.INSTRUMENT_STATUS_ID == entityId);
-                        //Update fields
-                        instrumentStatusToUpdate.INSTRUMENT_STATUS_ID = anInstrumentStatus.INSTRUMENT_STATUS_ID;
-                        instrumentStatusToUpdate.INSTRUMENT_ID = anInstrumentStatus.INSTRUMENT_ID;
-                        instrumentStatusToUpdate.STATUS_TYPE_ID = anInstrumentStatus.STATUS_TYPE_ID;
-                        instrumentStatusToUpdate.TIME_STAMP = anInstrumentStatus.TIME_STAMP;
-                        instrumentStatusToUpdate.NOTES = anInstrumentStatus.NOTES;
-                        instrumentStatusToUpdate.MEMBER_ID = anInstrumentStatus.MEMBER_ID;
-                        instrumentStatusToUpdate.TIME_ZONE = anInstrumentStatus.TIME_ZONE;
-                        instrumentStatusToUpdate.SENSOR_ELEVATION = anInstrumentStatus.SENSOR_ELEVATION;
-                        instrumentStatusToUpdate.GS_ELEVATION = anInstrumentStatus.GS_ELEVATION;
-                        instrumentStatusToUpdate.WS_ELEVATION = anInstrumentStatus.WS_ELEVATION;
-                        instrumentStatusToUpdate.VDATUM_ID = anInstrumentStatus.VDATUM_ID;
-
-                        aSTNE.SaveChanges();
+                        anEntity = sa.Update<instrument_status>(entityId, anEntity);
+                        sm(sa.Messages);
 
                     }//end using
                 }//end using
-
-                return new OperationResult.OK { ResponseResource = anInstrumentStatus };
+                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HttpMethod.PUT
 
         #endregion
-
         #region DeleteMethods
-        /// 
-        /// Force the user to provide authentication and authorization 
-        /// 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.DELETE, ForUriName = "DeleteInstrumentStatus")]
-        public OperationResult Delete(Int32 instrumentStatusId)
+        [HttpOperation(HttpMethod.DELETE)]
+        public OperationResult Delete(Int32 entityId)
         {
-            //Return BadRequest if missing required fields
-            if (instrumentStatusId <= 0)
-            {
-                return new OperationResult.BadRequest();
-            }
-
             try
             {
-                //Get basic authentication password
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNEntities2 aSTNE = GetRDS(securedPassword))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        INSTRUMENT_STATUS ObjectToBeDeleted = aSTNE.INSTRUMENT_STATUS.SingleOrDefault(instStat => instStat.INSTRUMENT_STATUS_ID == instrumentStatusId);
-                        //delete it
+                        instrument_status ObjectToBeDeleted = sa.Select<instrument_status>().SingleOrDefault(instStat => instStat.instrument_status_id == entityId);
 
-                        aSTNE.INSTRUMENT_STATUS.DeleteObject(ObjectToBeDeleted);
-                        aSTNE.SaveChanges();
+                        if (ObjectToBeDeleted == null) throw new NotFoundRequestException("Item Not found");
+                        sa.Delete<instrument_status>(ObjectToBeDeleted);
 
-                    }// end using
-                } //end using
-
-                //Return object to verify persisitance
-                return new OperationResult.OK { };
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+                return new OperationResult.OK { Description = this.MessageString };
             }
-            catch
-            {
-                return new OperationResult.BadRequest();
-            }
+            catch (Exception ex)
+            { return HandleException(ex); }
         }//end HTTP.DELETE
         #endregion
-
-        #endregion
-        #region Helper Methods
-        private bool Exists(ObjectSet<INSTRUMENT_STATUS> entityRDS, ref INSTRUMENT_STATUS anEntity)
-        {
-            INSTRUMENT_STATUS existingEntity;
-            INSTRUMENT_STATUS thisEntity = anEntity;
-            //check if it exists
-            try
-            {
-
-                existingEntity = entityRDS.FirstOrDefault(e => e.INSTRUMENT_ID == thisEntity.INSTRUMENT_ID &&
-                                                               e.STATUS_TYPE_ID == thisEntity.STATUS_TYPE_ID &&
-                                                              (DateTime.Equals(e.TIME_STAMP.Value, thisEntity.TIME_STAMP.Value) || !thisEntity.TIME_STAMP.HasValue) &&
-                                                              (!thisEntity.MEMBER_ID.HasValue || e.MEMBER_ID == thisEntity.MEMBER_ID || thisEntity.MEMBER_ID <= 0) &&
-                                                              (string.Equals(e.NOTES.ToUpper(), thisEntity.NOTES.ToUpper()) || string.IsNullOrEmpty(thisEntity.NOTES)) &&
-                                                               (string.Equals(e.TIME_ZONE.ToUpper(), thisEntity.TIME_ZONE.ToUpper()) || string.IsNullOrEmpty(thisEntity.TIME_ZONE)) &&
-                                                               thisEntity.SENSOR_ELEVATION == thisEntity.SENSOR_ELEVATION &&
-                                                               thisEntity.WS_ELEVATION == thisEntity.WS_ELEVATION &&
-                                                               thisEntity.GS_ELEVATION == thisEntity.GS_ELEVATION &&
-                                                               thisEntity.VDATUM_ID == thisEntity.VDATUM_ID);
-
-
-                if (existingEntity == null)
-                    return false;
-
-                //if exists then update ref contact
-                anEntity = existingEntity;
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        #endregion
-
     }//end class InstrumentStatusHandler
 }//end namespace
