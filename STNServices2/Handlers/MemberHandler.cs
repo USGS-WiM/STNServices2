@@ -425,6 +425,7 @@ namespace STNServices2.Handlers
                             ObjectToBeUpdated.salt = Cryptography.CreateSalt();
                             ObjectToBeUpdated.password = Cryptography.GenerateSHA256Hash(Encoding.UTF8
                                 .GetString(Convert.FromBase64String(anEntity.password)), ObjectToBeUpdated.salt);
+                            ObjectToBeUpdated.resetFlag = null;
                             sm(MessageType.info, "Password updated.");
                         }
 
