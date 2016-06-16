@@ -315,7 +315,7 @@ namespace STNServices2
            .And.AtUri(instrumentsResource+"/{instrumentId}/"+datafileResource).Named("GetInstrumentDataFiles")
            .And.AtUri(peakSummaryResource+"/{peakSummaryId}/" + datafileResource).Named("GetPeakSummaryDatafiles")
            .And.AtUri(approvalResource+"/{ApprovalId}/" + datafileResource).Named("GetApprovedDataFiles")
-           .And.AtUri(datafileResource+"/?IsApproved={approved}&Event={eventId}&Processor={memberId}&State={state}").Named("GetFilteredDataFiles")
+           .And.AtUri(datafileResource+"?IsApproved={approved}&Event={eventId}&Processor={memberId}&State={state}").Named("GetFilteredDataFiles")
            .HandledBy<DataFileHandler>()
            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")

@@ -383,7 +383,7 @@ namespace STNServices2.Handlers
 
         //returns completed reports that were done on this date, event, state
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredReports")]
-        public OperationResult GetFilteredReports( string aDate, [Optional] int eventId, [Optional] string stateNames)
+        public OperationResult GetFilteredReports( string aDate, [Optional] string eventId, [Optional] string stateNames)
         {
             List<reporting_metrics> ReportList = null;
             IQueryable<reporting_metrics> query = null;
@@ -397,12 +397,12 @@ namespace STNServices2.Handlers
                 List<string> states = new List<string>();
                 char[] delimiter = { ',' };
                 //stateNames will be a list that is comma separated. Need to parse out
-                if (stateNames != string.Empty)
+                if (!string.IsNullOrEmpty(stateNames))
                 {
                     states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
 
-                Int32 eventID = eventId > 0 ? eventId : -1;
+                Int32 eventID = !string.IsNullOrEmpty(eventId) ? Convert.ToInt32(eventId) : -1;
                                 
                 using (STNAgent sa = new STNAgent())
                 {
