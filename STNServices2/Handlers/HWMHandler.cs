@@ -47,7 +47,7 @@ namespace STNServices2.Handlers
     {
         #region GetMethods
 
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName="GetAllHWMs")]
         public OperationResult Get()
         {
             List<hwm> entities = null;
