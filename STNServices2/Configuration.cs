@@ -550,7 +550,7 @@ namespace STNServices2
         private void AddHWM_Resources()
         {           
             ResourceSpace.Has.ResourcesOfType<List<hwm>>()
-            .AtUri(hwmResource)
+            .AtUri(hwmResource).Named("GetAllHWMs")
             .And.AtUri(eventsResource+"/{eventId}/"+hwmResource).Named("GetEventHWMs")
             .And.AtUri(siteResource+"/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
             .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
