@@ -154,11 +154,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-        public string GetConType(reportmetric_contact c)
-        {
-            string h = "test";
-            return h;
-        }
+        
         // not finding this in config file anywhere .. even previous version
         //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         //[HttpOperation(HttpMethod.GET, ForUriName = "GetContactTypeContact")]

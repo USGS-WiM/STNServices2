@@ -201,7 +201,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredEvents")]
-        public OperationResult GetFilteredEvents([Optional]string date, [Optional]Int32 eventTypeId, [Optional] string stateName)
+        public OperationResult GetFilteredEvents([Optional]string date, [Optional]string eventTypeId, [Optional] string stateName)
         {
             IQueryable<events> query;
             List<events> entities = new List<events>();
@@ -214,10 +214,12 @@ namespace STNServices2.Handlers
                     query = sa.Select<events>().Include("instruments.site").Include("hwms.site");
 
                     if (fromDate.HasValue)  
-                        query = query.Where(s => s.event_start_date >= fromDate);                    
-                    if (eventTypeId > 0) 
-                        query = query.Where(s => s.event_type_id == eventTypeId);
-                    
+                        query = query.Where(s => s.event_start_date >= fromDate);
+                    if (!string.IsNullOrEmpty(eventTypeId) && Convert.ToInt32(eventTypeId) > 0)
+                    {
+                        Int32 eventTypdID = Convert.ToInt32(eventTypeId);
+                        query = query.Where(s => s.event_type_id == eventTypdID);
+                    }
                     if (!string.IsNullOrEmpty(stateName))
                     {
                         query = query.Where(e => e.instruments.Any(i => i.site.state == stateName));
