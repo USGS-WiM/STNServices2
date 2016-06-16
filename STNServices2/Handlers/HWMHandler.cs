@@ -152,7 +152,7 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovalHWMs")]
-        public OperationResult GetApprovalHWMs(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
+        public OperationResult GetApprovalHWMs(string approved, [Optional] string eventId, [Optional] string memberId, [Optional] string state)
         {
             try
             {
@@ -162,8 +162,8 @@ namespace STNServices2.Handlers
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-                Int32 filterMember = (memberId > 0) ? memberId : -1;
-                Int32 filterEvent = (eventId > 0) ? eventId : -1;
+                Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+                Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
                 using (STNAgent sa = new STNAgent())
                 {
@@ -472,7 +472,7 @@ namespace STNServices2.Handlers
 
 
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
-        public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, Int32 eventStatusID,
+        public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID,
                                                       [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
                                                       [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
         {
@@ -503,9 +503,14 @@ namespace STNServices2.Handlers
                     if (eventTypeList != null && eventTypeList.Count > 0)
                         query = query.Where(i => i.@event.event_type_id.HasValue && eventTypeList.Contains(i.@event.event_type_id.Value));
 
-                    if (eventStatusID > 0)
-                        query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == eventStatusID);
-
+                    if (!string.IsNullOrEmpty(eventStatusID))
+                    {
+                        if (Convert.ToInt32(eventStatusID) > 0)
+                        {
+                            Int32 eveStatId = Convert.ToInt32(eventStatusID);
+                            query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == eveStatId);
+                        }
+                    }
                     if (stateList != null && stateList.Count > 0)
                         query = query.Where(i => stateList.Contains(i.site.state));
 
@@ -543,28 +548,28 @@ namespace STNServices2.Handlers
                              waterbody = hw.waterbody,
                              site_id = hw.site_id,
                              event_id = hw.event_id,
-                             eventName = hw.event_id.HasValue ? hw.@event.event_name : "",
+                             eventName = hw.@event != null ? hw.@event.event_name : "",
                              hwm_type_id = hw.hwm_type_id,
-                             hwmTypeName = hw.hwm_types != null ? hw.hwm_types.hwm_type : "",
+                             hwmTypeName = hw.hwm_type_id > 0 && hw.hwm_types != null ? hw.hwm_types.hwm_type : "",
                              hwm_quality_id = hw.hwm_quality_id,
-                             hwmQualityName = hw.hwm_qualities != null ? hw.hwm_qualities.hwm_quality : "",
+                             hwmQualityName = hw.hwm_quality_id > 0 && hw.hwm_qualities != null ? hw.hwm_qualities.hwm_quality : "",
                              hwm_locationdescription = hw.hwm_locationdescription,
                              latitude_dd = hw.latitude_dd,
                              longitude_dd = hw.longitude_dd,
                              elev_ft = hw.elev_ft,
                              vdatum_id = hw.vdatum_id,
-                             verticalDatumName = hw.vertical_datums != null ? hw.vertical_datums.datum_name : "",
+                             verticalDatumName = hw.vdatum_id > 0 && hw.vertical_datums != null ? hw.vertical_datums.datum_name : "",
                              hdatum_id = hw.hdatum_id,
-                             horizontalDatumName = hw.horizontal_datums != null ? hw.horizontal_datums.datum_name : "",
+                             horizontalDatumName = hw.hdatum_id > 0 && hw.horizontal_datums != null ? hw.horizontal_datums.datum_name : "",
                              vcollect_method_id = hw.vcollect_method_id,
-                             verticalMethodName = hw.vertical_collect_methods != null ? hw.vertical_collect_methods.vcollect_method : "",
+                             verticalMethodName = hw.vcollect_method_id > 0 && hw.vertical_collect_methods != null ? hw.vertical_collect_methods.vcollect_method : "",
                              hcollect_method_id = hw.hcollect_method_id,
-                             horizontalMethodName = hw.horizontal_collect_methods != null ? hw.horizontal_collect_methods.hcollect_method : "",
+                             horizontalMethodName = hw.hcollect_method_id > 0 && hw.horizontal_collect_methods != null ? hw.horizontal_collect_methods.hcollect_method : "",
                              bank = hw.bank,
                              approval_id = hw.approval_id,
-                             approvalMember = hw.approval != null ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
+                             approvalMember = hw.approval_id > 0 && hw.approval != null ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
                              marker_id = hw.marker_id,
-                             markerName = hw.marker != null ? hw.marker.marker1 : "",
+                             markerName = hw.marker_id > 0 && hw.marker != null ? hw.marker.marker1 : "",
                              height_above_gnd = hw.height_above_gnd,
                              hwm_notes = hw.hwm_notes,
                              hwm_environment = hw.hwm_environment,
@@ -572,19 +577,19 @@ namespace STNServices2.Handlers
                              survey_date = hw.survey_date,
                              stillwater = hw.stillwater,
                              flag_member_id = hw.flag_member_id,
-                             flagMemberName = hw.flag_member != null ? hw.flag_member.fname + " " + hw.flag_member.lname : "",
+                             flagMemberName = hw.flag_member_id > 0 && hw.flag_member != null ? hw.flag_member.fname + " " + hw.flag_member.lname : "",
                              survey_member_id = hw.survey_member_id,
-                             surveyMemberName = hw.survey_member != null ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
+                             surveyMemberName = hw.survey_member_id > 0 && hw.survey_member != null ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
                              peak_summary_id = hw.peak_summary_id,
-                             site_no = hw.site.site_no,
-                             siteDescription = hw.site.site_description,
-                             networkNames = hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
-                             stateName = hw.site.state,
-                             countyName = hw.site.county,
-                             sitePriorityName = hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
-                             siteZone = hw.site.zone,
-                             sitePermHousing = hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
-                             siteNotes = hw.site.site_notes
+                             site_no = hw.site != null ? hw.site.site_no : "",
+                             siteDescription = hw.site != null ? hw.site.site_description : "",
+                             networkNames = hw.site != null && hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
+                             stateName = hw.site != null ? hw.site.state:"",
+                             countyName = hw.site != null ? hw.site.county:"",
+                             sitePriorityName = hw.site != null && hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
+                             siteZone = hw.site != null ? hw.site.zone:"",
+                             sitePermHousing = hw.site != null && hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
+                             siteNotes = hw.site != null ?hw.site.site_notes:""
                         }).ToList<hwm>();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);

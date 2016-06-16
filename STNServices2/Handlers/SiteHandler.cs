@@ -386,8 +386,8 @@ namespace STNServices2.Handlers
         }//end httpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredSites")]
-        public OperationResult GetFilteredSites([Optional] Int32 eventId, [Optional] string stateNames, [Optional] Int32 sensorTypeId, [Optional] Int32 opDefined, [Optional] Int32 networkNameId, 
-                                                    [Optional] Int32 hwmOnlySites, [Optional] Int32 sensorOnlySites, [Optional] Int32 rdgOnlySites)
+        public OperationResult GetFilteredSites([Optional] string eventId, [Optional] string stateNames, [Optional] string sensorTypeId, [Optional] string opDefined, [Optional] string networkNameId, 
+                                                    [Optional] string hwmOnlySites, [Optional] string sensorOnlySites, [Optional] string rdgOnlySites)
         {
             try
             {
@@ -401,13 +401,13 @@ namespace STNServices2.Handlers
                     states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
 
-                Int32 filterEvent = (eventId > 0) ? eventId : -1;
-                Int32 filterSensorType = (sensorTypeId > 0) ? sensorTypeId : -1;
-                Int32 filternetworkname = (networkNameId > 0) ? networkNameId : -1;
-                Boolean OPhasBeenDefined = opDefined > 0 ? true : false;
-                Boolean hwmOnly = hwmOnlySites > 0 ? true : false;
-                Boolean sensorOnly = sensorOnlySites > 0 ? true : false;
-                Boolean rdgOnly = rdgOnlySites > 0 ? true : false;
+                Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
+                Int32 filterSensorType = (!string.IsNullOrEmpty(sensorTypeId)) ? Convert.ToInt32(sensorTypeId) : -1;
+                Int32 filternetworkname = (!string.IsNullOrEmpty(networkNameId)) ? Convert.ToInt32(networkNameId) : -1;
+                Boolean OPhasBeenDefined = (!string.IsNullOrEmpty(opDefined) && Convert.ToInt32(opDefined) > 0) ? true : false;
+                Boolean hwmOnly = (!string.IsNullOrEmpty(hwmOnlySites) && Convert.ToInt32(hwmOnlySites) > 0) ? true : false;
+                Boolean sensorOnly = (!string.IsNullOrEmpty(sensorOnlySites) && Convert.ToInt32(sensorOnlySites) > 0) ? true : false;
+                Boolean rdgOnly = (!string.IsNullOrEmpty(rdgOnlySites) && Convert.ToInt32(rdgOnlySites) > 0) ? true : false;
 
                 using (STNAgent sa = new STNAgent(true))
                 {

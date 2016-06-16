@@ -299,7 +299,7 @@ namespace STNServices2.Handlers
         #endregion sensorViews response
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredInstruments")]
-        public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] Int32 eventStatusID, [Optional] string states, [Optional] string counties, 
+        public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID, [Optional] string states, [Optional] string counties, 
                                                         [Optional] string statusIDs, [Optional] string collectionConditionIDs, [Optional] string deploymentTypeIDs)
         {
             List<instrument> entities = null;
@@ -328,9 +328,13 @@ namespace STNServices2.Handlers
                     if (eventTypeList != null && eventTypeList.Count > 0)
                         query = query.Where(i => i.@event.event_type_id.HasValue && eventTypeList.Contains(i.@event.event_type_id.Value));
 
-                    if (eventStatusID > 0)
-                        query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == eventStatusID);
-
+                    if (!string.IsNullOrEmpty(eventStatusID))
+                    {
+                        if (Convert.ToInt32(eventStatusID) > 0){
+                            Int32 evStatID = Convert.ToInt32(eventStatusID);
+                            query = query.Where(i => i.@event.event_status_id.HasValue && i.@event.event_status_id.Value == evStatID);
+                        }
+                    }
                     if (stateList != null && stateList.Count > 0)
                         query = query.Where(i => stateList.Contains(i.site.state));
 
