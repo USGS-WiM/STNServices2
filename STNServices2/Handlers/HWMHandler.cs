@@ -47,7 +47,7 @@ namespace STNServices2.Handlers
     {
         #region GetMethods
 
-        [HttpOperation(HttpMethod.GET)]
+        [HttpOperation(HttpMethod.GET, ForUriName="GetAllHWMs")]
         public OperationResult Get()
         {
             List<hwm> entities = null;
@@ -545,7 +545,7 @@ namespace STNServices2.Handlers
                         hw => new HWMDownloadable 
                         {
                              hwm_id = hw.hwm_id,
-                             waterbody = hw.waterbody,
+                             waterbody =getTest("id"),// hw.waterbody,
                              site_id = hw.site_id,
                              event_id = hw.event_id,
                              eventName = hw.@event != null ? hw.@event.event_name : "",
@@ -586,7 +586,7 @@ namespace STNServices2.Handlers
                              networkNames = hw.site != null && hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
                              stateName = hw.site != null ? hw.site.state:"",
                              countyName = hw.site != null ? hw.site.county:"",
-                             sitePriorityName = hw.site != null && hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
+                             sitePriorityName = hw.site != null && hw.site.priority_id > 0 && hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
                              siteZone = hw.site != null ? hw.site.zone:"",
                              sitePermHousing = hw.site != null && hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
                              siteNotes = hw.site != null ?hw.site.site_notes:""
