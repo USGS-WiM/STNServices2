@@ -392,7 +392,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
+                using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<file>().Include("hwm.site").Include("instrument.site").Include("data_file.instrument.site").Where(
                                     f => string.Equals(f.hwm.site.state, stateName, StringComparison.OrdinalIgnoreCase) ||
