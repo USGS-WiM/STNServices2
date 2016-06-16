@@ -228,7 +228,7 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredPeaks")]
-        public OperationResult FilteredPeaks([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] Int32 eventStatusID,
+        public OperationResult FilteredPeaks([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID,
                                                 [Optional] string states, [Optional] string counties, [Optional] string startDate, [Optional] string endDate)
         {
             List<peak_summary> entities = null;
@@ -258,8 +258,14 @@ namespace STNServices2.Handlers
                     if (eventTypeList != null && eventTypeList.Count > 0)
                         query = query.Where(ps => (ps.hwms.Any(hwm => eventTypeList.Contains(hwm.@event.event_type_id.Value)) || (ps.data_file.Any(d => eventTypeList.Contains(d.instrument.@event.event_type_id.Value)))));
 
-                    if (eventStatusID > 0)
-                        query = query.Where(ps => (ps.hwms.Any(hwm => hwm.@event.event_status_id.Value == eventStatusID)) || (ps.data_file.Any(d => d.instrument.@event.event_status_id.Value == eventStatusID)));
+                    if (!string.IsNullOrEmpty(eventStatusID))
+                    {
+                        if (Convert.ToInt32(eventStatusID) > 0)
+                        {
+                            Int32 evStatID = Convert.ToInt32(eventStatusID);
+                            query = query.Where(ps => (ps.hwms.Any(hwm => hwm.@event.event_status_id.Value == evStatID)) || (ps.data_file.Any(d => d.instrument.@event.event_status_id.Value == evStatID)));
+                        }
+                    }
 
                     if (stateList != null && stateList.Count > 0)
                         query = query.Where(ps => (ps.hwms.Any(hwm => stateList.Contains(hwm.site.state)) || (ps.data_file.Any(d => stateList.Contains(d.instrument.site.state)))));

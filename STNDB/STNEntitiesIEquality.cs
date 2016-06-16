@@ -753,18 +753,18 @@ namespace STNDB
             return (this.member_id == other.member_id) && !other.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
                 (other.is_peak_estimated <= 0 || this.is_peak_estimated == other.is_peak_estimated || other.is_peak_estimated <= 0 ) &&
                 (other.is_peak_time_estimated <= 0 || this.is_peak_time_estimated == other.is_peak_time_estimated || other.is_peak_time_estimated <= 0) &&
-                (other.peak_stage.Value <= 0 || this.peak_stage.Value == other.peak_stage.Value || other.peak_stage.Value <= 0) &&
+                (!other.peak_stage.HasValue || this.peak_stage == other.peak_stage || other.peak_stage <= 0) &&
                 (other.is_peak_stage_estimated <= 0 || this.is_peak_stage_estimated == other.is_peak_stage_estimated || other.is_peak_stage_estimated <= 0) &&
-                (!other.peak_discharge.HasValue || this.peak_discharge.Value == other.peak_discharge.Value || other.peak_discharge.Value <= 0) &&
+                (!other.peak_discharge.HasValue || this.peak_discharge == other.peak_discharge || other.peak_discharge <= 0) &&
                 (other.is_peak_discharge_estimated <= 0 || this.is_peak_discharge_estimated == other.is_peak_discharge_estimated || (other.is_peak_discharge_estimated <= 0)) &&
-                (!other.vdatum_id.HasValue || this.vdatum_id.Value == other.vdatum_id.Value || other.vdatum_id.Value <= 0) &&
-                (other.height_above_gnd.Value <= 0 || this.height_above_gnd.Value == other.height_above_gnd.Value || other.height_above_gnd.Value <= 0) &&
-                (other.is_hag_estimated.Value  <= 0 || this.is_hag_estimated.Value == other.is_hag_estimated.Value || other.is_hag_estimated.Value <= 0) &&
+                (!other.vdatum_id.HasValue || this.vdatum_id == other.vdatum_id || other.vdatum_id <= 0) &&
+                (!other.height_above_gnd.HasValue || this.height_above_gnd == other.height_above_gnd || other.height_above_gnd <= 0) &&
+                (!other.is_hag_estimated.HasValue || this.is_hag_estimated == other.is_hag_estimated || other.is_hag_estimated <= 0) &&
                 (!string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone)) &&
-                (!other.aep.HasValue|| this.aep.Value == other.aep.Value || other.aep.Value <= 0) &&
-                (!other.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci.Value || other.aep_lowci.Value <= 0) &&
-                (!other.aep_upperci.HasValue || this.aep_upperci.Value == other.aep_upperci.Value || other.aep_upperci.Value <= 0) &&
-                (!other.aep_range.HasValue || this.aep_range.Value == other.aep_range.Value || other.aep_range.Value <= 0) &&
+                (!other.aep.HasValue|| this.aep == other.aep || other.aep <= 0) &&
+                (!other.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci || other.aep_lowci <= 0) &&
+                (!other.aep_upperci.HasValue || this.aep_upperci == other.aep_upperci || other.aep_upperci <= 0) &&
+                (!other.aep_range.HasValue || this.aep_range == other.aep_range || other.aep_range <= 0) &&
                 (string.Equals(this.calc_notes, other.calc_notes, StringComparison.OrdinalIgnoreCase));
         }
 
