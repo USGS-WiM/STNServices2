@@ -161,7 +161,7 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredDataFiles")]
-        public OperationResult GetFilteredDataFiles(string approved, [Optional] Int32 eventId, [Optional] Int32 memberId, [Optional] string state)
+        public OperationResult GetFilteredDataFiles(string approved, [Optional] string eventId, [Optional] string memberId, [Optional] string state)
         {
             List<data_file> entities;
             try
@@ -172,8 +172,8 @@ namespace STNServices2.Handlers
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-                Int32 filterMember = (memberId > 0) ? memberId : -1;
-                Int32 filterEvent = (eventId > 0) ? eventId : -1;
+                Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+                Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
                 using (STNAgent sa = new STNAgent(true))
                 {
