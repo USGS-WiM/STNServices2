@@ -219,7 +219,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddAGENCY_Resources
+        }//end AddAGENCY_Resources (1)
         private void AddAPPROVAL_Resources()
         {
             //ApprovalTable
@@ -244,7 +244,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddAPPROVAL_Resources
+        }//end AddAPPROVAL_Resources(2)
         private void AddCONTACT_Resources()
         {
             //GET
@@ -266,7 +266,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddCONTACT_Resources     
+        }//end AddCONTACT_Resources    (3) 
         private void AddCONTACT_TYPE_Resources()
         {
             //GET
@@ -285,7 +285,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddCONTACT_TYPE_Resources
+        }//end AddCONTACT_TYPE_Resources (4)
         private void AddCOUNTIES_Resources()
         {
             //GET
@@ -306,7 +306,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddCOUNTIES_Resources
+        }//end AddCOUNTIES_Resources (5)
         private void AddDATA_FILE_Resources()
         {
             //DATA_FILE Table
@@ -329,7 +329,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddDATA_FILE_Resources
+        }//end AddDATA_FILE_Resources (6)
         private void AddDEPLOYMENT_PRIORITY_Resources()
         {
             //GET
@@ -348,7 +348,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddDEPLOYMENT_PRIORITY_Resources
+        }//end AddDEPLOYMENT_PRIORITY_Resources (7)
         private void AddDEPLOYMENT_TYPE_Resources()
         {           
             ResourceSpace.Has.ResourcesOfType<List<deployment_type>>()
@@ -369,7 +369,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddDEPLOYMENT_TYPE_Resources
+        }//end AddDEPLOYMENT_TYPE_Resources (8)
         private void AddEVENT_Resources()
         {
             //GET
@@ -393,7 +393,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddEVENT_Resources
+        }//end AddEVENT_Resources (9)
         private void AddEVENT_STATUS_Resources()
         {
             //GET
@@ -412,7 +412,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddEvent_Status_Resources
+        }//end AddEvent_Status_Resources (10)
         private void AddEVENT_TYPE_Resources()
         {
             //GET
@@ -431,7 +431,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddEVENT_TYPE_Resources
+        }//end AddEVENT_TYPE_Resources (11)
         private void AddFILE_Resources()
         {
             //******NOTE******
@@ -470,7 +470,7 @@ namespace STNServices2
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
             .And.AtUri(eventsResource+"/{eventId}/EventFileItems").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
-        }//end AddFILE_Resources
+        }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
         {
             //GET
@@ -489,7 +489,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddFILE_TYPE_Resources
+        }//end AddFILE_TYPE_Resources (13)
         private void AddHORIZONTAL_COLLECT_METHODS_Resources()
         {
             //GET
@@ -508,7 +508,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddHORIZONTAL_COLLECT_METHODS_Resources
+        }//end AddHORIZONTAL_COLLECT_METHODS_Resources (14)
         private void AddHORIZONTAL_DATUM_Resources()
         {
             //GET
@@ -527,7 +527,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddHORIZONTAL_DATUM_Resources
+        }//end AddHORIZONTAL_DATUM_Resources (15)
         private void AddHOUSING_TYPE_Resources()
         {
             //GET
@@ -546,7 +546,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddHOUSING_TYPE_Resources
+        }//end AddHOUSING_TYPE_Resources (16)
         private void AddHWM_Resources()
         {           
             ResourceSpace.Has.ResourcesOfType<List<hwm>>()
@@ -582,7 +582,7 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
-        }//end AddHWM_Resources
+        }//end AddHWM_Resources (17)
         private void AddHWM_QUALITY_Resources()
          {
              //GET
@@ -601,7 +601,7 @@ namespace STNServices2
              .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
              .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-         }//end AddHWM_QUALITY_Resources
+         }//end AddHWM_QUALITY_Resources (18)
         private void AddHWM_TYPE_Resources()
          {
              //GET
@@ -620,7 +620,7 @@ namespace STNServices2
              .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
              .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-         }//end AddHWM_TYPE_Resources
+         }//end AddHWM_TYPE_Resources (19)
         private void AddINSTR_COLLECTION_CONDITIONS_Resources()
         {
             ResourceSpace.Has.ResourcesOfType<List<instr_collection_conditions>>()
@@ -637,7 +637,7 @@ namespace STNServices2
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-        }//end INSTR_COLLECTION_CONDITIONS_Resources
+        }//end INSTR_COLLECTION_CONDITIONS_Resources (20)
         private void AddINSTRUMENT_Resources()
         {           
             ResourceSpace.Has.ResourcesOfType<FullInstrument>()                
@@ -687,7 +687,7 @@ namespace STNServices2
             //    .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             //.And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddINSTRUMENT_Resources
+        }//end AddINSTRUMENT_Resources (21)
         private void AddINSTRUMENT_STATUS_Resources()
         {
             //InstrumentStatus
@@ -707,7 +707,7 @@ namespace STNServices2
                 .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
                 .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddINSTRUMENT_STATUS_Resources
+        }//end AddINSTRUMENT_STATUS_Resources (22)
         private void AddLANDOWNER_CONTACT_Resources()
         {
             //GET
@@ -726,7 +726,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddLANDOWNER_CONTACT_Resources
+        }//end AddLANDOWNER_CONTACT_Resources (23)
         private void AddMARKER_Resources()
         {
             //GET
@@ -745,7 +745,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddMARKER_Resources
+        }//end AddMARKER_Resources (24)
         private void AddMEMBER_Resources()
         {
             //GET
@@ -775,7 +775,7 @@ namespace STNServices2
             .HandledBy<MemberHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
-        }//end AddMEMBER_Resources
+        }//end AddMEMBER_Resources (25)
         private void AddNETWORK_NAME_Resources()
         {
             //InstrumentStatus
@@ -795,7 +795,7 @@ namespace STNServices2
                 .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
                 .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-        }//end AddNETWORK_TYPE_Resources
+        }//end AddNETWORK_TYPE_Resources (26)
         private void AddNETWORK_TYPE_Resources()
         {
             //NetworkType
@@ -815,7 +815,7 @@ namespace STNServices2
                 .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
                 .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-        }//end AddNETWORK_TYPE_Resources
+        }//end AddNETWORK_TYPE_Resources (27)
         private void AddOBJECTIVE_POINT_Resources()
         {
             //GET
@@ -839,7 +839,7 @@ namespace STNServices2
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
 
-        }//end AddOBJECTIVE_POINT_Resources
+        }//end AddOBJECTIVE_POINT_Resources (28)
         private void AddOBJECTIVE_POINT_TYPE_Resources()
         {
             //GET
@@ -858,7 +858,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddOBJECTIVE_POINT_TYPE_Resources
+        }//end AddOBJECTIVE_POINT_TYPE_Resources (29)
         private void AddOP_CONTROL_IDENTIFIER_Resources()
         {
             ResourceSpace.Has.ResourcesOfType<List<op_control_identifier>>()
@@ -876,7 +876,7 @@ namespace STNServices2
                 .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//End AddOP_CONTROL_IDENTIFIER_Resources()
+        }//End AddOP_CONTROL_IDENTIFIER_Resources() (30)
         private void AddOP_MEASUREMENTS_Resources()
         {
             ResourceSpace.Has.ResourcesOfType<List<op_measurements>>()
@@ -895,7 +895,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//End AddOP_MEASUREMENTS_Resources()
+        }//End AddOP_MEASUREMENTS_Resources() (31)
         private void AddOP_QUALTITY_Resources()
         {
             //GET ObjectivePointQualities
@@ -914,7 +914,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddOP_QUALITY_Resources
+        }//end AddOP_QUALITY_Resources (32)
         private void AddPEAK_SUMMARY_Resources()
         {
             //GET
@@ -944,7 +944,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddPEAK_SUMMARY_Resources
+        }//end AddPEAK_SUMMARY_Resources (33)
         private void AddREPORTING_METRICS_Resources()
         {            
             ResourceSpace.Has.ResourcesOfType<ReportResource>()
@@ -981,7 +981,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
             
-        } //end AddREPORTING_METRICS_Resources
+        } //end AddREPORTING_METRICS_Resources (34)
         private void AddROLE_Resources()
         {
             //GET
@@ -1000,7 +1000,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddROLE_TYPE_Resources
+        }//end AddROLE_TYPE_Resources (35)
         private void AddSENSOR_BRAND_Resourses()
         {
             ResourceSpace.Has.ResourcesOfType<List<sensor_brand>>()
@@ -1017,7 +1017,7 @@ namespace STNServices2
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
-        }
+        } //(36)
         private void AddSENSOR_TYPE_Resources()
         {
             //GET
@@ -1038,7 +1038,7 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
 
-        }//end AddSENSOR_TYPE_Resources
+        }//end AddSENSOR_TYPE_Resources (37)
         private void AddSITE_Resources()
         {            
             //GET
@@ -1081,7 +1081,7 @@ namespace STNServices2
            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
             
            
-        }//end AddSITE_Resources                 
+        }//end AddSITE_Resources                  (38)
         private void AddSITE_HOUSING_Resources()
         {
             ResourceSpace.Has.ResourcesOfType<List<site_housing>>()
@@ -1099,7 +1099,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//End AddSITE_HOUSING_Resources()
+        }//End AddSITE_HOUSING_Resources() (39)
         private void AddSOURCE_Resources()
         {
             //GET
@@ -1124,7 +1124,7 @@ namespace STNServices2
             .HandledBy<SourceHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
-        }//end AddSOURCE_Resources        
+        }//end AddSOURCE_Resources         (40)
         private void AddSTATE_Resources()
         {
             //GET
@@ -1143,7 +1143,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddSTATE_Resources
+        }//end AddSTATE_Resources (41)
         private void AddSTATUS_TYPE_Resources()
         {
             //GET
@@ -1162,7 +1162,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddSTATUS_TYPE_Resources
+        }//end AddSTATUS_TYPE_Resources (42)
         private void AddVERTICAL_COLLECTION_METHOD_Resources()
         {
             //GET
@@ -1181,7 +1181,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddVERTICAL_COLLECTION_METHOD_Resources
+        }//end AddVERTICAL_COLLECTION_METHOD_Resources (43)
         private void AddVERTICAL_DATUM_Resources()
         {
             //GET
@@ -1201,7 +1201,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
-        }//end AddVERTICAL_DATUM_Resources
+        }//end AddVERTICAL_DATUM_Resources (44)
 
         #endregion
 
