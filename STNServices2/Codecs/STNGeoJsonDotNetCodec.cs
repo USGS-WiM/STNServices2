@@ -61,7 +61,8 @@ namespace STNServices2.Codecs.json
             {
                 if (entity == null)
                     return;
-                if (entity.GetType().GetGenericTypeDefinition() == typeof(List<>) && extraTypes.Contains(entity.GetType().GetGenericArguments()[0]))
+                
+                if (entity.GetType().IsGenericType && entity.GetType().GetGenericTypeDefinition() == typeof(List<>) && extraTypes.Contains(entity.GetType().GetGenericArguments()[0]))
                 {
                     fc = new FeatureCollection(4326);
                     IEnumerable collection = entity as IEnumerable;
@@ -73,12 +74,12 @@ namespace STNServices2.Codecs.json
                         fc.addFeature(new Feature(item, longit,lat));
                         entity = fc;
                     }//next
-                }else if(extraTypes.Contains(entity.GetType())){
+                }else if (extraTypes.Contains(entity.GetType())){
                     fc = new FeatureCollection(4326);
-                    lat = -99;
-                    longit = -99;
+                    lat = Convert.ToDouble(entity.GetType().GetProperty("latitude_dd").GetValue(entity)); ;
+                    longit = Convert.ToDouble(entity.GetType().GetProperty("longitude_dd").GetValue(entity)); ;
 
-                    fc.addFeature(new Feature(entity,123,123));
+                    fc.addFeature(new Feature(entity, longit, lat));
                     entity = fc;
                 }//end if
 

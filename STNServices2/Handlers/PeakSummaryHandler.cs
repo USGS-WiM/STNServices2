@@ -105,7 +105,7 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent())
                 {
-                    if (Context.User.IsInRole(PublicRole))
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         // return only approved list
                         anEntity = sa.Select<hwm>().Include(i=>i.peak_summary).FirstOrDefault(i => i.hwm_id == hwmId && i.approval_id > 0).peak_summary;
@@ -135,7 +135,7 @@ namespace STNServices2.Handlers
 
                 using (STNAgent sa = new STNAgent(true))
                 {
-                    if (Context.User.IsInRole(PublicRole))
+                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         // return only approved list
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId && df.approval_id > 0).peak_summary;
