@@ -201,9 +201,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<approval>().FirstOrDefault(a => a.approval_id == ApprovalId).hwms.ToList();
+                    entities = sa.Select<approval>().Include(a=>a.hwms).FirstOrDefault(a => a.approval_id == ApprovalId).hwms.ToList();
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
 
