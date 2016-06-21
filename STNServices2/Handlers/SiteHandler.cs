@@ -404,8 +404,8 @@ namespace STNServices2.Handlers
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
                 Int32 filterSensorType = (!string.IsNullOrEmpty(sensorTypeId)) ? Convert.ToInt32(sensorTypeId) : -1;
                 Int32 filternetworkname = (!string.IsNullOrEmpty(networkNameId)) ? Convert.ToInt32(networkNameId) : -1;
-                Boolean OPhasBeenDefined = (!string.IsNullOrEmpty(opDefined) && Convert.ToInt32(opDefined) > 0) ? true : false;
-                Boolean hwmOnly = (!string.IsNullOrEmpty(hwmOnlySites) && Convert.ToInt32(hwmOnlySites) > 0) ? true : false;
+                Boolean OPhasBeenDefined = (!string.IsNullOrEmpty(opDefined) && Convert.ToInt32(opDefined) > 0) ? true : false;  
+                Boolean hwmOnly = (!string.IsNullOrEmpty(hwmOnlySites) && Convert.ToInt32(hwmOnlySites) > 0) ? true : false;  //this is the problem.. if false, it doesn't remove those with hwms
                 Boolean sensorOnly = (!string.IsNullOrEmpty(sensorOnlySites) && Convert.ToInt32(sensorOnlySites) > 0) ? true : false;
                 Boolean rdgOnly = (!string.IsNullOrEmpty(rdgOnlySites) && Convert.ToInt32(rdgOnlySites) > 0) ? true : false;
 
@@ -429,7 +429,7 @@ namespace STNServices2.Handlers
                         query = query.Where(r => r.state.Equals(thisState, StringComparison.OrdinalIgnoreCase));
                     }
                     if (OPhasBeenDefined)
-                        query = query.Where(s => s.objective_points.Any());
+                        query = query.Where(s => s.objective_points.Any());                    
 
                     if (filterSensorType > 0)
                         query = query.Where(s => s.instruments.Any(i => i != null && i.sensor_type_id == filterSensorType));
@@ -449,7 +449,7 @@ namespace STNServices2.Handlers
                     {
                         //Site with previous sensor deployment OR Sites with housing types 1-4 indicated //OR Sites with permanent housing installed 
                         //OR Site with proposed sensor indicated of any type
-                        query = query.Where(s => s.is_permanent_housing_installed == "Yes" || s.site_housing.Any(h => h.housing_type_id > 0 && h.housing_type_id < 5) || s.instruments.Any());
+                        query = query.Where(s => !s.hwms.Any() && (s.is_permanent_housing_installed == "Yes" || s.site_housing.Any(h => h.housing_type_id > 0 && h.housing_type_id < 5) || s.instruments.Any()));
                     }
 
                     if (rdgOnly)
