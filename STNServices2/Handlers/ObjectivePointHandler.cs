@@ -145,7 +145,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0)
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.latitude_dd < 0 || anEntity.longitude_dd > 0 || anEntity.vdatum_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -176,7 +176,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (entityId <= 0 || string.IsNullOrEmpty(anEntity.name) || string.IsNullOrEmpty(anEntity.description) || anEntity.op_type_id <= 0 ||
-                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.vdatum_id <= 0) 
+                    !anEntity.date_established.HasValue || anEntity.site_id <= 0 || anEntity.latitude_dd < 0 || anEntity.longitude_dd > 0 || anEntity.vdatum_id <= 0) 
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
