@@ -545,7 +545,7 @@ namespace STNServices2.Handlers
                         hw => new HWMDownloadable 
                         {
                              hwm_id = hw.hwm_id,
-                             waterbody =getTest("id"),// hw.waterbody,
+                             waterbody = hw.waterbody,
                              site_id = hw.site_id,
                              event_id = hw.event_id,
                              eventName = hw.@event != null ? hw.@event.event_name : "",
