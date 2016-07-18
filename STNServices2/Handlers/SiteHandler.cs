@@ -101,13 +101,13 @@ namespace STNServices2.Handlers
                     //only one will be provided
                     if (!string.IsNullOrEmpty(siteNo))
                     {
-                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_no.Equals(siteNo, StringComparison.OrdinalIgnoreCase));
+                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_no.ToUpper() == siteNo.ToUpper());
                         if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
                     if (!string.IsNullOrEmpty(siteName))
                     {
-                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_name.Equals(siteName, StringComparison.OrdinalIgnoreCase));
+                        anEntity = sa.Select<site>().SingleOrDefault(s => s.site_name.ToUpper() == siteName.ToUpper());
                         if (anEntity == null) throw new NotFoundRequestException(); 
                         sm(sa.Messages);
                     }
@@ -302,7 +302,7 @@ namespace STNServices2.Handlers
                 if (string.IsNullOrEmpty(stateAbbrev)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<site>().Where(s => s.state.Equals(stateAbbrev, StringComparison.OrdinalIgnoreCase)).ToList();
+                    entities = sa.Select<site>().Where(s => s.state.ToUpper() == stateAbbrev.ToUpper()).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }
@@ -570,16 +570,8 @@ namespace STNServices2.Handlers
                     {
                         anEntity.state = this.GetStateByName(anEntity.state).ToString();
                         
-                        //updatedSite = sa.Select<site>().SingleOrDefault(s => s.site_id == entityId);
-                        
-                        
-                        //update the site_no if it was changed during edit
-                        //if ((!string.Equals(anEntity.state, updatedSite.state, StringComparison.OrdinalIgnoreCase)) ||
-                        //    (!string.Equals(anEntity.county, updatedSite.county, StringComparison.OrdinalIgnoreCase)))
-                        //{
-                            anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
-                        //}
-                        
+                        anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
+                                                
                         anEntity = sa.Update<site>(entityId, anEntity);
                         sm(sa.Messages);                         
                     }//end using

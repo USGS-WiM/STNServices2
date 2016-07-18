@@ -395,9 +395,9 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent(true))
                 {
                     entities = sa.Select<file>().Include("hwm.site").Include("instrument.site").Include("data_file.instrument.site").Where(
-                                    f => string.Equals(f.hwm.site.state, stateName, StringComparison.OrdinalIgnoreCase) ||
-                                        string.Equals(f.instrument.site.state, stateName, StringComparison.OrdinalIgnoreCase) ||
-                                        string.Equals(f.data_file.instrument.site.state, stateName, StringComparison.OrdinalIgnoreCase)).ToList();
+                                    f => f.hwm.site.state.ToUpper() == stateName.ToUpper() || 
+                                        f.instrument.site.state.ToUpper() == stateName.ToUpper() || 
+                                        f.data_file.instrument.site.state.ToUpper() == stateName.ToUpper()).ToList();
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
