@@ -13,7 +13,6 @@ namespace STNServices2.Resources
     {
        public List<string> networkNames { get; set; }
        public recent_op RecentOP { get; set; }
-//       public string RecentOP { get; set; } 
        public List<string> Events { get; set; }
     }
 

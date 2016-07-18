@@ -597,7 +597,7 @@ namespace STNServices2.Handlers
         /// Force the user to provide authentication and authorization 
         /// 
         [STNRequiresRole(AdminRole)]
-        [HttpOperation(HttpMethod.DELETE, ForUriName = "DeleteSite")]
+        [HttpOperation(HttpMethod.DELETE)]
         public OperationResult Delete(Int32 entityId)
         {
             site anEntity = null;
@@ -614,7 +614,7 @@ namespace STNServices2.Handlers
 
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         //check and see if it has anything related (Can't delete if so)
-                        if (anEntity.objective_points != null || anEntity.files != null || anEntity.instruments != null || anEntity.hwms != null)
+                        if (anEntity.objective_points.Count > 0 || anEntity.files.Count > 0 || anEntity.instruments.Count > 0 || anEntity.hwms.Count > 0)
                         {
                             sm(MessageType.error, "Related Entities");
                             throw new BadRequestException("Please remove attached entities first.");
