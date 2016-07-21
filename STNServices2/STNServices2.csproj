@@ -128,7 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
-    <Compile Include="Codecs\testcodec.cs" />
     <Compile Include="Handlers\GeocoderHandler.cs" />
     <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
