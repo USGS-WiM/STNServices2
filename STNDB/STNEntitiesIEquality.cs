@@ -787,14 +787,10 @@ namespace STNDB
         {
             return (this.member_id == other.member_id && DateTime.Equals(this.report_date, other.report_date) && this.event_id == other.event_id && 
                 this.state == other.state && this.sw_fieldpers_notacct == other.sw_fieldpers_notacct && this.wq_fieldpers_notacct == other.wq_fieldpers_notacct && 
-                this.sw_yest_fieldpers == other.sw_yest_fieldpers && this.wq_yest_fieldpers == other.wq_yest_fieldpers && this.sw_tod_fieldpers == other.sw_tod_fieldpers &&
-                this.wq_tod_fieldpers == other.wq_tod_fieldpers && this.sw_tmw_fieldpers == other.sw_tmw_fieldpers && this.wq_tmw_fieldpers == other.wq_tmw_fieldpers &&
-                this.sw_yest_officepers == other.sw_yest_officepers && this.wq_yest_officepers == other.wq_yest_officepers && this.sw_tod_officepers == other.sw_tod_officepers &&
-                this.wq_tod_officepers == other.wq_tod_officepers && this.sw_tmw_officepers == other.sw_tmw_officepers && this.wq_tmw_officepers == other.wq_tmw_officepers &&
-                this.sw_autos_depl == other.sw_autos_depl && this.wq_autos_depl == other.wq_autos_depl && this.sw_boats_depl == other.sw_boats_depl && this.wq_boats_depl == other.wq_boats_depl &&
-                this.sw_other_depl == other.sw_other_depl && this.wq_other_depl == other.wq_other_depl && this.gage_visit == other.gage_visit && this.gage_down == other.gage_down && 
-                this.tot_discharge_meas == other.tot_discharge_meas && this.plan_discharge_meas == other.plan_discharge_meas && this.tot_check_meas == other.tot_check_meas && 
-                this.plan_check_meas == other.plan_check_meas && this.plan_indirect_meas == other.plan_indirect_meas && this.rating_extens == other.rating_extens && 
+                this.yest_fieldpers == other.yest_fieldpers && this.tod_fieldpers == other.tod_fieldpers && this.tmw_fieldpers == other.tmw_fieldpers &&
+                this.yest_officepers == other.yest_officepers && this.tod_officepers == other.tod_officepers && this.tmw_officepers == other.tmw_officepers &&
+                this.gage_visit == other.gage_visit && this.gage_down == other.gage_down && this.tot_discharge_meas == other.tot_discharge_meas && 
+                this.plan_discharge_meas == other.plan_discharge_meas && this.plan_indirect_meas == other.plan_indirect_meas && this.rating_extens == other.rating_extens && 
                 this.gage_peak_record == other.gage_peak_record && this.plan_rapdepl_gage == other.plan_rapdepl_gage && this.dep_rapdepl_gage == other.dep_rapdepl_gage && 
                 this.rec_rapdepl_gage == other.rec_rapdepl_gage && this.lost_rapdepl_gage == other.lost_rapdepl_gage && this.plan_wtrlev_sensor == other.plan_wtrlev_sensor && 
                 this.dep_wtrlev_sensor == other.dep_wtrlev_sensor && this.rec_wtrlev_sensor == other.rec_wtrlev_sensor && this.lost_wtrlev_sensor == other.lost_wtrlev_sensor && 
@@ -802,8 +798,7 @@ namespace STNDB
                 this.plan_barometric == other.plan_barometric && this.dep_barometric == other.dep_barometric && this.rec_barometric == other.rec_barometric && 
                 this.lost_barometric == other.lost_barometric && this.plan_meteorological == other.plan_meteorological && this.dep_meteorological == other.dep_meteorological && 
                 this.rec_meteorological == other.rec_meteorological && this.lost_meteorological == other.lost_meteorological && this.hwm_collected == other.hwm_collected && 
-                this.hwm_flagged == other.hwm_flagged && this.qw_gage_visit == other.qw_gage_visit && this.qw_cont_gagevisit == other.qw_cont_gagevisit && 
-                this.qw_gage_down == other.qw_gage_down && this.qw_discr_samples == other.qw_discr_samples && this.coll_sedsamples == other.coll_sedsamples && this.notes == other.notes); ;
+                this.hwm_flagged == other.hwm_flagged && this.qw_discr_samples == other.qw_discr_samples && this.coll_sedsamples == other.coll_sedsamples && this.notes == other.notes);
         }
 
         public override bool Equals(object obj)
