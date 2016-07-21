@@ -440,6 +440,9 @@
           <Property Name="lost_meteorological" Type="float8" Nullable="false" />
           <Property Name="hwm_flagged" Type="float8" Nullable="false" />
           <Property Name="hwm_collected" Type="float8" Nullable="false" />
+          <Property Name="qw_gage_visit" Type="float8" Nullable="false" />
+          <Property Name="qw_cont_gagevisit" Type="float8" Nullable="false" />
+          <Property Name="qw_gage_down" Type="float8" Nullable="false" />
           <Property Name="qw_discr_samples" Type="float8" Nullable="false" />
           <Property Name="coll_sedsamples" Type="float8" Nullable="false" />
           <Property Name="notes" Type="varchar" MaxLength="2000" />
@@ -1146,6 +1149,9 @@
           <Property Name="yest_officepers" Type="Double" />
           <Property Name="tod_officepers" Type="Double" />
           <Property Name="tmw_officepers" Type="Double" />
+          <Property Name="qw_gage_visit" Type="Double" Nullable="false" />
+          <Property Name="qw_cont_gagevisit" Type="Double" Nullable="false" />
+          <Property Name="qw_gage_down" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
@@ -2858,6 +2864,9 @@
           <EntitySetMapping Name="reporting_metrics">
             <EntityTypeMapping TypeName="STNNEWModel.reporting_metrics">
               <MappingFragment StoreEntitySet="reporting_metrics">
+                <ScalarProperty Name="qw_gage_down" ColumnName="qw_gage_down" />
+                <ScalarProperty Name="qw_cont_gagevisit" ColumnName="qw_cont_gagevisit" />
+                <ScalarProperty Name="qw_gage_visit" ColumnName="qw_gage_visit" />
                 <ScalarProperty Name="tmw_officepers" ColumnName="tmw_officepers" />
                 <ScalarProperty Name="tod_officepers" ColumnName="tod_officepers" />
                 <ScalarProperty Name="yest_officepers" ColumnName="yest_officepers" />
