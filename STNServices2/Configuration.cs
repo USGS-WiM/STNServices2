@@ -257,10 +257,11 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<contact>()
-            .AtUri(contactResource + "/{entityId}")
+                .AtUri(contactResource + "/{entityId}")
              .And.AtUri(contactResource + "?ReportMetric={reportMetricsId}&ContactType={contactTypeId}").Named("GetReportMetricContactsByType")
              .And.AtUri(contactResource + "/{contactId}/removeReportContact?ReportId={reportMetricsId}").Named("RemoveReportContact")
-             .And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={reportId}&ContactTypeId={contactTypeId}").Named("AddReportContact")
+             //.And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={reportId}&ContactTypeId={contactTypeId}").Named("AddReportContact")
+             .And.AtUri(reportMetricResource + "/{reportId}/addContactType/{contactTypeId}").Named("AddReportContact")
             .HandledBy<ContactHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
