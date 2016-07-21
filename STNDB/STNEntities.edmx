@@ -411,30 +411,10 @@
           <Property Name="state" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="sw_fieldpers_notacct" Type="float8" Nullable="false" />
           <Property Name="wq_fieldpers_notacct" Type="float8" Nullable="false" />
-          <Property Name="sw_yest_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="wq_yest_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="sw_tod_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="wq_tod_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="sw_tmw_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="wq_tmw_fieldpers" Type="float8" Nullable="false" />
-          <Property Name="sw_yest_officepers" Type="float8" Nullable="false" />
-          <Property Name="wq_yest_officepers" Type="float8" Nullable="false" />
-          <Property Name="sw_tod_officepers" Type="float8" Nullable="false" />
-          <Property Name="wq_tod_officepers" Type="float8" Nullable="false" />
-          <Property Name="sw_tmw_officepers" Type="float8" Nullable="false" />
-          <Property Name="wq_tmw_officepers" Type="float8" Nullable="false" />
-          <Property Name="sw_autos_depl" Type="float8" Nullable="false" />
-          <Property Name="wq_autos_depl" Type="float8" Nullable="false" />
-          <Property Name="sw_boats_depl" Type="float8" Nullable="false" />
-          <Property Name="wq_boats_depl" Type="float8" Nullable="false" />
-          <Property Name="sw_other_depl" Type="float8" Nullable="false" />
-          <Property Name="wq_other_depl" Type="float8" Nullable="false" />
           <Property Name="gage_visit" Type="float8" Nullable="false" />
           <Property Name="gage_down" Type="float8" Nullable="false" />
           <Property Name="tot_discharge_meas" Type="float8" Nullable="false" />
           <Property Name="plan_discharge_meas" Type="float8" Nullable="false" />
-          <Property Name="tot_check_meas" Type="float8" Nullable="false" />
-          <Property Name="plan_check_meas" Type="float8" Nullable="false" />
           <Property Name="plan_indirect_meas" Type="float8" Nullable="false" />
           <Property Name="rating_extens" Type="float8" Nullable="false" />
           <Property Name="gage_peak_record" Type="float8" Nullable="false" />
@@ -460,14 +440,17 @@
           <Property Name="lost_meteorological" Type="float8" Nullable="false" />
           <Property Name="hwm_flagged" Type="float8" Nullable="false" />
           <Property Name="hwm_collected" Type="float8" Nullable="false" />
-          <Property Name="qw_gage_visit" Type="float8" Nullable="false" />
-          <Property Name="qw_cont_gagevisit" Type="float8" Nullable="false" />
-          <Property Name="qw_gage_down" Type="float8" Nullable="false" />
           <Property Name="qw_discr_samples" Type="float8" Nullable="false" />
           <Property Name="coll_sedsamples" Type="float8" Nullable="false" />
           <Property Name="notes" Type="varchar" MaxLength="2000" />
           <Property Name="member_id" Type="float8" Nullable="false" />
           <Property Name="complete" Type="float8" />
+          <Property Name="yest_fieldpers" Type="float8" />
+          <Property Name="tod_fieldpers" Type="float8" />
+          <Property Name="tmw_fieldpers" Type="float8" />
+          <Property Name="yest_officepers" Type="float8" />
+          <Property Name="tod_officepers" Type="float8" />
+          <Property Name="tmw_officepers" Type="float8" />
         </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
@@ -1122,30 +1105,10 @@
           <Property Name="state" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="sw_fieldpers_notacct" Type="Double" Nullable="false" />
           <Property Name="wq_fieldpers_notacct" Type="Double" Nullable="false" />
-          <Property Name="sw_yest_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="wq_yest_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="sw_tod_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="wq_tod_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="sw_tmw_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="wq_tmw_fieldpers" Type="Double" Nullable="false" />
-          <Property Name="sw_yest_officepers" Type="Double" Nullable="false" />
-          <Property Name="wq_yest_officepers" Type="Double" Nullable="false" />
-          <Property Name="sw_tod_officepers" Type="Double" Nullable="false" />
-          <Property Name="wq_tod_officepers" Type="Double" Nullable="false" />
-          <Property Name="sw_tmw_officepers" Type="Double" Nullable="false" />
-          <Property Name="wq_tmw_officepers" Type="Double" Nullable="false" />
-          <Property Name="sw_autos_depl" Type="Double" Nullable="false" />
-          <Property Name="wq_autos_depl" Type="Double" Nullable="false" />
-          <Property Name="sw_boats_depl" Type="Double" Nullable="false" />
-          <Property Name="wq_boats_depl" Type="Double" Nullable="false" />
-          <Property Name="sw_other_depl" Type="Double" Nullable="false" />
-          <Property Name="wq_other_depl" Type="Double" Nullable="false" />
           <Property Name="gage_visit" Type="Double" Nullable="false" />
           <Property Name="gage_down" Type="Double" Nullable="false" />
           <Property Name="tot_discharge_meas" Type="Double" Nullable="false" />
           <Property Name="plan_discharge_meas" Type="Double" Nullable="false" />
-          <Property Name="tot_check_meas" Type="Double" Nullable="false" />
-          <Property Name="plan_check_meas" Type="Double" Nullable="false" />
           <Property Name="plan_indirect_meas" Type="Double" Nullable="false" />
           <Property Name="rating_extens" Type="Double" Nullable="false" />
           <Property Name="gage_peak_record" Type="Double" Nullable="false" />
@@ -1171,15 +1134,18 @@
           <Property Name="lost_meteorological" Type="Double" Nullable="false" />
           <Property Name="hwm_flagged" Type="Double" Nullable="false" />
           <Property Name="hwm_collected" Type="Double" Nullable="false" />
-          <Property Name="qw_gage_visit" Type="Double" Nullable="false" />
-          <Property Name="qw_cont_gagevisit" Type="Double" Nullable="false" />
-          <Property Name="qw_gage_down" Type="Double" Nullable="false" />
           <Property Name="qw_discr_samples" Type="Double" Nullable="false" />
           <Property Name="coll_sedsamples" Type="Double" Nullable="false" />
           <Property Name="notes" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
           <Property Name="member_id" Type="Double" Nullable="false" />
           <Property Name="complete" Type="Double" />
           <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.reporting_metricsreportmetric_contact" FromRole="reporting_metrics" ToRole="reportmetric_contact" />
+          <Property Name="yest_fieldpers" Type="Double" />
+          <Property Name="tod_fieldpers" Type="Double" />
+          <Property Name="tmw_fieldpers" Type="Double" />
+          <Property Name="yest_officepers" Type="Double" />
+          <Property Name="tod_officepers" Type="Double" />
+          <Property Name="tmw_officepers" Type="Double" />
         </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
@@ -2892,36 +2858,22 @@
           <EntitySetMapping Name="reporting_metrics">
             <EntityTypeMapping TypeName="STNNEWModel.reporting_metrics">
               <MappingFragment StoreEntitySet="reporting_metrics">
+                <ScalarProperty Name="tmw_officepers" ColumnName="tmw_officepers" />
+                <ScalarProperty Name="tod_officepers" ColumnName="tod_officepers" />
+                <ScalarProperty Name="yest_officepers" ColumnName="yest_officepers" />
+                <ScalarProperty Name="tmw_fieldpers" ColumnName="tmw_fieldpers" />
+                <ScalarProperty Name="tod_fieldpers" ColumnName="tod_fieldpers" />
+                <ScalarProperty Name="yest_fieldpers" ColumnName="yest_fieldpers" />
                 <ScalarProperty Name="reporting_metrics_id" ColumnName="reporting_metrics_id" />
                 <ScalarProperty Name="report_date" ColumnName="report_date" />
                 <ScalarProperty Name="event_id" ColumnName="event_id" />
                 <ScalarProperty Name="state" ColumnName="state" />
                 <ScalarProperty Name="sw_fieldpers_notacct" ColumnName="sw_fieldpers_notacct" />
                 <ScalarProperty Name="wq_fieldpers_notacct" ColumnName="wq_fieldpers_notacct" />
-                <ScalarProperty Name="sw_yest_fieldpers" ColumnName="sw_yest_fieldpers" />
-                <ScalarProperty Name="wq_yest_fieldpers" ColumnName="wq_yest_fieldpers" />
-                <ScalarProperty Name="sw_tod_fieldpers" ColumnName="sw_tod_fieldpers" />
-                <ScalarProperty Name="wq_tod_fieldpers" ColumnName="wq_tod_fieldpers" />
-                <ScalarProperty Name="sw_tmw_fieldpers" ColumnName="sw_tmw_fieldpers" />
-                <ScalarProperty Name="wq_tmw_fieldpers" ColumnName="wq_tmw_fieldpers" />
-                <ScalarProperty Name="sw_yest_officepers" ColumnName="sw_yest_officepers" />
-                <ScalarProperty Name="wq_yest_officepers" ColumnName="wq_yest_officepers" />
-                <ScalarProperty Name="sw_tod_officepers" ColumnName="sw_tod_officepers" />
-                <ScalarProperty Name="wq_tod_officepers" ColumnName="wq_tod_officepers" />
-                <ScalarProperty Name="sw_tmw_officepers" ColumnName="sw_tmw_officepers" />
-                <ScalarProperty Name="wq_tmw_officepers" ColumnName="wq_tmw_officepers" />
-                <ScalarProperty Name="sw_autos_depl" ColumnName="sw_autos_depl" />
-                <ScalarProperty Name="wq_autos_depl" ColumnName="wq_autos_depl" />
-                <ScalarProperty Name="sw_boats_depl" ColumnName="sw_boats_depl" />
-                <ScalarProperty Name="wq_boats_depl" ColumnName="wq_boats_depl" />
-                <ScalarProperty Name="sw_other_depl" ColumnName="sw_other_depl" />
-                <ScalarProperty Name="wq_other_depl" ColumnName="wq_other_depl" />
                 <ScalarProperty Name="gage_visit" ColumnName="gage_visit" />
                 <ScalarProperty Name="gage_down" ColumnName="gage_down" />
                 <ScalarProperty Name="tot_discharge_meas" ColumnName="tot_discharge_meas" />
                 <ScalarProperty Name="plan_discharge_meas" ColumnName="plan_discharge_meas" />
-                <ScalarProperty Name="tot_check_meas" ColumnName="tot_check_meas" />
-                <ScalarProperty Name="plan_check_meas" ColumnName="plan_check_meas" />
                 <ScalarProperty Name="plan_indirect_meas" ColumnName="plan_indirect_meas" />
                 <ScalarProperty Name="rating_extens" ColumnName="rating_extens" />
                 <ScalarProperty Name="gage_peak_record" ColumnName="gage_peak_record" />
@@ -2947,9 +2899,6 @@
                 <ScalarProperty Name="lost_meteorological" ColumnName="lost_meteorological" />
                 <ScalarProperty Name="hwm_flagged" ColumnName="hwm_flagged" />
                 <ScalarProperty Name="hwm_collected" ColumnName="hwm_collected" />
-                <ScalarProperty Name="qw_gage_visit" ColumnName="qw_gage_visit" />
-                <ScalarProperty Name="qw_cont_gagevisit" ColumnName="qw_cont_gagevisit" />
-                <ScalarProperty Name="qw_gage_down" ColumnName="qw_gage_down" />
                 <ScalarProperty Name="qw_discr_samples" ColumnName="qw_discr_samples" />
                 <ScalarProperty Name="coll_sedsamples" ColumnName="coll_sedsamples" />
                 <ScalarProperty Name="notes" ColumnName="notes" />
