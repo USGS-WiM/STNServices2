@@ -186,61 +186,68 @@ namespace STNServices2.Handlers
        
         #region PostMethods
 
-        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        [HttpOperation(HttpMethod.POST)]
-        public OperationResult POST(contact anEntity)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
-                    throw new BadRequestException("Invalid input parameters");
-                using (EasySecureString securedPassword = GetSecuredPassword())
-                {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
-                    {
-                        anEntity = sa.Add<contact>(anEntity);
-                        sm(sa.Messages);
+        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        //[HttpOperation(HttpMethod.POST)]
+        //public OperationResult Post(contact anEntity)
+        //{
+        //    try
+        //    {
+        //        if (string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
+        //            throw new BadRequestException("Invalid input parameters");
+        //        using (EasySecureString securedPassword = GetSecuredPassword())
+        //        {
+        //            using (STNAgent sa = new STNAgent(username, securedPassword))
+        //            {
+        //                anEntity = sa.Add<contact>(anEntity);
+        //                sm(sa.Messages);
 
-                    }//end using
-                }//end using
+        //            }//end using
+        //        }//end using
 
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
+        //        return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+        //    }
+        //    catch (Exception ex)
+        //    { return HandleException(ex); }
 
-        }//end HttpMethod.GET
+        //}//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST, ForUriName = "AddReportContact")]
-        public OperationResult AddReportContact(Int32 contactId, Int32 contactTypeId, Int32 reportId)
+        public OperationResult AddReportContact(contact anEntity, Int32 contactTypeId, Int32 reportId)
         {
-            reportmetric_contact anEntity = null;
+
+            reportmetric_contact newRepContact = null;
             contact thisContact = null;
             try
             {
-                if (contactTypeId <= 0 || reportId <= 0 || contactId <= 0) { throw new BadRequestException("Invalid input parameters"); }
+                if (contactTypeId <= 0 || reportId <= 0 || string.IsNullOrEmpty(anEntity.fname) || 
+                    string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone)) 
+                { throw new BadRequestException("Invalid input parameters"); }
+                
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //check if valid Contact Type
-                        if (sa.Select<contact_type>().First(s => s.contact_type_id == contactTypeId) == null) throw new NotFoundRequestException();
-                        if (sa.Select<contact>().First(c => c.contact_id == contactId) == null) throw new NotFoundRequestException();
+                        if (sa.Select<contact_type>().First(s => s.contact_type_id == contactTypeId) == null) throw new NotFoundRequestException();                        
                         if (sa.Select<reporting_metrics>().First(rm => rm.reporting_metrics_id == reportId) == null) throw new NotFoundRequestException();
-                                               
+
+                        //save the contact (if already exists, will return it
+                        thisContact = sa.Add<contact>(anEntity);
+
                         //add ReportMetrics_Contact if not already there.
-                        if (sa.Select<reportmetric_contact>().FirstOrDefault(rt => rt.contact_id == contactId && rt.reporting_metrics_id == reportId && rt.contact_type_id == contactTypeId) == null)
+                        if (sa.Select<reportmetric_contact>().FirstOrDefault(rt =>
+                            rt.contact_id == thisContact.contact_id && rt.reporting_metrics_id == reportId && rt.contact_type_id == contactTypeId) == null)
                         {
-                            anEntity = new reportmetric_contact();
-                            anEntity.reporting_metrics_id = reportId;
-                            anEntity.contact_type_id = contactTypeId;
-                            anEntity.contact_id = contactId;
-                            anEntity = sa.Add<reportmetric_contact>(anEntity);
+                            newRepContact = new reportmetric_contact();
+                            newRepContact.reporting_metrics_id = reportId;
+                            newRepContact.contact_type_id = contactTypeId;
+                            newRepContact.contact_id = thisContact.contact_id;
+                            newRepContact = sa.Add<reportmetric_contact>(newRepContact);
                             sm(sa.Messages);
                         }//end if
-                        thisContact = sa.Select<contact>().FirstOrDefault(c => c.contact_id == contactId);
+                        //thisContact = sa.Select<contact>().FirstOrDefault(c => c.contact_id == contactId);
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = thisContact, Description = this.MessageString };
