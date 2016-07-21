@@ -26,30 +26,10 @@ namespace STNDB
         public string state { get; set; }
         public double sw_fieldpers_notacct { get; set; }
         public double wq_fieldpers_notacct { get; set; }
-        public double sw_yest_fieldpers { get; set; }
-        public double wq_yest_fieldpers { get; set; }
-        public double sw_tod_fieldpers { get; set; }
-        public double wq_tod_fieldpers { get; set; }
-        public double sw_tmw_fieldpers { get; set; }
-        public double wq_tmw_fieldpers { get; set; }
-        public double sw_yest_officepers { get; set; }
-        public double wq_yest_officepers { get; set; }
-        public double sw_tod_officepers { get; set; }
-        public double wq_tod_officepers { get; set; }
-        public double sw_tmw_officepers { get; set; }
-        public double wq_tmw_officepers { get; set; }
-        public double sw_autos_depl { get; set; }
-        public double wq_autos_depl { get; set; }
-        public double sw_boats_depl { get; set; }
-        public double wq_boats_depl { get; set; }
-        public double sw_other_depl { get; set; }
-        public double wq_other_depl { get; set; }
         public double gage_visit { get; set; }
         public double gage_down { get; set; }
         public double tot_discharge_meas { get; set; }
         public double plan_discharge_meas { get; set; }
-        public double tot_check_meas { get; set; }
-        public double plan_check_meas { get; set; }
         public double plan_indirect_meas { get; set; }
         public double rating_extens { get; set; }
         public double gage_peak_record { get; set; }
@@ -75,14 +55,17 @@ namespace STNDB
         public double lost_meteorological { get; set; }
         public double hwm_flagged { get; set; }
         public double hwm_collected { get; set; }
-        public double qw_gage_visit { get; set; }
-        public double qw_cont_gagevisit { get; set; }
-        public double qw_gage_down { get; set; }
         public double qw_discr_samples { get; set; }
         public double coll_sedsamples { get; set; }
         public string notes { get; set; }
         public double member_id { get; set; }
         public Nullable<double> complete { get; set; }
+        public Nullable<double> yest_fieldpers { get; set; }
+        public Nullable<double> tod_fieldpers { get; set; }
+        public Nullable<double> tmw_fieldpers { get; set; }
+        public Nullable<double> yest_officepers { get; set; }
+        public Nullable<double> tod_officepers { get; set; }
+        public Nullable<double> tmw_officepers { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportmetric_contact> reportmetric_contact { get; set; }
