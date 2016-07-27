@@ -193,6 +193,7 @@
           <Property Name="flag_member_id" Type="int4" />
           <Property Name="survey_member_id" Type="int4" />
           <Property Name="uncertainty" Type="float8" />
+          <Property Name="hwm_uncertainty" Type="float8" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -200,6 +201,8 @@
           </Key>
           <Property Name="hwm_quality_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hwm_quality" Type="varchar" MaxLength="50" />
+          <Property Name="min_range" Type="float8" />
+          <Property Name="max_range" Type="float8" />
         </EntityType>
         <EntityType Name="hwm_types">
           <Key>
@@ -440,9 +443,6 @@
           <Property Name="lost_meteorological" Type="float8" Nullable="false" />
           <Property Name="hwm_flagged" Type="float8" Nullable="false" />
           <Property Name="hwm_collected" Type="float8" Nullable="false" />
-          <Property Name="qw_gage_visit" Type="float8" Nullable="false" />
-          <Property Name="qw_cont_gagevisit" Type="float8" Nullable="false" />
-          <Property Name="qw_gage_down" Type="float8" Nullable="false" />
           <Property Name="qw_discr_samples" Type="float8" Nullable="false" />
           <Property Name="coll_sedsamples" Type="float8" Nullable="false" />
           <Property Name="notes" Type="varchar" MaxLength="2000" />
@@ -868,6 +868,7 @@
           <NavigationProperty Name="survey_member" Relationship="STNNEWModel.memberhwm" FromRole="hwm" ToRole="member" />
           <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
           <Property Name="uncertainty" Type="Double" />
+          <Property Name="hwm_uncertainty" Type="Double" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -876,6 +877,8 @@
           <Property Name="hwm_quality_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="hwm_quality" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.hwm_qualitieshwm" FromRole="hwm_qualities" ToRole="hwm" />
+          <Property Name="min_range" Type="Double" />
+          <Property Name="max_range" Type="Double" />
         </EntityType>
         <EntityType Name="hwm_types">
           <Key>
@@ -1149,10 +1152,7 @@
           <Property Name="yest_officepers" Type="Double" />
           <Property Name="tod_officepers" Type="Double" />
           <Property Name="tmw_officepers" Type="Double" />
-          <Property Name="qw_gage_visit" Type="Double" Nullable="false" />
-          <Property Name="qw_cont_gagevisit" Type="Double" Nullable="false" />
-          <Property Name="qw_gage_down" Type="Double" Nullable="false" />
-        </EntityType>
+          </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
             <PropertyRef Name="reportmetric_contact_id" />
@@ -2625,6 +2625,7 @@
           <EntitySetMapping Name="hwms">
             <EntityTypeMapping TypeName="STNNEWModel.hwm">
               <MappingFragment StoreEntitySet="hwm">
+                <ScalarProperty Name="hwm_uncertainty" ColumnName="hwm_uncertainty" />
                 <ScalarProperty Name="uncertainty" ColumnName="uncertainty" />
                 <ScalarProperty Name="hwm_id" ColumnName="hwm_id" />
                 <ScalarProperty Name="waterbody" ColumnName="waterbody" />
@@ -2658,6 +2659,8 @@
           <EntitySetMapping Name="hwm_qualities">
             <EntityTypeMapping TypeName="STNNEWModel.hwm_qualities">
               <MappingFragment StoreEntitySet="hwm_qualities">
+                <ScalarProperty Name="max_range" ColumnName="max_range" />
+                <ScalarProperty Name="min_range" ColumnName="min_range" />
                 <ScalarProperty Name="hwm_quality_id" ColumnName="hwm_quality_id" />
                 <ScalarProperty Name="hwm_quality" ColumnName="hwm_quality" />
               </MappingFragment>
@@ -2864,9 +2867,6 @@
           <EntitySetMapping Name="reporting_metrics">
             <EntityTypeMapping TypeName="STNNEWModel.reporting_metrics">
               <MappingFragment StoreEntitySet="reporting_metrics">
-                <ScalarProperty Name="qw_gage_down" ColumnName="qw_gage_down" />
-                <ScalarProperty Name="qw_cont_gagevisit" ColumnName="qw_cont_gagevisit" />
-                <ScalarProperty Name="qw_gage_visit" ColumnName="qw_gage_visit" />
                 <ScalarProperty Name="tmw_officepers" ColumnName="tmw_officepers" />
                 <ScalarProperty Name="tod_officepers" ColumnName="tod_officepers" />
                 <ScalarProperty Name="yest_officepers" ColumnName="yest_officepers" />
