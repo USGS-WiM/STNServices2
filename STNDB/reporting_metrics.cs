@@ -66,9 +66,6 @@ namespace STNDB
         public Nullable<double> yest_officepers { get; set; }
         public Nullable<double> tod_officepers { get; set; }
         public Nullable<double> tmw_officepers { get; set; }
-        public double qw_gage_visit { get; set; }
-        public double qw_cont_gagevisit { get; set; }
-        public double qw_gage_down { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportmetric_contact> reportmetric_contact { get; set; }
