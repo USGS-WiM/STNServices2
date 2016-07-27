@@ -35,7 +35,7 @@
         <EntityTypeShape EntityType="STNNEWModel.op_measurements" Width="2.125" PointX="7.5" PointY="2.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.op_quality" Width="2.125" PointX="7.5" PointY="3" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.peak_summary" Width="2.125" PointX="7.5" PointY="3.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.reporting_metrics" Width="2.125" PointX="7.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="STNNEWModel.reporting_metrics" Width="2.125" PointX="7.5" PointY="4" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.reportmetric_contact" Width="2.125" PointX="9.75" PointY="5.75" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.role" Width="2.125" PointX="5" PointY="6.25" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.sensor_brand" Width="2.125" PointX="9.75" PointY="0.5" IsExpanded="false" />
