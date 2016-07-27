@@ -383,9 +383,9 @@ namespace STNDB
                     (!other.vcollect_method_id.HasValue||this.vcollect_method_id.Value == other.vcollect_method_id.Value) &&
                     (!other.approval_id.HasValue||this.approval_id.Value == other.approval_id.Value) &&
                     (!other.marker_id.HasValue||this.marker_id.Value == other.marker_id.Value) &&
+                    (other.uncertainty <= 0 || !other.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
+                    (other.hwm_uncertainty <= 0 || !other.hwm_uncertainty.HasValue || this.hwm_uncertainty == other.hwm_uncertainty) &&
                     (!other.height_above_gnd.HasValue||this.height_above_gnd.Value == other.height_above_gnd.Value));
-
-
         }
         public override bool Equals(object obj)
         {

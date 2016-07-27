@@ -169,11 +169,13 @@ namespace STNServices2.Handlers
                         //set HWM approvalID
                         aHWM.approval_id = anEntity.approval_id;
                         sa.Update<hwm>(aHWM);
+                        sm(sa.Messages);
+                
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anEntity };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString  };
             }
             catch(Exception ex)
             {
@@ -214,11 +216,12 @@ namespace STNServices2.Handlers
                         //set HWM approvalID
                         aDataFile.approval_id = anEntity.approval_id;
                         sa.Update<data_file>(aDataFile);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anEntity };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -257,11 +260,12 @@ namespace STNServices2.Handlers
                         //set datafile approvalID
                         aDataFile.approval_id = anEntity.approval_id;
                         sa.Update<data_file>(aDataFile);
+                        sm(sa.Messages);
                     }//end using
                 }//end using
 
                 //Return OK instead of created, Flex incorrectly treats 201 as error
-                return new OperationResult.OK { ResponseResource = anEntity };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -325,15 +329,17 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
-                        aHWM = sa.Select<hwm>().SingleOrDefault(hwm => hwm.hwm_id == hwmId);
-                        //remove approval
-                        sa.Delete<approval>(aHWM.approval);
+                        aHWM = sa.Select<hwm>().SingleOrDefault(h => h.hwm_id == hwmId);
+                        Int32 apprId = aHWM.approval_id.HasValue ? aHWM.approval_id.Value : 0;
                         //remove id from hwm
                         aHWM.approval_id = null;
                         sa.Update<hwm>(aHWM);
+                        approval anApproval = sa.Select<approval>().FirstOrDefault(a => a.approval_id == apprId);
+                        //remove approval     
+                        sa.Delete<approval>(anApproval);
                         sm(sa.Messages);
                     }// end using
                 } //end using
@@ -361,15 +367,18 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
-                        //remove approval
-                        sa.Delete<approval>(aDataFile.approval);
+                        Int32 apprId = aDataFile.approval_id.HasValue ? aDataFile.approval_id.Value : 0;
                         //remove id from hwm
                         aDataFile.approval_id = null;
                         sa.Update<data_file>(aDataFile);
+                        
+                        approval anApproval = sa.Select<approval>().FirstOrDefault(a => a.approval_id == apprId);
+                        //remove approval     
+                        sa.Delete<approval>(anApproval);
                         sm(sa.Messages);
                     }// end using
                 } //end using
