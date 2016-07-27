@@ -22,6 +22,8 @@ namespace STNDB
     
         public int hwm_quality_id { get; set; }
         public string hwm_quality { get; set; }
+        public Nullable<double> min_range { get; set; }
+        public Nullable<double> max_range { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hwm> hwms { get; set; }
