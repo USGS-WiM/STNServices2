@@ -470,7 +470,6 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
         public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID,
                                                       [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
@@ -601,17 +600,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-
-        private string getTest(string p)
-        {
-            string test = "Hello";
-            return test;
-        }
-        private string getFlagMember(hwm h)
-        {
-            string memberName = "help";
-            return memberName;
-        }
+                
         #endregion
         #region PostMethods
         /// 
