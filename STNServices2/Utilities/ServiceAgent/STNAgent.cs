@@ -208,7 +208,12 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             try
             {
-                string sql = String.Format(getSQLStatement(typeof(T).Name),args);
+                string sql = string.Empty;
+                if (args[0].ToString() == "baro_view" || args[0].ToString() == "met_view" || args[0].ToString() == "rdg_view" || args[0].ToString() == "stormtide_view" || args[0].ToString() == "waveheight_view")
+                    sql = String.Format(getSQLStatement(args[0].ToString()));
+                else
+                    sql = String.Format(getSQLStatement(typeof(T).Name), args);
+                
                 return context.Database.SqlQuery<T>(sql).AsQueryable();
             }
             catch (Exception)
@@ -222,7 +227,17 @@ namespace STNServices2.Utilities.ServiceAgent
             switch (type)
             {
                 case "peak_view":
-                    return @"SELECT * FROM peak_view;";                           
+                    return @"SELECT * FROM peak_view;";
+                case "baro_view":
+                    return @"SELECT * FROM barometric_view;";
+                case "met_view":
+                    return @"SELECT * FROM meteorological_view;";
+                case "rdg_view":
+                    return @"SELECT * FROM rapid_deployment_view;";
+                case "stormtide_view":
+                    return @"SELECT * FROM storm_tide_view;";
+                case "waveheight_view":
+                    return @"SELECT * FROM wave_height_view;";  
                 default:
                     throw new Exception("No sql for table " + type);
             }//end switch;
