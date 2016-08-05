@@ -255,52 +255,81 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         #region sensorViews response
-        //[HttpOperation(ForUriName = "GetSensorViews")]
-        //public OperationResult GetSensorViews([Optional] Int32 eventId)
-        //{
-        //    SensorViews SensorViews = new SensorViews();
+        [HttpOperation(ForUriName = "GetSensorViews")]
+        public OperationResult GetSensorViews(string view, [Optional] string eventIDs, [Optional] string eventTypeIDs, [Optional] string eventStatusID, [Optional] string states, [Optional] string counties,
+            [Optional] string sensorTypeIDs, [Optional] string statusIDs, [Optional] string collectionConditionIDs, [Optional] string deploymentTypeIDs)
+        {            
+            List<sensor_view> aViewTable = null;
+            IQueryable<sensor_view> query;
+            
+            try
+            {
+                if (string.IsNullOrEmpty(view) && 
+                    (view.ToLower() != "baro_view" || view.ToLower() != "met_view" || view.ToLower() != "rdg_view" || view.ToLower() != "stormtide_view" || view.ToLower() != "waveheight_view")) 
+                    throw new BadRequestException("Invalid input parameters. ViewType must be either 'baro_view', 'met_view', 'rdg_view', 'stormTide_view' or 'waveheight_view'");
 
-        //    try
-        //    {
-        //        using (STNEntities2 aSTNE = GetRDS())
-        //        {
-        //            var baro = aSTNE.BAROMETRIC_VIEW.ToList();
-        //            var met = aSTNE.METEOROLOGICAL_VIEW.ToList();
-        //            var RDG = aSTNE.RAPID_DEPLOYMENT_VIEW.ToList();
-        //            var storm = aSTNE.STORM_TIDE_VIEW.ToList();
-        //            var wave = aSTNE.WAVE_HEIGHT_VIEW.ToList();
+                using (STNAgent sa = new STNAgent())
+                {
+                    query = sa.getTable<sensor_view>(new Object[1] { view.ToString() });                    
 
-        //            //Return All Sensor Views data if there is no ID
-        //            if (eventId > 0)
-        //            {
-        //                SensorViews.Baro_View = baro.Where(b => b.EVENT_ID == eventId).ToList();
-        //                SensorViews.Met_View = met.Where(b => b.EVENT_ID == eventId).ToList();
-        //                SensorViews.RDG_View = RDG.Where(b => b.EVENT_ID == eventId).ToList();
-        //                SensorViews.StormTide_View = storm.Where(b => b.EVENT_ID == eventId).ToList();
-        //                SensorViews.WaveHeight_View = wave.Where(b => b.EVENT_ID == eventId).ToList();
-        //            }
-        //            else
-        //            {
-        //                SensorViews.Baro_View = baro;
-        //                SensorViews.Met_View = met;
-        //                SensorViews.RDG_View = RDG;
-        //                SensorViews.StormTide_View = storm;
-        //                SensorViews.WaveHeight_View = wave;
-        //            }
-        //        }//end using
+                    char[] delimiterChars = { ';', ',', ' ' }; char[] countydelimiterChars = { ';', ',' };
+                    //parse the requests
+                    List<decimal> eventIdList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
+                    List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+                    List<decimal> sensorTypeIdList = !string.IsNullOrEmpty(sensorTypeIDs) ? sensorTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<decimal> statusIdList = !string.IsNullOrEmpty(statusIDs) ? statusIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
 
-        //        return new OperationResult.OK { ResponseResource = SensorViews };
-        //    }
-        //    catch
-        //    {
-        //        return new OperationResult.BadRequest();
-        //    }
-        //}//end HttpMethod.GET
+                    if (eventIdList != null && eventIdList.Count > 0)                    
+                        query = query.Where(i => i.event_id.HasValue && eventIdList.Contains(i.event_id.Value));
+
+                    if (eventTypeList != null && eventTypeList.Count > 0)
+                        query = query.Where(i => i.event_type_id.HasValue && eventTypeList.Contains(i.event_type_id.Value));                        
+                    
+                    if (!string.IsNullOrEmpty(eventStatusID))
+                    {
+                        if (Convert.ToInt32(eventStatusID) > 0)
+                        {
+                            Int32 evStatID = Convert.ToInt32(eventStatusID);
+                            query = query.Where(i => i.event_status_id.HasValue && i.event_status_id.Value == evStatID);                            
+                        }
+                    }
+                    if (stateList != null && stateList.Count > 0)                    
+                        query = query.Where(i => stateList.Contains(i.state));
+
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(i => countyList.Contains(i.county));
+
+                    if (collectionConditionIdList != null && collectionConditionIdList.Count > 0)
+                        query = query.Where(i => i.inst_collection_id.HasValue && collectionConditionIdList.Contains(i.inst_collection_id.Value));
+
+                    if (deploymentTypeIdList != null && deploymentTypeIdList.Count > 0)                    
+                        query = query.Where(i => i.deployment_type_id.HasValue && deploymentTypeIdList.Contains(i.deployment_type_id.Value));
+
+                    if (sensorTypeIdList != null && sensorTypeIdList.Count > 0)                    
+                        query = query.Where(i => i.sensor_type_id.HasValue && sensorTypeIdList.Contains(i.sensor_type_id.Value));
+
+                    if (statusIdList != null && statusIdList.Count > 0)                    
+                        query = query.Where(i => i.status_type_id.HasValue && statusIdList.Contains(i.status_type_id.Value));
+                                        
+                    aViewTable = query.ToList();
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = aViewTable, Description = this.MessageString };
+            }
+            catch
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.GET
         #endregion sensorViews response
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredInstruments")]
-        public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID, [Optional] string states, [Optional] string counties, 
-                                                        [Optional] string statusIDs, [Optional] string collectionConditionIDs, [Optional] string deploymentTypeIDs)
+        public OperationResult GetFilteredInstruments([Optional] string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID, [Optional] string states, [Optional] string counties,
+                                                        [Optional] string statusIDs, [Optional] string collectionConditionIDs, [Optional] string sensorTypeIDs, [Optional] string deploymentTypeIDs)
         {
             List<instrument> entities = null;
             try
@@ -312,6 +341,7 @@ namespace STNServices2.Handlers
                 List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
                 List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 List<decimal> statusIdList = !string.IsNullOrEmpty(statusIDs) ? statusIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                List<decimal> sensorTypeIdList = !string.IsNullOrEmpty(sensorTypeIDs) ? sensorTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                 List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
 
@@ -346,6 +376,9 @@ namespace STNServices2.Handlers
 
                     if (deploymentTypeIdList != null && deploymentTypeIdList.Count > 0)
                         query = query.Where(i => i.deployment_type_id.HasValue && deploymentTypeIdList.Contains(i.deployment_type_id.Value));
+
+                    if (sensorTypeIdList != null && sensorTypeIdList.Count > 0)
+                        query = query.Where(i => i.sensor_type_id.HasValue && sensorTypeIdList.Contains(i.sensor_type_id.Value));
 
                     if (statusIdList != null && statusIdList.Count > 0)
                         query = query.AsEnumerable().Where(i => (i.instrument_status == null || i.instrument_status.Count <= 0) ? false :
