@@ -842,9 +842,13 @@ namespace STNServices2.Test
             List<instrument> siteEvInstrList = this.GETRequest<List<instrument>>(host + Configuration.siteResource + "/3148/" + Configuration.instrumentsResource + "?Event=8");
             Assert.IsNotNull(siteEvInstrList, siteEvInstrList.Count.ToString());
 
-            //GetFilteredInstruments "/Instruments/FilteredInstruments?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}&DeploymentType={deploymentTypeIDs}
+            //GetFilteredInstruments "/Instruments/FilteredInstruments?Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}&SensorType={sensorTypeIDs}&DeploymentType={deploymentTypeIDs}
             List<instrument> filtInstrList = this.GETRequest<List<instrument>>(host + Configuration.instrumentsResource + "/FilteredInstruments?Event=&EventType=2&EventStatus=0&States=&CollectionCondition=&DeploymentType=");
             Assert.IsNotNull(filtInstrList, filtInstrList.Count.ToString());
+
+            //GetSensorViews "/SensorViews?ViewType={view}&Event={eventIds}&EventType={eventTypeIDs}&EventStatus={eventStatusID}&States={states}&County={counties}&CurrentStatus={statusIDs}&CollectionCondition={collectionConditionIDs}&SensorType={sensorTypeIDs}&DeploymentType={deploymentTypeIDs}
+            List<sensor_view> sensViewList = this.GETRequest<List<sensor_view>>(host + "/SensorViews?ViewType=baro_view&Event=&EventType=2&EventStatus=0&States=&CollectionCondition=&DeploymentType=");
+            Assert.IsNotNull(sensViewList, sensViewList.Count.ToString());
 
             //GetSiteFullInstrumentList "/Sites/{siteId}/SiteFullInstrumentList"
             List<instrument> siteFInstrList = this.GETRequest<List<instrument>>(host + Configuration.siteResource + "/3148/SiteFullInstrumentList");
