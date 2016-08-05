@@ -38,7 +38,7 @@ using OpenRasta.Codecs;
 using WiM.Resources.Spatial;
 using Newtonsoft.Json;
 using WiM.Codecs.json;
-
+using STNServices2.Resources;
 using STNDB;
 
 namespace STNServices2.Codecs.json
@@ -47,9 +47,13 @@ namespace STNServices2.Codecs.json
     [MediaType("application/geojson;q=0.5", "geojson")]
     public class STNGeoJsonDotNetCodec : JsonDotNetCodec
     {
-        private Type[] extraTypes = new Type[3] {    typeof(hwm), 
+        private Type[] extraTypes = new Type[5] {    typeof(hwm), 
                                                      typeof(site),
-                                                     typeof(objective_point)
+                                                     typeof(SiteLocationQuery),
+                                                     typeof(objective_point),
+                                                     //typeof(instrument),
+                                                     typeof(sensor_view)
+                                                    // typeof(FullInstrument)
                                                 };
 
         public override void WriteTo(object entity, IHttpEntity response, string[] parameters)

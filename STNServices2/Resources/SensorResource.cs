@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using STNDB;
 
 namespace STNServices2.Resources
-{
+{   
     public class sensor_view
     {
         public Int32 site_id { get; set; }
@@ -18,19 +18,18 @@ namespace STNServices2.Resources
         public string county { get; set; }
         public string state { get; set; }
         public string city { get; set; }
-        public Int32 instrument_id { get; set; }
-        public Int32 event_id { get; set; }
-        public string event_name { get; set; }
-        public Nullable<DateTime> event_start_date { get; set; }
-        public Nullable<DateTime> event_end_date { get; set; }
+        public Nullable<Int32> instrument_id { get; set; }
         public Nullable<Int32> sensor_type_id { get; set; }
-        public string sensor { get; set; }
-        public  Nullable<Int32> deployment_type_id { get; set; }
-        public string method { get; set; }
+        public Nullable<Int32> event_id { get; set; }
+        public string event_name { get; set; }
+        public Nullable<Int32> status_type_id { get; set; }
+        public Nullable<Int32> deployment_type_id { get; set; }
         public string status { get; set; }
         public Nullable<DateTime> time_stamp { get; set; }
-
-    }//end class sensor_view
+        public Nullable<Int32> inst_collection_id { get; set; }
+        public Nullable<Int32> event_type_id { get; set; }
+        public Nullable<Int32> event_status_id { get; set; }        
+    }    
 
     [XmlInclude(typeof(instrument))]
     public class InstrumentDownloadable : instrument
@@ -69,6 +68,7 @@ namespace STNServices2.Resources
         public string sensorBrand { get; set; }
        
     }
+   
     [XmlInclude(typeof(instrument_status))]
     public class Instrument_Status : instrument_status
     {
@@ -77,4 +77,5 @@ namespace STNServices2.Resources
 
     }
 
+   
 }
