@@ -29,8 +29,8 @@ namespace STNServices2.Resources
         public string member_name { get; set; }
         public decimal site_id { get; set; }
         public String site_no { get; set; }
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public double latitude_dd { get; set; }
+        public double longitude_dd { get; set; }
         public String description { get; set; }
         public string networks { get; set; }
         public String state { get; set; }
