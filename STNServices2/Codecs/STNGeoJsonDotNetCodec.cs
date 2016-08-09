@@ -47,11 +47,11 @@ namespace STNServices2.Codecs.json
     [MediaType("application/geojson;q=0.5", "geojson")]
     public class STNGeoJsonDotNetCodec : JsonDotNetCodec
     {
-        private Type[] extraTypes = new Type[5] {    typeof(hwm), 
+        private Type[] extraTypes = new Type[6] {    typeof(hwm), 
                                                      typeof(site),
                                                      typeof(SiteLocationQuery),
                                                      typeof(objective_point),
-                                                     //typeof(instrument),
+                                                     typeof(peak_summary),
                                                      typeof(sensor_view)
                                                     // typeof(FullInstrument)
                                                 };
