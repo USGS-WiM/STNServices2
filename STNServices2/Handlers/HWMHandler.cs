@@ -55,20 +55,9 @@ namespace STNServices2.Handlers
             {
                 using (STNAgent sa = new STNAgent())
                 {
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {
-                        entities = sa.Select<hwm>().Where(h => h.approval_id > 0).ToList();
-                        sm(MessageType.info, "Count: " + entities.Count());
-                        sm(sa.Messages);
-                    } else {
-                        //they are logged in, give them all
-                        entities = sa.Select<hwm>().ToList();
-                        sm(MessageType.info, "Count: " + entities.Count());
-                        sm(sa.Messages);
-                    }
-
+                    entities = sa.Select<hwm>().ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
+                    sm(sa.Messages);      
 
                 }//end using
 
@@ -110,12 +99,7 @@ namespace STNServices2.Handlers
                 if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.event_id == eventId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else 
-                        entities = hWMs.ToList();
-
+                    entities = sa.Select<hwm>().Where(h => h.event_id == eventId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages); 
                 }//end using
@@ -135,12 +119,7 @@ namespace STNServices2.Handlers
                 if (siteId <= 0 || eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.event_id == eventId && h.site_id == siteId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else 
-                        entities = hWMs.ToList();
-
+                    entities = sa.Select<hwm>().Where(h => h.event_id == eventId && h.site_id == siteId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
@@ -225,12 +204,8 @@ namespace STNServices2.Handlers
                 if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.flag_member_id == memberId || i.survey_member_id == memberId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
-
+                    entities = sa.Select<hwm>().Where(i => i.flag_member_id == memberId || i.survey_member_id == memberId).ToList();
+                    
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
@@ -250,11 +225,7 @@ namespace STNServices2.Handlers
                 if (hwmQualityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hwm_quality_id == hwmQualityId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities  = sa.Select<hwm>().Where(i => i.hwm_quality_id == hwmQualityId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -275,11 +246,7 @@ namespace STNServices2.Handlers
                 if (hwmTypeId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hwm_type_id == hwmTypeId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(i => i.hwm_type_id == hwmTypeId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -300,12 +267,8 @@ namespace STNServices2.Handlers
                 if (hmethodId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.hcollect_method_id == hmethodId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
-
+                    entities = sa.Select<hwm>().Where(i => i.hcollect_method_id == hmethodId).ToList();
+                    
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
@@ -325,12 +288,7 @@ namespace STNServices2.Handlers
                 if (vmethodId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.vcollect_method_id == vmethodId);
-
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(h => h.vcollect_method_id == vmethodId).ToList();
  
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -351,12 +309,7 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {                    
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.site_id == siteId);
-
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else 
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(h => h.site_id == siteId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -377,12 +330,7 @@ namespace STNServices2.Handlers
                 if (vdatumId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(h => h.vdatum_id == vdatumId);
-
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(h => h.vdatum_id == vdatumId).ToList();
                     
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -403,12 +351,7 @@ namespace STNServices2.Handlers
                 if (markerId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(i => i.marker_id == markerId);
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(i => i.marker_id == markerId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -430,12 +373,7 @@ namespace STNServices2.Handlers
                 if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<hwm> hWMs = sa.Select<hwm>().Where(hwm => hwm.peak_summary_id == peakSummaryId);
-
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        entities = hWMs.Where(h => h.approval_id > 0).ToList();
-                    else
-                        entities = hWMs.ToList();
+                    entities = sa.Select<hwm>().Where(hwm => hwm.peak_summary_id == peakSummaryId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
@@ -457,9 +395,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<file>().Include(f => f.hwm).FirstOrDefault(f => f.file_id == fileId).hwm;
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                        anEntity = anEntity.approval_id > 0 ? anEntity : null;
-
+                    
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
