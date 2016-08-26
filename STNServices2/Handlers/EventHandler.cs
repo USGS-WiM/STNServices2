@@ -66,16 +66,19 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
-        public OperationResult Get(Int32 entityId)
+        public OperationResult Get(string entityId)
         {
             events anEntity = null;
 
             try
             {
-                if (entityId < 0) throw new BadRequestException("Invalid input parameters");
+                if (string.IsNullOrEmpty(entityId)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<events>().FirstOrDefault(e => e.event_id == entityId);
+
+                    anEntity = sa.Select<events>().FirstOrDefault(e => String.Equals(e.event_id.ToString().Trim().ToLower(), entityId.Trim().ToLower()) || 
+                        String.Equals(e.event_name.Trim().Replace(" ", "").ToLower(), entityId.Trim().ToLower()));
+
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
 
