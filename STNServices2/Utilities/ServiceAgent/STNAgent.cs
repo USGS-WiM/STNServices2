@@ -209,8 +209,11 @@ namespace STNServices2.Utilities.ServiceAgent
             try
             {
                 string sql = string.Empty;
-                if (args[0].ToString() == "baro_view" || args[0].ToString() == "met_view" || args[0].ToString() == "rdg_view" || args[0].ToString() == "stormtide_view" || args[0].ToString() == "waveheight_view")
-                    sql = String.Format(getSQLStatement(args[0].ToString()));
+                if (args[0] != null)
+                {
+                    if (args[0].ToString() == "baro_view" || args[0].ToString() == "met_view" || args[0].ToString() == "rdg_view" || args[0].ToString() == "stormtide_view" || args[0].ToString() == "waveheight_view")
+                        sql = String.Format(getSQLStatement(args[0].ToString()));
+                }
                 else
                     sql = String.Format(getSQLStatement(typeof(T).Name), args);
                 
@@ -227,7 +230,36 @@ namespace STNServices2.Utilities.ServiceAgent
             switch (type)
             {
                 case "peak_view":
-                    return @"SELECT * FROM peak_view;";
+                    return @"SELECT DISTINCT pk.peak_summary_id, pk.peak_stage, pk.peak_date, vd.datum_name, 
+                        CASE
+                            WHEN NOT hwm_v.peak_summary_id IS NULL THEN hwm_v.latitude_dd
+                            WHEN NOT df_v.peak_summary_id IS NULL THEN df_v.latitude_dd
+                            ELSE NULL::double precision
+                            END AS latitude,
+                        CASE
+                            WHEN NOT hwm_v.peak_summary_id IS NULL THEN hwm_v.site_id
+                            WHEN NOT df_v.peak_summary_id IS NULL THEN df_v.site_id
+                            ELSE NULL::integer
+                            END AS site_id,
+                        CASE
+                            WHEN NOT hwm_v.peak_summary_id IS NULL THEN hwm_v.longitude_dd
+                            WHEN NOT df_v.peak_summary_id IS NULL THEN df_v.longitude_dd
+                            ELSE NULL::double precision
+                            END AS longitude,
+                        CASE
+                            WHEN NOT hwm_v.peak_summary_id IS NULL THEN hwm_v.event_name
+                            WHEN NOT df_v.peak_summary_id IS NULL THEN df_v.event_name
+                            ELSE NULL::character varying
+                            END AS event_name
+                    FROM peak_summary pk
+                    LEFT JOIN vertical_datums vd ON pk.vdatum_id = vd.datum_id
+                    LEFT JOIN ( SELECT df.peak_summary_id, sv.latitude_dd, sv.longitude_dd, sv.site_id, sv.event_name
+                                FROM sensor_view sv, data_file df
+                                WHERE df.instrument_id = sv.instrument_id AND NOT df.peak_summary_id IS NULL) df_v ON pk.peak_summary_id = df_v.peak_summary_id
+                    LEFT JOIN ( SELECT hwm.peak_summary_id, hwm.latitude_dd, hwm.longitude_dd, hwm.site_id, e.event_name
+                                FROM hwm hwm, events e
+                                WHERE hwm.event_id = e.event_id AND NOT hwm.peak_summary_id IS NULL) hwm_v ON pk.peak_summary_id = hwm_v.peak_summary_id;";
+                    //return @"SELECT * FROM peak_view;";
                 case "baro_view":
                     return @"SELECT * FROM barometric_view;";
                 case "met_view":
