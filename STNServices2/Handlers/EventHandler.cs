@@ -72,7 +72,7 @@ namespace STNServices2.Handlers
 
             try
             {
-                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                if (entityId < 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<events>().FirstOrDefault(e => e.event_id == entityId);
