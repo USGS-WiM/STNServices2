@@ -274,7 +274,8 @@ namespace STNServices2.Handlers
 
                     char[] delimiterChars = { ';', ',', ' ' }; char[] countydelimiterChars = { ';', ',' };
                     //parse the requests
-                    List<decimal> eventIdList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    //List<decimal> eventIdList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+                    List<string> eventValueList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                     List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                     List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
                     List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
@@ -283,8 +284,9 @@ namespace STNServices2.Handlers
                     List<decimal> collectionConditionIdList = !string.IsNullOrEmpty(collectionConditionIDs) ? collectionConditionIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                     List<decimal> deploymentTypeIdList = !string.IsNullOrEmpty(deploymentTypeIDs) ? deploymentTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
 
-                    if (eventIdList != null && eventIdList.Count > 0)                    
-                        query = query.Where(i => i.event_id.HasValue && eventIdList.Contains(i.event_id.Value));
+                    
+                    if (eventValueList != null && eventValueList.Count > 0)
+                        query = query.Where(e => eventValueList.Contains(e.event_name.Trim().Replace(" ", "").ToUpper()) || eventValueList.Contains(e.event_id.ToString()));
 
                     if (eventTypeList != null && eventTypeList.Count > 0)
                         query = query.Where(i => i.event_type_id.HasValue && eventTypeList.Contains(i.event_type_id.Value));                        
