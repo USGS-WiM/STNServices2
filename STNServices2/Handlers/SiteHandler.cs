@@ -391,7 +391,7 @@ namespace STNServices2.Handlers
 
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredSites")]
         public OperationResult GetFilteredSites([Optional] string eventId, [Optional] string stateNames, [Optional] string sensorTypeId, [Optional] string opDefined, [Optional] string networkNameId, 
-                                                    [Optional] string hwmOnlySites, [Optional] string sensorOnlySites, [Optional] string rdgOnlySites)
+                                                    [Optional] string hwmOnlySites, [Optional] string surveyedHWMs, [Optional] string sensorOnlySites, [Optional] string rdgOnlySites)
         {
             try
             {
@@ -447,6 +447,13 @@ namespace STNServices2.Handlers
                         //Site with no sensor deployments AND Site with no proposed sensors AND 
                         //(Site does not have permanent housing installed OR Site has had HWM collected at it in the past OR Site has “Sensor not appropriate” box checked)
                         query = query.Where(s => !s.instruments.Any() && ((s.is_permanent_housing_installed == "No" || s.is_permanent_housing_installed == null) || s.hwms.Any() || s.sensor_not_appropriate == 1));
+                    }
+                    if (!string.IsNullOrEmpty(surveyedHWMs))
+                    {
+                        if (surveyedHWMs == "true")
+                            query = query.Where(i => i.hwms.Any() && i.hwms.Any(h => h.survey_date.HasValue));
+                        else
+                            query = query.Where(i => i.hwms.Any() && i.hwms.Any(h => !h.survey_date.HasValue));
                     }
 
                     if (sensorOnly)
