@@ -1077,7 +1077,7 @@ namespace STNServices2
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
             ResourceSpace.Has.ResourcesOfType<List<site>>()
-           .AtUri(@"/Sites/FilteredSites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}
+           .AtUri(@"/Sites/FilteredSites?Event={eventId}&State={stateNames}&SensorType={sensorTypeId}&NetworkName={networkNameId}&OPDefined={opDefined}&HWMOnly={hwmOnlySites}&HWMSurveyed={surveyedHWMs}
                     &SensorOnly={sensorOnlySites}&RDGOnly={rdgOnlySites}").Named("FilteredSites")
            .HandledBy<SiteHandler>()
            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
