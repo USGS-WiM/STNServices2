@@ -565,13 +565,13 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, site anEntity)
         {
-            //site updatedSite;
+            site updatedSite = null;
             
             try
             {
                 if (entityId <= 0 || string.IsNullOrEmpty(anEntity.site_description) || anEntity.latitude_dd <= 0 || anEntity.longitude_dd >= 0 || 
                     anEntity.hdatum_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.state) || 
-                    string.IsNullOrEmpty(anEntity.county) || string.IsNullOrEmpty(anEntity.waterbody) || (anEntity.member_id <= 0))
+                    string.IsNullOrEmpty(anEntity.county) || string.IsNullOrEmpty(anEntity.waterbody))
                 {
                     throw new BadRequestException("Invalid input parameters");
                 }
@@ -579,16 +579,45 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        updatedSite = sa.Select<site>().SingleOrDefault(s => s.site_id == entityId);
+
                         anEntity.state = this.GetStateByName(anEntity.state).ToString();
-                        
-                        anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
-                                                
-                        anEntity = sa.Update<site>(entityId, anEntity);
+                        if ((!string.Equals(anEntity.state.ToUpper(), updatedSite.state.ToUpper())) || (!string.Equals(anEntity.county.ToUpper(), updatedSite.county.ToUpper())))
+                            anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
+                                      
+                        updatedSite.site_no = anEntity.site_no;
+                        updatedSite.site_name = anEntity.site_name;
+                        updatedSite.site_description = anEntity.site_description;
+                        updatedSite.address = anEntity.address;
+                        updatedSite.city = anEntity.city;
+                        updatedSite.state = anEntity.state;
+                        updatedSite.zip = anEntity.zip;
+                        updatedSite.other_sid = anEntity.other_sid;
+                        updatedSite.county = anEntity.county;
+                        updatedSite.waterbody = anEntity.waterbody;
+                        updatedSite.latitude_dd = anEntity.latitude_dd;
+                        updatedSite.longitude_dd = anEntity.longitude_dd;
+                        updatedSite.hdatum_id = anEntity.hdatum_id;
+                        updatedSite.drainage_area_sqmi = anEntity.drainage_area_sqmi;
+                        updatedSite.landownercontact_id = anEntity.landownercontact_id;
+                        updatedSite.priority_id = anEntity.priority_id;
+                        updatedSite.zone = anEntity.zone;
+                        updatedSite.is_permanent_housing_installed = anEntity.is_permanent_housing_installed;
+                        updatedSite.usgs_sid = anEntity.usgs_sid;
+                        updatedSite.noaa_sid = anEntity.noaa_sid;
+                        updatedSite.hcollect_method_id = anEntity.hcollect_method_id;
+                        updatedSite.site_notes = anEntity.site_notes;
+                        updatedSite.safety_notes = anEntity.safety_notes;
+                        updatedSite.access_granted = anEntity.access_granted;
+                        updatedSite.member_id = anEntity.member_id;
+                        updatedSite.sensor_not_appropriate = anEntity.sensor_not_appropriate;
+          
+                        anEntity = sa.Update<site>(entityId, updatedSite);
                         sm(sa.Messages);                         
                     }//end using
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = updatedSite, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
