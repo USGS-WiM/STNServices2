@@ -101,6 +101,40 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw ;
             }
         }
+        internal void PutFileItem(file uploadFile, System.IO.MemoryStream memoryStream)
+        {
+            S3Bucket aBucket = null;
+            try
+            {
+
+                int eventId = 0;
+                if (uploadFile.hwm_id.HasValue && uploadFile.hwm_id > 0)
+                {
+                    eventId = this.Select<hwm>().FirstOrDefault(h => h.hwm_id == uploadFile.hwm_id).event_id.Value;                    
+                }
+                else if (uploadFile.instrument_id.HasValue && uploadFile.instrument_id > 0)
+                {
+                    eventId = this.Select<instrument>().FirstOrDefault(h => h.instrument_id == uploadFile.instrument_id).event_id.Value;                    
+                }
+                //Upload to S3
+                uploadFile.path = BuildNewpath(uploadFile, eventId);
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
+
+                aBucket.PutObject(uploadFile.path + "/" + uploadFile.name, memoryStream);
+                this.Update<file>(uploadFile);
+                sm(MessageType.info, uploadFile.path + ": added");
+            }
+            catch (Exception ex)
+            {
+                sm(WiM.Resources.MessageType.error, "FileID: " + uploadFile.path + " exception: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (aBucket != null) { aBucket.Dispose(); aBucket = null; }
+            }
+        }
         internal void AddFile(file uploadFile, System.IO.MemoryStream memoryStream)
         {
             S3Bucket aBucket = null;
@@ -145,14 +179,17 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 if (afile == null || afile.path == null || String.IsNullOrEmpty(afile.path)) throw new WiM.Exceptions.NotFoundRequestException();
                     
-                    string directoryName = string.Empty;
-                    aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"], 
-                                            ConfigurationManager.AppSettings["AWSSecretKey"]);
-                    directoryName = afile.path + "/" + afile.name;
+                string directoryName = string.Empty;
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"], 
+                                        ConfigurationManager.AppSettings["AWSSecretKey"]);
+                directoryName = afile.path + "/" + afile.name;
+                var fileStream = aBucket.GetObject(directoryName);
                 
-                    fileItem = new InMemoryFile(aBucket.GetObject(directoryName));
-                    fileItem.ContentType = GetContentType(afile.name);
-                    return fileItem;
+                fileItem = new InMemoryFile(fileStream);
+                fileItem.ContentType = GetContentType(afile.name);
+                fileItem.Length = fileStream != null ? fileStream.Length : 0;
+                return fileItem;
+                    
             }
             catch (Exception ex)
             {
