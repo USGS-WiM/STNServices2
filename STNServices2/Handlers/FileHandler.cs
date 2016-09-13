@@ -126,7 +126,6 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
 
                     fileItem = sa.GetFileItem(anEntity);
-                    if (fileItem == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
@@ -463,7 +462,6 @@ namespace STNServices2.Handlers
 
                         if (entity.Stream != null && entity.ContentType != null)
                         {
-
                             //Process Stream
                             if (entity.Headers.ContentDisposition.Name.Equals("File"))
                             {
@@ -495,7 +493,6 @@ namespace STNServices2.Handlers
                                             uploadFile = (file)jsonSerializer.Deserialize(jsonTextReader, typeof(file));
                                         }
                                     }//end using
-
                                 }
                             }
                         }
@@ -511,9 +508,16 @@ namespace STNServices2.Handlers
                     {
                         using (STNAgent sa = new STNAgent(username, securedPassword, true))
                         {
-                            //Update path SHOULDN"T THIS BE .name and then in .AddFile, the path will be the SITE_ or EVENT_ path to the s3 bucket
+                            //now remove existing fileItem for this file
+                            if (uploadFile.file_id > 0)
+                                sa.RemoveFileItem(uploadFile);
+                            
                             uploadFile.name = filename;
-                            sa.AddFile(uploadFile, memoryStream);
+                            //are they 'reuploading lost fileItem to existing file or posting new fileItem with new file
+                            if (uploadFile.file_id > 0)
+                                sa.PutFileItem(uploadFile, memoryStream);
+                            else
+                                sa.AddFile(uploadFile, memoryStream);
                             sm(sa.Messages);
                         }//end using
                     }//end using
@@ -524,7 +528,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }//end catch
         }//end HttpMethod.POST
-
+        
         #endregion
 
         #region PutMethods
@@ -555,6 +559,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.PUT
 
+      
         #endregion
 
         #region DeleteMethods
