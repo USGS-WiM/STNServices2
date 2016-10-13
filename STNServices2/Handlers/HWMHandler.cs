@@ -517,6 +517,8 @@ namespace STNServices2.Handlers
                              surveyMemberName = hw.survey_member_id > 0 && hw.survey_member != null ? hw.survey_member.fname + " " + hw.survey_member.lname : "",
                              peak_summary_id = hw.peak_summary_id,
                              site_no = hw.site != null ? hw.site.site_no : "",
+                             site_latitude = hw.site != null? hw.site.latitude_dd: 0,
+                             site_longitude = hw.site != null? hw.site.longitude_dd: 0,
                              siteDescription = hw.site != null ? hw.site.site_description : "",
                              networkNames = hw.site != null && hw.site.network_name_site.Count > 0 ? (hw.site.network_name_site.Where(ns => ns.site_id == hw.site.site_id).ToList()).Select(x => x.network_name.name).Distinct().Aggregate((x, j) => x + ", " + j) : "",
                              stateName = hw.site != null ? hw.site.state:"",
@@ -629,7 +631,8 @@ namespace STNServices2.Handlers
 
                         //remove files
                         ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        ObjectToBeDeleted.files.Clear();                        
+                        ObjectToBeDeleted.files.ToList().ForEach(f => sa.Delete<file>(f));
+                        //ObjectToBeDeleted.files.Clear();                        
                         ////delete HWM now
                         sa.Delete(ObjectToBeDeleted);
 
@@ -637,8 +640,7 @@ namespace STNServices2.Handlers
                         {
                             approval item = sa.Select<approval>().SingleOrDefault(h => h.approval_id == approvalID);
                             sa.Delete<approval>(item);
-                        }                       
-   
+                        }                          
                         
                         sm(sa.Messages);
                         #endregion

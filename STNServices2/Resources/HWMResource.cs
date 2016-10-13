@@ -33,6 +33,8 @@ namespace STNServices2.Resources
         public string siteZone { get; set; }
         public string sitePermHousing { get; set; }
         public string siteNotes { get; set; }
+        public double site_latitude { get; set; }
+        public double site_longitude { get; set; }
     }//end class HWMDownloadable
 
 
