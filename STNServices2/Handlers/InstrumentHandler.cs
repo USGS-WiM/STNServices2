@@ -639,20 +639,32 @@ namespace STNServices2.Handlers
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
-                    {
+                    {                        
+                        List<instrument_status> insStatList = sa.Select<instrument_status>().Where(ins => ins.instrument_id == entityId).ToList();
+                        List<Int32> SIDs = new List<Int32>();
+                        //delete the statuses and get the id
+                        foreach (instrument_status i in insStatList)
+                        {
+                            SIDs.Add(i.instrument_status_id);
+                            sa.Delete<instrument_status>(i);
+                        }
+                        
+                        //get and delete all op_measurements
+                        foreach(Int32 id in SIDs)
+                        {
+                            sa.Select<op_measurements>().Where(o => o.instrument_status_id == id).ToList().ForEach(op => sa.Delete<op_measurements>(op));
+                        }
+
                         //fetch the object to be updated (assuming that it exists)
-                        instrument ObjectToBeDeleted = sa.Select<instrument>().Include(df => df.data_files).Include(f => f.files).Include(s => s.instrument_status).SingleOrDefault(c => c.instrument_id == entityId);
+                        instrument ObjectToBeDeleted = sa.Select<instrument>().Include(c=>c.files).Include(c=>c.data_files).SingleOrDefault(c => c.instrument_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
                                                 
                         //remove files
                         ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        ObjectToBeDeleted.files.Clear();
-
-                        //remove datafile
-                        ObjectToBeDeleted.data_files.Clear();
-
-                        //remove instrument status
-                        ObjectToBeDeleted.instrument_status.Clear();
+                        ObjectToBeDeleted.files.ToList().ForEach(f=> sa.Delete<file>(f));
+                        
+                        //remove datafile          
+                        ObjectToBeDeleted.data_files.ToList().ForEach(df => sa.Delete<data_file>(df));
                         
                         //delete instrument
                         sa.Delete<instrument>(ObjectToBeDeleted);
@@ -669,46 +681,6 @@ namespace STNServices2.Handlers
         }
 
         #endregion
-        #region Helper Methods
-
-        //private string BuildFilePath(FILES uploadFile, string fileName)
-        //{
-        //    try
-        //    {
-        //        //determine default object name
-        //        // ../SITE/3043/ex.jpg
-        //        List<string> objectName = new List<string>();
-        //        objectName.Add("SITE");
-        //        objectName.Add(uploadFile.SITE_ID.ToString());
-
-        //        if (uploadFile.HWM_ID != null && uploadFile.HWM_ID > 0)
-        //        {
-        //            // ../SITE/3043/HWM/7956/ex.jpg
-        //            objectName.Add("HWM");
-        //            objectName.Add(uploadFile.HWM_ID.ToString());
-        //        }
-        //        else if (uploadFile.DATA_FILE_ID != null && uploadFile.DATA_FILE_ID > 0)
-        //        {
-        //            // ../SITE/3043/DATA_FILE/7956/ex.txt
-        //            objectName.Add("DATA_FILE");
-        //            objectName.Add(uploadFile.DATA_FILE_ID.ToString());
-        //        }
-        //        else if (uploadFile.INSTRUMENT_ID != null && uploadFile.INSTRUMENT_ID > 0)
-        //        {
-        //            // ../SITE/3043/INSTRUMENT/7956/ex.jpg
-        //            objectName.Add("INSTRUMENT");
-        //            objectName.Add(uploadFile.INSTRUMENT_ID.ToString());
-        //        }
-        //        objectName.Add(fileName);
-
-        //        return string.Join("/", objectName);
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
-
-        #endregion
+       
     }//end class InstrumentHandler
 }//end namespace

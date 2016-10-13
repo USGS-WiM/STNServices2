@@ -51,11 +51,15 @@ namespace STNServices2.Handlers
             try
             {
                 if (latitude <= 0 || longitude >= 0) throw new BadRequestException("Invalid input parameters");
-                var client = new RestClient(ConfigurationManager.AppSettings["GeocoderServer"]);
-                var request = new RestRequest("/geocoder/geographies/coordinates?benchmark=4&vintage=4&format=json", Method.GET);
-
-                request.AddParameter("x", longitude);
-                request.AddParameter("y", latitude);
+               
+                var client = new RestClient("https://geocoding.geo.census.gov");                
+                string url = string.Format("geocoder/geographies/coordinates?x={0}&y={1}&benchmark=4&vintage=4&format=json", longitude, latitude );
+                var request = new RestRequest(url, Method.GET);
+                
+                //without this, get ssl/tsl error
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };      
+               
                 IRestResponse response = client.Execute(request);
 
                 return new OperationResult.OK { ResponseResource = JsonConvert.DeserializeObject(response.Content) };
