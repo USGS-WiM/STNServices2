@@ -135,7 +135,15 @@ namespace STNServices2.Test
         //    }
 
         //}//end method
+        [TestMethod]
+        public void GeoCoderRequest()
+        {
+            //GET location
+            object RequestLocation = this.GETRequest<object>(host + "Geocode/location?Latitude=45.564564&Longitude=-89.456");
+            Assert.IsNotNull(RequestLocation);
 
+            
+        }//end method
         [TestMethod]
         public void ContactRequest()
         {
@@ -997,7 +1005,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(roleMemberList, roleMemberList.Count.ToString());
 
             //GET GetEventMembers
-            List<member> eventMemberList = this.GETRequest<List<member>>(host + Configuration.eventsResource + "/8/" + Configuration.memberResource, basicAuth);
+            List<member> eventMemberList = this.GETRequest<List<member>>(host + Configuration.eventsResource + "/135/" + Configuration.memberResource, basicAuth);
             Assert.IsNotNull(eventMemberList, eventMemberList.Count.ToString());
 
             //POST
@@ -1511,7 +1519,7 @@ namespace STNServices2.Test
             site postObj;
             postObj = this.POSTRequest<site>(host + Configuration.siteResource, new site() { 
                 site_description = "site_post1", latitude_dd = 45.52, longitude_dd = -89.32, hdatum_id = 1,
-                hcollect_method_id = 1, state = "WI", county = "Dane County", waterbody = "test2", member_id = 1}, basicAuth);
+                hcollect_method_id = 1, state = "WI", county = "St. John", waterbody = "test2", member_id = 1}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.site_id.ToString());
 
             //GET POSTed item

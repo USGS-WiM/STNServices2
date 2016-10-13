@@ -242,7 +242,7 @@
           </Key>
           <Property Name="instrument_status_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="status_type_id" Type="int4" />
-          <Property Name="instrument_id" Type="int4" />
+          <Property Name="instrument_id" Type="int4" StoreGeneratedPattern="None" />
           <Property Name="time_stamp" Type="timestamp" />
           <Property Name="notes" Type="varchar" MaxLength="255" />
           <Property Name="time_zone" Type="varchar" MaxLength="8" />
@@ -930,9 +930,9 @@
           </Key>
           <Property Name="instrument_status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="status_type_id" Type="Int32" />
-          <Property Name="instrument_id" Type="Int32" />
+          <Property Name="instrument_id" Type="Int32" annotation:StoreGeneratedPattern="None" />
           <Property Name="time_stamp" Type="DateTime" Precision="6" />
-          <Property Name="notes" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="600" FixedLength="false" Unicode="true" />
           <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="member_id" Type="Int32" />
           <Property Name="sensor_elevation" Type="Double" />
@@ -1960,8 +1960,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="instrumentinstrument_status">
-          <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
-          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" />
+          <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" >
+          </End>
+          <End Type="STNNEWModel.instrument_status" Role="instrument_status" Multiplicity="*" >
+          </End>
           <ReferentialConstraint>
             <Principal Role="instrument">
               <PropertyRef Name="instrument_id" />
@@ -1996,7 +1998,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="data_fileinstrument">
-          <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" />
+          <End Type="STNNEWModel.data_file" Role="data_file" Multiplicity="*" >
+          </End>
           <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="instrument">
@@ -2008,8 +2011,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="instrumentfile">
-          <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" />
-          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
+          <End Type="STNNEWModel.instrument" Role="instrument" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="STNNEWModel.file" Role="file" Multiplicity="*" >
+          </End>
           <ReferentialConstraint>
             <Principal Role="instrument">
               <PropertyRef Name="instrument_id" />
@@ -2408,7 +2414,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="objective_pointfile">
-          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" />
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="STNNEWModel.file" Role="file" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="objective_point">
@@ -2420,7 +2428,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="objective_pointop_control_identifier">
-          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" />
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="STNNEWModel.op_control_identifier" Role="op_control_identifier" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="objective_point">
@@ -2432,7 +2442,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="objective_pointop_measurements">
-          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="1" />
+          <End Type="STNNEWModel.objective_point" Role="objective_point" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="STNNEWModel.op_measurements" Role="op_measurements" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="objective_point">
