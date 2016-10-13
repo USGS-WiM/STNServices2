@@ -165,9 +165,28 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                       // try
+                       // {
                         anEntity = sa.Update<instrument_status>(entityId, anEntity);
                         sm(sa.Messages);
-
+                       // }
+                       //  catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+                         //{
+                         //    Exception raise = dbEx;
+                         //    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                         //    {
+                         //        foreach (var validationError in validationErrors.ValidationErrors)
+                         //        {
+                         //            string message = string.Format("{0}:{1}",
+                         //                validationErrors.Entry.Entity.ToString(),
+                         //                validationError.ErrorMessage);
+                         //            // raise a new exception nesting
+                         //            // the current instance as InnerException
+                         //            raise = new InvalidOperationException(message, raise);
+                         //        }
+                         //    }
+                         //    throw raise;
+                         //}                   
                     }//end using
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };

@@ -326,7 +326,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

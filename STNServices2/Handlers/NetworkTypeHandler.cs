@@ -228,8 +228,8 @@ namespace STNServices2.Handlers
 
                         network_type_site ObjectToBeDeleted = sa.Select<network_type_site>().SingleOrDefault(nns => nns.site_id == siteId && nns.network_type_id == networkTypeId);
                       
-                        if (ObjectToBeDeleted == null) throw new NotFoundRequestException();
-                        sa.Delete<network_type_site>(ObjectToBeDeleted);
+                        if (ObjectToBeDeleted != null) 
+                            sa.Delete<network_type_site>(ObjectToBeDeleted);
                         sm(sa.Messages);
                     }//end using
                 }//end using
