@@ -210,16 +210,16 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        objective_point ObjectToBeDeleted = sa.Select<objective_point>().Include(i => i.files).Include(i => i.op_control_identifier).FirstOrDefault(i => i.objective_point_id == entityId);
+                        //delete opControlIdentifiers first
+                        sa.Select<op_control_identifier>().Where(opc => opc.objective_point_id == entityId).ToList().ForEach(o => sa.Delete<op_control_identifier>(o));
+
+                        objective_point ObjectToBeDeleted = sa.Select<objective_point>().Include(i => i.files).FirstOrDefault(i => i.objective_point_id == entityId);
                         if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
                                                
                         //remove files
                         ObjectToBeDeleted.files.ToList().ForEach(f => sa.RemoveFileItem(f));
-                        ObjectToBeDeleted.files.Clear();
-                        
-                        //delete op_control_identifiers for this op
-                        ObjectToBeDeleted.op_control_identifier.Clear();
-                       
+                        ObjectToBeDeleted.files.ToList().ForEach(f => sa.Delete<file>(f));
+                                                                       
                         sa.Delete<objective_point>(ObjectToBeDeleted);
                         sm(sa.Messages);
                     }//end using
