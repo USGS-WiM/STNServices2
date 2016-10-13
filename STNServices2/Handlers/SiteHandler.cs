@@ -689,8 +689,13 @@ namespace STNServices2.Handlers
             }
             else
             {
-                //remove . and space from counties like 'st. lucie'
+                //remove . and space from counties like 'st. lucie'  this only removes from start and end of name
                 siteCounty = siteCounty.Trim(new Char[] { ' ', '.' });
+                //if there's a dot, remove it and the space following
+                if (siteCounty.IndexOf(".") > -1)
+                {
+                    siteCounty = siteCounty.Remove(siteCounty.IndexOf("."),2);
+                }
                 siteNo = siteState + siteCounty.Substring(0, 3).ToUpper() + siteID.ToString("D5");
             }
 
