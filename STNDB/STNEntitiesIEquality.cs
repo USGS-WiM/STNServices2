@@ -371,21 +371,21 @@ namespace STNDB
                     this.hwm_quality_id == other.hwm_quality_id &&
                     this.site_id.Value == other.site_id.Value &&
                     (this.event_id == other.event_id || other.event_id <= 0 || other.event_id == null) &&
-                    (!this.flag_date.HasValue || DateTime.Equals(this.flag_date.Value, other.flag_date.Value)) &&
+                    (!this.flag_date.HasValue || !other.flag_date.HasValue || DateTime.Equals(this.flag_date.Value, other.flag_date.Value)) &&
                     (string.IsNullOrEmpty(other.waterbody) || string.Equals(this.waterbody, other.waterbody, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.bank) || string.Equals(this.bank, other.bank, StringComparison.OrdinalIgnoreCase)) &&
-                    (!other.latitude_dd.HasValue || this.latitude_dd.Value == other.latitude_dd.Value) &&
-                    (!other.longitude_dd.HasValue||this.longitude_dd.Value == other.longitude_dd.Value) &&
-                    (!other.elev_ft.HasValue||this.elev_ft.Value == other.elev_ft.Value) &&
-                    (!other.vdatum_id.HasValue|| this.vdatum_id.Value == other.vdatum_id.Value) &&
-                    (!other.hdatum_id.HasValue||this.hdatum_id.Value == other.hdatum_id.Value) &&
-                    (!other.flag_member_id.HasValue || this.flag_member_id.Value == other.flag_member_id.Value) &&
-                    (!other.vcollect_method_id.HasValue||this.vcollect_method_id.Value == other.vcollect_method_id.Value) &&
-                    (!other.approval_id.HasValue||this.approval_id.Value == other.approval_id.Value) &&
-                    (!other.marker_id.HasValue||this.marker_id.Value == other.marker_id.Value) &&
-                    (other.uncertainty <= 0 || !other.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
-                    (other.hwm_uncertainty <= 0 || !other.hwm_uncertainty.HasValue || this.hwm_uncertainty == other.hwm_uncertainty) &&
-                    (!other.height_above_gnd.HasValue||this.height_above_gnd.Value == other.height_above_gnd.Value));
+                    (!other.latitude_dd.HasValue || !this.latitude_dd.HasValue || this.latitude_dd.Value == other.latitude_dd.Value) &&
+                    (!other.longitude_dd.HasValue || !this.longitude_dd.HasValue || this.longitude_dd.Value == other.longitude_dd.Value) &&
+                    (!other.elev_ft.HasValue || !this.elev_ft.HasValue || this.elev_ft.Value == other.elev_ft.Value) &&
+                    (!other.vdatum_id.HasValue || !this.vdatum_id.HasValue || this.vdatum_id.Value == other.vdatum_id.Value) &&
+                    (!other.hdatum_id.HasValue || !this.hdatum_id.HasValue || this.hdatum_id.Value == other.hdatum_id.Value) &&
+                    (!other.flag_member_id.HasValue || !this.flag_member_id.HasValue || this.flag_member_id.Value == other.flag_member_id.Value) &&
+                    (!other.vcollect_method_id.HasValue || !this.vcollect_method_id.HasValue || this.vcollect_method_id.Value == other.vcollect_method_id.Value) &&
+                    (!other.approval_id.HasValue || !this.approval_id.HasValue || this.approval_id.Value == other.approval_id.Value) &&
+                    (!other.marker_id.HasValue || !this.marker_id.HasValue || this.marker_id.Value == other.marker_id.Value) &&
+                    (other.uncertainty <= 0 || !other.uncertainty.HasValue || !this.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
+                    (other.hwm_uncertainty <= 0 || !other.hwm_uncertainty.HasValue || !this.hwm_uncertainty.HasValue || this.hwm_uncertainty == other.hwm_uncertainty) &&
+                    (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd.Value == other.height_above_gnd.Value));
         }
         public override bool Equals(object obj)
         {
