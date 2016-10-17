@@ -642,7 +642,7 @@ namespace STNServices2.Test
 
             //GET eventHWMs "/Events/{eventId}/HWMs"
             Int32 eventId = this.GETRequest<List<events>>(host + Configuration.eventsResource).Find(e => e.hwms != null).event_id;
-            List<hwm> eventHWMList = this.GETRequest<List<hwm>>(host + Configuration.eventsResource + "/" + eventId + "/" + Configuration.hwmResource, basicAuth);
+            List<hwm> eventHWMList = this.GETRequest<List<hwm>>(host + Configuration.eventsResource + "/135/" + Configuration.hwmResource, basicAuth);
             Assert.IsNotNull(eventHWMList, eventHWMList.Count.ToString());
 
             //GET SiteEventHWMs "Sites/{siteId}/EventHWMs?Event={eventId}"
@@ -1484,7 +1484,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
             //GET GetEventSites
-            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/18/" + Configuration.siteResource);
+            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/135/" + Configuration.siteResource);
             Assert.IsNotNull(eventSites, eventSites.Count.ToString());
 
             //GET getNetworkTypeSites
