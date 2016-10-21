@@ -66,7 +66,7 @@ namespace STNServices2.Test
             //POST DataFileApproval
             List<data_file> df = this.GETRequest<List<data_file>>(host + Configuration.datafileResource, basicAuth);
             approval postDFA; Int32 dfID = df.Find(x => !x.approval_id.HasValue).data_file_id;
-            postDFA = this.POSTRequest<approval>(host + Configuration.datafileResource + "/" + dfID + "Approve", null, basicAuth);
+            postDFA = this.POSTRequest<approval>(host + Configuration.datafileResource + "/" + dfID + "/Approve", null, basicAuth);
             Assert.IsNotNull(postDFA, "ID: " + postDFA.approval_id.ToString());
             
             //'GetDataFileApproval'            
@@ -639,6 +639,10 @@ namespace STNServices2.Test
             //GET LIST
             List<hwm> RequestList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource);
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
+
+            //GET GetEventStateHWMs "/Events/{eventId}/eventStateHWMs?state={state}"            
+            List<hwm> eventStHWMList = this.GETRequest<List<hwm>>(host + Configuration.eventsResource + "/10/stateHWMs?State=PA", basicAuth);
+            Assert.IsNotNull(eventStHWMList, eventStHWMList.Count.ToString());
 
             //GET eventHWMs "/Events/{eventId}/HWMs"
             Int32 eventId = this.GETRequest<List<events>>(host + Configuration.eventsResource).Find(e => e.hwms != null).event_id;
