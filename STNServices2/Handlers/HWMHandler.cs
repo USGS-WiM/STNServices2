@@ -173,6 +173,39 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }// end HttpMethod.GET                   
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventStateHWMs")]
+        public OperationResult GetEventStateHWMs(string eventId, string state)
+        {
+            try
+            {
+                List<hwm> entities = null;
+
+                //set defaults                
+                string filterState = GetStateByName(state).ToString();
+                Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
+
+                using (STNAgent sa = new STNAgent())
+                {
+                    IQueryable<hwm> query = sa.Select<hwm>().Include(h => h.site);
+                    
+                    if (filterEvent > 0)
+                        query = query.Where(h => h.event_id == filterEvent);
+
+                    //TODO :: change this to be state_id
+                    if (filterState != State.UNSPECIFIED.ToString())
+                        query = query.Where(h => h.site.state == filterState);
+                                        
+                    entities = query.AsEnumerable().ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+
+                }//end using
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }// end HttpMethod.GET                   
+
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovedHWMs")]
         public OperationResult GetApprovedHWMs(Int32 ApprovalId)
         {
@@ -450,7 +483,7 @@ namespace STNServices2.Handlers
                         query = query.Where(i => stateList.Contains(i.site.state));
 
                     if (countyList != null && countyList.Count > 0)
-                        query = query.Where(i => countyList.Contains(i.site.county));
+                        query = query.Where(i => countyList.Contains(i.site.county.ToUpper()));
 
                     if (hwmTypeIdList != null && hwmTypeIdList.Count > 0)
                         query = query.Where(i => hwmTypeIdList.Contains(i.hwm_type_id));
@@ -492,6 +525,7 @@ namespace STNServices2.Handlers
                              latitude_dd = hw.latitude_dd,
                              longitude_dd = hw.longitude_dd,
                              elev_ft = hw.elev_ft,
+                             uncertainty = hw.uncertainty,
                              vdatum_id = hw.vdatum_id,
                              verticalDatumName = hw.vdatum_id > 0 && hw.vertical_datums != null ? hw.vertical_datums.datum_name : "",
                              hdatum_id = hw.hdatum_id,
