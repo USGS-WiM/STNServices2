@@ -211,11 +211,15 @@ namespace STNServices2.Utilities.ServiceAgent
                 using (ZipFile zip = new ZipFile())
                 {
                     ms = new MemoryStream();
+                    
                     foreach (file f in files)
                     {
                         //Note: if empty folder exists, folder will not be included.
-                        zip.AddEntry(f.path, GetFileItem(f).OpenStream() );
-                        zip.Comment = "Downloaded: " + f.path;
+                        if (!zip.ContainsEntry(f.path + "/" + f.name))
+                        {
+                            zip.AddEntry(f.path + "/" + f.name, GetFileItem(f).OpenStream());
+                            zip.Comment = "Downloaded: " + f.path;
+                        }
                     }//end foreach
                     zip.Save(ms);
                     ms.Seek(0, SeekOrigin.Begin);
@@ -306,7 +310,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 case "stormtide_view":
                     return @"SELECT * FROM storm_tide_view;";
                 case "waveheight_view":
-                    return @"SELECT * FROM wave_height_view;";  
+                    return @"SELECT * FROM wave_height_view;";                
                 default:
                     throw new Exception("No sql for table " + type);
             }//end switch;

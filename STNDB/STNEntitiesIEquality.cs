@@ -53,7 +53,7 @@ namespace STNDB
         public bool Equals(approval other)
         {
             return this.member_id == other.member_id &&
-                        (DateTime.Equals(this.approval_date, other.approval_date) || !this.approval_date.HasValue);
+                        (!this.approval_date.HasValue || !other.approval_date.HasValue || DateTime.Equals(this.approval_date, other.approval_date));
                         
         }
         public override bool Equals(object obj)
@@ -137,14 +137,14 @@ namespace STNDB
         public bool Equals(data_file other)
         {
             return (this.instrument_id == other.instrument_id &&
-            (!other.start.HasValue || DateTime.Equals(this.start.Value, other.start.Value)) &&
-            (!other.end.HasValue || DateTime.Equals(this.end.Value, other.end.Value)) &&
-            (!other.good_start.HasValue || DateTime.Equals(this.good_start.Value, other.good_start.Value)) &&
-            (!other.good_end.HasValue || DateTime.Equals(this.good_end.Value, other.good_end.Value)) &&
-            (!other.collect_date.HasValue || DateTime.Equals(this.collect_date.Value, other.collect_date.Value)) &&
-            (!other.processor_id.HasValue || this.processor_id.Value == other.processor_id.Value || other.processor_id.Value <= 0) &&
-            (!other.peak_summary_id.HasValue || this.peak_summary_id.Value == other.peak_summary_id.Value || other.peak_summary_id.Value <= 0) &&
-            (!other.approval_id.HasValue || this.approval_id.Value == other.approval_id.Value || other.approval_id.Value <= 0));
+            (!other.start.HasValue || !this.start.HasValue || DateTime.Equals(this.start.Value, other.start.Value)) &&
+            (!other.end.HasValue || !this.end.HasValue || DateTime.Equals(this.end.Value, other.end.Value)) &&
+            (!other.good_start.HasValue || !this.good_start.HasValue || DateTime.Equals(this.good_start.Value, other.good_start.Value)) &&
+            (!other.good_end.HasValue || !this.good_end.HasValue || DateTime.Equals(this.good_end.Value, other.good_end.Value)) &&
+            (!other.collect_date.HasValue || !this.collect_date.HasValue || DateTime.Equals(this.collect_date.Value, other.collect_date.Value)) &&
+            (!other.processor_id.HasValue || !this.processor_id.HasValue || this.processor_id.Value == other.processor_id.Value || other.processor_id.Value <= 0) &&
+            (!other.peak_summary_id.HasValue || !this.peak_summary_id.HasValue || this.peak_summary_id.Value == other.peak_summary_id.Value || other.peak_summary_id.Value <= 0) &&
+            (!other.approval_id.HasValue || !this.approval_id.HasValue || this.approval_id.Value == other.approval_id.Value || other.approval_id.Value <= 0));
 
         }
         public override bool Equals(object obj)
@@ -243,8 +243,8 @@ namespace STNDB
         public bool Equals(events other)
         {
             return string.Equals(this.event_name, other.event_name) &&
-                                (!other.event_start_date.HasValue || DateTime.Equals(this.event_start_date.Value, other.event_start_date.Value)) &&
-                                (!other.event_end_date.HasValue || DateTime.Equals(this.event_end_date.Value, other.event_end_date.Value)) &&
+                                (!other.event_start_date.HasValue || !this.event_start_date.HasValue || DateTime.Equals(this.event_start_date.Value, other.event_start_date.Value)) &&
+                                (!other.event_end_date.HasValue || !this.event_end_date.HasValue || DateTime.Equals(this.event_end_date.Value, other.event_end_date.Value)) &&
                                 (this.event_type_id == other.event_type_id || other.event_type_id <= 0 || other.event_type_id == null);
         }
         public override bool Equals(object obj)
@@ -263,17 +263,17 @@ namespace STNDB
     {
         public bool Equals(file other)
         {
-            return  (!other.hwm_id.HasValue || this.hwm_id == other.hwm_id) &&
-                    (!other.site_id.HasValue || this.site_id == other.site_id) &&
-                    (!other.instrument_id.HasValue || this.instrument_id == other.instrument_id) &&
-                    (!other.data_file_id.HasValue || this.data_file_id == other.data_file_id) &&
-                    (!other.filetype_id.HasValue || this.filetype_id == other.filetype_id) &&
-                    (!other.source_id.HasValue || this.source_id == other.source_id) &&
+            return (!other.hwm_id.HasValue || !this.hwm_id.HasValue || this.hwm_id == other.hwm_id) &&
+                    (!other.site_id.HasValue || !this.site_id.HasValue || this.site_id == other.site_id) &&
+                    (!other.instrument_id.HasValue || !this.instrument_id.HasValue || this.instrument_id == other.instrument_id) &&
+                    (!other.data_file_id.HasValue || !this.data_file_id.HasValue || this.data_file_id == other.data_file_id) &&
+                    (!other.filetype_id.HasValue || !this.filetype_id.HasValue || this.filetype_id == other.filetype_id) &&
+                    (!other.source_id.HasValue || !this.source_id.HasValue || this.source_id == other.source_id) &&
                     (string.IsNullOrEmpty(other.path) || string.Equals(this.path, other.path, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.photo_direction) || string.Equals(this.photo_direction, other.photo_direction,StringComparison.OrdinalIgnoreCase)) &&
-                    (!other.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
-                    (!other.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&
-                    (!other.file_date.HasValue || DateTime.Equals(this.file_date.Value, other.file_date.Value));
+                    (!other.latitude_dd.HasValue || !this.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
+                    (!other.longitude_dd.HasValue || !this.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&
+                    (!other.file_date.HasValue || !this.file_date.HasValue || DateTime.Equals(this.file_date.Value, other.file_date.Value));
 
         }
         public override bool Equals(object obj)
@@ -461,13 +461,13 @@ namespace STNDB
         public bool Equals(instrument other)
         {
             var t = this.sensor_type_id.Value == other.sensor_type_id.Value &&
-                    (!other.deployment_type_id.HasValue || other.deployment_type_id <= 0|| this.deployment_type_id == other.deployment_type_id ) &&
-                    (!other.sensor_brand_id.HasValue || other.sensor_brand_id <= 0 || this.sensor_brand_id == other.sensor_brand_id ) &&
-                    (!other.interval.HasValue || other.interval <= 0 || this.interval == other.interval ) &&
-                    (!other.site_id.HasValue || other.site_id <= 0 || this.site_id == other.site_id) &&
-                    (!other.inst_collection_id.HasValue || other.inst_collection_id <= 0 || this.inst_collection_id == other.inst_collection_id) &&
-                    (!other.housing_type_id.HasValue || other.housing_type_id <= 0 || this.housing_type_id == other.housing_type_id) &&
-                    (!other.event_id.HasValue ||other.event_id <= 0 || this.event_id == other.event_id ) &&
+                    (!other.deployment_type_id.HasValue || !this.deployment_type_id.HasValue || other.deployment_type_id <= 0 || this.deployment_type_id == other.deployment_type_id) &&
+                    (!other.sensor_brand_id.HasValue || !this.sensor_brand_id.HasValue || other.sensor_brand_id <= 0 || this.sensor_brand_id == other.sensor_brand_id) &&
+                    (!other.interval.HasValue || !this.interval.HasValue || other.interval <= 0 || this.interval == other.interval) &&
+                    (!other.site_id.HasValue || !this.site_id.HasValue || other.site_id <= 0 || this.site_id == other.site_id) &&
+                    (!other.inst_collection_id.HasValue || !this.inst_collection_id.HasValue || other.inst_collection_id <= 0 || this.inst_collection_id == other.inst_collection_id) &&
+                    (!other.housing_type_id.HasValue || !this.housing_type_id.HasValue || other.housing_type_id <= 0 || this.housing_type_id == other.housing_type_id) &&
+                    (!other.event_id.HasValue || !this.event_id.HasValue || other.event_id <= 0 || this.event_id == other.event_id) &&
                     (string.IsNullOrEmpty(other.location_description) || string.Equals(this.location_description, other.location_description,StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.serial_number) || string.Equals(this.serial_number, other.serial_number,StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrEmpty(other.vented) || string.Equals(this.vented, other.vented,StringComparison.OrdinalIgnoreCase)) &&
@@ -493,11 +493,11 @@ namespace STNDB
         {
             return this.instrument_id == other.instrument_id &&
                    this.status_type_id == other.status_type_id &&
-                   (!other.member_id.HasValue || this.member_id == other.member_id || other.member_id <= 0) &&
+                   (!other.member_id.HasValue || !this.member_id.HasValue || this.member_id == other.member_id || other.member_id <= 0) &&
                    (string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone, StringComparison.OrdinalIgnoreCase)) &&
-                   (!other.sensor_elevation.HasValue || this.sensor_elevation == other.sensor_elevation) &&
-                   (!other.ws_elevation.HasValue || this.ws_elevation == other.ws_elevation) &&
-                   (!other.gs_elevation.HasValue || this.gs_elevation == other.gs_elevation);
+                   (!other.sensor_elevation.HasValue || !this.sensor_elevation.HasValue || this.sensor_elevation == other.sensor_elevation) &&
+                   (!other.ws_elevation.HasValue || !this.ws_elevation.HasValue || this.ws_elevation == other.ws_elevation) &&
+                   (!other.gs_elevation.HasValue || !this.gs_elevation.HasValue || this.gs_elevation == other.gs_elevation);
         }
 
         public override bool Equals(object obj)
@@ -630,19 +630,19 @@ namespace STNDB
         {
             return (string.Equals(this.name, other.name, StringComparison.OrdinalIgnoreCase) && 
                 (string.IsNullOrEmpty(other.description) || string.Equals(this.description, other.description, StringComparison.OrdinalIgnoreCase)) &&
-                (!other.date_established.HasValue || DateTime.Equals(this.date_established, other.date_established)) && 
+                (!other.date_established.HasValue || !this.date_established.HasValue || DateTime.Equals(this.date_established, other.date_established)) && 
                 this.elev_ft == other.elev_ft) &&
-                (!other.date_recovered.HasValue || DateTime.Equals(this.date_recovered, other.date_recovered)) &&
+                (!other.date_recovered.HasValue || !this.date_recovered.HasValue || DateTime.Equals(this.date_recovered, other.date_recovered)) &&
                 (this.op_is_destroyed == other.op_is_destroyed) &&
                 (string.IsNullOrEmpty(other.op_notes) || string.Equals(this.op_notes, other.op_notes, StringComparison.OrdinalIgnoreCase)) &&
                 (this.site_id == other.site_id) &&
-                (!other.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
-                (!other.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&
-                (!other.vdatum_id.HasValue || other.vdatum_id <= 0 || this.vdatum_id == other.vdatum_id) &&
-                (other.hdatum_id <= 0 || !other.hdatum_id.HasValue || this.hdatum_id == other.hdatum_id) &&
-                (other.vcollect_method_id <= 0 || !other.vcollect_method_id.HasValue || this.vcollect_method_id == other.vcollect_method_id) &&
-                (other.hcollect_method_id <= 0 || !other.hcollect_method_id.HasValue || this.hcollect_method_id == other.hcollect_method_id) &&
-                (other.uncertainty <= 0 || !other.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
+                (!other.latitude_dd.HasValue || !this.latitude_dd.HasValue || this.latitude_dd == other.latitude_dd) &&
+                (!other.longitude_dd.HasValue || !this.longitude_dd.HasValue || this.longitude_dd == other.longitude_dd) &&
+                (!other.vdatum_id.HasValue || !this.vdatum_id.HasValue || other.vdatum_id <= 0 || this.vdatum_id == other.vdatum_id) &&
+                (other.hdatum_id <= 0 || !this.hdatum_id.HasValue || this.hdatum_id == other.hdatum_id) &&
+                (other.vcollect_method_id <= 0 || !other.vcollect_method_id.HasValue || !this.vcollect_method_id.HasValue || this.vcollect_method_id == other.vcollect_method_id) &&
+                (other.hcollect_method_id <= 0 || !other.hcollect_method_id.HasValue || !this.hcollect_method_id.HasValue || this.hcollect_method_id == other.hcollect_method_id) &&
+                (other.uncertainty <= 0 || !other.uncertainty.HasValue || !this.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
                 (string.IsNullOrEmpty(other.unquantified) || string.Equals(this.unquantified, other.unquantified, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -750,21 +750,21 @@ namespace STNDB
     {
         public bool Equals(peak_summary other)
         {
-            return (this.member_id == other.member_id) && !other.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
+            return (this.member_id == other.member_id) && !other.peak_date.HasValue || !this.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
                 (other.is_peak_estimated <= 0 || this.is_peak_estimated == other.is_peak_estimated || other.is_peak_estimated <= 0 ) &&
                 (other.is_peak_time_estimated <= 0 || this.is_peak_time_estimated == other.is_peak_time_estimated || other.is_peak_time_estimated <= 0) &&
-                (!other.peak_stage.HasValue || this.peak_stage == other.peak_stage || other.peak_stage <= 0) &&
+                (!other.peak_stage.HasValue || !this.peak_stage.HasValue || this.peak_stage == other.peak_stage || other.peak_stage <= 0) &&
                 (other.is_peak_stage_estimated <= 0 || this.is_peak_stage_estimated == other.is_peak_stage_estimated || other.is_peak_stage_estimated <= 0) &&
-                (!other.peak_discharge.HasValue || this.peak_discharge == other.peak_discharge || other.peak_discharge <= 0) &&
+                (!other.peak_discharge.HasValue || !this.peak_discharge.HasValue || this.peak_discharge == other.peak_discharge || other.peak_discharge <= 0) &&
                 (other.is_peak_discharge_estimated <= 0 || this.is_peak_discharge_estimated == other.is_peak_discharge_estimated || (other.is_peak_discharge_estimated <= 0)) &&
-                (!other.vdatum_id.HasValue || this.vdatum_id == other.vdatum_id || other.vdatum_id <= 0) &&
-                (!other.height_above_gnd.HasValue || this.height_above_gnd == other.height_above_gnd || other.height_above_gnd <= 0) &&
-                (!other.is_hag_estimated.HasValue || this.is_hag_estimated == other.is_hag_estimated || other.is_hag_estimated <= 0) &&
+                (!other.vdatum_id.HasValue || !this.vdatum_id.HasValue || this.vdatum_id == other.vdatum_id || other.vdatum_id <= 0) &&
+                (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd == other.height_above_gnd || other.height_above_gnd <= 0) &&
+                (!other.is_hag_estimated.HasValue || !this.is_hag_estimated.HasValue || this.is_hag_estimated == other.is_hag_estimated || other.is_hag_estimated <= 0) &&
                 (!string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone)) &&
-                (!other.aep.HasValue|| this.aep == other.aep || other.aep <= 0) &&
-                (!other.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci || other.aep_lowci <= 0) &&
-                (!other.aep_upperci.HasValue || this.aep_upperci == other.aep_upperci || other.aep_upperci <= 0) &&
-                (!other.aep_range.HasValue || this.aep_range == other.aep_range || other.aep_range <= 0) &&
+                (!other.aep.HasValue || !this.aep.HasValue || this.aep == other.aep || other.aep <= 0) &&
+                (!other.aep_lowci.HasValue || !this.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci || other.aep_lowci <= 0) &&
+                (!other.aep_upperci.HasValue || !this.aep_upperci.HasValue || this.aep_upperci == other.aep_upperci || other.aep_upperci <= 0) &&
+                (!other.aep_range.HasValue || !this.aep_range.HasValue || this.aep_range == other.aep_range || other.aep_range <= 0) &&
                 (string.Equals(this.calc_notes, other.calc_notes, StringComparison.OrdinalIgnoreCase));
         }
 

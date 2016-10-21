@@ -470,6 +470,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
             .And.AtUri(eventsResource+"/{eventId}/EventFileItems").Named("GetEventFileItems")
+            //.And.AtUri(eventsResource+"/{eventId}/EventFileItems1?HWMFiles={hwmFiles}&HWMFileType={hwmFileTypes}&SensorFiles={sensorFiles}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems1")
             .HandledBy<FileHandler>();
         }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
@@ -553,6 +554,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<List<hwm>>()
             .AtUri(hwmResource).Named("GetAllHWMs")
             .And.AtUri(eventsResource+"/{eventId}/"+hwmResource).Named("GetEventHWMs")
+            .And.AtUri(eventsResource + "/{eventId}/stateHWMs?State={state}").Named("GetEventStateHWMs")
             .And.AtUri(siteResource+"/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
             .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
             .And.AtUri(approvalResource+"/{ApprovalId}/"+hwmResource).Named("GetApprovedHWMs")
