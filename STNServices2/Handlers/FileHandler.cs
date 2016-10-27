@@ -333,84 +333,24 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         //get event file items back in zip file - will be adding additional filters on here soon
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
-        public OperationResult GetEventFileItems(Int32 eventId)
-        {
-            List<file> entities = null;
-            InMemoryFile fileItem = null;
-           
-            try
-            {
-                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent())
-                {
-                    //all files for this event
-                    entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
-                        .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId).ToList();
-                   
-                    sm(MessageType.info, "FileCount:" + entities.Count);
-                    fileItem = sa.GetFileItemZip(entities);
-
-                    sm(MessageType.info, "Count: " + entities.Count());
-                    sm(sa.Messages);
-                }//end using
-
-                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
-            }
-            catch (Exception ex)
-            { return HandleException(ex); }
-        }//end HttpMethod.GET
-
-
-
-        //working on this new version
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems1")]
-        //public OperationResult GetEventFileItems1(Int32 eventId, [Optional] string hwmFiles, [Optional] string sensorFiles, [Optional] string hwmFileTypes, [Optional] string sensorFileTypes)
+        //[HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
+        //public OperationResult GetEventFileItems(Int32 eventId)
         //{
         //    List<file> entities = null;
         //    InMemoryFile fileItem = null;
-        //    char[] delimiterChars = { ';', ',', ' ' }; 
-        //    List<decimal> hwmFTList = !string.IsNullOrEmpty(hwmFileTypes) ? hwmFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-        //    List<decimal> sensFTList = !string.IsNullOrEmpty(sensorFileTypes) ? sensorFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
-            
+
         //    try
         //    {
         //        if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
         //        using (STNAgent sa = new STNAgent())
         //        {
         //            //all files for this event
-        //            IQueryable<file> allEventFilesQuery = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
-        //                .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId);
+        //            entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
+        //                .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId).ToList();
 
-        //            IQueryable<file> hwmFilesQuery = null;
-        //            IQueryable<file> sensorFilesQuery = null;
-
-        //            //only HWM files only
-        //            if (!string.IsNullOrEmpty(hwmFiles))
-        //            {
-        //                //only site files
-        //                hwmFilesQuery = allEventFilesQuery.Where(f => f.hwm_id.HasValue && !f.instrument_id.HasValue);
-        //                //now see which types they want
-        //                if (hwmFTList != null && hwmFTList.Count > 0)
-        //                    hwmFilesQuery = hwmFilesQuery.Where(f => hwmFTList.Contains(f.filetype_id.Value));
-        //            }
-        //            //only Sensor files only
-        //            if (!string.IsNullOrEmpty(sensorFiles))
-        //            {
-        //                //only site files
-        //                sensorFilesQuery = allEventFilesQuery.Where(f => !f.hwm_id.HasValue && !f.objective_point_id.HasValue && f.instrument_id.HasValue);
-        //                //now see which types they want
-        //                if (sensFTList != null && sensFTList.Count > 0)
-        //                    sensorFilesQuery = sensorFilesQuery.Where(f => sensFTList.Contains(f.filetype_id.Value));
-        //            }
-
-        //            entities = new List<file>();
-        //            if (hwmFilesQuery != null) hwmFilesQuery.ToList().ForEach(h => entities.Add(h));
-        //            if (sensorFilesQuery != null) sensorFilesQuery.ToList().ForEach(s => entities.Add(s));
-                    
         //            sm(MessageType.info, "FileCount:" + entities.Count);
         //            fileItem = sa.GetFileItemZip(entities);
-                    
+
         //            sm(MessageType.info, "Count: " + entities.Count());
         //            sm(sa.Messages);
         //        }//end using
@@ -420,6 +360,71 @@ namespace STNServices2.Handlers
         //    catch (Exception ex)
         //    { return HandleException(ex); }
         //}//end HttpMethod.GET
+
+
+
+        //working on this new version
+
+        [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
+        public OperationResult GetEventFileItems(Int32 eventId, [Optional] string hwmFiles, [Optional] string sensorFiles, [Optional] string hwmFileTypes, [Optional] string sensorFileTypes)
+        {
+            List<file> entities = null;
+            InMemoryFile fileItem = null;
+            char[] delimiterChars = { ';', ',', ' ' };
+            List<decimal> hwmFTList = !string.IsNullOrEmpty(hwmFileTypes) ? hwmFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+            List<decimal> sensFTList = !string.IsNullOrEmpty(sensorFileTypes) ? sensorFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+
+            try
+            {
+                if (eventId <= 0 || (string.IsNullOrEmpty(hwmFiles) && (string.IsNullOrEmpty(sensorFiles)))) throw new BadRequestException("Invalid input parameters");
+                using (EasySecureString securedPassword = GetSecuredPassword())
+                {
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    {
+                        //all files for this event
+                        IQueryable<file> allEventFilesQuery = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
+                        .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId);
+
+                        IQueryable<file> hwmFilesQuery = null;
+                        IQueryable<file> sensorFilesQuery = null;
+
+                        //only HWM files only
+                        if (!string.IsNullOrEmpty(hwmFiles))
+                        {
+                            //only site files
+                            hwmFilesQuery = allEventFilesQuery.Where(f => f.hwm_id.HasValue && !f.instrument_id.HasValue);
+                            //now see which types they want
+                            if (hwmFTList != null && hwmFTList.Count > 0)
+                                hwmFilesQuery = hwmFilesQuery.Where(f => hwmFTList.Contains(f.filetype_id.Value));
+                        }
+                        //only Sensor files only
+                        if (!string.IsNullOrEmpty(sensorFiles))
+                        {
+                            //only site files
+                            sensorFilesQuery = allEventFilesQuery.Where(f => !f.hwm_id.HasValue && !f.objective_point_id.HasValue && f.instrument_id.HasValue);
+                            //now see which types they want
+                            if (sensFTList != null && sensFTList.Count > 0)
+                                sensorFilesQuery = sensorFilesQuery.Where(f => sensFTList.Contains(f.filetype_id.Value));
+                        }
+
+                        entities = new List<file>();
+                        if (hwmFilesQuery != null) hwmFilesQuery.ToList().ForEach(h => entities.Add(h));
+                        if (sensorFilesQuery != null) sensorFilesQuery.ToList().ForEach(s => entities.Add(s));
+
+                        sm(MessageType.info, "FileCount:" + entities.Count);
+                        fileItem = sa.GetFileItemZip(entities);
+
+                        sm(MessageType.info, "Count: " + entities.Count());
+                        sm(sa.Messages);
+                    }//end using
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetSiteEventFiles")]
         public OperationResult GetSiteEventFiles(Int32 siteId, Int32 eventId)
