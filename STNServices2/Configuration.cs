@@ -469,8 +469,8 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
-            .And.AtUri(eventsResource+"/{eventId}/EventFileItems").Named("GetEventFileItems")
-            //.And.AtUri(eventsResource+"/{eventId}/EventFileItems1?HWMFiles={hwmFiles}&HWMFileType={hwmFileTypes}&SensorFiles={sensorFiles}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems1")
+            //.And.AtUri(eventsResource+"/{eventId}/EventFileItems").Named("GetEventFileItems")
+            .And.AtUri(eventsResource+"/{eventId}/EventFileItems?HWMFiles={hwmFiles}&HWMFileType={hwmFileTypes}&SensorFiles={sensorFiles}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
         }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
