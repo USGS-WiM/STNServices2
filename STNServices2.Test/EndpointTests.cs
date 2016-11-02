@@ -62,7 +62,7 @@ namespace STNServices2.Test
         {
             List<approval> returnedObject = this.GETRequest<List<approval>>(host + Configuration.approvalResource);
             Assert.IsNotNull(returnedObject, returnedObject.Count.ToString());
-
+            
             //POST DataFileApproval
             List<data_file> df = this.GETRequest<List<data_file>>(host + Configuration.datafileResource, basicAuth);
             approval postDFA; Int32 dfID = df.Find(x => !x.approval_id.HasValue).data_file_id;
@@ -102,6 +102,7 @@ namespace STNServices2.Test
             approval postHWMapproval; Int32 ahwmID = allHWMs.Find(x => !x.approval_id.HasValue).hwm_id;
             postHWMapproval = this.POSTRequest<approval>(host + Configuration.hwmResource + "/" + ahwmID + "Approve", null, basicAuth);
             Assert.IsNotNull(postHWMapproval, "ID: " + postHWMapproval.approval_id.ToString());
+            
             //Delete POSTed item
             bool success = this.DELETERequest<approval>(host + Configuration.approvalResource + "/" + postHWMapproval.approval_id, basicAuth);
             Assert.IsTrue(success);            
@@ -280,7 +281,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(instrDFList, instrDFList.Count.ToString());
 
             //GET Filtered Datafile
-            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "/?IsApproved=false&Event=23", basicAuth);//optional props: eventId, memberId, stateAbb
+            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "/?IsApproved=false&Event=135&State=NC", basicAuth);//optional props: eventId, memberId, stateAbb
             Assert.IsNotNull(filteredDFList, filteredDFList.Count.ToString());
 
             //POST
@@ -507,7 +508,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(putObj);
 
             //Delete POSTed item
-            bool success = this.DELETERequest<file>(host + Configuration.fileResource + "/" + postObj.file_id, basicAuth);
+            bool success = this.DELETERequest<file>(host + Configuration.fileResource + "/39244", basicAuth);
             Assert.IsTrue(success);
         }//end method
         [TestMethod]
