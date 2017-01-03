@@ -718,7 +718,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(postObj, "ID: " + postObj.hwm_id.ToString());
 
             //GET POSTed item
-            hwm RequestObj = this.GETRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, basicAuth);
+            hwm RequestObj = this.GETRequest<hwm>(host + Configuration.hwmResource + "/4044", basicAuth);// + postObj.hwm_id, basicAuth);
             Assert.IsNotNull(RequestObj);
 
             //GET file hwm item  fileResource+"/{fileId}/HWM"            
@@ -726,8 +726,9 @@ namespace STNServices2.Test
             Assert.IsNotNull(fileHWM);
 
             //PUT POSTed item
-            postObj.hwm_environment = "put-test";
-            hwm putObj = this.PUTRequest<hwm>(host + Configuration.hwmResource + "/" + postObj.hwm_id, postObj, basicAuth);
+
+            RequestObj.hwm_environment = "put-test"; 
+            hwm putObj = this.PUTRequest<hwm>(host + Configuration.hwmResource + "/" + RequestObj.hwm_id, RequestObj, basicAuth);
             Assert.IsNotNull(putObj);
 
             ////Delete POSTed item
