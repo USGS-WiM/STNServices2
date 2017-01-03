@@ -206,7 +206,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredEvents")]
         public OperationResult GetFilteredEvents([Optional]string date, [Optional]string eventTypeId, [Optional] string stateName)
         {
-            IQueryable<events> query;
+            IQueryable<events> query;           
             List<events> entities = new List<events>();
             DateTime? fromDate;
             try
@@ -214,19 +214,26 @@ namespace STNServices2.Handlers
                 fromDate = ValidDate(date);
                 using (STNAgent sa = new STNAgent())
                 {
+                    //get all events
                     query = sa.Select<events>().Include("instruments.site").Include("hwms.site");
 
+                    //events from this day forward
                     if (fromDate.HasValue)  
                         query = query.Where(s => s.event_start_date >= fromDate);
+
+                    //for this eventType only
                     if (!string.IsNullOrEmpty(eventTypeId) && Convert.ToInt32(eventTypeId) > 0)
                     {
                         Int32 eventTypdID = Convert.ToInt32(eventTypeId);
                         query = query.Where(s => s.event_type_id == eventTypdID);
                     }
+
+                    //in this state only
                     if (!string.IsNullOrEmpty(stateName))
                     {
-                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName));
-                        query = query.Where(e => e.hwms.Any(h => h.site.state == stateName));
+                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));
+                    //    query = query.Where(e => e.instruments.Any(i => i.site.state == stateName));
+                    //    query = query.Where(e => e.hwms.Any(h => h.site.state == stateName));
                     }
                     entities = query.Distinct().ToList();
                 }

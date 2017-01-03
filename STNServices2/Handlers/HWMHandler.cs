@@ -536,7 +536,7 @@ namespace STNServices2.Handlers
                              horizontalMethodName = hw.hcollect_method_id > 0 && hw.horizontal_collect_methods != null ? hw.horizontal_collect_methods.hcollect_method : "",
                              bank = hw.bank,
                              approval_id = hw.approval_id,
-                             approvalMember = hw.approval_id > 0 && hw.approval != null ? hw.approval.member.fname + " " + hw.approval.member.lname : "",
+                             approvalMember = hw.approval_id > 0  ? getApprovalName(hw) : "",
                              marker_id = hw.marker_id,
                              markerName = hw.marker_id > 0 && hw.marker != null ? hw.marker.marker1 : "",
                              height_above_gnd = hw.height_above_gnd,
@@ -571,6 +571,18 @@ namespace STNServices2.Handlers
             }
             catch (Exception ex)
             { return HandleException(ex); }
+        }
+
+        private string getApprovalName(hwm h)
+        {
+            try
+            {
+                return h.approval.member.fname + " " + h.approval.member.lname;                
+            }
+            catch
+            {
+                return "Missing Approval";
+            }
         }
                 
         #endregion
@@ -626,6 +638,10 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //remove approval_id from hwm if no approval in db
+                        if (anEntity.approval_id > 0 && sa.Select<approval>().FirstOrDefault(a => a.approval_id == anEntity.approval_id) == null)                                                    
+                            anEntity.approval_id = null;
+                        
                         anEntity = sa.Update<hwm>(entityId, anEntity);
                         sm(sa.Messages);
 
