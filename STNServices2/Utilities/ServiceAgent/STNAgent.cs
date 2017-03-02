@@ -38,13 +38,13 @@ namespace STNServices2.Utilities.ServiceAgent
         #region "Constructor and IDisposable Support"
         #region Constructors
         internal STNAgent(Boolean include = false)
-            : this("fradmin", new EasySecureString("***REMOVED***"), include)
+            : this(ConfigurationManager.AppSettings["Username"], new EasySecureString(ConfigurationManager.AppSettings["Password"]), include)     
         {        
         }
         internal STNAgent(string username, EasySecureString password, Boolean include = false)
-            : base(ConfigurationManager.ConnectionStrings["STNDBEntities"].ConnectionString)
+            : base(ConfigurationManager.AppSettings["connectionString"])
         {
-            this.context = new STNDBEntities(string.Format(connectionString, "fradmin", new EasySecureString("***REMOVED***").decryptString()));
+            this.context = new STNDBEntities(string.Format(connectionString, ConfigurationManager.AppSettings["Username"], new EasySecureString(ConfigurationManager.AppSettings["Password"]).decryptString()));
             this.context.Configuration.ProxyCreationEnabled = include;
             
         }
@@ -253,7 +253,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 string sql = string.Empty;
                 if (args[0] != null)
                 {
-                    if (args[0].ToString() == "baro_view" || args[0].ToString() == "met_view" || args[0].ToString() == "rdg_view" || args[0].ToString() == "stormtide_view" || args[0].ToString() == "waveheight_view")
+                    if (args[0].ToString() == "baro_view" || args[0].ToString() == "met_view" || args[0].ToString() == "rdg_view" || args[0].ToString() == "stormtide_view" || args[0].ToString() == "waveheight_view" ||
+                         args[0].ToString() == "pressuretemp_view" || args[0].ToString() == "therm_view" || args[0].ToString() == "webcam_view" || args[0].ToString() == "raingage_view")
                         sql = String.Format(getSQLStatement(args[0].ToString()));
                 }
                 else
@@ -311,7 +312,15 @@ namespace STNServices2.Utilities.ServiceAgent
                 case "stormtide_view":
                     return @"SELECT * FROM storm_tide_view;";
                 case "waveheight_view":
-                    return @"SELECT * FROM wave_height_view;";                
+                    return @"SELECT * FROM wave_height_view;";
+                case "pressuretemp_view":
+                    return @"SELECT * FROM pressuretemp_view;";
+                case "therm_view":
+                    return @"SELECT * FROM therm_view;";
+                case "webcam_view":
+                    return @"SELECT * FROM webcam_view;";
+                case "raingage_view":
+                    return @"SELECT * FROM raingage_view;";
                 default:
                     throw new Exception("No sql for table " + type);
             }//end switch;
