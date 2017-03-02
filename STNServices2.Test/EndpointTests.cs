@@ -7,6 +7,7 @@ using WiM.Test;
 using WiM.Hypermedia;
 using STNServices2;
 using STNServices2.Resources;
+using System.Configuration;
 
 namespace STNServices2.Test
 {
@@ -16,7 +17,7 @@ namespace STNServices2.Test
         #region Private Fields
         private string host = "http://localhost/";
         private string basicAuth = "Basic " + Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
-                                .GetBytes("fradmin:Ij7E9doC"));
+                                .GetBytes(ConfigurationManager.AppSettings["Username"] + ":" + ConfigurationManager.AppSettings["Password"]));
        
             
         #endregion

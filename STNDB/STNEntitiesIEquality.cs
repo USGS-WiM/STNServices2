@@ -385,7 +385,8 @@ namespace STNDB
                     (!other.marker_id.HasValue || !this.marker_id.HasValue || this.marker_id.Value == other.marker_id.Value) &&
                     (other.uncertainty <= 0 || !other.uncertainty.HasValue || !this.uncertainty.HasValue || this.uncertainty == other.uncertainty) &&
                     (other.hwm_uncertainty <= 0 || !other.hwm_uncertainty.HasValue || !this.hwm_uncertainty.HasValue || this.hwm_uncertainty == other.hwm_uncertainty) &&
-                    (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd.Value == other.height_above_gnd.Value));
+                    (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd.Value == other.height_above_gnd.Value) &&
+                    (string.IsNullOrEmpty(other.hwm_label) || string.Equals(this.hwm_label, other.hwm_label, StringComparison.OrdinalIgnoreCase)));
         }
         public override bool Equals(object obj)
         {
@@ -395,11 +396,10 @@ namespace STNDB
             return Equals(obj as hwm);
         }
         public override int GetHashCode()
-        {
-            return this.hwm_type_id + this.hwm_quality_id + this.site_id.GetHashCode() + this.event_id.GetHashCode() + this.flag_date.GetHashCode() +
-                   this.waterbody.GetHashCode()+ this.bank.GetHashCode()+ this.latitude_dd.GetHashCode()+ this.longitude_dd.GetHashCode()+
-                   this.elev_ft.GetHashCode()+ this.vdatum_id.GetHashCode()+this.hdatum_id.GetHashCode()+ this.flag_member_id.GetHashCode()+this.vcollect_method_id.GetHashCode() +
-                   this.approval_id.GetHashCode()+ this.marker_id.GetHashCode()+ this.height_above_gnd.GetHashCode();
+        {         //anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
+            return this.site_id.GetHashCode() + this.event_id.GetHashCode() + this.hwm_type_id + this.flag_date.GetHashCode() + this.hwm_quality_id +   
+                   this.hwm_environment.GetHashCode()+ this.hdatum_id.GetHashCode() + this.latitude_dd.GetHashCode()+ this.longitude_dd.GetHashCode()+
+                   this.flag_member_id.GetHashCode() + this.hcollect_method_id.GetHashCode() + this.hwm_label.GetHashCode();
         }
     }
     public partial class hwm_qualities : IEquatable<hwm_qualities>

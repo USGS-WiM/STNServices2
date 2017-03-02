@@ -42,7 +42,7 @@
         <EntityTypeShape EntityType="STNNEWModel.sensor_deployment" Width="2.125" PointX="11.75" PointY="9.125" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.sensor_type" Width="2.125" PointX="9.5" PointY="10.125" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.site_housing" Width="2.125" PointX="10.5" PointY="8.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.site" Width="2.125" PointX="7.625" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="STNNEWModel.site" Width="2.125" PointX="7.625" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.source" Width="2.125" PointX="16.125" PointY="8" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.state" Width="2.125" PointX="15.125" PointY="8.5" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.status_type" Width="2.125" PointX="11.75" PointY="10.125" IsExpanded="false" />
@@ -50,7 +50,7 @@
         <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="2.125" PointX="7.25" PointY="9.625" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.events" Width="2.125" PointX="0.5" PointY="5.375" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.horizontal_collect_methods" Width="2.125" PointX="5" PointY="9.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="2.125" PointX="5" PointY="2.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="2.125" PointX="5" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.hwm_qualities" Width="2.125" PointX="2.75" PointY="9.625" IsExpanded="false" />
         <AssociationConnector Association="STNNEWModel.hwm_typeshwm" />
         <AssociationConnector Association="STNNEWModel.hwm_qualitieshwm" />
