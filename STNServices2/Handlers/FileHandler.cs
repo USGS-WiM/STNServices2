@@ -332,55 +332,25 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        //get event file items back in zip file - will be adding additional filters on here soon
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
-        //public OperationResult GetEventFileItems(Int32 eventId)
-        //{
-        //    List<file> entities = null;
-        //    InMemoryFile fileItem = null;
-
-        //    try
-        //    {
-        //        if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-        //        using (STNAgent sa = new STNAgent())
-        //        {
-        //            //all files for this event
-        //            entities = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
-        //                .Where(f => f.hwm.event_id == eventId || f.instrument.event_id == eventId || f.data_file.instrument.event_id == eventId).ToList();
-
-        //            sm(MessageType.info, "FileCount:" + entities.Count);
-        //            fileItem = sa.GetFileItemZip(entities);
-
-        //            sm(MessageType.info, "Count: " + entities.Count());
-        //            sm(sa.Messages);
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
-        //    }
-        //    catch (Exception ex)
-        //    { return HandleException(ex); }
-        //}//end HttpMethod.GET
-
-
-
-        //working on this new version
-
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventFileItems")]
-        public OperationResult GetEventFileItems(Int32 eventId, [Optional] string hwmFiles, [Optional] string sensorFiles, [Optional] string hwmFileTypes, [Optional] string sensorFileTypes)
+        public OperationResult GetEventFileItems(Int32 eventId, [Optional] string stateName, [Optional] string county, [Optional] string fromDate, [Optional] string toDate,
+            string filesFor, [Optional] string sensorFiles, [Optional] string hwmFileTypes, [Optional] string sensorFileTypes)
         {
             List<file> entities = null;
             InMemoryFile fileItem = null;
             char[] delimiterChars = { ';', ',', ' ' };
             List<decimal> hwmFTList = !string.IsNullOrEmpty(hwmFileTypes) ? hwmFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
             List<decimal> sensFTList = !string.IsNullOrEmpty(sensorFileTypes) ? sensorFileTypes.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
+            DateTime? FromDate = ValidDate(fromDate);
+            DateTime? ToDate = ValidDate(toDate);
 
             try
             {
-                if (eventId <= 0 || (string.IsNullOrEmpty(hwmFiles) && (string.IsNullOrEmpty(sensorFiles)))) throw new BadRequestException("Invalid input parameters");
+                if (eventId <= 0 || (string.IsNullOrEmpty(filesFor) && (string.IsNullOrEmpty(sensorFiles)))) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword))
+                    using (STNAgent sa = new STNAgent(username,securedPassword))
                     {
                         //all files for this event
                         IQueryable<file> allEventFilesQuery = sa.Select<file>().Include(f => f.hwm).Include(f => f.instrument).Include("data_file.instrument")
@@ -389,20 +359,40 @@ namespace STNServices2.Handlers
                         IQueryable<file> hwmFilesQuery = null;
                         IQueryable<file> sensorFilesQuery = null;
 
+                        //date range
+                        if (FromDate.HasValue) 
+                            allEventFilesQuery = allEventFilesQuery.Where(f => f.file_date >= FromDate);
+                        
+                        if (ToDate.HasValue)
+                            allEventFilesQuery = allEventFilesQuery.Where(f => f.file_date <= ToDate);
+                        
+                        //state
+                        if (!string.IsNullOrEmpty(stateName))
+                            allEventFilesQuery = allEventFilesQuery.Where( f => f.hwm.site.state.ToUpper() == stateName.ToUpper() || 
+                                        f.instrument.site.state.ToUpper() == stateName.ToUpper() || 
+                                        f.data_file.instrument.site.state.ToUpper() == stateName.ToUpper());
+
+                        //county
+                        if (!string.IsNullOrEmpty(county))
+                            allEventFilesQuery = allEventFilesQuery.Where(f => f.hwm.site.county.ToUpper() == county.ToUpper() ||
+                                        f.instrument.site.county.ToUpper() == county.ToUpper() ||
+                                        f.data_file.instrument.site.county.ToUpper() == county.ToUpper());
                         //only HWM files only
-                        if (!string.IsNullOrEmpty(hwmFiles))
+                        if (filesFor == "HWMs")
                         {
                             //only site files
-                            hwmFilesQuery = allEventFilesQuery.Where(f => f.hwm_id.HasValue && !f.instrument_id.HasValue);
+                            hwmFilesQuery = allEventFilesQuery.Where(f => (f.hwm_id.HasValue && f.hwm_id > 0) && (!f.instrument_id.HasValue || f.instrument_id == 0));  
+
                             //now see which types they want
                             if (hwmFTList != null && hwmFTList.Count > 0)
                                 hwmFilesQuery = hwmFilesQuery.Where(f => hwmFTList.Contains(f.filetype_id.Value));
                         }
                         //only Sensor files only
-                        if (!string.IsNullOrEmpty(sensorFiles))
+                        if (filesFor == "Sensors")
                         {
                             //only site files
-                            sensorFilesQuery = allEventFilesQuery.Where(f => !f.hwm_id.HasValue && !f.objective_point_id.HasValue && f.instrument_id.HasValue);
+                            sensorFilesQuery = allEventFilesQuery.Where(f => ((!f.hwm_id.HasValue || f.hwm_id == 0) && (!f.objective_point_id.HasValue || f.objective_point_id == 0)) && f.instrument_id.HasValue);
+                            
                             //now see which types they want
                             if (sensFTList != null && sensFTList.Count > 0)
                                 sensorFilesQuery = sensorFilesQuery.Where(f => sensFTList.Contains(f.filetype_id.Value));

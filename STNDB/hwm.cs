@@ -48,6 +48,7 @@ namespace STNDB
         public Nullable<int> survey_member_id { get; set; }
         public Nullable<double> uncertainty { get; set; }
         public Nullable<double> hwm_uncertainty { get; set; }
+        public string hwm_label { get; set; }
     
         public virtual hwm_types hwm_types { get; set; }
         public virtual hwm_qualities hwm_qualities { get; set; }

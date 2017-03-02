@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="STNNEWModel.Store" Provider="Npgsql" ProviderManifestToken="9.4.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="STNNEWModel.Store" Provider="Npgsql" ProviderManifestToken="9.4.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="agencies">
           <Key>
             <PropertyRef Name="agency_id" />
@@ -194,6 +194,7 @@
           <Property Name="survey_member_id" Type="int4" />
           <Property Name="uncertainty" Type="float8" />
           <Property Name="hwm_uncertainty" Type="float8" />
+          <Property Name="hwm_label" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -242,9 +243,9 @@
           </Key>
           <Property Name="instrument_status_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="status_type_id" Type="int4" />
-          <Property Name="instrument_id" Type="int4" StoreGeneratedPattern="None" />
+          <Property Name="instrument_id" Type="int4" />
           <Property Name="time_stamp" Type="timestamp" />
-          <Property Name="notes" Type="varchar" MaxLength="255" />
+          <Property Name="notes" Type="varchar" MaxLength="600" />
           <Property Name="time_zone" Type="varchar" MaxLength="8" />
           <Property Name="member_id" Type="int4" />
           <Property Name="sensor_elevation" Type="float8" />
@@ -869,6 +870,7 @@
           <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
           <Property Name="uncertainty" Type="Double" />
           <Property Name="hwm_uncertainty" Type="Double" />
+          <Property Name="hwm_label" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -2637,6 +2639,7 @@
           <EntitySetMapping Name="hwms">
             <EntityTypeMapping TypeName="STNNEWModel.hwm">
               <MappingFragment StoreEntitySet="hwm">
+                <ScalarProperty Name="hwm_label" ColumnName="hwm_label" />
                 <ScalarProperty Name="hwm_uncertainty" ColumnName="hwm_uncertainty" />
                 <ScalarProperty Name="uncertainty" ColumnName="uncertainty" />
                 <ScalarProperty Name="hwm_id" ColumnName="hwm_id" />
