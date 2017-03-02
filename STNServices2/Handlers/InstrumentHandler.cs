@@ -265,7 +265,8 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(view) && 
-                    (view.ToLower() != "baro_view" || view.ToLower() != "met_view" || view.ToLower() != "rdg_view" || view.ToLower() != "stormtide_view" || view.ToLower() != "waveheight_view")) 
+                    (view.ToLower() != "baro_view" || view.ToLower() != "met_view" || view.ToLower() != "rdg_view" || view.ToLower() != "stormtide_view" || view.ToLower() != "waveheight_view" ||
+                    view.ToLower() != "pressuretemp_view" || view.ToLower() != "therm_view" || view.ToLower() != "webcam_view" || view.ToLower() != "raingage_view")) 
                     throw new BadRequestException("Invalid input parameters. ViewType must be either 'baro_view', 'met_view', 'rdg_view', 'stormTide_view' or 'waveheight_view'");
 
                 using (STNAgent sa = new STNAgent())
