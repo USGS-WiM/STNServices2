@@ -518,6 +518,7 @@ namespace STNServices2.Handlers
                              event_id = hw.event_id,
                              eventName = hw.@event != null ? hw.@event.event_name : "",
                              hwm_type_id = hw.hwm_type_id,
+                             hwm_label = hw.hwm_label,
                              hwmTypeName = hw.hwm_type_id > 0 && hw.hwm_types != null ? hw.hwm_types.hwm_type : "",
                              hwm_quality_id = hw.hwm_quality_id,
                              hwmQualityName = hw.hwm_quality_id > 0 && hw.hwm_qualities != null ? hw.hwm_qualities.hwm_quality : "",
@@ -598,7 +599,7 @@ namespace STNServices2.Handlers
             {
                 if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                     anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
-                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0)
+                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
                         throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
@@ -630,7 +631,7 @@ namespace STNServices2.Handlers
             {
                 if (anEntity.site_id <= 0 || anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                    anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
-                   anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0)
+                   anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
                     throw new BadRequestException("Invalid input parameters");
 
                 //Get basic authentication password

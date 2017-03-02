@@ -79,6 +79,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
     <Reference Include="WiMHypermedia, Version=1.0.5947.24027, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
