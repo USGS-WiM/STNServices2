@@ -15,6 +15,7 @@ namespace STNServices2.Resources
     {
         public string eventName { get; set; }
         public string hwmTypeName { get; set; }
+        public string hwm_label { get; set; }
         public string hwmQualityName { get; set; }
         public string verticalDatumName { get; set; }
         public string verticalMethodName { get; set; }
