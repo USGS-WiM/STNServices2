@@ -188,7 +188,7 @@ namespace STNServices2
                 AddGEOCODER_Resources();
             } //End using OpenRastaConfiguration.Manual
         }
-
+        
         #region Helper methods
 
         private void AddGEOCODER_Resources()
@@ -469,7 +469,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
-            //.And.AtUri(eventsResource+"/{eventId}/EventFileItems").Named("GetEventFileItems")
+            .And.AtUri(hwmResource + "/historicHWMspreadsheet").Named("GetHistoricHWMspreadsheet")
             .And.AtUri(eventsResource + "/{eventId}/EventFileItems?FromDate={fromDate}&ToDate={toDate}&State={stateName}&County={county}&FilesFor={filesFor}&HWMFileType={hwmFileTypes}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
         }//end AddFILE_Resources (12)

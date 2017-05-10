@@ -371,8 +371,17 @@ namespace STNServices2.Handlers
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
             }
-            catch (Exception ex)
-            { return HandleException(ex); }
+            catch (Exception ex) //System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                //foreach (var validationErrors in ex.EntityValidationErrors)
+                //{
+                //    foreach (var validationError in validationErrors.ValidationErrors)
+                //    {
+                //        Console.WriteLine("Property: {0} throws Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                //    }
+                //}
+                return HandleException(ex); 
+            }
         }//end HttpMethod.POST
 
         #endregion

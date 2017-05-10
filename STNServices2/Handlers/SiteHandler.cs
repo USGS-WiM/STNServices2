@@ -535,6 +535,11 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //no duplicate lat/longs allowed
+                        List<site> query = sa.Select<site>().Where(s => s.latitude_dd == anEntity.latitude_dd && s.longitude_dd == anEntity.longitude_dd).ToList();
+                        if (query.Count > 0)
+                            throw new BadRequestException("Lat/Long already exists");
+
                         //aSite.STATE = this.GetStateByName(aSite.STATE).ToString();
                         anEntity = sa.Add<site>(anEntity);                       
 
@@ -579,6 +584,11 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //no duplicate lat/longs allowed
+                        List<site> query = sa.Select<site>().Where(s => s.latitude_dd == anEntity.latitude_dd && s.longitude_dd == anEntity.longitude_dd).ToList();
+                        if (query.Count > 0)
+                            throw new BadRequestException("Lat/Long already exists");
+
                         updatedSite = sa.Select<site>().SingleOrDefault(s => s.site_id == entityId);
 
                         anEntity.state = this.GetStateByName(anEntity.state).ToString();

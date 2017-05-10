@@ -882,6 +882,7 @@ namespace STNDB
         public bool Equals(site other)
         {
             return (this.latitude_dd == other.latitude_dd && this.longitude_dd == other.longitude_dd &&
+                (string.IsNullOrEmpty(other.site_description) || string.Equals(this.site_description, other.site_description, StringComparison.OrdinalIgnoreCase)) &&
                 this.hdatum_id == other.hdatum_id && (string.Equals(this.waterbody, other.waterbody , StringComparison.OrdinalIgnoreCase)) &&
                 (string.Equals(this.state, other.state , StringComparison.OrdinalIgnoreCase)) &&
                 (string.Equals(this.county, other.county, StringComparison.OrdinalIgnoreCase)) &&

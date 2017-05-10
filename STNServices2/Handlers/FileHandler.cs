@@ -110,6 +110,23 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetHistoricHWMspreadsheet")]
+        public OperationResult GetHistoricHWMSpreadsheet()
+        {
+            InMemoryFile fileItem;            
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    fileItem = sa.GetHWMSpreadsheetItem();
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItem")]
         public OperationResult GetFileItem(Int32 fileId)
         {
