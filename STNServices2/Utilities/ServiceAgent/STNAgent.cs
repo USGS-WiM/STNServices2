@@ -170,6 +170,31 @@ namespace STNServices2.Utilities.ServiceAgent
                 if(aBucket != null){ aBucket.Dispose(); aBucket = null;}
             }
         }
+        internal InMemoryFile GetHWMSpreadsheetItem()
+        {
+            S3Bucket aBucket = null;
+            InMemoryFile fileItem = null;
+            try
+            {
+                string directoryName = string.Empty;
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                        ConfigurationManager.AppSettings["AWSSecretKey"]);
+                directoryName = "cleanHistoricHWMUploadSpreadsheet.xlsx";
+                var fileStream = aBucket.GetObject(directoryName);
+
+                fileItem = new InMemoryFile(fileStream);
+                fileItem.ContentType = GetContentType(".XLSX");
+               // fileItem.Length = fileStream != null ? fileStream.Length : 0;
+                fileItem.FileName = "cleanHistoricHWMUploadSpreadsheet.xlsx";
+                return fileItem;
+
+            }
+            catch (Exception ex)
+            {
+                sm(WiM.Resources.MessageType.error, "Failed to include item: cleanHistoricHWMUploadSpreadsheet.xlsx exception: " + ex.Message);
+                throw;
+            }
+        }
         internal InMemoryFile GetFileItem(file afile)
         {
             //file aFile = null;

@@ -599,13 +599,17 @@ namespace STNServices2.Handlers
             {
                 if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                     anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
-                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
+                    anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0) // || string.IsNullOrEmpty(anEntity.hwm_label))
                         throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        if (string.IsNullOrEmpty(anEntity.hwm_label)) {
+                            Int32 siteHWMCnt = sa.Select<hwm>().Where(h => h.site_id == anEntity.site_id).Count();
+                            anEntity.hwm_label = "hwm-" + (Convert.ToInt32(siteHWMCnt) + 1);
+                        }
                         anEntity = sa.Add<hwm>(anEntity);
                         sm(sa.Messages);
                     }//end using

@@ -708,12 +708,14 @@ namespace STNServices2.Test
             hwm postObj;
             postObj = this.POSTRequest<hwm>(host + Configuration.hwmResource, new hwm()
             {
-                site_id = 1,
+                site_id = 16133,
                 event_id = 1,
                 hwm_type_id = 1,
                 hwm_quality_id = 1,
                 hwm_environment = "post-Test",
+                hcollect_method_id = 1,
                 hdatum_id = 1,
+                flag_date = new DateTime(),
                 flag_member_id = 1
             }, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.hwm_id.ToString());
@@ -1018,7 +1020,7 @@ namespace STNServices2.Test
             //POST
             member postObj;
             postObj = this.POSTRequest<member>(host + Configuration.memberResource, new member() {
-                username = "newUser", fname = "New", lname="user", phone="123-456-7890", email="test@usgs.gov", agency_id = 1,
+                username = "newUser", fname = "New", lname="user", phone="(704) 344-6272 x34", email="test@usgs.gov", agency_id = 1, role_id = 2,
                 password = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes("STNDef@u1t"))}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.member_id.ToString());
 
@@ -1524,8 +1526,11 @@ namespace STNServices2.Test
 
             //POST
             site postObj;
-            postObj = this.POSTRequest<site>(host + Configuration.siteResource, new site() { 
-                site_description = "site_post1", latitude_dd = 45.52, longitude_dd = -89.32, hdatum_id = 1,
+            postObj = this.POSTRequest<site>(host + Configuration.siteResource, new site() {
+                site_description = "site_post1",
+                latitude_dd = 26.894,
+                longitude_dd = -80.6672222222222,
+                hdatum_id = 1,
                 hcollect_method_id = 1, state = "WI", county = "St. John", waterbody = "test2", member_id = 1}, basicAuth);
             Assert.IsNotNull(postObj, "ID: " + postObj.site_id.ToString());
 
