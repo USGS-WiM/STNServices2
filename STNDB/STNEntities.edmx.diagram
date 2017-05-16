@@ -50,7 +50,7 @@
         <EntityTypeShape EntityType="STNNEWModel.vertical_datums" Width="2.125" PointX="7.25" PointY="9.625" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.events" Width="2.125" PointX="0.5" PointY="5.375" IsExpanded="false" />
         <EntityTypeShape EntityType="STNNEWModel.horizontal_collect_methods" Width="2.125" PointX="5" PointY="9.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="2.125" PointX="5" PointY="2.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="STNNEWModel.hwm" Width="2.125" PointX="5" PointY="2.25" IsExpanded="true" />
         <EntityTypeShape EntityType="STNNEWModel.hwm_qualities" Width="2.125" PointX="2.75" PointY="9.625" IsExpanded="false" />
         <AssociationConnector Association="STNNEWModel.hwm_typeshwm" />
         <AssociationConnector Association="STNNEWModel.hwm_qualitieshwm" />

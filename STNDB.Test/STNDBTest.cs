@@ -64,19 +64,25 @@ namespace STNDB.Test
                 try
                 {
                     var query = context.sites.Include(s => s.hwms).ToList();
-
-                    foreach (var s in query)
+                    var queryGrp = query.SelectMany(s => s.hwms).GroupBy(h => h.event_id);
+                    foreach(var grp in queryGrp)
                     {
+                        // foreach hwm in this event group
                         var i = 0;
-                        foreach (var h in s.hwms)
+                        var currentSiteId = -1;    
+                        foreach (var h in grp.OrderBy(g => g.site_id))
                         {
-                            i++;
+                            if (h.site_id != currentSiteId) 
+                            {
+                                i = 1;
+                                currentSiteId = h.site_id.Value;
+                            }                            
                             //update label
                             h.hwm_label = "hwm-" + i.ToString();
+                            context.SaveChanges(); 
+                            i++;
                         }
-                        context.SaveChanges();
                     }
-                    
 
                    // Assert.IsNotNull(query, testQuery.Count.ToString());
                 }

@@ -399,7 +399,7 @@ namespace STNDB
         {         //anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
             return this.site_id.GetHashCode() + this.event_id.GetHashCode() + this.hwm_type_id + this.flag_date.GetHashCode() + this.hwm_quality_id +   
                    this.hwm_environment.GetHashCode()+ this.hdatum_id.GetHashCode() + this.latitude_dd.GetHashCode()+ this.longitude_dd.GetHashCode()+
-                   this.flag_member_id.GetHashCode() + this.hcollect_method_id.GetHashCode() + this.hwm_label.GetHashCode();
+                   this.flag_member_id.GetHashCode() + this.hcollect_method_id.GetHashCode();
         }
     }
     public partial class hwm_qualities : IEquatable<hwm_qualities>

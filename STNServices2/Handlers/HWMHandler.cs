@@ -607,8 +607,7 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         if (string.IsNullOrEmpty(anEntity.hwm_label)) {
-                            Int32 siteHWMCnt = sa.Select<hwm>().Where(h => h.site_id == anEntity.site_id).Count();
-                            anEntity.hwm_label = "hwm-" + (Convert.ToInt32(siteHWMCnt) + 1);
+                            anEntity.hwm_label = "no_label";
                         }
                         anEntity = sa.Add<hwm>(anEntity);
                         sm(sa.Messages);
@@ -635,7 +634,7 @@ namespace STNServices2.Handlers
             {
                 if (anEntity.site_id <= 0 || anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
                    anEntity.hwm_quality_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_environment) || anEntity.hdatum_id <= 0 ||
-                   anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0 || string.IsNullOrEmpty(anEntity.hwm_label))
+                   anEntity.flag_member_id <= 0 || anEntity.hcollect_method_id <= 0) // || string.IsNullOrEmpty(anEntity.hwm_label))
                     throw new BadRequestException("Invalid input parameters");
 
                 //Get basic authentication password
@@ -647,6 +646,8 @@ namespace STNServices2.Handlers
                         if (anEntity.approval_id > 0 && sa.Select<approval>().FirstOrDefault(a => a.approval_id == anEntity.approval_id) == null)                                                    
                             anEntity.approval_id = null;
                         
+                        if (string.IsNullOrEmpty(anEntity.hwm_label)) anEntity.hwm_label = "no_label";
+
                         anEntity = sa.Update<hwm>(entityId, anEntity);
                         sm(sa.Messages);
 
