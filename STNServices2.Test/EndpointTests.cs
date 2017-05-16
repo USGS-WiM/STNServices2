@@ -708,7 +708,7 @@ namespace STNServices2.Test
             hwm postObj;
             postObj = this.POSTRequest<hwm>(host + Configuration.hwmResource, new hwm()
             {
-                site_id = 16133,
+                site_id = 1,
                 event_id = 1,
                 hwm_type_id = 1,
                 hwm_quality_id = 1,
