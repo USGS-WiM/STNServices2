@@ -260,6 +260,10 @@ namespace STNServices2.Test
         [TestMethod]
         public void DataFileRequest()
         {
+            // run data file scripts
+            data_file requestDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunScript?SeaDataFileID=3481&AirDataFileID=2840&Hertz=True");
+            Assert.IsNotNull(requestDF);
+
             //GET LIST
             List<data_file> RequestList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource);
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
@@ -282,7 +286,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(instrDFList, instrDFList.Count.ToString());
 
             //GET Filtered Datafile
-            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "/?IsApproved=false&Event=135&State=NC", basicAuth);//optional props: eventId, memberId, stateAbb
+            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "?IsApproved=false&Event=7", basicAuth);//optional props: eventId, memberId, stateAbb
             Assert.IsNotNull(filteredDFList, filteredDFList.Count.ToString());
 
             //POST
@@ -656,8 +660,8 @@ namespace STNServices2.Test
             List<hwm> SEventHWMList = this.GETRequest<List<hwm>>(host + Configuration.siteResource + "/" + siteId + "/EventHWMs?Event=35", basicAuth);
             Assert.IsNotNull(SEventHWMList, SEventHWMList.Count.ToString());
 
-            //GET ApprovalHWMs "/HWMs?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}"
-            List<hwm> approvalHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "?IsApproved=true&Event=35", basicAuth);
+            //GET ApprovalHWMs "/HWMs?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}"
+            List<hwm> approvalHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "?IsApproved=false&Event=10&State=PA&Counties=Jefferson County,Clearfield County", basicAuth);
             Assert.IsNotNull(approvalHWMList, approvalHWMList.Count.ToString());
 
             //GET ApprovEDHWMs "/Approvals/{ApprovalId}/HWMs"           
@@ -1493,8 +1497,12 @@ namespace STNServices2.Test
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
             //GET GetEventSites
-            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/135/" + Configuration.siteResource);
+            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/7/" + Configuration.siteResource);
             Assert.IsNotNull(eventSites, eventSites.Count.ToString());
+
+            //GET GetEventSitesWithoutPeaks
+            List<site> peaklessSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/7/PeaklessSites");
+            Assert.IsNotNull(peaklessSites, peaklessSites.Count.ToString());
 
             //GET getNetworkTypeSites
             List<site> ntSites = this.GETRequest<List<site>>(host + Configuration.networkTypeResource + "/1/" + Configuration.siteResource);

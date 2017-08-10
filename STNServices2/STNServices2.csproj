@@ -122,12 +122,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Scripts\DataTests.c" />
+    <Content Include="Assets\Scripts\storm_avg_z_cross.jpg" />
+    <Content Include="Assets\Scripts\storm_barometric_pressure.jpg" />
+    <Content Include="Assets\Scripts\storm_h13.jpg" />
+    <Content Include="Assets\Scripts\storm_psd_contours.jpg" />
+    <Content Include="Assets\Scripts\storm_stormtide.jpg" />
+    <Content Include="Assets\Scripts\storm_stormtide_unfiltered.jpg" />
+    <Content Include="Assets\Scripts\usgs.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
+    <Compile Include="Codecs\testCodec.cs" />
     <Compile Include="Handlers\GeocoderHandler.cs" />
     <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
@@ -189,6 +198,7 @@
     <Compile Include="PipeLineContributers\STNHyperMediaPipelineContributor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ServiceAgent\STNAgent.cs" />
+    <Compile Include="Utilities\ServiceAgent\STNServiceAgent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\STNDB\STNDB.csproj">
@@ -203,6 +213,63 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Scripts\.gitattributes" />
+    <Content Include="Assets\Scripts\.project" />
+    <Content Include="Assets\Scripts\.pydevproject" />
+    <Content Include="Assets\Scripts\csv_readers.py" />
+    <Content Include="Assets\Scripts\csv_readers.pyc" />
+    <Content Include="Assets\Scripts\DataTests.pyd" />
+    <Content Include="Assets\Scripts\DataTests.pyx" />
+    <Content Include="Assets\Scripts\NCCAR00007_1511451_sea.csv" />
+    <Content Include="Assets\Scripts\NCCAR12248_9983816_air.csv" />
+    <Content Include="Assets\Scripts\netCDF_Utils\dataset_generator.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\dumps.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\edit_netcdf.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\edit_netcdf.pyc" />
+    <Content Include="Assets\Scripts\netCDF_Utils\nc.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\nc.pyc" />
+    <Content Include="Assets\Scripts\netCDF_Utils\var_datastore.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\var_datastore.pyc" />
+    <Content Include="Assets\Scripts\netCDF_Utils\__init__.py" />
+    <Content Include="Assets\Scripts\netCDF_Utils\__init__.pyc" />
+    <Content Include="Assets\Scripts\pressure_script.py" />
+    <Content Include="Assets\Scripts\pressure_to_depth.py" />
+    <Content Include="Assets\Scripts\pressure_to_depth.pyc" />
+    <Content Include="Assets\Scripts\script_test.bat" />
+    <Content Include="Assets\Scripts\setup.py" />
+    <Content Include="Assets\Scripts\stats.py" />
+    <Content Include="Assets\Scripts\stats.pyc" />
+    <Content Include="Assets\Scripts\stn_script.py" />
+    <Content Include="Assets\Scripts\storm_air" />
+    <Content Include="Assets\Scripts\storm_airchop.nc" />
+    <Content Include="Assets\Scripts\storm_script.py" />
+    <Content Include="Assets\Scripts\storm_sea" />
+    <Content Include="Assets\Scripts\storm_seachop.nc" />
+    <Content Include="Assets\Scripts\storm_stormtide.nc" />
+    <Content Include="Assets\Scripts\storm_stormtide_unfiltered.nc" />
+    <Content Include="Assets\Scripts\tester.py" />
+    <Content Include="Assets\Scripts\tools\multi_series.py" />
+    <Content Include="Assets\Scripts\tools\multi_series_old.py" />
+    <Content Include="Assets\Scripts\tools\multi_series_options.py" />
+    <Content Include="Assets\Scripts\tools\storm_csv.py" />
+    <Content Include="Assets\Scripts\tools\storm_data.py" />
+    <Content Include="Assets\Scripts\tools\storm_data.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_graph.py" />
+    <Content Include="Assets\Scripts\tools\storm_graph.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_graph_utilities.py" />
+    <Content Include="Assets\Scripts\tools\storm_graph_utilities.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_netCDF.py" />
+    <Content Include="Assets\Scripts\tools\storm_netCDF.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_options.py" />
+    <Content Include="Assets\Scripts\tools\storm_options.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_statistics.py" />
+    <Content Include="Assets\Scripts\tools\storm_statistics.pyc" />
+    <Content Include="Assets\Scripts\tools\storm_statistics_psd_plot.py" />
+    <Content Include="Assets\Scripts\tools\__init__.py" />
+    <Content Include="Assets\Scripts\tools\__init__.pyc" />
+    <Content Include="Assets\Scripts\unit_conversion.py" />
+    <Content Include="Assets\Scripts\unit_conversion.pyc" />
+    <Content Include="Assets\Scripts\__init__.py" />
     <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
   </ItemGroup>
   <ItemGroup>
