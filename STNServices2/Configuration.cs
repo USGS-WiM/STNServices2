@@ -202,7 +202,7 @@ namespace STNServices2
 
         private void AddAGENCY_Resources()
         {
-            //GET
+            //GET "Agencies"
             ResourceSpace.Has.ResourcesOfType<List<agency>>()
             .AtUri(agencyResource)
             .HandledBy<AgencyHandler>()
@@ -316,14 +316,15 @@ namespace STNServices2
            .And.AtUri(instrumentsResource+"/{instrumentId}/"+datafileResource).Named("GetInstrumentDataFiles")
            .And.AtUri(peakSummaryResource+"/{peakSummaryId}/" + datafileResource).Named("GetPeakSummaryDatafiles")
            .And.AtUri(approvalResource+"/{ApprovalId}/" + datafileResource).Named("GetApprovedDataFiles")
-           .And.AtUri(datafileResource+"?IsApproved={approved}&Event={eventId}&Processor={memberId}&State={state}").Named("GetFilteredDataFiles")
+           .And.AtUri(datafileResource + "?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}").Named("GetFilteredDataFiles")
            .HandledBy<DataFileHandler>()
            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-           .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+           .And.TranscodedBy<CsvDotNetCodec1>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<data_file>()
             .AtUri(datafileResource+"/{entityId}")
+            .And.AtUri(datafileResource + "/RunScript?SeaDataFileID={seaDataFileId}&AirDataFileID={airDataFileId}&Hertz={hertz}&Username={username}").Named("RunDataFileScripts")
             .And.AtUri(fileResource+"/{fileId}/DataFile").Named("GetFileDataFile")
             .HandledBy<DataFileHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -556,7 +557,7 @@ namespace STNServices2
             .And.AtUri(eventsResource+"/{eventId}/"+hwmResource).Named("GetEventHWMs")
             .And.AtUri(eventsResource + "/{eventId}/stateHWMs?State={state}").Named("GetEventStateHWMs")
             .And.AtUri(siteResource+"/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
-            .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
+            .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}").Named("GetApprovalHWMs")
             .And.AtUri(approvalResource+"/{ApprovalId}/"+hwmResource).Named("GetApprovedHWMs")
             .And.AtUri(memberResource+"/{memberId}/"+hwmResource).Named("GetMemberHWMs")
             .And.AtUri(hwmqualityResource+"/{hwmQualityId}/" + hwmResource).Named("GetHWMQualityHWMs")
@@ -1056,6 +1057,7 @@ namespace STNServices2
             .And.AtUri(networkNameResource+"/{networkNameId}/" + siteResource).Named("getNetworkNameSites")
             .And.AtUri(stateResource + "/{stateAbbrev}/" + siteResource).Named("GetSitesByStateName") //was "/sites?State={stateName}"
             .And.AtUri(siteResource+"?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
+            .And.AtUri(eventsResource + "/{eventId}/PeaklessSites").Named("GetSitesWithoutPeaks")
             .And.AtUri(horizontaldatumResource+"/{hdatumId}/"+siteResource).Named("GetHDatumSites")
             .And.AtUri(landOwnerResource+"/{landOwnerId}/"+siteResource).Named("GetLandOwnserSites")
             .HandledBy<SiteHandler>()

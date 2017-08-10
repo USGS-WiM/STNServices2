@@ -131,17 +131,19 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetApprovalHWMs")]
-        public OperationResult GetApprovalHWMs(string approved, [Optional] string eventId, [Optional] string memberId, [Optional] string state)
+        public OperationResult GetApprovalHWMs(string approved, [Optional] string eventId, [Optional] string state, [Optional] string counties)
         {
             try
             {
                 List<hwm> entities = null;
-
+                char[] countydelimiterChars = { ';', ',' };
+                
                 //set defaults
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-                Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+         //       Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
                 using (STNAgent sa = new STNAgent())
@@ -150,7 +152,7 @@ namespace STNServices2.Handlers
                     if (isApprovedStatus)
                         query = sa.Select<hwm>().Include(h => h.site).Where(h => h.approval_id > 0);
                     else
-                        query = sa.Select<hwm>().Include(h => h.site).Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);
+                        query = sa.Select<hwm>().Include(h => h.site).Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);                                   
 
                     if (filterEvent > 0)
                         query = query.Where(h => h.event_id == filterEvent);
@@ -159,8 +161,8 @@ namespace STNServices2.Handlers
                     if (filterState != State.UNSPECIFIED.ToString())
                         query = query.Where(h => h.site.state == filterState);
 
-                    if (filterMember > 0)
-                        query = query.Where(h => h.flag_member_id == filterMember || h.survey_member_id == filterMember);
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(h => countyList.Contains(h.site.county.ToUpper()));
 
                     entities = query.AsEnumerable().ToList();
                     sm(MessageType.info, "Count: " + entities.Count());

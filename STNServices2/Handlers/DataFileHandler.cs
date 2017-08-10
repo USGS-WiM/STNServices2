@@ -23,6 +23,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -161,50 +162,74 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredDataFiles")]
-        public OperationResult GetFilteredDataFiles(string approved, [Optional] string eventId, [Optional] string memberId, [Optional] string state)
+        public OperationResult GetFilteredDataFiles(string approved, [Optional] string eventId, [Optional] string state, [Optional] string counties)
         {
             List<data_file> entities;
+            List<data_file> refreshedVersion;
+            
             try
             {
                 if (string.IsNullOrEmpty(approved)) throw new BadRequestException("Invalid input parameters");
                
                 //set defaults
+                char[] countydelimiterChars = { ';', ',' };
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-                Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+              //  Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
                 using (STNAgent sa = new STNAgent(true))
                 {
                     IQueryable<data_file> query;
                     if (isApprovedStatus)
-                        query = sa.Select<data_file>().Where(h => h.approval_id > 0);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Where(d => d.approval_id > 0);
                     else
-                        query = sa.Select<data_file>().Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Where(d => d.approval_id <= 0 || !d.approval_id.HasValue);
 
                     if (filterEvent > 0)
-                        query = query.Where(d => d.instrument.event_id == filterEvent);
+                        query = query.Where(d => d.instrument.event_id.Value == filterEvent);
 
                     if (filterState != State.UNSPECIFIED.ToString())
                         query = query.Where(d => d.instrument.site.state == filterState);
 
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(d => countyList.Contains(d.instrument.site.county.ToUpper()));
+                    /*
                     if (filterMember > 0)
                         query = query.Where(d => d.processor_id == filterMember);
-
+                    */
 
                     entities = query.ToList();
-
+                    /*
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //they are the general public..only approved ones
                         entities = entities.Where(d => d.approval_id > 0).ToList();
-                    }
-                    sm(MessageType.info, "Count: " + entities.Count());
+                    }*/
+                    // do this for serialization for csv
+                    refreshedVersion = entities.Select(d => new data_file()
+                    {
+                        approval_id = d.approval_id,
+                        collect_date = d.collect_date,
+                        data_file_id = d.data_file_id,
+                        elevation_status = d.elevation_status,
+                        end = d.end,
+                        good_end = d.good_end,
+                        good_start = d.good_start,
+                        instrument_id = d.instrument_id,
+                        peak_summary_id = d.peak_summary_id,
+                        processor_id = d.processor_id,
+                        start = d.start,
+                        time_zone = d.time_zone
+                    }).ToList();
+
+                    sm(MessageType.info, "Count: " + refreshedVersion.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = refreshedVersion, Description = this.MessageString };
             }
             catch( Exception ex)
             { return HandleException(ex); }
@@ -272,6 +297,28 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "RunDataFileScripts")]
+        public OperationResult RunDataFileScripts(Int32 airDataFileId, Int32 seaDataFileId, Boolean hertz, string username)
+        {            
+            try
+            {
+                STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, seaDataFileId, username);
+                if (stnsa.initialized)
+                    stnsa.RunScript(hertz);
+                return new OperationResult.OK {  };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+        /* RunScripts(dfID1, dfID2, 4hz, username)
+        // stnserviceagent stnsa = new stnserviceagent(dfID1,dfID2,username);
+
+        //if (stnsa.initialized) 
+         * stnsa.runscript(4hz)
+         * else return NoGO
+         * 
+         * dispose stuff
+        */
         #endregion
 
         #region PostMethods
