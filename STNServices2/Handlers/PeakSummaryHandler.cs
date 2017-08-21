@@ -313,8 +313,8 @@ namespace STNServices2.Handlers
                             priority = globalPeakSite.deployment_priority != null ? globalPeakSite.deployment_priority.priority_name : "",
                             zone = globalPeakSite.zone,
                             horizontal_collection_method = globalPeakSite.horizontal_collect_methods != null ? globalPeakSite.horizontal_collect_methods.hcollect_method : "",
-                            perm_housing_installed = globalPeakSite.is_permanent_housing_installed == null || globalPeakSite.is_permanent_housing_installed == "No" ? "No" : "Yes",
-                            site_notes = globalPeakSite.site_notes
+                            perm_housing_installed = globalPeakSite.is_permanent_housing_installed == null || globalPeakSite.is_permanent_housing_installed == "No" ? "No" : "Yes"
+                         //   site_notes = globalPeakSite.site_notes
                         }).ToList<peak_summary>();
 
                     sm(MessageType.info, "Count: " + entities.Count());
