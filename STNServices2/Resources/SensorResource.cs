@@ -55,7 +55,7 @@ namespace STNServices2.Resources
         public string siteZone { get; set; }
         public string siteHCollectMethod { get; set; }
         public string sitePermHousing { get; set; }
-        public string siteNotes { get; set; }
+      //  public string siteNotes { get; set; }
     }//end class InstrumentDownloadable
 
     [XmlInclude(typeof(instrument))]
