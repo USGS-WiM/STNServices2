@@ -562,8 +562,8 @@ namespace STNServices2.Handlers
                              countyName = hw.site != null ? hw.site.county:"",
                              sitePriorityName = hw.site != null && hw.site.priority_id > 0 && hw.site.deployment_priority != null ? hw.site.deployment_priority.priority_name : "",
                              siteZone = hw.site != null ? hw.site.zone:"",
-                             sitePermHousing = hw.site != null && hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
-                             siteNotes = hw.site != null ?hw.site.site_notes:""
+                             sitePermHousing = hw.site != null && hw.site.is_permanent_housing_installed == null || hw.site.is_permanent_housing_installed == "No" ? "No" : "Yes"
+                         //    siteNotes = hw.site != null ?hw.site.site_notes:""
                         }).ToList<hwm>();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);

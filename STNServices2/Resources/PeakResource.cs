@@ -41,7 +41,7 @@ namespace STNServices2.Resources
         public String zone { get; set; }
         public String horizontal_collection_method { get; set; }
         public String perm_housing_installed { get; set; }
-        public String site_notes { get; set; }
+     //   public String site_notes { get; set; }
     }//end class HWMDownloadable
 
 }//end namespace

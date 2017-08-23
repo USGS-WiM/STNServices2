@@ -420,8 +420,8 @@ namespace STNServices2.Handlers
                             sitePriorityName = inst.site.deployment_priority != null ? inst.site.deployment_priority.priority_name : "",
                             siteZone = inst.site.zone,
                             siteHCollectMethod = inst.site.horizontal_collect_methods != null ? inst.site.horizontal_collect_methods.hcollect_method : "",
-                            sitePermHousing = inst.site.is_permanent_housing_installed == null || inst.site.is_permanent_housing_installed == "No" ? "No" : "Yes",
-                            siteNotes = inst.site.site_notes
+                            sitePermHousing = inst.site.is_permanent_housing_installed == null || inst.site.is_permanent_housing_installed == "No" ? "No" : "Yes"
+                        //    siteNotes = inst.site.site_notes
                         }).ToList<instrument>();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
