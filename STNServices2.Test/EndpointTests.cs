@@ -1567,9 +1567,11 @@ namespace STNServices2.Test
             Assert.IsNotNull(instSite);
 
             //PUT POSTed item
-            postObj.site_description = "site_put2"; postObj.latitude_dd = 42.3; postObj.longitude_dd = -90.3; postObj.hdatum_id = 2;
-            postObj.hcollect_method_id = 2; postObj.state = "WI"; postObj.county = "Dane County"; postObj.waterbody = "test2"; postObj.member_id = 1;
-            site putObj = this.PUTRequest<site>(host + Configuration.siteResource + "/" + postObj.site_id, postObj, basicAuth);
+            site aSite = new site();
+            aSite.access_granted = "Yes"; aSite.county = "Calhoun County"; aSite.hcollect_method_id = 1; aSite.hdatum_id = 2; aSite.is_permanent_housing_installed = "No";
+            aSite.latitude_dd = 28.41061; aSite.longitude_dd = -96.48467; aSite.member_id = 1762; aSite.site_description = "Gated community"; aSite.site_id = 20825;
+            aSite.site_name = "TXCAL20825"; aSite.site_no = "TXCAL20825"; aSite.state = "TX"; aSite.waterbody = "unknown";
+            site putObj = this.PUTRequest<site>(host + Configuration.siteResource + "/" + aSite.site_id, aSite, basicAuth);
             Assert.IsNotNull(putObj);
 
             //Delete POSTed item

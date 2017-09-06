@@ -26,6 +26,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Data.Entity;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -36,6 +37,7 @@ using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
 using WiM.Security;
+using System.Configuration;
 
 namespace STNServices2.Handlers
 {
@@ -543,6 +545,37 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.Get
        
+        [HttpOperation(HttpMethod.GET, ForUriName="GetDataFileScript")]
+        public OperationResult GetDataFileScript(Int32 entityId)
+        {
+            string isRunning = "false";
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString(); // "D:\stntemp\stormtide"
+                    string path2 = entityId.ToString();
+                    string combinedPath = System.IO.Path.Combine(path1);//, path2);
+                    
+                    string[] subdirs = Directory.GetDirectories(combinedPath, path2+"*");
+
+                    if (subdirs.Length > 0)
+                        isRunning = "true";
+                    else
+                        isRunning = "false";
+
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = isRunning, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
         #endregion
 
         #region PostMethods

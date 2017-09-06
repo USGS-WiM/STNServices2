@@ -86,6 +86,8 @@ def convert_ms_to_datestring(ms, tzinfo, script = None):
             final_date = date.strftime('%Y-%m-%dT%H:%M:%SZ')
         elif script == 'csv':
             final_date = date.strftime('%m/%d/%y %H:%M:%S')
+        elif script == 'dash':
+            final_date = date.strftime('%m-%d-%y %H:%M:%S')
         else:
             final_date = date.strftime('%m/%d/%y %H:%M')
         return final_date

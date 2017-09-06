@@ -26,12 +26,12 @@ import pytz
 
 
 INSTRUMENTS = {
-    'Level Troll': Leveltroll,
-    'RBR Solo': RBRSolo,
+    'LevelTroll': Leveltroll,
+    'RBRSolo': RBRSolo,
     'Wave Guage': Waveguage,
-    'USGS Homemade': House,
-    'Measurement Specialties': MeasureSysLogger,
-    'Hobo': Hobo }
+    'USGS Homebrew': House,
+    'MS TruBlue 255': MeasureSysLogger,
+    'Onset Hobo U20': Hobo }
 
 def convert_to_netcdf(inputs):
     translated = translate_inputs(inputs)
@@ -41,13 +41,10 @@ def convert_to_netcdf(inputs):
         setattr(instrument, key, translated[key])
     
     instrument.read()
-       
-   
-       
-
+    
     instrument.write(pressure_type=translated['pressure_type'])
-    csv_dict['File Created'].append(instrument.out_filename)
-  
+
+    
     return instrument.bad_data
 
 
@@ -142,7 +139,6 @@ def process_file(args, csv_dict):
      
     #checks for the correct file type
     if check_file_type(inputs['in_filename'], inputs['pressure_type']) == False:
-        print 'Not proper file type'
         return (2, None)
        
     #check for dates in chronological order if sea pressure file
@@ -160,11 +156,13 @@ def process_file(args, csv_dict):
             return (3, None)
         
     
-    
-    data_issues = convert_to_netcdf(inputs)
-    if data_issues is None:
-        return (7, None)
-    
+    try:
+        data_issues = convert_to_netcdf(inputs)
+        if data_issues is None:
+            return (7, None)
+    except:
+        csv_dict['Exceptions'].append('General Script Error')
+        return (5, None)
      
     time = nc.get_time(inputs['out_filename'])
     
@@ -184,11 +182,12 @@ def process_file(args, csv_dict):
     if args['pressure_type'] == 'Air Pressure':
         air_pressure = True
          
-    
-    nc.chop_netcdf(inputs['out_filename'], ''.join([inputs['out_filename'],'chop.nc']), 
+    try:
+        nc.chop_netcdf(inputs['out_filename'], ''.join([inputs['out_filename'],'chop.nc']), 
                            start_index, end_index, air_pressure)
-    
-  
+    except:
+        csv_dict['Exceptions'].append('Bad Good Start and/or End Date')
+        return (8, None)
   
     if data_issues:
         return (1, ''.join([inputs['out_filename'],'chop.nc']))
@@ -233,66 +232,75 @@ def process_storm_files(args, csv_dict):
         csv_dict['Exceptions'].append('There is no chronological overlap between sea and air data')
         return 4
     
-    
+    try:
         
- 
-    snc = Storm_netCDF()
-    so.netCDF['Storm Tide with Unfiltered Water Level'] = Bool(True)
-    so.netCDF['Storm Tide Water Level'] = Bool(True)
-    snc.process_netCDFs(so)
-    csv_dict['File Created'].append(so.output_fname + '_stormtide.nc')
-    csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.nc')
-
-          
- 
-
-    sg = StormGraph()
-    so.graph['Storm Tide with Wind Data'] = Bool(False)
-    so.graph['Storm Tide with Unfiltered Water Level'] = Bool(True)
-    so.graph['Storm Tide Water Level'] = Bool(True)
-    so.graph['Atmospheric Pressure'] = Bool(True)
-    sg.process_graphs(so)
-    csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.jpg')
-    csv_dict['File Created'].append(so.output_fname + '_stormtide.jpg')
-    csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.jpg')
+        try:
+            snc = Storm_netCDF()
+            so.netCDF['Storm Tide with Unfiltered Water Level'] = Bool(True)
+            so.netCDF['Storm Tide Water Level'] = Bool(True)
+            snc.process_netCDFs(so)
+            csv_dict['File Created'].append(so.output_fname + '_stormtide.nc')
+            csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.nc')
+        except:
+            csv_dict['Exceptions'].append('Could not create netCDF files')
+            return 4
+                 
+        
+        try:   
+            sg = StormGraph()
+            so.graph['Storm Tide with Wind Data'] = Bool(False)
+            so.graph['Storm Tide with Unfiltered Water Level'] = Bool(True)
+            so.graph['Storm Tide Water Level'] = Bool(True)
+            so.graph['Atmospheric Pressure'] = Bool(True)
+            sg.process_graphs(so)
+            csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.jpg')
+            csv_dict['File Created'].append(so.output_fname + '_stormtide.jpg')
+            csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.jpg')
             
-       
+        except:
+            csv_dict['Exceptions'].append('Could not create water level visualizations')
+            return 4
         
-    depth_idx = np.nanargmax(so.raw_water_level)
-    tide_idx = np.nanargmax(so.surge_water_level)
-    
-    csv_dict['Computed Peak Value'] = so.surge_water_level[tide_idx]
-    csv_dict['Computed Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[tide_idx], pytz.utc, 'dash')
-    csv_dict['Instantaneous Peak Value'] = so.raw_water_level[depth_idx]
-    csv_dict['Instantaneous Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[depth_idx], pytz.utc, 'dash')
-    
-    if args['sea_4hz'].lower() == 'true':
+        depth_idx = np.nanargmax(so.raw_water_level)
+        tide_idx = np.nanargmax(so.surge_water_level)
+        
+        csv_dict['Computed Peak Value'] = so.surge_water_level[tide_idx]
+        csv_dict['Computed Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[tide_idx], pytz.utc, 'dash')
+        csv_dict['Instantaneous Peak Value'] = so.raw_water_level[depth_idx]
+        csv_dict['Instantaneous Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[depth_idx], pytz.utc, 'dash')
+        
+        if args['sea_4hz'].lower() == 'true':
             
-    
-        so.int_units = False
-        so.high_cut = 1.0
-        so.low_cut = 0.045
-        so.from_water_level_file = False
-    
-        
-        ss = StormStatistics()
-        
-        for y in so.statistics:
-            so.statistics[y] = Bool(False)
+            try:
+                so.int_units = False
+                so.high_cut = 1.0
+                so.low_cut = 0.045
+                so.from_water_level_file = False
             
-        so.statistics['H1/3'] = Bool(True)
-        so.statistics['Average Z Cross'] = Bool(True)
-        so.statistics['PSD Contour'] = Bool(True)
-    
-        ss.process_graphs(so)
+                
+                ss = StormStatistics()
+                
+                for y in so.statistics:
+                    so.statistics[y] = Bool(False)
+                    
+                so.statistics['H1/3'] = Bool(True)
+                so.statistics['Average Z Cross'] = Bool(True)
+                so.statistics['PSD Contour'] = Bool(True)
         
-        csv_dict['File Created'].append(so.output_fname + '_avg_z_cross.jpg')
-        csv_dict['File Created'].append(so.output_fname + '_h13.jpg')
-        csv_dict['File Created'].append(so.output_fname + '_psd_contours.jpg')
-      
-    
-    return 0
-    
+                ss.process_graphs(so)
+                
+                csv_dict['File Created'].append(so.output_fname + '_avg_z_cross.jpg')
+                csv_dict['File Created'].append(so.output_fname + '_h13.jpg')
+                csv_dict['File Created'].append(so.output_fname + '_psd_contours.jpg')
+            except:
+                csv_dict['Exceptions'].append('Could not create statistics visualizations')
+                return 4
+        
+        return 0
+    except:
+        csv_dict['Exceptions'].append('General Exception')
+        return 5
+     
     
 
 
