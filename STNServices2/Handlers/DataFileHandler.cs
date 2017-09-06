@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using STNServices2.Security;
+using STNServices2.Resources;
 using WiM.Security;
 
 
@@ -305,20 +306,37 @@ namespace STNServices2.Handlers
                 STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, seaDataFileId, username);
                 if (stnsa.initialized)
                     stnsa.RunScript(hertz);
+
                 return new OperationResult.OK {  };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-        /* RunScripts(dfID1, dfID2, 4hz, username)
-        // stnserviceagent stnsa = new stnserviceagent(dfID1,dfID2,username);
 
-        //if (stnsa.initialized) 
-         * stnsa.runscript(4hz)
-         * else return NoGO
-         * 
-         * dispose stuff
-        */
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventDataFileView")]
+        public OperationResult GetEventDataFileView(Int32 eventId)
+        {
+            List<dataFile_view> entities;
+
+            //Return BadRequest if there is no ID
+            if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.getTable<dataFile_view>(new Object[1] { null }).Where(e => e.event_id == eventId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+       
         #endregion
 
         #region PostMethods

@@ -331,6 +331,14 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
+            ResourceSpace.Has.ResourcesOfType<dataFile_view>()
+                .AtUri("/DataFileView?EventId={eventId}").Named("GetEventDataFileView")
+                .HandledBy<DataFileHandler>()
+                .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+                .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+           .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
+
         }//end AddDATA_FILE_Resources (6)
         private void AddDEPLOYMENT_PRIORITY_Resources()
         {
@@ -1065,8 +1073,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
-
-            
+                        
             ResourceSpace.Has.ResourcesOfType<site>()
             .AtUri(siteResource+"/{entityId}")
             .And.AtUri(siteResource+"/Search?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySearch")
@@ -1088,7 +1095,13 @@ namespace STNServices2
            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
-            
+
+            ResourceSpace.Has.ResourcesOfType<string>()
+            .AtUri(siteResource + "/{entityId}/GetDataFileScript").Named("GetDataFileScript")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
            
         }//end AddSITE_Resources                  (38)
         private void AddSITE_HOUSING_Resources()

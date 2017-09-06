@@ -20,7 +20,7 @@ import pandas as pd
 import unit_conversion
 from matplotlib.ticker import FormatStrFormatter
 import tools.storm_graph_utilities as graph_util
-
+import os
 
 class StormGraph(object):
     
@@ -165,8 +165,14 @@ class StormGraph(object):
             
         self.df = pd.DataFrame(graph_data)
        
+       
+        script_dir = os.path.dirname(__file__)
+        rel_path = "../"
+        abs_file_path = os.path.join(script_dir, rel_path)
+        current_file = "usgs.png"
+       
         #Read images
-        logo = image.imread('usgs.png', None)
+        logo = image.imread(abs_file_path+current_file, None)
     
         #Create grids for section formatting
         if wind == False:
@@ -227,7 +233,12 @@ class StormGraph(object):
         #create dataframe
        
         #Read images
-        logo = image.imread('usgs.png', None)
+        script_dir = os.path.dirname(__file__)
+        rel_path = "../"
+        abs_file_path = os.path.join(script_dir, rel_path)
+        current_file = "usgs.png"
+        
+        logo = image.imread(abs_file_path+current_file, None)
     
         #Create grids for section formatting
         self.grid_spec = gridspec.GridSpec(2, 2,
@@ -385,7 +396,7 @@ class StormGraph(object):
          
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
           
-        file_name = ''.join([so.output_fname,'_stormtide_unfiltered','.jpg'])
+        file_name = ''.join([so.output_fname,'_stormtide_unfiltered','.png'])
         plt.savefig(file_name)
         
 
@@ -540,7 +551,7 @@ class StormGraph(object):
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
         
          
-        file_name = ''.join([so.output_fname,'_stormtide_wind','.jpg'])
+        file_name = ''.join([so.output_fname,'_stormtide_wind','.png'])
         
 
         plt.savefig(file_name)
@@ -671,7 +682,7 @@ class StormGraph(object):
         
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
          
-        file_name = ''.join([so.output_fname,'_stormtide','.jpg'])
+        file_name = ''.join([so.output_fname,'_stormtide','.png'])
         plt.savefig(file_name)
     
     
@@ -728,7 +739,7 @@ class StormGraph(object):
                   title="EXPLANATION")
         legend.get_title().set_position((-28, 0))
          
-        file_name = ''.join([so.output_fname,'_barometric_pressure','.jpg'])
+        file_name = ''.join([so.output_fname,'_barometric_pressure','.png'])
         plt.savefig(file_name)
         
       

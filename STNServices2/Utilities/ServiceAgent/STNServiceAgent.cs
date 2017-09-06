@@ -10,7 +10,7 @@ using OpenRasta.IO;
 using Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using WiM.Utilities.ServiceAgent;
+//using WiM.Utilities.ServiceAgent;
 using WiM.Resources;
 using WiM.Resources.Spatial;
 using WiM.Utilities.Storage;
@@ -21,7 +21,7 @@ using STNDB;
 
 namespace STNServices2.Utilities.ServiceAgent
 {
-    public class STNServiceAgent: ExternalProcessServiceAgentBase
+    public class STNServiceAgent:  ExternalProcessServiceAgentBase
     {
         #region Properties    
         private DirectoryInfo workspaceDirectory { get; set; }
@@ -42,29 +42,80 @@ namespace STNServices2.Utilities.ServiceAgent
         public STNServiceAgent(Int32 pressureSensorDFID, Int32 waterSensorDFID, string username)
             :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
         {
-           /* if (!System.IO.Directory.Exists(ConfigurationManager.AppSettings["STNRepository"]))
-                System.IO.Directory.CreateDirectory(ConfigurationManager.AppSettings["STNRepository"]);
-            */
             Init(pressureSensorDFID, waterSensorDFID, username);
         }
         #endregion Constructors
 
         #region Methods
         public Boolean RunScript(Boolean hz)
-        {
-            JObject result = null;
-            string msg;
-           
+        {                     
             try
             {
-                result = Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Script"], getBody(hz))) as JObject;
-                    //if (isDynamicError(result, out msg)) throw new Exception("Delineation Error: " + msg);                    
+                // execute the stn_script
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Script"], getBody(hz)));
+             
+                // remove temp air/sea files
+                File.Delete(pressureDFName);
+                File.Delete(waterDFName);
                 
+                // put everything in s3 under air file
+                DirectoryInfo di = new DirectoryInfo(combinedPath);
+
+                foreach(var f in di.GetFiles())
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        //create new file from air and update the fields
+                        file newFile = new file();                         
+                        newFile.file_date = DateTime.Now;
+                        newFile.site_id = seaDataFile.files.FirstOrDefault().site_id;
+                        newFile.name = f.Name;
+                        newFile.instrument_id = seaDataFile.instrument_id;
+
+                        // if photo
+                        if (f.Extension == ".png")
+                        {
+                            newFile.filetype_id = 1;
+                            newFile.photo_date = DateTime.Now;
+                            newFile.description = "Photo File generated from STN_Script processing";
+                            //create source
+                            source createdSource = new source();
+                            createdSource.source_name = scriptMember.fname + " " + scriptMember.lname;
+                            createdSource.agency_id = scriptMember.agency_id;
+                            createdSource = sa.Add<source>(createdSource);
+                            newFile.source_id = createdSource.source_id;                                
+                        }
+                        else
+                        {
+                            //it's a data file
+                            newFile.filetype_id = 2;
+                            newFile.description = "Data File generated from STN_Script processing";
+                            //create new data_file and new file
+                            data_file newDF = new data_file();
+                            newDF.good_start = seaDataFile.good_start;
+                            newDF.good_end = seaDataFile.good_end;
+                            newDF.processor_id = scriptMember.member_id;
+                            newDF.instrument_id = seaDataFile.instrument_id;
+                            newDF.collect_date = DateTime.Now;
+                            newDF.time_zone = "UTC";
+                            newDF = sa.Add<data_file>(newDF);
+                            newFile.data_file_id = newDF.data_file_id;
+                        }
+                                     
+                        // create new memory stream, copy the f to it, and then save it in s3
+                        f.OpenRead().CopyTo(memoryStream);
+                        memoryStream.Position = 0;
+                        sa.AddFile(newFile, memoryStream);
+                    } // end using MemoryStream
+                }// end foreach file
+
+                //delete directory
+                Directory.Delete(combinedPath, true);
+
                 return true;
             }
             catch (Exception ex)
             {
-            //    sm("Error delineating " + ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -75,9 +126,11 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 //get water level's siteid and eventid
                 seaDataFile = sa.Select<data_file>()
+                    .Include(df => df.files)
                     .Include(df => df.instrument)
                     .Include("instrument.instr_collection_conditions")
                     .Include("instrument.instrument_status")
+                    .Include("instrument.sensor_brand")
                     .Include("instrument.instrument_status.vertical_datums")
                     .Include("instrument.site")
                     .FirstOrDefault(df => df.data_file_id == watDFID);
@@ -89,7 +142,6 @@ namespace STNServices2.Utilities.ServiceAgent
                 string path4 = "DFID" + seaDataFile.data_file_id.ToString() + DateTime.Now.ToString("MMddyyyyHHmmss");
                 combinedPath = System.IO.Path.Combine(path1, path2 + path3 + path4);
                 workspaceDirectory = System.IO.Directory.CreateDirectory(combinedPath);
-          //      workspaceDirectory = System.IO.Directory.CreateDirectory(System.IO.Path.Combine(ConfigurationManager.AppSettings["STNRepository"].ToString(), seaDataFile.instrument.site_id.ToString() + "INSTRUMENT" + seaDataFile.instrument_id.ToString() + "DFID" + seaDataFile.data_file_id.ToString() + DateTime.Now.ToLongTimeString()));
                 
                 //bring over files it needs from s3 (air/sea) and store in temp location
                 pressureDFName = moveFile(presDFID);
@@ -98,9 +150,11 @@ namespace STNServices2.Utilities.ServiceAgent
                 scriptMember = sa.Select<member>().Include(m=> m.agency).FirstOrDefault(m => m.username == username);
                 //get air datafile
                 airDataFile = sa.Select<data_file>()
+                    .Include(df => df.files)
                     .Include(df => df.instrument)
                     .Include("instrument.instr_collection_conditions")
                     .Include("instrument.instrument_status")
+                    .Include("instrument.sensor_brand")
                     .Include("instrument.instrument_status.vertical_datums")
                     .Include("instrument.site")
                     .FirstOrDefault(df => df.data_file_id == presDFID);
@@ -120,14 +174,14 @@ namespace STNServices2.Utilities.ServiceAgent
         private string moveFile(Int32 fileId) {
             STNAgent sa = new STNAgent();
             try
-            {                
+            {
                 string filename = "";
                 file fileentity = sa.Select<file>().FirstOrDefault(f => f.data_file_id == fileId);
                 InMemoryFile fileItem = sa.GetFileItem(fileentity);
-                filename = fileentity.name;
+                filename = System.IO.Path.Combine(combinedPath, fileentity.name);
                 //copy data file to our temporary location
                 string tempLocation = Path.Combine(new String[] { AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts" });
-                using (var fileStream = File.Create(System.IO.Path.Combine(tempLocation,filename)))//System.IO.Path.Combine(combinedPath, filename))) //BROKEN HERE
+                using (var fileStream = File.Create(System.IO.Path.Combine(tempLocation,filename)))
                 {
                     fileItem.OpenStream().Seek(0, SeekOrigin.Begin);
                     fileItem.OpenStream().CopyTo(fileStream);
@@ -145,62 +199,110 @@ namespace STNServices2.Utilities.ServiceAgent
             List<string> body = new List<string>();
             try
             {
-                body.Add("-sea_fname " + waterDFName);
-                body.Add("-air_fname " + pressureDFName);
-                body.Add("-out_fname " + pressureDFName + "_output");
-                body.Add("-creator_name " + scriptMember.fname + " " + scriptMember.lname);
-                body.Add("-creator_email " + scriptMember.email);
-                body.Add("-creator_url " + "www.usgs.gov");
-                body.Add("-sea_instrument_name " + seaDataFile.instrument.serial_number);
-                body.Add("-air_instrument_name " + airDataFile.instrument.serial_number);
-                body.Add("-sea_stn_station_number " + seaDataFile.instrument.site.site_id);
-                body.Add("-air_stn_station_number " + airDataFile.instrument.site.site_id);
-                body.Add("-sea_stn_instrument_id " + seaDataFile.instrument.instrument_id);
-                body.Add("-air_stn_instrument_id " + airDataFile.instrument.instrument_id);
-                body.Add("-sea_latitude " + seaDataFile.instrument.site.latitude_dd);
-                body.Add("-air_latitude " + airDataFile.instrument.site.latitude_dd);
-                body.Add("-sea_longitude " + seaDataFile.instrument.site.longitude_dd);
-                body.Add("-air_longitude " + airDataFile.instrument.site.longitude_dd);
-                body.Add("-tz_info " + "UTC");
-                body.Add("-daylight_savings " + "False");
+                // -sea_fname
+                body.Add('"' + waterDFName + '"');
+                // -air_fname
+                body.Add('"' + pressureDFName + '"');
+                // -out_fname
+                body.Add('"' + Path.ChangeExtension(pressureDFName, null) + "_output" + '"');
+                // -creator_name
+                body.Add('"' + scriptMember.fname + " " + scriptMember.lname + '"');
+                // -creator_email
+                body.Add(scriptMember.email);
+                // -creator_url
+                body.Add("www.usgs.gov");
+                // -sea_instrument_name
+                body.Add('"' + seaDataFile.instrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
+                // -air_instrument_name
+                body.Add('"' + airDataFile.instrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
+                // -sea_stn_station_number
+                body.Add(seaDataFile.instrument.site.site_id.ToString());
+                // -air_stn_station_number
+                body.Add(airDataFile.instrument.site.site_id.ToString());
+                // -sea_stn_instrument_id
+                body.Add(seaDataFile.instrument.instrument_id.ToString());
+                // -air_stn_instrument_id 
+                body.Add(airDataFile.instrument.instrument_id.ToString());
+                // -sea_latitude
+                body.Add(seaDataFile.instrument.site.latitude_dd.ToString());
+                // -air_latitude 
+                body.Add(airDataFile.instrument.site.latitude_dd.ToString());
+                // -sea_longitude
+                body.Add(seaDataFile.instrument.site.longitude_dd.ToString());
+                // -air_longitude
+                body.Add(airDataFile.instrument.site.longitude_dd.ToString());
+                // -tz_info
+                body.Add("UTC");
+                // -daylight_savings
+                body.Add("False");
+
+                // -datum
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
-                    body.Add("-datum " + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.instrument_status_id == 1).vertical_datums.datum_abbreviation);
-                else body.Add("-datum " + "NAVD88");
+                    body.Add('"' + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.instrument_status_id == 1).vertical_datums.datum_abbreviation + '"');
+                else body.Add("NAVD88");
 
+                // -sea_initial_sensor_orifice_elevation
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
-                    body.Add("-sea_initial_sensor_orifice_elevation " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation);
-                else body.Add("-sea_initial_sensor_orifice_elevation " + 1);
+                    body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
+                else body.Add("1");
+
+                // -air_initial_sensor_orifice_elevation 
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
-                    body.Add("-air_initial_sensor_orifice_elevation " + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation);
-                else body.Add("-air_initial_sensor_orifice_elevation " + 1);
+                    body.Add(airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
+                else body.Add("1");
 
+                // -sea_final_sensor_orifice_elevation 
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
-                    body.Add("-sea_final_sensor_orifice_elevation " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation);
-                else body.Add("-sea_final_sensor_orifice_elevation " + 1.3);
+                    body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
+                else body.Add("1");
 
+                // -air_final_sensor_orifice_elevation
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
-                    body.Add("-air_final_sensor_orifice_elevation " + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation);
-                else body.Add("-air_final_sensor_orifice_elevation " + 2);
+                    body.Add(airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
+                else body.Add("1");
 
-                body.Add("-salinity " + seaDataFile.instrument.instr_collection_conditions.condition);
-
-                if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation != null)
-                    body.Add("-initial_land_surface_elevation " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation);
-                else body.Add("-initial_land_surface_elevation " + 2.2);
-
-                if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation != null)
-                    body.Add("-final_land_surface_elevation " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation);
-                else body.Add("-final_land_surface_elevation " + 2.3);
-
-                body.Add("-deployment_time " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).time_stamp);
-                body.Add("-retrieval_time " + seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).time_stamp);
-                body.Add("-sea_name " + seaDataFile.instrument.site.waterbody);
-                body.Add("-sea_good_start_date " + seaDataFile.good_start);
-                body.Add("-air_good_start_date " + airDataFile.good_start);
-                body.Add("-sea_good_end_date " + seaDataFile.good_end);
-                body.Add("-air_good_end_date " + airDataFile.good_end);
-                body.Add("-sea_4hz " + hertz.ToString());
+                // -salinity 
+                body.Add('"' + seaDataFile.instrument.instr_collection_conditions.condition + '"');
                 
+                // -initial_land_surface_elevation
+                if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation != null)
+                    body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation.ToString());
+                else body.Add("1");
+
+                // -final_land_surface_elevation
+                if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation != null)
+                    body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation.ToString());
+                else body.Add("1");
+
+                string depTime = seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).time_stamp.Value.ToString("yyyyMMdd HHmm");                
+                // -deployment_time
+                body.Add('"' + depTime + '"');
+                string retTime = seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).time_stamp.Value.ToString("yyyyMMdd HHmm");
+                // -retrieval_time
+                body.Add('"' + retTime + '"');
+                // -sea_name 
+                body.Add('"' + seaDataFile.instrument.site.waterbody + '"');
+
+                string seaGoodStart = seaDataFile.good_start.Value.ToString("yyyyMMdd HHmm");
+                // -sea_good_start_date         
+                body.Add('"' + seaGoodStart + '"');
+
+                string airGoodStart = airDataFile.good_start.Value.ToString("yyyyMMdd HHmm");
+                // -air_good_start_date 
+                body.Add('"' + airGoodStart + '"');
+
+                string seaGoodEnd = seaDataFile.good_end.Value.ToString("yyyyMMdd HHmm");
+                // -sea_good_end_date
+                body.Add('"' + seaGoodEnd + '"');
+
+                string airGoodEnd = airDataFile.good_end.Value.ToString("yyyyMMdd HHmm");
+                // -air_good_end_date
+                body.Add('"' + airGoodEnd + '"');
+
+                // -sea_4hz 
+                body.Add(hertz.ToString());
+
+                var joinedBody = "\"" + string.Join("\", \"", body) + "\"";
                 return string.Join(" ", body);
             }
             catch (Exception)

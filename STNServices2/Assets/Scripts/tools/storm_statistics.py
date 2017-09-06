@@ -17,6 +17,7 @@ import pytz
 import unit_conversion as uc
 from matplotlib.ticker import FormatStrFormatter
 from datetime import datetime
+import os
 
 class StormStatistics(object):
     
@@ -101,7 +102,11 @@ class StormStatistics(object):
         self.time_nums2 = np.linspace(first_date, last_date, len(time))
         
         #Read images
-        logo = image.imread('usgs.png', None)
+        script_dir = os.path.dirname(__file__)
+        rel_path = "../"
+        abs_file_path = os.path.join(script_dir, rel_path)
+        current_file = "usgs.png"
+        logo = image.imread(abs_file_path+current_file, None)
     
         #Create grids for section formatting
         
@@ -172,7 +177,7 @@ class StormStatistics(object):
         
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
          
-        file_name = ''.join([so.output_fname,'_avg_z_cross','.jpg'])
+        file_name = ''.join([so.output_fname,'_avg_z_cross','.png'])
         plt.savefig(file_name)
         
     def plot_peak(self,so):
@@ -214,7 +219,7 @@ class StormStatistics(object):
         
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
          
-        file_name = ''.join([so.output_fname,'_peak_wave','.jpg'])
+        file_name = ''.join([so.output_fname,'_peak_wave','.png'])
         plt.savefig(file_name)
         
         
@@ -269,7 +274,7 @@ class StormStatistics(object):
         
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
          
-        file_name = ''.join([so.output_fname,'_h13','.jpg'])
+        file_name = ''.join([so.output_fname,'_h13','.png'])
         plt.savefig(file_name)
         
     def spectra_plot(self, so):
@@ -356,7 +361,7 @@ class StormStatistics(object):
         ax.set_yticks([100,200,500,1000,2000])
         ax.grid(b=True, which='major', color='black', linestyle="-")
     
-        plt.savefig(''.join([fname, '_psd_contours','.jpg']))
+        plt.savefig(''.join([fname, '_psd_contours','.png']))
     
 def convert_ms_to_date(time):
     '''Format the date of a time series plot'''
@@ -402,4 +407,3 @@ if __name__ == '__main__':
     so.format_output_fname('FEVTest2'.replace('/','-'))
     ss.process_graphs(so)
         
-    
