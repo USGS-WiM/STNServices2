@@ -514,6 +514,8 @@ namespace STNServices2.Handlers
                     entities = query.AsEnumerable().Select(
                         hw => new HWMDownloadable 
                         {
+                            latitude = hw.latitude_dd.Value,
+                            longitude = hw.longitude_dd.Value,
                              hwm_id = hw.hwm_id,
                              waterbody = hw.waterbody,
                              site_id = hw.site_id,
