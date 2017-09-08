@@ -409,8 +409,11 @@ namespace STNServices2.Handlers
                         if (ObjectToBeUpdated == null) throw new NotFoundRequestException("Requested member not found.");
 
                         if (!IsAuthorizedToEdit(ObjectToBeUpdated.username))
-                            return new OperationResult.Forbidden { Description="Not authorized to edit specified user" };
-
+                        {
+                            //first fail checks for admin only (managers can edit field people)
+                            if (!IsAuthorized("Manager") && ObjectToBeUpdated.role_id != 3) 
+                                return new OperationResult.Forbidden { Description="Not authorized to edit specified user" };
+                        }
                         ObjectToBeUpdated.username = anEntity.username;
                         ObjectToBeUpdated.fname = anEntity.fname;
                         ObjectToBeUpdated.lname = anEntity.lname;

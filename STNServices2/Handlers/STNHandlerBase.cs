@@ -36,7 +36,7 @@ namespace STNServices2.Handlers
         {
             if (string.Equals(OwnerUserName, username,StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (IsAuthorized(AdminRole))
+            if (IsAuthorized(AdminRole) || IsAuthorized(ManagerRole))
                 return true;
 
 
