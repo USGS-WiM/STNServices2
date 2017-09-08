@@ -13,6 +13,8 @@ namespace STNServices2.Resources
     [XmlInclude(typeof(hwm))]
     public class HWMDownloadable : hwm
     {
+        public double latitude { get; set; }
+        public double longitude { get; set; }
         public string eventName { get; set; }
         public string hwmTypeName { get; set; }
         public string hwm_label { get; set; }
@@ -32,8 +34,7 @@ namespace STNServices2.Resources
         public string stateName { get; set; }
         public string countyName { get; set; }
         public string siteZone { get; set; }
-        public string sitePermHousing { get; set; }
-      //  public string siteNotes { get; set; }
+        public string sitePermHousing { get; set; }      
         public double site_latitude { get; set; }
         public double site_longitude { get; set; }
     }//end class HWMDownloadable
