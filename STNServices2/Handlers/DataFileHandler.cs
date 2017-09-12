@@ -298,16 +298,44 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
-        [HttpOperation(HttpMethod.GET, ForUriName = "RunDataFileScripts")]
-        public OperationResult RunDataFileScripts(Int32 airDataFileId, Int32 seaDataFileId, Boolean hertz, string username)
+        [HttpOperation(HttpMethod.GET, ForUriName = "RunStormDataFileScript")]
+        public OperationResult RunStormScript(Int32 seaDataFileId, Int32 airDataFileId, string hertz, string username)
         {            
             try
             {
+                //Return BadRequest if there is no ID
+                bool isHertz = false;
+                Boolean.TryParse(hertz, out isHertz);
+                if (airDataFileId <= 0 || seaDataFileId <= 0 || string.IsNullOrEmpty(username))
+                    throw new BadRequestException("Invalid input parameters");
+                
                 STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, seaDataFileId, username);
                 if (stnsa.initialized)
-                    stnsa.RunScript(hertz);
-
+                    stnsa.RunStormScript(isHertz);
+                else
+                    throw new BadRequestException("Error initializing python script.");
+                
                 return new OperationResult.OK {  };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "RunAirDataFileScript")]
+        public OperationResult RunAirDataFileScript(Int32 seaDataFileId, string username)
+        {
+            try
+            {
+                if (seaDataFileId <= 0 || string.IsNullOrEmpty(username))
+                    throw new BadRequestException("Invalid input parameters");
+
+                STNServiceAgent stnsa = new STNServiceAgent(seaDataFileId, username);
+                if (stnsa.initialized)
+                    stnsa.RunAirScript();
+                else
+                    throw new BadRequestException("Error initializing python script.");
+                
+                return new OperationResult.OK { };
             }
             catch (Exception ex)
             { return HandleException(ex); }

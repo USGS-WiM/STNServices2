@@ -324,7 +324,8 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<data_file>()
             .AtUri(datafileResource+"/{entityId}")
-            .And.AtUri(datafileResource + "/RunScript?SeaDataFileID={seaDataFileId}&AirDataFileID={airDataFileId}&Hertz={hertz}&Username={username}").Named("RunDataFileScripts")
+            .And.AtUri(datafileResource + "/RunStormScript?SeaDataFileID={seaDataFileId}&AirDataFileID={airDataFileId}&Hertz={hertz}&Username={username}").Named("RunStormDataFileScript")
+            .And.AtUri(datafileResource + "/RunAirScript?AirDataFileID={airDataFileId}&Username={username}").Named("RunAirDataFileScript")
             .And.AtUri(fileResource+"/{fileId}/DataFile").Named("GetFileDataFile")
             .HandledBy<DataFileHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")

@@ -213,7 +213,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 fileItem = new InMemoryFile(fileStream);
                 fileItem.ContentType = GetContentType(afile.name);
                 fileItem.Length = fileStream != null ? fileStream.Length : 0;
-                fileItem.FileName = afile.name;
+                fileItem.FileName = afile.name;                
                 return fileItem;
                     
             }

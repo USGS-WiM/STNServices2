@@ -24,12 +24,12 @@ from tools.storm_statistics import StormStatistics
 from datetime import datetime
 
 INSTRUMENTS = {
-    'LevelTroll': Leveltroll,
-    'RBRSolo': RBRSolo,
+    'Level Troll': Leveltroll,
+    'RBR Solo': RBRSolo,
     'Wave Guage': Waveguage,
-    'USGS Homebrew': House,
-    'MS TruBlue 255': MeasureSysLogger,
-    'Onset Hobo U20': Hobo }
+    'USGS Homemade': House,
+    'Measurement Specialties': MeasureSysLogger,
+    'Hobo': Hobo }
 
 def convert_to_netcdf(inputs, csv_dict):
     translated = translate_inputs(inputs)
@@ -38,19 +38,19 @@ def convert_to_netcdf(inputs, csv_dict):
     for key in translated:
         setattr(instrument, key, translated[key])
         
-    try:
-        instrument.read()
+#     try:
+    instrument.read()
        
-    except:
-        csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
-        return None
+#     except:
+#         csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
+#         return None
        
-    try:
-        instrument.write(pressure_type=translated['pressure_type'])
-        csv_dict['File Created'].append(instrument.out_filename)
-    except:
-        csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
-        
+#     try:
+    instrument.write(pressure_type=translated['pressure_type'])
+    csv_dict['File Created'].append(instrument.out_filename)
+#     except:
+#         csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
+#         
     
     return instrument.bad_data
 
@@ -147,14 +147,14 @@ def process_file(args, csv_dict):
             return (3, None)
         
     
-    try:
-        data_issues = convert_to_netcdf(inputs, csv_dict)
-        
-        if data_issues is None:
-            return (7, None)
-    except:
-        csv_dict['Exceptions'].append('General Script Error')
-        return (5, None)
+    
+    data_issues = convert_to_netcdf(inputs, csv_dict)
+     
+    if data_issues is None:
+        return (7, None)
+
+#      csv_dict['Exceptions'].append('General Script Error')
+#      return (5, None)
      
     time = nc.get_time(inputs['out_filename'])
     
@@ -313,6 +313,3 @@ if __name__ == '__main__':
     df = pd.DataFrame(csv_dict)
     df.to_csv(path_or_buf=''.join([output, '.csv']))
         
-    
-   
-    
