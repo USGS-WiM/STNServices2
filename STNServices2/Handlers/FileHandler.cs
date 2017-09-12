@@ -60,6 +60,7 @@ using STNServices2.Utilities.ServiceAgent;
 using WiM.Exceptions;
 using WiM.Resources;
 using WiM.Security;
+using System.Drawing;
 
 namespace STNServices2.Handlers
 {
@@ -143,6 +144,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
 
                     fileItem = sa.GetFileItem(anEntity);
+                    
                     sm(sa.Messages);
                 }//end using
 
@@ -151,7 +153,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-    
+            
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByDateRange")]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
@@ -678,5 +680,8 @@ namespace STNServices2.Handlers
         }//end HTTP.DELETE
         #endregion
 
+        #region helpers
+       
+        #endregion
     }//end class FileHandler
 }//end namespace

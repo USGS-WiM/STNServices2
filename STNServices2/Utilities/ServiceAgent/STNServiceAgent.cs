@@ -23,17 +23,25 @@ namespace STNServices2.Utilities.ServiceAgent
 {
     public class STNServiceAgent:  ExternalProcessServiceAgentBase
     {
-        #region Properties    
+        #region Properties
         private DirectoryInfo workspaceDirectory { get; set; }
-        private string pressureDFName { get; set; }
+        private string combinedPath { get; set; }
+        
+        // storm parts
+        private string airDFName { get; set; }
         private string waterDFName { get; set; }
         public Boolean initialized { get; private set; }
         private member scriptMember { get; set; }
         private data_file seaDataFile { get; set; }
         private data_file airDataFile { get; set; }
         private site waterSite { get; set; }
-        private site airSite { get; set; }
-        private string combinedPath { get; set; }
+        
+        // air parts
+        private string pressureDFName { get; set; }
+        public Boolean pressureInitialized { get; private set; }
+        private member pressureScriptMember { get; set; }
+        private data_file pressureDataFile { get; set; }
+
         STNAgent sa = new STNAgent();
 
         #endregion Properties
@@ -44,10 +52,16 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             Init(pressureSensorDFID, waterSensorDFID, username);
         }
+        public STNServiceAgent(Int32 pressureSensorDFID, string username)
+            :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
+        {
+            AirInit(pressureSensorDFID, username);
+        }
         #endregion Constructors
 
         #region Methods
-        public Boolean RunScript(Boolean hz)
+        // air and sea together
+        public Boolean RunStormScript(bool hz)
         {                     
             try
             {
@@ -55,7 +69,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Script"], getBody(hz)));
              
                 // remove temp air/sea files
-                File.Delete(pressureDFName);
+                File.Delete(airDFName);
                 File.Delete(waterDFName);
                 
                 // put everything in s3 under air file
@@ -120,6 +134,80 @@ namespace STNServices2.Utilities.ServiceAgent
             }
         }
         
+        //air only
+        public Boolean RunAirScript()
+        {
+            try
+            {
+                // execute the stn_script
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Air_Script"], getAirBody()));
+
+                // remove temp air/sea files
+                File.Delete(pressureDFName);
+
+                // put everything in s3 under air file
+                DirectoryInfo di = new DirectoryInfo(combinedPath);
+
+                foreach (var f in di.GetFiles())
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        //create new file from air and update the fields
+                        file newFile = new file();
+                        newFile.file_date = DateTime.Now;
+                        newFile.site_id = pressureDataFile.files.FirstOrDefault().site_id;
+                        newFile.name = f.Name;
+                        newFile.instrument_id = pressureDataFile.instrument_id;
+
+                        // if photo
+                        if (f.Extension == ".png")
+                        {
+                            newFile.filetype_id = 1;
+                            newFile.photo_date = DateTime.Now;
+                            newFile.description = "Photo File generated from STN_Script_air processing";
+                            //create source
+                            source createdSource = new source();
+                            createdSource.source_name = pressureScriptMember.fname + " " + pressureScriptMember.lname;
+                            createdSource.agency_id = pressureScriptMember.agency_id;
+                            createdSource = sa.Add<source>(createdSource);
+                            newFile.source_id = createdSource.source_id;
+                        }
+                        else
+                        {
+                            //it's a data file
+                            newFile.filetype_id = 2;
+                            newFile.description = "Data File generated from STN_Script_air processing";
+                            //create new data_file and new file
+                            data_file newDF = new data_file();
+                            newDF.good_start = pressureDataFile.good_start;
+                            newDF.good_end = pressureDataFile.good_end;
+                            newDF.processor_id = pressureScriptMember.member_id;
+                            newDF.instrument_id = pressureDataFile.instrument_id;
+                            newDF.collect_date = DateTime.Now;
+                            newDF.time_zone = "UTC";
+                            newDF = sa.Add<data_file>(newDF);
+                            newFile.data_file_id = newDF.data_file_id;
+                        }
+
+                        // create new memory stream, copy the f to it, and then save it in s3
+                        f.OpenRead().CopyTo(memoryStream);
+                        memoryStream.Position = 0;
+                        sa.AddFile(newFile, memoryStream);
+                    } // end using MemoryStream
+                }// end foreach file
+
+                //delete directory
+                Directory.Delete(combinedPath, true);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        //init air and see script
         private void Init(Int32 presDFID, Int32 watDFID, string username)
         {
             try
@@ -144,7 +232,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 workspaceDirectory = System.IO.Directory.CreateDirectory(combinedPath);
                 
                 //bring over files it needs from s3 (air/sea) and store in temp location
-                pressureDFName = moveFile(presDFID);
+                airDFName = moveFile(presDFID);
                 waterDFName = moveFile(watDFID);
                 // get member
                 scriptMember = sa.Select<member>().Include(m=> m.agency).FirstOrDefault(m => m.username == username);
@@ -167,10 +255,47 @@ namespace STNServices2.Utilities.ServiceAgent
                 initialized = false;
             }            
         }
+
+        //init air only
+        private void AirInit(Int32 presDFID, string username)
+        {
+            try
+            {
+                //get air datafile
+                pressureDataFile = sa.Select<data_file>()
+                    .Include(df => df.files)
+                    .Include(df => df.instrument)
+                    .Include("instrument.instr_collection_conditions")
+                    .Include("instrument.instrument_status")
+                    .Include("instrument.sensor_brand")
+                    .Include("instrument.instrument_status.vertical_datums")
+                    .Include("instrument.site")
+                    .FirstOrDefault(df => df.data_file_id == presDFID);
+
+                // create directory;
+                string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString();
+                string path2 = pressureDataFile.instrument.site_id.ToString();
+                string path3 = "INSTRUMENT" + pressureDataFile.instrument_id.ToString();
+                string path4 = "DFID" + pressureDataFile.data_file_id.ToString() + DateTime.Now.ToString("MMddyyyyHHmmss");
+                combinedPath = System.IO.Path.Combine(path1, path2 + path3 + path4);
+                workspaceDirectory = System.IO.Directory.CreateDirectory(combinedPath);
+
+                //bring over files it needs from s3 (air/sea) and store in temp location
+                pressureDFName = moveFile(presDFID);
+                // get member
+                pressureScriptMember = sa.Select<member>().Include(m => m.agency).FirstOrDefault(m => m.username == username);
+                pressureInitialized = true;
+            }
+            catch
+            {
+                pressureInitialized = false;
+            }
+        }
         #endregion Methods
 
         #region Helper Methods
 
+        // get from s3 and move to temp location for script access
         private string moveFile(Int32 fileId) {
             STNAgent sa = new STNAgent();
             try
@@ -187,13 +312,15 @@ namespace STNServices2.Utilities.ServiceAgent
                     fileItem.OpenStream().CopyTo(fileStream);
                     fileItem.Dispose();
                 }
-                return filename;// System.IO.Path.Combine(combinedPath, filename);
+                return filename;
             }
             catch
             {
                 return string.Empty;
             }
         }
+        
+        // for air and see script (stn_script.py)
         private string getBody(Boolean hertz)
         {
             List<string> body = new List<string>();
@@ -202,9 +329,9 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -sea_fname
                 body.Add('"' + waterDFName + '"');
                 // -air_fname
-                body.Add('"' + pressureDFName + '"');
+                body.Add('"' + airDFName + '"');
                 // -out_fname
-                body.Add('"' + Path.ChangeExtension(pressureDFName, null) + "_output" + '"');
+                body.Add('"' + Path.ChangeExtension(airDFName, null) + "_output" + '"');
                 // -creator_name
                 body.Add('"' + scriptMember.fname + " " + scriptMember.lname + '"');
                 // -creator_email
@@ -302,6 +429,69 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -sea_4hz 
                 body.Add(hertz.ToString());
 
+                var joinedBody = "\"" + string.Join("\", \"", body) + "\"";
+                return string.Join(" ", body);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }//end getParameterList   
+        
+        // for air only (stn_script_air.py)
+        private string getAirBody()
+        {
+            List<string> body = new List<string>();
+            try
+            {
+                // -air_fname
+                body.Add('"' + pressureDFName + '"');
+                // -out_fname
+                body.Add('"' + Path.ChangeExtension(pressureDFName, null) + "_output" + '"');
+                // -creator_name
+                body.Add('"' + pressureScriptMember.fname + " " + pressureScriptMember.lname + '"');
+                // -creator_email
+                body.Add(pressureScriptMember.email);
+                // -creator_url
+                body.Add("www.usgs.gov");
+                // -air_instrument_name
+                body.Add('"' + pressureDataFile.instrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
+                // -air_stn_instrument_id 
+                body.Add(pressureDataFile.instrument.instrument_id.ToString());
+                // -air_stn_station_number
+                body.Add(pressureDataFile.instrument.site.site_id.ToString());
+                // -air_latitude 
+                body.Add(pressureDataFile.instrument.site.latitude_dd.ToString());
+                // -air_longitude
+                body.Add(pressureDataFile.instrument.site.longitude_dd.ToString());
+                // -tz_info
+                body.Add("UTC");
+                // -daylight_savings
+                body.Add("False");
+
+                // -datum
+                if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
+                    body.Add('"' + pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.instrument_status_id == 1).vertical_datums.datum_abbreviation + '"');
+                else body.Add("NAVD88");
+
+                // -air_initial_sensor_orifice_elevation 
+                if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
+                    body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
+                else body.Add("1");
+
+                // -air_final_sensor_orifice_elevation
+                if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
+                    body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
+                else body.Add("1");
+
+                string airGoodStart = pressureDataFile.good_start.Value.ToString("yyyyMMdd HHmm");
+                // -air_good_start_date 
+                body.Add('"' + airGoodStart + '"');
+
+                string airGoodEnd = pressureDataFile.good_end.Value.ToString("yyyyMMdd HHmm");
+                // -air_good_end_date
+                body.Add('"' + airGoodEnd + '"');
+                
                 var joinedBody = "\"" + string.Join("\", \"", body) + "\"";
                 return string.Join(" ", body);
             }
