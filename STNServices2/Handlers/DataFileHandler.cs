@@ -322,15 +322,15 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "RunAirDataFileScript")]
-        public OperationResult RunAirDataFileScript(Int32 seaDataFileId, string username)
+        public OperationResult RunAirDataFileScript(Int32 airDataFileId, string username)
         {
             try
             {
-                if (seaDataFileId <= 0 || string.IsNullOrEmpty(username))
+                if (airDataFileId <= 0 || string.IsNullOrEmpty(username))
                     throw new BadRequestException("Invalid input parameters");
 
-                STNServiceAgent stnsa = new STNServiceAgent(seaDataFileId, username);
-                if (stnsa.initialized)
+                STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, username);
+                if (stnsa.pressureInitialized)
                     stnsa.RunAirScript();
                 else
                     throw new BadRequestException("Error initializing python script.");

@@ -346,8 +346,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 case "raingage_view":
                     return @"SELECT * FROM raingage_view;";
                 case "dataFile_view":
-                    return @"SELECT s.site_id, s.site_no, s.latitude_dd, s.longitude_dd, s.city, s.state, s.waterbody, i.instrument_id, i.event_id, i.sensor_type_id, st.sensor, i.deployment_type_id, dt.method,
-                                i.location_description, i.sensor_brand_id, sb.brand_name, f.file_id, f.name, f.file_date, f.data_file_id, df.good_start, df.good_end, df.collect_date
+                    return @"SELECT s.site_id, s.site_no, s.latitude_dd, s.longitude_dd, s.county, s.state, s.waterbody, i.instrument_id, i.event_id, i.sensor_type_id, st.sensor, i.deployment_type_id, dt.method,
+                                i.location_description, i.sensor_brand_id, sb.brand_name, f.file_id, f.name, f.file_date, f.data_file_id, df.good_start, df.good_end, df.collect_date, df.script_parent
                             FROM sites s
                             LEFT JOIN instrument i ON s.site_id = i.site_id
                             LEFT JOIN files f ON i.instrument_id = f.instrument_id

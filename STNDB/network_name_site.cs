@@ -18,7 +18,7 @@ namespace STNDB
         public int network_name_id { get; set; }
         public int site_id { get; set; }
     
-        public virtual site site { get; set; }
         public virtual network_name network_name { get; set; }
+        public virtual site site { get; set; }
     }
 }

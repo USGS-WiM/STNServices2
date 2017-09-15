@@ -19,8 +19,8 @@ namespace STNDB
         public int contact_id { get; set; }
         public int contact_type_id { get; set; }
     
+        public virtual contact_type contact_type { get; set; }
         public virtual contact contact { get; set; }
         public virtual reporting_metrics reporting_metrics { get; set; }
-        public virtual contact_type contact_type { get; set; }
     }
 }

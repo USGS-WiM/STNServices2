@@ -17,8 +17,8 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public events()
         {
-            this.hwms = new HashSet<hwm>();
             this.instruments = new HashSet<instrument>();
+            this.hwms = new HashSet<hwm>();
         }
     
         public int event_id { get; set; }
@@ -31,11 +31,11 @@ namespace STNDB
         public Nullable<int> event_coordinator { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hwm> hwms { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<instrument> instruments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hwm> hwms { get; set; }
         public virtual event_status event_status { get; set; }
-        public virtual event_type event_type { get; set; }
         public virtual member member { get; set; }
+        public virtual event_type event_type { get; set; }
     }
 }

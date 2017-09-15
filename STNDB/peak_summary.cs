@@ -17,8 +17,8 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public peak_summary()
         {
-            this.hwms = new HashSet<hwm>();
             this.data_file = new HashSet<data_file>();
+            this.hwms = new HashSet<hwm>();
         }
     
         public int peak_summary_id { get; set; }
@@ -40,11 +40,11 @@ namespace STNDB
         public Nullable<double> aep_range { get; set; }
         public string calc_notes { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hwm> hwms { get; set; }
+        public virtual member member { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<data_file> data_file { get; set; }
-        public virtual member member { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hwm> hwms { get; set; }
         public virtual vertical_datums vertical_datums { get; set; }
     }
 }

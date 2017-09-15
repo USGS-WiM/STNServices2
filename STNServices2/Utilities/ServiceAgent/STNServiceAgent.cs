@@ -50,7 +50,7 @@ namespace STNServices2.Utilities.ServiceAgent
         public STNServiceAgent(Int32 pressureSensorDFID, Int32 waterSensorDFID, string username)
             :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
         {
-            Init(pressureSensorDFID, waterSensorDFID, username);
+            StormInit(pressureSensorDFID, waterSensorDFID, username);
         }
         public STNServiceAgent(Int32 pressureSensorDFID, string username)
             :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
@@ -91,7 +91,7 @@ namespace STNServices2.Utilities.ServiceAgent
                         {
                             newFile.filetype_id = 1;
                             newFile.photo_date = DateTime.Now;
-                            newFile.description = "Photo File generated from STN_Script processing";
+                            newFile.description = "Photo File generated from Storm Script processing using water data file: " + seaDataFile.files.FirstOrDefault().name + " and air data file: " + airDataFile.files.FirstOrDefault().name;
                             //create source
                             source createdSource = new source();
                             createdSource.source_name = scriptMember.fname + " " + scriptMember.lname;
@@ -99,13 +99,27 @@ namespace STNServices2.Utilities.ServiceAgent
                             createdSource = sa.Add<source>(createdSource);
                             newFile.source_id = createdSource.source_id;                                
                         }
+                        else if (f.Extension == ".csv")
+                        {
+                            //this is the output showing how the script ran (successful or not) save as 'Other'                           
+                            newFile.filetype_id = 7;
+                            newFile.description = "Output csv file generated from Storm Script processing using water data file: " + seaDataFile.files.FirstOrDefault().name + " and air data file: " + airDataFile.files.FirstOrDefault().name + " This file shows success/errors from the processing.";
+                            //create source
+                            source createdSource = new source();
+                            createdSource.source_name = scriptMember.fname + " " + scriptMember.lname;
+                            createdSource.agency_id = scriptMember.agency_id;
+                            createdSource = sa.Add<source>(createdSource);
+                            newFile.source_id = createdSource.source_id;
+                        }
                         else
                         {
                             //it's a data file
-                            newFile.filetype_id = 2;
-                            newFile.description = "Data File generated from STN_Script processing";
+                            newFile.filetype_id = 2;                            
+                            newFile.description = "Data File generated from Storm Script processing using water data file: " + seaDataFile.files.FirstOrDefault().name + " and air data file: " + airDataFile.files.FirstOrDefault().name;
                             //create new data_file and new file
                             data_file newDF = new data_file();
+                            // assign this datafile's script_parent to be the waterDFID_airDFID used to make it
+                            newDF.script_parent = seaDataFile.data_file_id.ToString() + "_" + airDataFile.data_file_id.ToString();
                             newDF.good_start = seaDataFile.good_start;
                             newDF.good_end = seaDataFile.good_end;
                             newDF.processor_id = scriptMember.member_id;
@@ -123,6 +137,10 @@ namespace STNServices2.Utilities.ServiceAgent
                     } // end using MemoryStream
                 }// end foreach file
 
+                // update that this is the script_parent
+                seaDataFile.script_parent = "true";
+                sa.Update<data_file>(seaDataFile.data_file_id, seaDataFile);
+
                 //delete directory
                 Directory.Delete(combinedPath, true);
 
@@ -130,6 +148,7 @@ namespace STNServices2.Utilities.ServiceAgent
             }
             catch (Exception ex)
             {
+                Directory.Delete(combinedPath, true); // delete the directory either way since output.csv should specify errors and client needs to know when complete
                 throw new Exception(ex.Message);
             }
         }
@@ -164,7 +183,19 @@ namespace STNServices2.Utilities.ServiceAgent
                         {
                             newFile.filetype_id = 1;
                             newFile.photo_date = DateTime.Now;
-                            newFile.description = "Photo File generated from STN_Script_air processing";
+                            newFile.description = "Photo File generated from Air Script processing.";
+                            //create source
+                            source createdSource = new source();
+                            createdSource.source_name = pressureScriptMember.fname + " " + pressureScriptMember.lname;
+                            createdSource.agency_id = pressureScriptMember.agency_id;
+                            createdSource = sa.Add<source>(createdSource);
+                            newFile.source_id = createdSource.source_id;
+                        }
+                        else if (f.Extension == ".csv")
+                        {
+                            //this is the output showing how the script ran (successful or not) save as 'Other'                           
+                            newFile.filetype_id = 7;
+                            newFile.description = "Output csv file generated from Air Script processing. Shows success/errors from processing.";
                             //create source
                             source createdSource = new source();
                             createdSource.source_name = pressureScriptMember.fname + " " + pressureScriptMember.lname;
@@ -176,9 +207,10 @@ namespace STNServices2.Utilities.ServiceAgent
                         {
                             //it's a data file
                             newFile.filetype_id = 2;
-                            newFile.description = "Data File generated from STN_Script_air processing";
+                            newFile.description = "Data File generated from Air Script processing.";
                             //create new data_file and new file
                             data_file newDF = new data_file();
+                            newDF.script_parent = pressureDataFile.data_file_id.ToString();
                             newDF.good_start = pressureDataFile.good_start;
                             newDF.good_end = pressureDataFile.good_end;
                             newDF.processor_id = pressureScriptMember.member_id;
@@ -196,6 +228,10 @@ namespace STNServices2.Utilities.ServiceAgent
                     } // end using MemoryStream
                 }// end foreach file
 
+                // update that this is the script_parent
+                pressureDataFile.script_parent = "true";
+                sa.Update<data_file>(pressureDataFile.data_file_id, pressureDataFile);
+
                 //delete directory
                 Directory.Delete(combinedPath, true);
 
@@ -203,12 +239,13 @@ namespace STNServices2.Utilities.ServiceAgent
             }
             catch (Exception ex)
             {
+                Directory.Delete(combinedPath, true); // delete the directory either way since output.csv should specify errors and client needs to know when complete
                 throw new Exception(ex.Message);
             }
         }
         
         //init air and see script
-        private void Init(Int32 presDFID, Int32 watDFID, string username)
+        private void StormInit(Int32 presDFID, Int32 watDFID, string username)
         {
             try
             {
@@ -331,7 +368,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_fname
                 body.Add('"' + airDFName + '"');
                 // -out_fname
-                body.Add('"' + Path.ChangeExtension(airDFName, null) + "_output" + '"');
+                body.Add('"' + Path.ChangeExtension(waterDFName, null) + "_output" + '"');
                 // -creator_name
                 body.Add('"' + scriptMember.fname + " " + scriptMember.lname + '"');
                 // -creator_email
@@ -365,7 +402,7 @@ namespace STNServices2.Utilities.ServiceAgent
 
                 // -datum
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
-                    body.Add('"' + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.instrument_status_id == 1).vertical_datums.datum_abbreviation + '"');
+                    body.Add('"' + airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vertical_datums.datum_abbreviation + '"');
                 else body.Add("NAVD88");
 
                 // -sea_initial_sensor_orifice_elevation
@@ -471,7 +508,7 @@ namespace STNServices2.Utilities.ServiceAgent
 
                 // -datum
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
-                    body.Add('"' + pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.instrument_status_id == 1).vertical_datums.datum_abbreviation + '"');
+                    body.Add('"' + pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vertical_datums.datum_abbreviation + '"');
                 else body.Add("NAVD88");
 
                 // -air_initial_sensor_orifice_elevation 
