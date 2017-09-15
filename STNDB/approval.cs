@@ -17,18 +17,18 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public approval()
         {
-            this.hwms = new HashSet<hwm>();
             this.data_file = new HashSet<data_file>();
+            this.hwms = new HashSet<hwm>();
         }
     
         public int approval_id { get; set; }
         public Nullable<int> member_id { get; set; }
         public Nullable<System.DateTime> approval_date { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hwm> hwms { get; set; }
+        public virtual member member { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<data_file> data_file { get; set; }
-        public virtual member member { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hwm> hwms { get; set; }
     }
 }

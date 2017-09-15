@@ -15,7 +15,7 @@ namespace STNServices2.Resources
         public string site_no { get; set; }
         public double latitude_dd { get; set; }
         public double longitude_dd { get; set; }
-        public string city { get; set;}
+        public string county { get; set;}
         public string state { get; set; }
         public string waterbody { get; set; }
         public Nullable<Int32> instrument_id { get; set; }
@@ -34,5 +34,6 @@ namespace STNServices2.Resources
         public Nullable<DateTime> good_start { get; set; }
         public Nullable<DateTime> good_end { get; set; }
         public Nullable<DateTime> collect_date { get; set; }
+        public string script_parent { get; set; }
     } 
 }
