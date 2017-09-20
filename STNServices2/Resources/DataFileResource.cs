@@ -29,11 +29,11 @@ namespace STNServices2.Resources
         public string brand_name { get; set; }
         public Int32 file_id { get; set; }
         public string name { get; set; }
+        public string script_parent { get; set; }
         public Nullable<DateTime> file_date  { get; set; }
         public Nullable<Int32> data_file_id  { get; set; }
         public Nullable<DateTime> good_start { get; set; }
         public Nullable<DateTime> good_end { get; set; }
         public Nullable<DateTime> collect_date { get; set; }
-        public string script_parent { get; set; }
     } 
 }
