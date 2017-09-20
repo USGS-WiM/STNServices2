@@ -40,13 +40,17 @@ def convert_to_netcdf(inputs):
     for key in translated:
         setattr(instrument, key, translated[key])
     
-    instrument.read()
-       
+    try:
+        instrument.read()
+    except:
+        csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
+        return None   
    
-       
-
-    instrument.write(pressure_type=translated['pressure_type'])
-    csv_dict['File Created'].append(instrument.out_filename)
+    try:
+        instrument.write(pressure_type=translated['pressure_type'])
+        csv_dict['File Created'].append(instrument.out_filename)
+    except:
+        csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
   
     return instrument.bad_data
 
@@ -160,11 +164,13 @@ def process_file(args, csv_dict):
             return (3, None)
         
     
-    
-    data_issues = convert_to_netcdf(inputs)
-    if data_issues is None:
-        return (7, None)
-    
+    try:
+        data_issues = convert_to_netcdf(inputs)
+        if data_issues is None:
+            return (7, None)
+    except:
+        csv_dict['Exceptions'].append('General Script Error')
+        return (5, None)
      
     time = nc.get_time(inputs['out_filename'])
     
@@ -177,7 +183,7 @@ def process_file(args, csv_dict):
                                                          inputs['daylight_savings']))
     #checks for chronological order of dates
     if end_index <= start_index:
-        csv_dict['Exceptions'].append('Good start dates are not in chronolgical order')
+        csv_dict['Exceptions'].append('Good start dates are not in chronological order')
         return (3, None)
        
     air_pressure = False
@@ -185,10 +191,13 @@ def process_file(args, csv_dict):
         air_pressure = True
          
     
-    nc.chop_netcdf(inputs['out_filename'], ''.join([inputs['out_filename'],'chop.nc']), 
+    try:
+        nc.chop_netcdf(inputs['out_filename'], ''.join([inputs['out_filename'],'chop.nc']), 
                            start_index, end_index, air_pressure)
+    except:
+        csv_dict['Exceptions'].append('Bad Good Start and/or End Date')
+        return (8, None)
     
-  
   
     if data_issues:
         return (1, ''.join([inputs['out_filename'],'chop.nc']))
@@ -235,64 +244,74 @@ def process_storm_files(args, csv_dict):
     
     
         
- 
-    snc = Storm_netCDF()
-    so.netCDF['Storm Tide with Unfiltered Water Level'] = Bool(True)
-    so.netCDF['Storm Tide Water Level'] = Bool(True)
-    snc.process_netCDFs(so)
-    csv_dict['File Created'].append(so.output_fname + '_stormtide.nc')
-    csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.nc')
+    try:
+        try:
+            snc = Storm_netCDF()
+            so.netCDF['Storm Tide with Unfiltered Water Level'] = Bool(True)
+            so.netCDF['Storm Tide Water Level'] = Bool(True)
+            snc.process_netCDFs(so)
+            csv_dict['File Created'].append(so.output_fname + '_stormtide.nc')
+            csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.nc')
+        except:
+            csv_dict['Exceptions'].append('Could not create netCDF files')
+            return 4
 
           
  
-
-    sg = StormGraph()
-    so.graph['Storm Tide with Wind Data'] = Bool(False)
-    so.graph['Storm Tide with Unfiltered Water Level'] = Bool(True)
-    so.graph['Storm Tide Water Level'] = Bool(True)
-    so.graph['Atmospheric Pressure'] = Bool(True)
-    sg.process_graphs(so)
-    csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.jpg')
-    csv_dict['File Created'].append(so.output_fname + '_stormtide.jpg')
-    csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.jpg')
-            
+        try:
+            sg = StormGraph()
+            so.graph['Storm Tide with Wind Data'] = Bool(False)
+            so.graph['Storm Tide with Unfiltered Water Level'] = Bool(True)
+            so.graph['Storm Tide Water Level'] = Bool(True)
+            so.graph['Atmospheric Pressure'] = Bool(True)
+            sg.process_graphs(so)
+            csv_dict['File Created'].append(so.output_fname + '_stormtide_unfiltered.png')
+            csv_dict['File Created'].append(so.output_fname + '_stormtide.jpg')
+            csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.png')
+        except:
+            csv_dict['Exceptions'].append('Could not create water level visualizations')
+            return 4   
        
         
-    depth_idx = np.nanargmax(so.raw_water_level)
-    tide_idx = np.nanargmax(so.surge_water_level)
+        depth_idx = np.nanargmax(so.raw_water_level)
+        tide_idx = np.nanargmax(so.surge_water_level)
+        
+        csv_dict['Computed Peak Value'] = so.surge_water_level[tide_idx]
+        csv_dict['Computed Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[tide_idx], pytz.utc, 'dash')
+        csv_dict['Instantaneous Peak Value'] = so.raw_water_level[depth_idx]
+        csv_dict['Instantaneous Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[depth_idx], pytz.utc, 'dash')
     
-    csv_dict['Computed Peak Value'] = so.surge_water_level[tide_idx]
-    csv_dict['Computed Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[tide_idx], pytz.utc, 'dash')
-    csv_dict['Instantaneous Peak Value'] = so.raw_water_level[depth_idx]
-    csv_dict['Instantaneous Peak Date/time'] = uc.convert_ms_to_datestring(so.sea_time[depth_idx], pytz.utc, 'dash')
-    
-    if args['sea_4hz'].lower() == 'true':
+        if args['sea_4hz'].lower() == 'true':
+                
+            try:
+                so.int_units = False
+                so.high_cut = 1.0
+                so.low_cut = 0.045
+                so.from_water_level_file = False
             
-    
-        so.int_units = False
-        so.high_cut = 1.0
-        so.low_cut = 0.045
-        so.from_water_level_file = False
-    
-        
-        ss = StormStatistics()
-        
-        for y in so.statistics:
-            so.statistics[y] = Bool(False)
+                
+                ss = StormStatistics()
+                
+                for y in so.statistics:
+                    so.statistics[y] = Bool(False)
+                    
+                so.statistics['H1/3'] = Bool(True)
+                so.statistics['Average Z Cross'] = Bool(True)
+                so.statistics['PSD Contour'] = Bool(True)
             
-        so.statistics['H1/3'] = Bool(True)
-        so.statistics['Average Z Cross'] = Bool(True)
-        so.statistics['PSD Contour'] = Bool(True)
-    
-        ss.process_graphs(so)
+                ss.process_graphs(so)
+                
+                csv_dict['File Created'].append(so.output_fname + '_avg_z_cross.jpg')
+                csv_dict['File Created'].append(so.output_fname + '_h13.jpg')
+                csv_dict['File Created'].append(so.output_fname + '_psd_contours.jpg')
+            except:
+                csv_dict['Exceptions'].append('Could not create statistics visualizations')
+                return 4
         
-        csv_dict['File Created'].append(so.output_fname + '_avg_z_cross.jpg')
-        csv_dict['File Created'].append(so.output_fname + '_h13.jpg')
-        csv_dict['File Created'].append(so.output_fname + '_psd_contours.jpg')
-      
-    
-    return 0
-    
+        return 0
+    except:
+        csv_dict['Exceptions'].append('General Exception')
+        return 5
     
 
 
@@ -389,6 +408,8 @@ if __name__ == '__main__':
         df = pd.DataFrame(csv_dict)
         df.to_csv(path_or_buf=''.join([output, '.csv']))
         
+        
+        
     def create_dict():
         csv_dict = {}
         csv_dict['Status'] = 'pending'
@@ -396,7 +417,7 @@ if __name__ == '__main__':
         csv_dict['Exceptions'] = []
         csv_dict['Warnings'] = []
         csv_dict['Script start date'] = datetime.strftime(datetime.now(), '%m-%d-%Y %H:%M:%S')
-        csv_dict['Script Version'] = 'V 1.0'
+        csv_dict['Script Version'] = 'V 1.1'
         
         return csv_dict
         
@@ -454,7 +475,18 @@ if __name__ == '__main__':
     else:
         csv_dict['Status'] = 'failed'
         
+   
+        
     output_csv(csv_dict, output)
     
+    import os 
     
+    output_idx = output.rfind('\\')
+    for root, sub_folders, files in os.walk(output[:output_idx]):
+        for file_in_root in files:
+           
+            outfile = open(''.join([root,'\\',file_in_root]), 'wb')
+            outfile.close()    
+    
+    sys.exit()
     

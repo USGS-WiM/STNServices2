@@ -10,7 +10,7 @@ import pandas as pd
 current_path = sys.path[0]
 sys.path.append(''.join([current_path,'\\..']))
 sys.path.append(''.join([current_path,'\\..\\netCDF_Utils']))
-
+from netCDF4 import Dataset
 import numpy as np
 import netCDF_Utils.nc as nc
 from pytz import timezone
@@ -18,9 +18,7 @@ from csv_readers import Leveltroll, MeasureSysLogger, House, Hobo, RBRSolo, Wave
 import unit_conversion as uc
 import argparse
 from tools.storm_options import StormOptions
-from tools.storm_netCDF import Storm_netCDF
 from tools.storm_graph import StormGraph, Bool
-from tools.storm_statistics import StormStatistics
 from datetime import datetime
 
 INSTRUMENTS = {
@@ -38,19 +36,19 @@ def convert_to_netcdf(inputs, csv_dict):
     for key in translated:
         setattr(instrument, key, translated[key])
         
-#     try:
-    instrument.read()
+    try:
+        instrument.read()
        
-#     except:
-#         csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
-#         return None
+    except:
+        csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
+        return None
        
-#     try:
-    instrument.write(pressure_type=translated['pressure_type'])
-    csv_dict['File Created'].append(instrument.out_filename)
-#     except:
-#         csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
-#         
+    try:
+        instrument.write(pressure_type=translated['pressure_type'])
+        csv_dict['File Created'].append(instrument.out_filename)
+    except:
+        csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
+        
     
     return instrument.bad_data
 
@@ -147,14 +145,14 @@ def process_file(args, csv_dict):
             return (3, None)
         
     
-    
-    data_issues = convert_to_netcdf(inputs, csv_dict)
-     
-    if data_issues is None:
-        return (7, None)
-
-#      csv_dict['Exceptions'].append('General Script Error')
-#      return (5, None)
+    try:
+        data_issues = convert_to_netcdf(inputs, csv_dict)
+        
+        if data_issues is None:
+            return (7, None)
+    except:
+        csv_dict['Exceptions'].append('General Script Error')
+        return (5, None)
      
     time = nc.get_time(inputs['out_filename'])
     
@@ -218,11 +216,11 @@ def make_baro_graph(args, csv_dict):
         so.graph['Storm Tide Water Level'] = Bool(False)
         so.graph['Atmospheric Pressure'] = Bool(True)
         sg.process_graphs(so)
-        csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.jpg')
+        csv_dict['File Created'].append(so.output_fname + '_barometric_pressure.png')
         
         return 0
     except:
-        csv_dict['Exceptions'].append('Could not create barometric presure visualizations')
+        csv_dict['Exceptions'].append('Could not create barometric pressure visualizations')
         return 4
        
 
@@ -291,7 +289,7 @@ if __name__ == '__main__':
     csv_dict['Warnings'] = []
     csv_dict['Status'] = 'pending'
     csv_dict['Script start date'] = datetime.strftime(datetime.now(), '%m-%d-%Y %H:%M:%S')
-    csv_dict['Script Version'] = 'V 1.0'
+    csv_dict['Script Version'] = 'v 1.1'
     
     
     csv_dict['Data Start Date/time'] = datetime.strftime(datetime.strptime(args['good_start_date'],'%Y%m%d %H%M'), '%m-%d-%Y %H:%M:%S')
@@ -312,4 +310,19 @@ if __name__ == '__main__':
         csv_dict[x] = pd.Series(csv_dict[x])
     df = pd.DataFrame(csv_dict)
     df.to_csv(path_or_buf=''.join([output, '.csv']))
+    
+    outfile = open(''.join([output, '.csv']), 'wb')
+    outfile.close()    
+    
+    import os
+
+    output_idx = output.rfind('\\')
+    for root, sub_folders, files in os.walk(output[:output_idx]):
+        for file_in_root in files:
+          
+            outfile = open(''.join([root,'\\',file_in_root]), 'wb')
+            outfile.close()    
+    
+    sys.exit()
         
+    

@@ -69,7 +69,6 @@
           <Property Name="peak_summary_id" Type="int4" />
           <Property Name="elevation_status" Type="varchar" MaxLength="20" />
           <Property Name="time_zone" Type="varchar" MaxLength="8" />
-          <Property Name="script_parent" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="deployment_priority">
           <Key>
@@ -140,6 +139,7 @@
           <Property Name="photo_date" Type="timestamp" />
           <Property Name="is_nwis" Type="int4" />
           <Property Name="objective_point_id" Type="int4" />
+          <Property Name="script_parent" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -1018,7 +1018,6 @@
           <Property Name="peak_summary_id" Type="Int32" />
           <Property Name="elevation_status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="time_zone" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="script_parent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="instrument" Relationship="STNNEWModel.data_fileinstrument" FromRole="data_file" ToRole="instrument" />
           <NavigationProperty Name="peak_summary" Relationship="STNNEWModel.peak_summarydata_file" FromRole="data_file" ToRole="peak_summary" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberdata_file" FromRole="data_file" ToRole="member" />
@@ -1112,6 +1111,7 @@
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.data_filefile" FromRole="file" ToRole="data_file" />
           <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitefile" FromRole="file" ToRole="site" />
+          <Property Name="script_parent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -2515,7 +2515,6 @@
           <EntitySetMapping Name="data_file">
             <EntityTypeMapping TypeName="STNNEWModel.data_file">
               <MappingFragment StoreEntitySet="data_file">
-                <ScalarProperty Name="script_parent" ColumnName="script_parent" />
                 <ScalarProperty Name="time_zone" ColumnName="time_zone" />
                 <ScalarProperty Name="elevation_status" ColumnName="elevation_status" />
                 <ScalarProperty Name="peak_summary_id" ColumnName="peak_summary_id" />
@@ -2588,6 +2587,7 @@
           <EntitySetMapping Name="files">
             <EntityTypeMapping TypeName="STNNEWModel.file">
               <MappingFragment StoreEntitySet="files">
+                <ScalarProperty Name="script_parent" ColumnName="script_parent" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
                 <ScalarProperty Name="is_nwis" ColumnName="is_nwis" />
                 <ScalarProperty Name="photo_date" ColumnName="photo_date" />

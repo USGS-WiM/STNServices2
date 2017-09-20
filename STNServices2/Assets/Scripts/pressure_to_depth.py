@@ -203,8 +203,9 @@ def eta_to_pressure(a, omega, k, z, H, t):
        
 def lowpass_filter(data, fs):
     '''Performs a butterworth filter of order 4 with a 1 min cutoff'''
-#     fs = 4 
-    cutoff = .0004
+    fs = 4 
+    cutoff = .0166666666666665
+#     cutoff = .0004
 #     cutoff = .0001
     
     lowcut = cutoff / (.5 * fs)

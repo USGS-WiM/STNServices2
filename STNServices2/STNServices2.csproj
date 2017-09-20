@@ -122,14 +122,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Scripts\DataTests.c" />
-    <Content Include="Assets\Scripts\stn_script_testing.py" />
+    <Content Include="Assets\Scripts\documentation\storm_avg_z_cross.jpg" />
+    <Content Include="Assets\Scripts\documentation\storm_barometric_pressure.jpg" />
+    <Content Include="Assets\Scripts\documentation\storm_h13.jpg" />
+    <Content Include="Assets\Scripts\documentation\storm_psd_contours.jpg" />
+    <Content Include="Assets\Scripts\documentation\storm_stormtide.jpg" />
+    <Content Include="Assets\Scripts\documentation\storm_stormtide_unfiltered.jpg" />
     <Content Include="Assets\Scripts\stn_script_air.py" />
-    <Content Include="Assets\Scripts\storm_avg_z_cross.jpg" />
-    <Content Include="Assets\Scripts\storm_barometric_pressure.jpg" />
-    <Content Include="Assets\Scripts\storm_h13.jpg" />
-    <Content Include="Assets\Scripts\storm_psd_contours.jpg" />
-    <Content Include="Assets\Scripts\storm_stormtide.jpg" />
-    <Content Include="Assets\Scripts\storm_stormtide_unfiltered.jpg" />
     <Content Include="Assets\Scripts\usgs.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -223,10 +222,6 @@
     <Content Include="Assets\Scripts\csv_readers.pyc" />
     <Content Include="Assets\Scripts\DataTests.pyd" />
     <Content Include="Assets\Scripts\DataTests.pyx" />
-    <Content Include="Assets\Scripts\NCCAR00007_1511451_sea.csv" />
-    <Content Include="Assets\Scripts\NCCAR12248_9983816_air.csv" />
-    <Content Include="Assets\Scripts\netCDF_Utils\dataset_generator.py" />
-    <Content Include="Assets\Scripts\netCDF_Utils\dumps.py" />
     <Content Include="Assets\Scripts\netCDF_Utils\edit_netcdf.py" />
     <Content Include="Assets\Scripts\netCDF_Utils\edit_netcdf.pyc" />
     <Content Include="Assets\Scripts\netCDF_Utils\nc.py" />
@@ -235,7 +230,6 @@
     <Content Include="Assets\Scripts\netCDF_Utils\var_datastore.pyc" />
     <Content Include="Assets\Scripts\netCDF_Utils\__init__.py" />
     <Content Include="Assets\Scripts\netCDF_Utils\__init__.pyc" />
-    <Content Include="Assets\Scripts\pressure_script.py" />
     <Content Include="Assets\Scripts\pressure_to_depth.py" />
     <Content Include="Assets\Scripts\pressure_to_depth.pyc" />
     <Content Include="Assets\Scripts\script_test.bat" />
@@ -243,17 +237,6 @@
     <Content Include="Assets\Scripts\stats.py" />
     <Content Include="Assets\Scripts\stats.pyc" />
     <Content Include="Assets\Scripts\stn_script.py" />
-    <Content Include="Assets\Scripts\storm_air" />
-    <Content Include="Assets\Scripts\storm_airchop.nc" />
-    <Content Include="Assets\Scripts\storm_script.py" />
-    <Content Include="Assets\Scripts\storm_sea" />
-    <Content Include="Assets\Scripts\storm_seachop.nc" />
-    <Content Include="Assets\Scripts\storm_stormtide.nc" />
-    <Content Include="Assets\Scripts\storm_stormtide_unfiltered.nc" />
-    <Content Include="Assets\Scripts\tester.py" />
-    <Content Include="Assets\Scripts\tools\multi_series.py" />
-    <Content Include="Assets\Scripts\tools\multi_series_old.py" />
-    <Content Include="Assets\Scripts\tools\multi_series_options.py" />
     <Content Include="Assets\Scripts\tools\storm_csv.py" />
     <Content Include="Assets\Scripts\tools\storm_data.py" />
     <Content Include="Assets\Scripts\tools\storm_data.pyc" />
@@ -267,12 +250,20 @@
     <Content Include="Assets\Scripts\tools\storm_options.pyc" />
     <Content Include="Assets\Scripts\tools\storm_statistics.py" />
     <Content Include="Assets\Scripts\tools\storm_statistics.pyc" />
-    <Content Include="Assets\Scripts\tools\storm_statistics_psd_plot.py" />
     <Content Include="Assets\Scripts\tools\__init__.py" />
     <Content Include="Assets\Scripts\tools\__init__.pyc" />
     <Content Include="Assets\Scripts\unit_conversion.py" />
     <Content Include="Assets\Scripts\unit_conversion.pyc" />
     <Content Include="Assets\Scripts\__init__.py" />
+    <Content Include="Assets\Scripts\documentation\NCCAR00007_1511451_sea.csv" />
+    <Content Include="Assets\Scripts\documentation\NCCAR12248_9983816_air.csv" />
+    <Content Include="Assets\Scripts\documentation\output.csv" />
+    <Content Include="Assets\Scripts\documentation\storm_air" />
+    <Content Include="Assets\Scripts\documentation\storm_airchop.nc" />
+    <Content Include="Assets\Scripts\documentation\storm_sea" />
+    <Content Include="Assets\Scripts\documentation\storm_seachop.nc" />
+    <Content Include="Assets\Scripts\documentation\storm_stormtide.nc" />
+    <Content Include="Assets\Scripts\documentation\storm_stormtide_unfiltered.nc" />
     <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@ Created on Feb 4, 2016
 
 @author: chogg
 '''
+from datetime import datetime
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -314,8 +315,8 @@ class StormGraph(object):
         
         #calculate and format the datetime of the unfiltered and storm tide maximum
         
-        tide_time = str(mdates.num2date(self.time_nums[tide_idx], pytz.timezone(so.timezone)))[:-10]
-        depth_time = str(mdates.num2date(self.time_nums[depth_idx], pytz.timezone(so.timezone)))[:-10]
+        tide_time = datetime.strftime(mdates.num2date(self.time_nums[tide_idx], pytz.timezone('GMT')), '%Y-%m-%d %H:%M:%S')
+        depth_time = datetime.strftime(mdates.num2date(self.time_nums[depth_idx], pytz.timezone('GMT')), '%Y-%m-%d %H:%M:%S')
      
         depth_num = self.time_nums[depth_idx]
         tide_num = self.time_nums[tide_idx]
@@ -462,8 +463,8 @@ class StormGraph(object):
             tide_max = so.surge_water_level[tide_idx] * unit_conversion.METER_TO_FEET
         
         #format the unfiltered and storm tide maximum dates
-        tide_time = str(mdates.num2date(self.time_nums[tide_idx], pytz.timezone(so.timezone)))[:-10]
-        depth_time = str(mdates.num2date(self.time_nums[depth_idx], pytz.timezone(so.timezone)))[:-10]
+        tide_time = datetime.strftime(mdates.num2date(self.time_nums[tide_idx], pytz.timezone('GMT')), '%Y-%m-%d %H:%M:%S')
+        depth_time = datetime.strftime(mdates.num2date(self.time_nums[depth_idx], pytz.timezone('GMT')), '%Y-%m-%d %H:%M:%S')
      
         depth_num = self.time_nums[depth_idx]
         tide_num = self.time_nums[tide_idx]
@@ -608,7 +609,8 @@ class StormGraph(object):
             tide_max = so.surge_water_level[tide_idx] * unit_conversion.METER_TO_FEET
        
        
-        tide_time = str(mdates.num2date(self.time_nums[tide_idx], pytz.timezone(so.timezone)))[:-10]
+        tide_time = datetime.strftime(mdates.num2date(self.time_nums[tide_idx], pytz.timezone('GMT')), '%Y-%m-%d %H:%M:%S')
+        
         
         tide_num = self.time_nums[tide_idx]
          

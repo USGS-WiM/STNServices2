@@ -18,6 +18,7 @@ using WiM.Exceptions;
 
 using STNServices2.Resources;
 using STNDB;
+using System.Text;
 
 namespace STNServices2.Utilities.ServiceAgent
 {
@@ -85,7 +86,7 @@ namespace STNServices2.Utilities.ServiceAgent
                         newFile.site_id = seaDataFile.files.FirstOrDefault().site_id;
                         newFile.name = f.Name;
                         newFile.instrument_id = seaDataFile.instrument_id;
-
+                        newFile.script_parent = seaDataFile.files.FirstOrDefault().file_id.ToString() + "_" + airDataFile.files.FirstOrDefault().file_id.ToString();
                         // if photo
                         if (f.Extension == ".png")
                         {
@@ -119,7 +120,6 @@ namespace STNServices2.Utilities.ServiceAgent
                             //create new data_file and new file
                             data_file newDF = new data_file();
                             // assign this datafile's script_parent to be the waterDFID_airDFID used to make it
-                            newDF.script_parent = seaDataFile.data_file_id.ToString() + "_" + airDataFile.data_file_id.ToString();
                             newDF.good_start = seaDataFile.good_start;
                             newDF.good_end = seaDataFile.good_end;
                             newDF.processor_id = scriptMember.member_id;
@@ -136,10 +136,31 @@ namespace STNServices2.Utilities.ServiceAgent
                         sa.AddFile(newFile, memoryStream);
                     } // end using MemoryStream
                 }// end foreach file
+                                
+                // update that this is the script_parent (what if it failed?? Don't want this to be flagged as parent, if nothing was processed)
+                // get the 'fileName_output.csv' file and read each row, look for 'complete with no errors', if present, update script_parent
 
-                // update that this is the script_parent
-                seaDataFile.script_parent = "true";
-                sa.Update<data_file>(seaDataFile.data_file_id, seaDataFile);
+                file parentFile = seaDataFile.files.FirstOrDefault();
+                string airFileID = airDataFile.files.FirstOrDefault().file_id.ToString();
+                string scriptParentIDs = parentFile.file_id.ToString() + "_" + airFileID;
+                file outputFileCSV = sa.Select<file>().FirstOrDefault(f => f.script_parent == scriptParentIDs && f.filetype_id == 7);
+                InMemoryFile fileItem = sa.GetFileItem(outputFileCSV);
+                Boolean isValidOutput = false;
+                using (var fileStream = fileItem.OpenStream())
+                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+                {
+                    String line;
+                    while ((line = streamReader.ReadLine()) != null)
+                    {
+                        if (line.Contains("complete with no errors"))
+                            isValidOutput = true;
+                    }
+                }
+                if (isValidOutput)
+                {
+                    parentFile.script_parent = "true";
+                    sa.Update<file>(parentFile.file_id, parentFile);
+                }
 
                 //delete directory
                 Directory.Delete(combinedPath, true);
@@ -177,7 +198,7 @@ namespace STNServices2.Utilities.ServiceAgent
                         newFile.site_id = pressureDataFile.files.FirstOrDefault().site_id;
                         newFile.name = f.Name;
                         newFile.instrument_id = pressureDataFile.instrument_id;
-
+                        newFile.script_parent = pressureDataFile.files.FirstOrDefault().file_id.ToString();
                         // if photo
                         if (f.Extension == ".png")
                         {
@@ -210,7 +231,6 @@ namespace STNServices2.Utilities.ServiceAgent
                             newFile.description = "Data File generated from Air Script processing.";
                             //create new data_file and new file
                             data_file newDF = new data_file();
-                            newDF.script_parent = pressureDataFile.data_file_id.ToString();
                             newDF.good_start = pressureDataFile.good_start;
                             newDF.good_end = pressureDataFile.good_end;
                             newDF.processor_id = pressureScriptMember.member_id;
@@ -228,9 +248,28 @@ namespace STNServices2.Utilities.ServiceAgent
                     } // end using MemoryStream
                 }// end foreach file
 
-                // update that this is the script_parent
-                pressureDataFile.script_parent = "true";
-                sa.Update<data_file>(pressureDataFile.data_file_id, pressureDataFile);
+                // update that this is the script_parent (what if it failed?? Don't want this to be flagged as parent, if nothing was processed)
+                // get the 'fileName_output.csv' file and read each row, look for 'complete with no errors', if present, update script_parent
+                
+                file parentFile = pressureDataFile.files.FirstOrDefault();
+                file outputFileCSV = sa.Select<file>().FirstOrDefault(f => f.script_parent == parentFile.file_id.ToString() && f.filetype_id == 7);
+                InMemoryFile fileItem = sa.GetFileItem(outputFileCSV);
+                Boolean isValidOutput = false;
+                using (var fileStream = fileItem.OpenStream())
+                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+                {
+                    String line;
+                    while ((line = streamReader.ReadLine()) != null)
+                    {
+                        if (line.Contains("complete with no errors"))
+                            isValidOutput = true;
+                    }
+                }
+                if (isValidOutput)
+                {
+                    parentFile.script_parent = "true";
+                    sa.Update<file>(parentFile.file_id, parentFile);
+                }
 
                 //delete directory
                 Directory.Delete(combinedPath, true);

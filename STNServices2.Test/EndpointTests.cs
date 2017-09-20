@@ -261,8 +261,11 @@ namespace STNServices2.Test
         public void DataFileRequest()
         {
             // run data file scripts
-            data_file requestDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunScript?SeaDataFileID=3481&AirDataFileID=2840&Hertz=True");
-            Assert.IsNotNull(requestDF);
+            data_file requestAirDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunAirScript?AirDataFileID=3720&Username=fradmin");
+            Assert.IsNotNull(requestAirDF);
+
+            data_file requestStormDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunScript?SeaDataFileID=3481&AirDataFileID=2840&Hertz=True");
+            Assert.IsNotNull(requestStormDF);
 
             //GET LIST
             List<data_file> RequestList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource);
