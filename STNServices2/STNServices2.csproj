@@ -87,7 +87,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.Text">
-      <HintPath>..\..\..\STNServices2\packages\ServiceStack.Text.4.0.56\lib\net40\ServiceStack.Text.dll</HintPath>
+      <HintPath>E:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -114,10 +114,10 @@
       <HintPath>..\..\..\STNServices2\packages\WiMHypermedia.1.0.5947.24027\lib\net45\WiMHypermedia.dll</HintPath>
     </Reference>
     <Reference Include="WiMServices">
-      <HintPath>..\..\..\STNServices2\packages\WiMServices.1.0.6082.21091\lib\net45\WiMServices.dll</HintPath>
+      <HintPath>..\..\WiMServices\WiMServices\bin\Release\WiMServices.dll</HintPath>
     </Reference>
     <Reference Include="WiMServices.Test">
-      <HintPath>..\..\..\STNServices2\packages\WiMServices.Test.1.0.6032.17739\lib\net45\WiMServices.Test.dll</HintPath>
+      <HintPath>..\..\WiMServices\WiMServices.Test\bin\Release\WiMServices.Test.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
