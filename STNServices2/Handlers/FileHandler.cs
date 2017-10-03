@@ -68,7 +68,6 @@ namespace STNServices2.Handlers
     public class FileHandler : STNHandlerBase
     {
         #region GetMethods
-
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
