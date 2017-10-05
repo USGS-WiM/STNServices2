@@ -540,6 +540,7 @@ namespace STNServices2.Handlers
                              hcollect_method_id = hw.hcollect_method_id,
                              horizontalMethodName = hw.hcollect_method_id > 0 && hw.horizontal_collect_methods != null ? hw.horizontal_collect_methods.hcollect_method : "",
                              bank = hw.bank,
+                             hwm_uncertainty = hw.hwm_uncertainty,
                              approval_id = hw.approval_id,
                              approvalMember = hw.approval_id > 0  ? getApprovalName(hw) : "",
                              marker_id = hw.marker_id,
