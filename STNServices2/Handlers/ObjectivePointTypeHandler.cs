@@ -50,19 +50,13 @@ namespace STNServices2.Handlers
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
-
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -79,17 +73,12 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
 
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointOPType")]

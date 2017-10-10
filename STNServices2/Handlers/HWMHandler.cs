@@ -135,6 +135,8 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(approved)) throw new BadRequestException("Invalid input parameters");
+
                 List<hwm> entities = null;
                 char[] countydelimiterChars = { ';', ',' };
                 
@@ -143,7 +145,6 @@ namespace STNServices2.Handlers
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
                 List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
-         //       Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
                 using (STNAgent sa = new STNAgent())
@@ -157,7 +158,6 @@ namespace STNServices2.Handlers
                     if (filterEvent > 0)
                         query = query.Where(h => h.event_id == filterEvent);
 
-                    //TODO :: change this to be state_id
                     if (filterState != State.UNSPECIFIED.ToString())
                         query = query.Where(h => h.site.state == filterState);
 
@@ -193,7 +193,6 @@ namespace STNServices2.Handlers
                     if (filterEvent > 0)
                         query = query.Where(h => h.event_id == filterEvent);
 
-                    //TODO :: change this to be state_id
                     if (filterState != State.UNSPECIFIED.ToString())
                         query = query.Where(h => h.site.state == filterState);
                                         
@@ -223,7 +222,7 @@ namespace STNServices2.Handlers
 
                 }//end using
 
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -443,8 +442,8 @@ namespace STNServices2.Handlers
 
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredHWMs")]
         public OperationResult FilteredHWMs([Optional]string eventIds, [Optional] string eventTypeIDs, [Optional] string eventStatusID,
-                                                      [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
-                                                      [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
+                                            [Optional] string states, [Optional] string counties, [Optional] string hwmTypeIDs,
+                                            [Optional] string hwmQualIDs, [Optional] string hwmEnvironment, [Optional] string surveyComplete, [Optional] string stillWater)
         {
 
             List<hwm> entities = null;
@@ -571,24 +570,11 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
 
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
-        }
-
-        private string getApprovalName(hwm h)
-        {
-            try
-            {
-                return h.approval.member.fname + " " + h.approval.member.lname;                
-            }
-            catch
-            {
-                return "Missing Approval";
-            }
-        }
+        }        
                 
         #endregion
         #region PostMethods
@@ -713,6 +699,20 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HTTP.DELETE
+        #endregion
+        
+        #region Helpers
+        private string getApprovalName(hwm h)
+        {
+            try
+            {
+                return h.approval.member.fname + " " + h.approval.member.lname;                
+            }
+            catch
+            {
+                return "Missing Approval";
+            }
+        }
         #endregion
 
     }//end class HWMHandler

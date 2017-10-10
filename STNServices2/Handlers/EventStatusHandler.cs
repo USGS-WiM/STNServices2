@@ -79,7 +79,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<event_status>().FirstOrDefault(i => i.event_status_id == entityId);
-                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 

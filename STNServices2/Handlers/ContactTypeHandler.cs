@@ -58,11 +58,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             {
                 return HandleException(ex);
-            }
-            finally
-            {
-
-            }//end try
+            }            
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -73,15 +69,15 @@ namespace STNServices2.Handlers
             {
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                //Get basic authentication password
-                    using (STNAgent sa = new STNAgent())
-                    {
-                        anEntity = sa.Select<contact_type>().SingleOrDefault(rp => rp.contact_type_id == entityId);
-                        sm(sa.Messages);
-                    }//end using
+                using (STNAgent sa = new STNAgent())
+                {
+                    anEntity = sa.Select<contact_type>().SingleOrDefault(rp => rp.contact_type_id == entityId);
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
+                    sm(sa.Messages);
+                }//end using
 
-                    return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -101,6 +97,8 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<reportmetric_contact>().FirstOrDefault(i => i.contact_id == contactId).contact_type;
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                     sm(sa.Messages);
                 }//end using
 

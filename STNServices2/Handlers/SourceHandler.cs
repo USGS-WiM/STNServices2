@@ -65,10 +65,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -93,10 +89,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
@@ -139,8 +131,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<file>().Include(i=>i.source).FirstOrDefault(i => i.file_id == fileId).source;
-                        if (anEntity == null) throw new NotFoundRequestException(); 
+                        anEntity = sa.Select<file>().Include(i=>i.source).FirstOrDefault(i => i.file_id == fileId).source;                        
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -192,7 +183,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.source_name) || anEntity.agency_id <= 0)
+                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.source_name) || anEntity.agency_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())

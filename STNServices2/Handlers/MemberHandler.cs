@@ -69,7 +69,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -90,7 +90,7 @@ namespace STNServices2.Handlers
                         List<member> MemberList = sa.Select<member>()
                                         .Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
                         aMember = MemberList.First<member>();
-
+                        if (aMember == null) throw new NotFoundRequestException();
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = aMember };
@@ -160,18 +160,18 @@ namespace STNServices2.Handlers
             List<member> entities = null;
             try
             {
+                if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
-
                         entities = sa.Select<agency>().FirstOrDefault(a => a.agency_id == agencyId).members.ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -184,18 +184,18 @@ namespace STNServices2.Handlers
             List<member> entities = null;
             try
             {
+                if (roleId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword, true))
                     {
-
                         entities = sa.Select<role>().FirstOrDefault(a => a.role_id == roleId).members.ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

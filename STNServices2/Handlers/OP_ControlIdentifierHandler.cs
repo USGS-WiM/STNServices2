@@ -56,7 +56,6 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
 
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
@@ -99,8 +98,7 @@ namespace STNServices2.Handlers
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<op_control_identifier>().Where(m => m.objective_point_id == objectivePointId).ToList();
-                    if (entities == null) throw new NotFoundRequestException();
+                    entities = sa.Select<op_control_identifier>().Where(m => m.objective_point_id == objectivePointId).ToList();                    
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
@@ -185,12 +183,11 @@ namespace STNServices2.Handlers
             
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
-
                         anEntity = sa.Select<op_control_identifier>().FirstOrDefault(i => i.op_control_identifier_id == entityId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
@@ -204,9 +201,5 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HTTP.DELETE
         #endregion
-
-      
-       
-
     }//end class PeakSummaryHandler
 }//end namespace

@@ -106,7 +106,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<instrument>().Include(i => i.housing_type).FirstOrDefault(i => i.instrument_id == instrumentId).housing_type;
-                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 

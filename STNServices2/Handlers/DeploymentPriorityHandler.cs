@@ -76,7 +76,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<deployment_priority>().FirstOrDefault(e => e.priority_id == entityId);
-
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using

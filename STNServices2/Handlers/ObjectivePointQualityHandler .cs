@@ -94,7 +94,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<objective_point>().FirstOrDefault(h => h.objective_point_id == objectivePointId).op_quality;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
 

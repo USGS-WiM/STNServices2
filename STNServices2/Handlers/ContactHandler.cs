@@ -77,7 +77,8 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Select<contact>().SingleOrDefault(rp => rp.contact_id == entityId);
-                        if (anEntity == null) throw new NotFoundRequestException(); 
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                         sm(sa.Messages);
                     }//end using
                 }
@@ -154,68 +155,15 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-        
-        // not finding this in config file anywhere .. even previous version
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetContactTypeContact")]
-        //public OperationResult GetContactTypeContacts(Int32 contactTypeId)
-        //{
-        //    List<contact> entities = new List<contact>();
 
-        //    //Get basic authentication password
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNAgent sa = new STNAgent(username, securedPassword))
-        //            {
-        //                entities = sa.Select<contact_type>().FirstOrDefault(ct => ct.contact_type_id == contactTypeId)
-        //                                                        .reportmetric_contact.Select(c=>c.contact).ToList();
-        //                sm(sa.Messages);
-        //            }//end using
-        //        }
-
-        //        return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
-        //    }
-        //    catch (Exception ex)
-        //    { return HandleException(ex); }
-
-        //}//end HttpMethod.GET
         #endregion
-       
+
         #region PostMethods
-
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.POST)]
-        //public OperationResult Post(contact anEntity)
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
-        //            throw new BadRequestException("Invalid input parameters");
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNAgent sa = new STNAgent(username, securedPassword))
-        //            {
-        //                anEntity = sa.Add<contact>(anEntity);
-        //                sm(sa.Messages);
-
-        //            }//end using
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-        //    }
-        //    catch (Exception ex)
-        //    { return HandleException(ex); }
-
-        //}//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST, ForUriName = "AddReportContact")]
         public OperationResult AddReportContact(contact anEntity, Int32 contactTypeId, Int32 reportId)
         {
-
             reportmetric_contact newRepContact = null;
             contact thisContact = null;
             try
@@ -247,7 +195,7 @@ namespace STNServices2.Handlers
                             newRepContact = sa.Add<reportmetric_contact>(newRepContact);
                             sm(sa.Messages);
                         }//end if
-                        //thisContact = sa.Select<contact>().FirstOrDefault(c => c.contact_id == contactId);
+                        
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = thisContact, Description = this.MessageString };
@@ -267,8 +215,7 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || 
-                    string.IsNullOrEmpty(anEntity.phone))
+                if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())

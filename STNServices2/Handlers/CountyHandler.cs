@@ -77,6 +77,8 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anentity = sa.Select<county>().SingleOrDefault(rp => rp.county_id == entityId);
+                    if (anentity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                     sm(sa.Messages);
                 }//end using
 

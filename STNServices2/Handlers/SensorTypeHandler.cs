@@ -88,10 +88,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentSensorType")]
