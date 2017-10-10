@@ -75,11 +75,11 @@ namespace STNServices2.Handlers
                 if (string.IsNullOrEmpty(entityId)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-
+                    // why is this get so complicated, instead of just passing in Int32 eventId and getting it based on that??
                     anEntity = sa.Select<events>().FirstOrDefault(e => String.Equals(e.event_id.ToString().Trim().ToLower(), entityId.Trim().ToLower()) || 
                         String.Equals(e.event_name.Trim().Replace(" ", "").ToLower(), entityId.Trim().ToLower()));
 
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using
@@ -231,9 +231,7 @@ namespace STNServices2.Handlers
                     //in this state only
                     if (!string.IsNullOrEmpty(stateName))
                     {
-                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));
-                    //    query = query.Where(e => e.instruments.Any(i => i.site.state == stateName));
-                    //    query = query.Where(e => e.hwms.Any(h => h.site.state == stateName));
+                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));                    
                     }
                     entities = query.Distinct().ToList();
                 }

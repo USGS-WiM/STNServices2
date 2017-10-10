@@ -44,8 +44,7 @@ namespace STNServices2.Handlers
             List<hwm_types> entities = null;
 
             try
-            {
-                
+            {                
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<hwm_types>().OrderBy(e => e.hwm_type_id).ToList();

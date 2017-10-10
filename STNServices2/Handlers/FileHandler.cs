@@ -302,6 +302,7 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
                 }//end using
 
+                // this will always only contain 1 file file:datafile relationship is 1:1
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)

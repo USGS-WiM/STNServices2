@@ -196,6 +196,7 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))

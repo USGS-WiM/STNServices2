@@ -57,7 +57,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -76,7 +76,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -91,11 +91,10 @@ namespace STNServices2.Handlers
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<file>().Include(f=>f.instrument).FirstOrDefault(f => f.file_id == fileId).instrument;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    anEntity = sa.Select<file>().Include(f=>f.instrument).FirstOrDefault(f => f.file_id == fileId).instrument;                    
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -114,7 +113,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -130,10 +129,9 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<data_file>().FirstOrDefault(f => f.data_file_id == dataFileId).instrument;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -152,7 +150,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -172,7 +170,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -191,7 +189,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -210,7 +208,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -229,7 +227,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -241,14 +239,14 @@ namespace STNServices2.Handlers
             List<instrument> entities;
             try
             {
-                if (siteId <= 0 || eventId <=0) throw new BadRequestException("Invalid input parameters");
+                if (siteId <= 0 || eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<instrument>().AsEnumerable().Where(instr => instr.site_id == siteId && instr.event_id == eventId).OrderBy(instr => instr.instrument_id).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -275,7 +273,6 @@ namespace STNServices2.Handlers
 
                     char[] delimiterChars = { ';', ',', ' ' }; char[] countydelimiterChars = { ';', ',' };
                     //parse the requests
-                    //List<decimal> eventIdList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                     List<string> eventValueList = !string.IsNullOrEmpty(eventIDs) ? eventIDs.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                     List<decimal> eventTypeList = !string.IsNullOrEmpty(eventTypeIDs) ? eventTypeIDs.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToList() : null;
                     List<string> stateList = !string.IsNullOrEmpty(states) ? states.ToUpper().Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries).Select(st => GetStateByName(st).ToString()).ToList() : null;
@@ -416,12 +413,11 @@ namespace STNServices2.Handlers
                             stateName = inst.site.state,
                             countyName = inst.site.county,
                             siteWaterbody = inst.site.waterbody,
-                            siteHDatum =  inst.site.horizontal_datums != null ? inst.site.horizontal_datums.datum_name : "", //inst.site.horizontal_datums is coming back null even though there's a hdatum_id...
+                            siteHDatum =  inst.site.horizontal_datums != null ? inst.site.horizontal_datums.datum_name : "", 
                             sitePriorityName = inst.site.deployment_priority != null ? inst.site.deployment_priority.priority_name : "",
                             siteZone = inst.site.zone,
                             siteHCollectMethod = inst.site.horizontal_collect_methods != null ? inst.site.horizontal_collect_methods.hcollect_method : "",
                             sitePermHousing = inst.site.is_permanent_housing_installed == null || inst.site.is_permanent_housing_installed == "No" ? "No" : "Yes"
-                        //    siteNotes = inst.site.site_notes
                         }).ToList<instrument>();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
@@ -491,7 +487,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);                
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

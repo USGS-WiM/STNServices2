@@ -85,13 +85,13 @@ namespace STNServices2.Handlers
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId && df.approval_id > 0);
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     else
                     {
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     
@@ -117,14 +117,14 @@ namespace STNServices2.Handlers
                         //general public..only approved ones
                         anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
                         anEntity = anEntity.approval_id > 0 ? anEntity : null;
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
                         anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     sm(sa.Messages);
@@ -177,7 +177,7 @@ namespace STNServices2.Handlers
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-              //  Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+
                 List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
@@ -196,19 +196,10 @@ namespace STNServices2.Handlers
                         query = query.Where(d => d.instrument.site.state == filterState);
 
                     if (countyList != null && countyList.Count > 0)
-                        query = query.Where(d => countyList.Contains(d.instrument.site.county.ToUpper()));
-                    /*
-                    if (filterMember > 0)
-                        query = query.Where(d => d.processor_id == filterMember);
-                    */
+                        query = query.Where(d => countyList.Contains(d.instrument.site.county.ToUpper()));                    
 
                     entities = query.ToList();
-                    /*
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
-                    {
-                        //they are the general public..only approved ones
-                        entities = entities.Where(d => d.approval_id > 0).ToList();
-                    }*/
+                   
                     // do this for serialization for csv
                     refreshedVersion = entities.Select(d => new data_file()
                     {

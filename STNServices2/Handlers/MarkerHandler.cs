@@ -86,10 +86,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName="GetHWMMarker")]
@@ -102,7 +98,6 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent(true))
                 {
                     anEntity = sa.Select<hwm>().Include(e=>e.marker).FirstOrDefault(e => e.hwm_id == hwmId).marker;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
 
                 }//end using

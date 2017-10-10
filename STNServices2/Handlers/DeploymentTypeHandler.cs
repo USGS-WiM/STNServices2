@@ -77,6 +77,7 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anEntity = sa.Select<deployment_type>().FirstOrDefault(e => e.deployment_type_id == entityId);
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using
@@ -276,7 +277,7 @@ namespace STNServices2.Handlers
 
                         sensor_deployment ObjectToBeDeleted = sa.Select<sensor_deployment>().SingleOrDefault(sd => sd.sensor_type_id == sensorTypeId && sd.deployment_type_id == deploymentTypeId);
 
-                        if (ObjectToBeDeleted == null) throw new NotFoundRequestException();
+                        if (ObjectToBeDeleted == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sa.Delete<sensor_deployment>(ObjectToBeDeleted);
                         sm(sa.Messages);
                     }//end using

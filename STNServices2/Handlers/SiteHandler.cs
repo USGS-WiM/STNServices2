@@ -79,12 +79,8 @@ namespace STNServices2.Handlers
                 {              
                     
                     anEntity = sa.Select<site>().FirstOrDefault(e => e.site_id == entityId);
-
-                    if (anEntity == null)
-                        throw new NotFoundRequestException();
-                    
+                    if (anEntity == null) throw new NotFoundRequestException();                    
                     sm(sa.Messages);
-
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -526,12 +522,12 @@ namespace STNServices2.Handlers
                                 other_sid = s.other_sid,
                                 noaa_sid = s.noaa_sid,
                                 hcollect_method_id = s.hcollect_method_id,
-                                site_notes = s.site_notes,
+                                site_notes = s.site_notes, // should this be removed?? (Internal)
                                 safety_notes = s.safety_notes,
                                 access_granted = s.access_granted,
                                 member_id = s.member_id,
                                 networkNames = s.network_name_site.Count > 0 ? s.network_name_site.Where(ns => ns.site_id == s.site_id).Select(x => x.network_name.name).Distinct().ToList() : new List<string>(),
-                                RecentOP = getRecentOP(s),// s.objective_points.Count > 0 ? s.objective_points.OrderByDescending(x => x.date_established).FirstOrDefault() : null,
+                                RecentOP = getRecentOP(s),
                                 Events = getSiteEvents(s)
                             }).ToList();
                 }//end using
@@ -554,9 +550,9 @@ namespace STNServices2.Handlers
                 if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-                    string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString(); // "D:\stntemp\stormtide"
+                    string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString(); 
                     string path2 = entityId.ToString();
-                    string combinedPath = System.IO.Path.Combine(path1);//, path2);
+                    string combinedPath = System.IO.Path.Combine(path1);
                     
                     string[] subdirs = Directory.GetDirectories(combinedPath, path2+"*");
 

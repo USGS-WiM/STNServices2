@@ -60,10 +60,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
   
         [HttpOperation(HttpMethod.GET)]
@@ -87,10 +83,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         //returns a list of all the states we have sites in
@@ -119,10 +111,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET        
         
       
@@ -135,13 +123,15 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(anEntity.state_abbrev) || string.IsNullOrEmpty(anEntity.state_name))
+                    throw new BadRequestException("Invalid input parameters");
+
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Add<state>(anEntity);
                         sm(sa.Messages);
-
                     }//end using
                 }//end using
                 return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
@@ -162,6 +152,9 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.state_abbrev) || string.IsNullOrEmpty(anEntity.state_name))
+                    throw new BadRequestException("Invalid input parameters");
+
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))

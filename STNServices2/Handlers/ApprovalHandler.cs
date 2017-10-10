@@ -80,6 +80,8 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     thisEntity = sa.Select<approval>().FirstOrDefault(i => i.approval_id == entityId);
+                    if (thisEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                     sm(sa.Messages);
                 }//end using
 
@@ -293,6 +295,7 @@ namespace STNServices2.Handlers
                     {
                         //fetch the object to be updated (assuming that it exists)
                         anEntity = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
                         //remove id from HWM or DF
                         if (anEntity.hwms.Count > 0) anEntity.hwms.ToList().ForEach(x => { x.approval_id = null; sa.Update<hwm>(x); });
@@ -333,6 +336,8 @@ namespace STNServices2.Handlers
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aHWM = sa.Select<hwm>().SingleOrDefault(h => h.hwm_id == hwmId);
+                        if (aHWM == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                         Int32 apprId = aHWM.approval_id.HasValue ? aHWM.approval_id.Value : 0;
                         //remove id from hwm
                         aHWM.approval_id = null;
@@ -371,6 +376,8 @@ namespace STNServices2.Handlers
                     {
                         //fetch the object to be updated (assuming that it exists)
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
+                        if (aDataFile == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                         Int32 apprId = aDataFile.approval_id.HasValue ? aDataFile.approval_id.Value : 0;
                         //remove id from hwm
                         aDataFile.approval_id = null;

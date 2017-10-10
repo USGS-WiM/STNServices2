@@ -114,7 +114,6 @@ namespace STNServices2.Handlers
                     {
                         anEntity = sa.Select<hwm>().Include(i => i.peak_summary).FirstOrDefault(i => i.hwm_id == hwmId).peak_summary;
                     }
-                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
@@ -144,7 +143,6 @@ namespace STNServices2.Handlers
                     {
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId).peak_summary;
                     }
-                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
@@ -314,7 +312,6 @@ namespace STNServices2.Handlers
                             zone = globalPeakSite.zone,
                             horizontal_collection_method = globalPeakSite.horizontal_collect_methods != null ? globalPeakSite.horizontal_collect_methods.hcollect_method : "",
                             perm_housing_installed = globalPeakSite.is_permanent_housing_installed == null || globalPeakSite.is_permanent_housing_installed == "No" ? "No" : "Yes"
-                         //   site_notes = globalPeakSite.site_notes
                         }).ToList<peak_summary>();
 
                     sm(MessageType.info, "Count: " + entities.Count());
