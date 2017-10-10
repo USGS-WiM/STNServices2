@@ -106,7 +106,7 @@
           <Property Name="event_name" Type="varchar" MaxLength="255" />
           <Property Name="event_start_date" Type="timestamp" />
           <Property Name="event_end_date" Type="timestamp" />
-          <Property Name="event_description" Type="varchar" MaxLength="1000" />
+          <Property Name="event_description" Type="varchar" MaxLength="255" />
           <Property Name="event_type_id" Type="int4" />
           <Property Name="event_status_id" Type="int4" />
           <Property Name="event_coordinator" Type="int4" />
