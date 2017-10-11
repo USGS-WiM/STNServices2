@@ -37,6 +37,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WiM.Security;
 using WiM.Utilities.ServiceAgent;
+using RestSharp.Authenticators;
 
 namespace STNServices2.Handlers
 {
@@ -70,8 +71,33 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetNewsFeed")]
+        public OperationResult GetSTNNewsFeed()
+        {
+            //GeocoderResource geocode = null; : ServiceAgentBase
+            try
+            {                
+                var client = new RestClient("https://my.usgs.gov");
+                client.Authenticator = new HttpBasicAuthenticator(ConfigurationManager.AppSettings["ConfluenceUsername"], ConfigurationManager.AppSettings["ConfluencePassword"]);
+                string url = string.Format("confluence/rest/api/content/578001390?expand=body.storage");
+                var request = new RestRequest(url, Method.GET);
+
+                //without this, get ssl/tsl error
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                IRestResponse response = client.Execute(request);
+
+                return new OperationResult.OK { ResponseResource = JsonConvert.DeserializeObject(response.Content) };
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.GET
+
         #endregion
 
-        
+
     }//end GeocoderHandler
 }
