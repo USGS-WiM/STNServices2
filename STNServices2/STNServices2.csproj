@@ -135,6 +135,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Codecs\UTF8XmlSerializerCodec1.cs" />
+    <Compile Include="Codecs\UTF8XmlCodec1.cs" />
+    <Compile Include="Codecs\UTF8EntityXmlSerializerCodec1.cs" />
     <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
     <Compile Include="Codecs\testCodec.cs" />
     <Compile Include="Handlers\GeocoderHandler.cs" />
@@ -266,9 +269,7 @@
     <Content Include="Assets\Scripts\documentation\storm_stormtide_unfiltered.nc" />
     <None Include="Properties\PublishProfiles\stnservices2P.pubxml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="dist\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

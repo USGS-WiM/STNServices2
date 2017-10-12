@@ -63,6 +63,7 @@ using STNServices2.Handlers;
 using STNServices2.PipeLineContributors;
 using STNServices2.Security;
 using STNServices2.Resources;
+using STNServices2.Codecs.xml;
 using STNServices2.Codecs.json;
 
 using OpenRasta.Configuration;
@@ -196,6 +197,7 @@ namespace STNServices2
             //GET census.gov geocode for lat/long    
             ResourceSpace.Has.ResourcesOfType<object>()
             .AtUri("Geocode/location?Latitude={latitude}&Longitude={longitude}").Named("GetReverseGeocode")
+            .And.AtUri("Confluence/STNNewsFeed").Named("GetNewsFeed")
             .HandledBy<GeocoderHandler>()
             .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }
@@ -581,7 +583,7 @@ namespace STNServices2
                             &States={states}&County={counties}&HWMType={hwmTypeIDs}&HWMQuality={hwmQualIDs}
                             &HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}").Named("FilteredHWMs")
             .HandledBy<HWMHandler>()
-            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
