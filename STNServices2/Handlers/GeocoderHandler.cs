@@ -37,7 +37,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WiM.Security;
 using WiM.Utilities.ServiceAgent;
-using RestSharp.Authenticators;
 
 namespace STNServices2.Handlers
 {
@@ -78,8 +77,7 @@ namespace STNServices2.Handlers
             try
             {                
                 var client = new RestClient("https://my.usgs.gov");
-                client.Authenticator = new HttpBasicAuthenticator(ConfigurationManager.AppSettings["ConfluenceUsername"], ConfigurationManager.AppSettings["ConfluencePassword"]);
-                string url = string.Format("confluence/rest/api/content/578001390?expand=body.storage");
+                string url = string.Format("confluence/rest/api/content/{0}?expand=body.storage", ConfigurationManager.AppSettings["ConfluenceID"]);
                 var request = new RestRequest(url, Method.GET);
 
                 //without this, get ssl/tsl error
