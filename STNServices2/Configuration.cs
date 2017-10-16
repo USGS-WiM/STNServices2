@@ -196,6 +196,7 @@ namespace STNServices2
             //GET census.gov geocode for lat/long    
             ResourceSpace.Has.ResourcesOfType<object>()
             .AtUri("Geocode/location?Latitude={latitude}&Longitude={longitude}").Named("GetReverseGeocode")
+            .And.AtUri("Confluence/STNNewsFeed").Named("GetNewsFeed")
             .HandledBy<GeocoderHandler>()
             .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }

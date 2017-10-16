@@ -70,8 +70,32 @@ namespace STNServices2.Handlers
             }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetNewsFeed")]
+        public OperationResult GetSTNNewsFeed()
+        {
+            //GeocoderResource geocode = null; : ServiceAgentBase
+            try
+            {                
+                var client = new RestClient("https://my.usgs.gov");
+                string url = string.Format("confluence/rest/api/content/{0}?expand=body.storage", ConfigurationManager.AppSettings["ConfluenceID"]);
+                var request = new RestRequest(url, Method.GET);
+
+                //without this, get ssl/tsl error
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                IRestResponse response = client.Execute(request);
+
+                return new OperationResult.OK { ResponseResource = JsonConvert.DeserializeObject(response.Content) };
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult.BadRequest();
+            }
+        }//end HttpMethod.GET
+
         #endregion
 
-        
+
     }//end GeocoderHandler
 }
