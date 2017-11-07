@@ -314,15 +314,6 @@ if __name__ == '__main__':
     outfile = open(''.join([output, '.csv']), 'wb')
     outfile.close()    
     
-    import os
-
-    output_idx = output.rfind('\\')
-    for root, sub_folders, files in os.walk(output[:output_idx]):
-        for file_in_root in files:
-          
-            outfile = open(''.join([root,'\\',file_in_root]), 'wb')
-            outfile.close()    
-    
     sys.exit()
         
     

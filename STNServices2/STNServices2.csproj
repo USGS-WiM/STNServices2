@@ -128,6 +128,7 @@
     <Content Include="Assets\Scripts\documentation\storm_psd_contours.jpg" />
     <Content Include="Assets\Scripts\documentation\storm_stormtide.jpg" />
     <Content Include="Assets\Scripts\documentation\storm_stormtide_unfiltered.jpg" />
+    <Content Include="Assets\Scripts\stn_script_getchop.py" />
     <Content Include="Assets\Scripts\stn_script_air.py" />
     <Content Include="Assets\Scripts\usgs.png" />
     <Content Include="Web.config">

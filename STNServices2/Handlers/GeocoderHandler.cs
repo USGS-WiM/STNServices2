@@ -38,10 +38,14 @@ using Newtonsoft.Json.Linq;
 using WiM.Security;
 using WiM.Utilities.ServiceAgent;
 using RestSharp.Authenticators;
+using OpenRasta.IO;
+using STNDB;
+using STNServices2.Utilities.ServiceAgent;
+using System.IO;
 
 namespace STNServices2.Handlers
 {
-    public class GeocoderHandler
+    public class GeocoderHandler : STNHandlerBase
     {
         #region GetMethods
 
@@ -94,6 +98,40 @@ namespace STNServices2.Handlers
                 return new OperationResult.BadRequest();
             }
         }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItemasJson")]
+        public OperationResult GetFileItemAsJson(Int32 fileId)
+        {
+            InMemoryFile fileItem;
+            dynamic files;
+            file anEntity = null;
+            try
+            {
+                if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
+
+                using (Utilities.ServiceAgent.STNAgent sa = new STNAgent())
+                {
+                    //use include statements for stnagent's GetFileItem to find the event this file is on
+                    anEntity = sa.Select<file>().SingleOrDefault(f => f.file_id == fileId);
+                    if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
+
+                    fileItem = sa.GetFileItem(anEntity);
+                    using (var fileStream = fileItem.OpenStream())
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        string json = reader.ReadToEnd();
+                        files = JsonConvert.DeserializeObject(json);
+                    }
+
+                    sm(sa.Messages);
+                }//end using
+                return new OperationResult.OK { ResponseResource = files, Description = this.MessageString };
+                //                return new OperationResult.OK { ResponseResource = fileItem, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
 
         #endregion
 

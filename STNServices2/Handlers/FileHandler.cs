@@ -127,6 +127,33 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetTESTdataFile")]
+        public OperationResult GetTESTdataFile()
+        {
+            InMemoryFile fileItem;
+            dynamic files;
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    fileItem = sa.GetTESTdataItem();
+                    using (var fileStream = fileItem.OpenStream())
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        string json = reader.ReadToEnd();
+                        files = JsonConvert.DeserializeObject(json);
+                    }
+
+                    sm(sa.Messages);
+                }//end using
+                return new OperationResult.OK { ResponseResource = files, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
+
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItem")]
         public OperationResult GetFileItem(Int32 fileId)
         {
@@ -152,7 +179,8 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-            
+
+        
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByDateRange")]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
@@ -605,6 +633,79 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }//end catch
         }//end HttpMethod.POST
         
+        
+        [HttpOperation(HttpMethod.POST, ForUriName = "RunChopperScript")]
+        public OperationResult RunChopperScript(IEnumerable<IMultipartHttpEntity> entities)
+        {
+            dynamic responseJson = null;           
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    String filename = "";
+                    XmlSerializer serializer;
+                    file uploadFile = null;
+
+                    foreach (var entity in entities)
+                    {
+                        //Process Stream
+                        if (!entity.Headers.ContentDisposition.Disposition.ToLower().Equals("form-data"))
+                            return new OperationResult.BadRequest { ResponseResource = "Sent a field that is not declared as form-data, cannot process" };
+
+                        if (entity.Stream != null && entity.ContentType != null)
+                        {
+                            //Process Stream
+                            if (entity.Headers.ContentDisposition.Name.Equals("File"))
+                            {
+                                entity.Stream.CopyTo(memoryStream);
+                                filename = entity.Headers.ContentDisposition.FileName;
+                            }
+                        }
+                        else
+                        {
+                            //Process Variables
+                            if (entity.Headers.ContentDisposition.Name.Equals("FileEntity"))
+                            {
+                                var mem = new MemoryStream();
+                                entity.Stream.CopyTo(mem);
+                                mem.Position = 0;
+                                try
+                                {
+                                    serializer = new XmlSerializer(typeof(file));
+                                    uploadFile = (file)serializer.Deserialize(mem);
+                                }
+                                catch
+                                {
+                                    mem.Position = 0;
+                                    JsonSerializer jsonSerializer = new JsonSerializer();
+                                    using (StreamReader streamReader = new StreamReader(mem, new UTF8Encoding(false, true)))
+                                    {
+                                        using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                                        {
+                                            uploadFile = (file)jsonSerializer.Deserialize(jsonTextReader, typeof(file));
+                                        }
+                                    }//end using
+                                } //end catch
+                            } //end if FileEntity
+                        }//end else
+                    }//next
+
+                    //Return BadRequest if missing required fields
+                    if (uploadFile.instrument_id <= 0 || uploadFile.site_id <= 0)
+                        throw new BadRequestException("Invalid input parameters");
+
+                    STNServiceAgent stnsa = new STNServiceAgent(uploadFile.instrument_id.Value, memoryStream, filename);
+                    if (stnsa.chopperInitialized)
+                        responseJson = stnsa.RunChopperScript();
+                    else
+                        throw new BadRequestException("Error initializing python script.");
+                } //end using memoryStream
+                return new OperationResult.OK { ResponseResource = responseJson };
+            }//end try
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+    
         #endregion
 
         #region PutMethods

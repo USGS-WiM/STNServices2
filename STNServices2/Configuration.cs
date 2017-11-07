@@ -342,6 +342,10 @@ namespace STNServices2
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
 
+            ResourceSpace.Has.ResourcesOfType<object>()
+            .AtUri(datafileResource + "/RunChopperScript?DataFileID={dataFileId}").Named("RunChopperScript")
+            .HandledBy<DataFileHandler>()
+            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }//end AddDATA_FILE_Resources (6)
         private void AddDEPLOYMENT_PRIORITY_Resources()
         {
@@ -456,6 +460,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<file>()
            .AtUri(fileResource+"/{entityId}")           
            .And.AtUri(fileResource+"/bytes").Named("UploadFile")
+           .And.AtUri(fileResource + "/RunChopperScript").Named("RunChopperScript")
            .HandledBy<FileHandler>()
            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<MultipartFormDataObjectCodec>()
@@ -482,8 +487,15 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
             .And.AtUri(hwmResource + "/historicHWMspreadsheet").Named("GetHistoricHWMspreadsheet")
+            .And.AtUri(fileResource + "/testDataFile").Named("GetTESTdataFile")
             .And.AtUri(eventsResource + "/{eventId}/EventFileItems?FromDate={fromDate}&ToDate={toDate}&State={stateName}&County={county}&FilesFor={filesFor}&HWMFileType={hwmFileTypes}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
+
+       /*     ResourceSpace.Has.ResourcesOfType<object>()
+            .AtUri(fileResource + "/testDataFile").Named("GetTESTdataFile")
+            .HandledBy<FileHandler>()
+            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
+            */
         }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
         {

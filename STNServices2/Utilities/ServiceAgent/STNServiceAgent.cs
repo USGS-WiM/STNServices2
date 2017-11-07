@@ -19,6 +19,7 @@ using WiM.Exceptions;
 using STNServices2.Resources;
 using STNDB;
 using System.Text;
+using OpenRasta.Web;
 
 namespace STNServices2.Utilities.ServiceAgent
 {
@@ -43,21 +44,39 @@ namespace STNServices2.Utilities.ServiceAgent
         private member pressureScriptMember { get; set; }
         private data_file pressureDataFile { get; set; }
 
+        // choper parts
+        private instrument chopperInstrument { get; set; }
+        public Boolean chopperInitialized { get; private set; }
+        private string chopperDFName { get; set; }
+        private string chopperPressureType { get; set; }
+
         STNAgent sa = new STNAgent();
+        private int value;
+        private MemoryStream memoryStream;
+        private string v;
 
         #endregion Properties
 
         #region Constructors
+        // for storm script
         public STNServiceAgent(Int32 pressureSensorDFID, Int32 waterSensorDFID, string username)
             :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
         {
             StormInit(pressureSensorDFID, waterSensorDFID, username);
         }
+        // for air only script
         public STNServiceAgent(Int32 pressureSensorDFID, string username)
             :base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] {AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts"}))
         {
             AirInit(pressureSensorDFID, username);
         }
+        // for chopper script
+        public STNServiceAgent(Int32 instrument_id, MemoryStream ms, string fileName) //uploadFile.instrument_id, memoryStream
+            : base(ConfigurationManager.AppSettings["EXEPath"], Path.Combine(new String[] { AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts" }))
+        {
+            ChopperInit(instrument_id, ms, fileName);
+        }
+       
         #endregion Constructors
 
         #region Methods
@@ -282,12 +301,87 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw new Exception(ex.Message);
             }
         }
+        public class chopperJson
+        {
+            public List<Int32> pressure { get; set; }
+            public List<Int32> time { get; set; }
+        }
         
+        // chopper
+        public dynamic RunChopperScript()
+        {
+            dynamic jsonfile = null;
+            Boolean isValidOutput = true;
+            try
+            {
+                // execute the stn_script
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Chopper_Script"], getChopperBody()));
+                File.Delete(chopperDFName);
+
+                DirectoryInfo di = new DirectoryInfo(combinedPath);
+                foreach (var f in di.GetFiles().Where(fil => fil.Extension == ".json" || fil.Extension == ".csv"))
+                {
+                    using (StreamReader r = new StreamReader(System.IO.Path.Combine(combinedPath, f.Name)))
+                    {       
+                        if (f.Extension == ".json")
+                        {                        
+                            //write the file ... 
+                            string j = r.ReadToEnd();
+                            jsonfile = JsonConvert.DeserializeObject<dynamic>(j);
+                        }//end if "json"
+                    
+                        if (f.Extension == ".csv")
+                        {
+                            String line;                                                        
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                if (line.Contains("complete with no errors"))
+                                    isValidOutput = true;
+                            }
+                        }//end "csv"
+                    }//end streamreader
+                } //end foreach
+
+                // if the output is valid return the jsonfile else return invalid json result for handler to handle
+                if (!isValidOutput)
+                {
+                    string error = "{Error: Invalid}";
+                    jsonfile = JsonConvert.DeserializeObject(error);
+                }
+                return jsonfile;
+            }
+            catch (Exception ex)
+            {
+                Directory.Delete(combinedPath, true);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                //delete directory
+                Directory.Delete(combinedPath, true);
+            }
+        }
+
+        private dynamic deserializeFromStream(MemoryStream memoryStream)
+        {
+            dynamic jsonfile = null;
+            using (var reader = new StreamReader(memoryStream))
+            {
+                string json = reader.ReadToEnd();
+                jsonfile = JsonConvert.DeserializeObject(json);
+
+                /*  reader.Close();
+                  reader.Dispose();*/
+            } // end streamreader
+            return jsonfile;
+        }
+
         //init air and see script
         private void StormInit(Int32 presDFID, Int32 watDFID, string username)
         {
             try
             {
+                combinedPath = "";
                 //get water level's siteid and eventid
                 seaDataFile = sa.Select<data_file>()
                     .Include(df => df.files)
@@ -337,6 +431,7 @@ namespace STNServices2.Utilities.ServiceAgent
         {
             try
             {
+                combinedPath = "";
                 //get air datafile
                 pressureDataFile = sa.Select<data_file>()
                     .Include(df => df.files)
@@ -362,7 +457,46 @@ namespace STNServices2.Utilities.ServiceAgent
                 pressureScriptMember = sa.Select<member>().Include(m => m.agency).FirstOrDefault(m => m.username == username);
                 pressureInitialized = true;
             }
-            catch
+            catch (Exception ex)
+            {
+                pressureInitialized = false;
+            }
+        }
+
+        //init air only
+        private void ChopperInit(Int32 instrumentId, MemoryStream memoryStream, string fileName)
+        {
+            try
+            {
+                combinedPath = "";
+                //get the instrument to get access to required properties
+                chopperInstrument = sa.Select<instrument>()                    
+                    .Include(i => i.instr_collection_conditions)
+                    .Include(i => i.instrument_status)
+                    .Include(i => i.sensor_brand)
+                    .Include("instrument_status.vertical_datums")
+                    .Include(i => i.site)
+                    .FirstOrDefault(inst => inst.instrument_id == instrumentId);
+
+                // create directory;
+                string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString();
+                string path2 = "ChopperScript";
+                string path3 = "INST_" + chopperInstrument.instrument_id.ToString();
+                string path4 = "DATE_" + DateTime.Now.ToString("MMddyyyyHHmmss");
+                combinedPath = System.IO.Path.Combine(path1, path2 + path3 + path4);
+                workspaceDirectory = System.IO.Directory.CreateDirectory(combinedPath);
+                                
+                if (chopperInstrument.sensor_type_id == 1 && chopperInstrument.deployment_type_id == 3)
+                    chopperPressureType = "Air Pressure";
+                if (chopperInstrument.sensor_type_id == 1 && (chopperInstrument.deployment_type_id == 1 || chopperInstrument.deployment_type_id == 2))
+                    chopperPressureType = "Sea Pressure";
+
+                //store in temp location                
+               chopperDFName = storeFile(memoryStream, fileName);
+                
+                chopperInitialized = true;
+            }
+            catch (Exception ex)
             {
                 pressureInitialized = false;
             }
@@ -381,8 +515,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 InMemoryFile fileItem = sa.GetFileItem(fileentity);
                 filename = System.IO.Path.Combine(combinedPath, fileentity.name);
                 //copy data file to our temporary location
-                string tempLocation = Path.Combine(new String[] { AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts" });
-                using (var fileStream = File.Create(System.IO.Path.Combine(tempLocation,filename)))
+                string tempLocation = Path.Combine(new String[] { AppDomain.CurrentDomain.BaseDirectory, "Assets", "Scripts" });// Path.Combine(ConfigurationManager.AppSettings["STNRepository"], filename);
+                using (var fileStream = File.Create(System.IO.Path.Combine(tempLocation, filename)))
                 {
                     fileItem.OpenStream().Seek(0, SeekOrigin.Begin);
                     fileItem.OpenStream().CopyTo(fileStream);
@@ -390,12 +524,29 @@ namespace STNServices2.Utilities.ServiceAgent
                 }
                 return filename;
             }
-            catch
+            catch (Exception ex)
+            { return string.Empty; }
+        }
+        
+        private string storeFile(MemoryStream memoryStream, string fn)
+        {
+            try
+            {
+                string filename = "";
+                filename = System.IO.Path.Combine(combinedPath, fn);
+                //copy data file to our temporary location
+                string tempLocation = Path.Combine(ConfigurationManager.AppSettings["STNRepository"], filename);
+                memoryStream.Position = 0;
+                System.IO.File.WriteAllBytes(tempLocation, memoryStream.ToArray());
+                
+                return filename;
+            }
+            catch (Exception ex)
             {
                 return string.Empty;
             }
         }
-        
+
         // for air and see script (stn_script.py)
         private string getBody(Boolean hertz)
         {
@@ -568,6 +719,37 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_good_end_date
                 body.Add('"' + airGoodEnd + '"');
                 
+                var joinedBody = "\"" + string.Join("\", \"", body) + "\"";
+                return string.Join(" ", body);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }//end getParameterList   
+
+        private string getChopperBody()
+        {
+            List<string> body = new List<string>();
+            try
+            {
+                // -in_fname
+                body.Add('"' + chopperDFName + '"');
+                // -out_fname
+                body.Add('"' + Path.ChangeExtension(chopperDFName, null) + "_output" + '"');
+                // -pressure_type
+                body.Add('"' + chopperPressureType + '"');
+                // -daylight_savings
+                body.Add("False");
+                // -tz_info
+                body.Add("UTC");                                
+                // -datum
+                if (chopperInstrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
+                    body.Add('"' + chopperInstrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vertical_datums.datum_abbreviation + '"');
+                else body.Add("NAVD88");
+                // -instrument_name
+                body.Add('"' + chopperInstrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
+
                 var joinedBody = "\"" + string.Join("\", \"", body) + "\"";
                 return string.Join(" ", body);
             }

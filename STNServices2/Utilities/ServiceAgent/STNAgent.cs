@@ -195,6 +195,31 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw;
             }
         }
+        internal InMemoryFile GetTESTdataItem()
+        {
+            S3Bucket aBucket = null;
+            InMemoryFile fileItem = null;
+            try
+            {
+                string directoryName = string.Empty;
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                        ConfigurationManager.AppSettings["AWSSecretKey"]);
+                directoryName = "data.json";
+                var fileStream = aBucket.GetObject(directoryName);
+
+                fileItem = new InMemoryFile(fileStream);
+                fileItem.ContentType = GetContentType(".json");
+                // fileItem.Length = fileStream != null ? fileStream.Length : 0;
+                fileItem.FileName = "data.json";
+                return fileItem;
+
+            }
+            catch (Exception ex)
+            {
+                sm(WiM.Resources.MessageType.error, "Failed to include item: data.json exception: " + ex.Message);
+                throw;
+            }
+        }
         internal InMemoryFile GetFileItem(file afile)
         {
             //file aFile = null;
