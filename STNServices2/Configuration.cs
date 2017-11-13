@@ -490,12 +490,7 @@ namespace STNServices2
             .And.AtUri(fileResource + "/testDataFile").Named("GetTESTdataFile")
             .And.AtUri(eventsResource + "/{eventId}/EventFileItems?FromDate={fromDate}&ToDate={toDate}&State={stateName}&County={county}&FilesFor={filesFor}&HWMFileType={hwmFileTypes}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
-
-       /*     ResourceSpace.Has.ResourcesOfType<object>()
-            .AtUri(fileResource + "/testDataFile").Named("GetTESTdataFile")
-            .HandledBy<FileHandler>()
-            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
-            */
+       
         }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
         {
