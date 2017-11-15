@@ -301,11 +301,6 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw new Exception(ex.Message);
             }
         }
-        public class chopperJson
-        {
-            public List<Int32> pressure { get; set; }
-            public List<Int32> time { get; set; }
-        }
         
         // chopper
         public dynamic RunChopperScript()

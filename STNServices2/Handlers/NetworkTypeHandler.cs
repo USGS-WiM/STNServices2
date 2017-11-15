@@ -37,6 +37,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -88,9 +89,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<network_type_site>().Where(nt => nt.site_id == siteId).Select(nt => nt.network_type).ToList();
+                    entities = sa.Select<network_type_site>().Include(n => n.network_type).Include(n => n.site).Where(nt => nt.site_id == siteId).Select(nt => nt.network_type).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
