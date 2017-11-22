@@ -365,6 +365,8 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(data_file anEntity)
         {
+            Int32 loggedInUserId = 0;
+
             try
             {
                 if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue || 
@@ -376,6 +378,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username,securedPassword))
                     {
+                        //updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         sa.Add<data_file>(anEntity);
                         sm(sa.Messages);
                     }//end using
@@ -401,7 +409,8 @@ namespace STNServices2.Handlers
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, data_file anEntity)
-        {            
+        {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue ||
@@ -413,6 +422,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<data_file>(entityId, anEntity);
                         sm(sa.Messages);                       
 

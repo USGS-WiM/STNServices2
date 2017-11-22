@@ -585,6 +585,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(hwm anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (anEntity.site_id <= 0|| anEntity.event_id <= 0 || anEntity.hwm_type_id <= 0 || !anEntity.flag_date.HasValue ||
@@ -596,6 +597,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         if (string.IsNullOrEmpty(anEntity.hwm_label)) {
                             anEntity.hwm_label = "no_label";
                         }
@@ -637,6 +644,12 @@ namespace STNServices2.Handlers
                             anEntity.approval_id = null;
                         
                         if (string.IsNullOrEmpty(anEntity.hwm_label)) anEntity.hwm_label = "no_label";
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
 
                         anEntity = sa.Update<hwm>(entityId, anEntity);
                         sm(sa.Messages);

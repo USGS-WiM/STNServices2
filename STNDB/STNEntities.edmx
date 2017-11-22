@@ -35,6 +35,8 @@
           <Property Name="phone" Type="varchar" MaxLength="20" />
           <Property Name="alt_phone" Type="varchar" MaxLength="20" />
           <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="contact_type">
           <Key>
@@ -69,6 +71,8 @@
           <Property Name="peak_summary_id" Type="int4" />
           <Property Name="elevation_status" Type="varchar" MaxLength="20" />
           <Property Name="time_zone" Type="varchar" MaxLength="8" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="deployment_priority">
           <Key>
@@ -106,10 +110,12 @@
           <Property Name="event_name" Type="varchar" MaxLength="255" />
           <Property Name="event_start_date" Type="timestamp" />
           <Property Name="event_end_date" Type="timestamp" />
-          <Property Name="event_description" Type="varchar" MaxLength="255" />
+          <Property Name="event_description" Type="varchar" MaxLength="1000" />
           <Property Name="event_type_id" Type="int4" />
           <Property Name="event_status_id" Type="int4" />
           <Property Name="event_coordinator" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="file_type">
           <Key>
@@ -140,6 +146,8 @@
           <Property Name="is_nwis" Type="int4" />
           <Property Name="objective_point_id" Type="int4" />
           <Property Name="script_parent" Type="varchar" MaxLength="50" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -196,6 +204,8 @@
           <Property Name="uncertainty" Type="float8" />
           <Property Name="hwm_uncertainty" Type="float8" />
           <Property Name="hwm_label" Type="varchar" MaxLength="20" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -237,6 +247,8 @@
           <Property Name="housing_type_id" Type="int4" />
           <Property Name="sensor_brand_id" Type="int4" />
           <Property Name="vented" Type="varchar" MaxLength="5" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="instrument_status">
           <Key>
@@ -253,6 +265,8 @@
           <Property Name="ws_elevation" Type="float8" />
           <Property Name="gs_elevation" Type="float8" />
           <Property Name="vdatum_id" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="landownercontact">
           <Key>
@@ -269,6 +283,8 @@
           <Property Name="secondaryphone" Type="varchar" MaxLength="25" />
           <Property Name="email" Type="varchar" MaxLength="100" />
           <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="markers">
           <Key>
@@ -294,6 +310,8 @@
           <Property Name="password" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="salt" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="resetFlag" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="network_name">
           <Key>
@@ -348,6 +366,8 @@
           <Property Name="uncertainty" Type="float8" />
           <Property Name="unquantified" Type="varchar" MaxLength="5" />
           <Property Name="op_quality_id" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="objective_point_type">
           <Key>
@@ -364,6 +384,8 @@
           <Property Name="objective_point_id" Type="int4" />
           <Property Name="identifier" Type="varchar" MaxLength="100" />
           <Property Name="identifier_type" Type="varchar" MaxLength="20" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="op_measurements">
           <Key>
@@ -375,6 +397,8 @@
           <Property Name="water_surface" Type="float8" />
           <Property Name="ground_surface" Type="float8" />
           <Property Name="offset_correction" Type="float8" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="op_quality">
           <Key>
@@ -405,6 +429,8 @@
           <Property Name="aep_upperci" Type="float8" />
           <Property Name="aep_range" Type="float8" />
           <Property Name="calc_notes" Type="varchar" MaxLength="2000" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="reporting_metrics">
           <Key>
@@ -456,6 +482,8 @@
           <Property Name="yest_officepers" Type="float8" />
           <Property Name="tod_officepers" Type="float8" />
           <Property Name="tmw_officepers" Type="float8" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
@@ -465,6 +493,8 @@
           <Property Name="reporting_metrics_id" Type="int4" Nullable="false" />
           <Property Name="contact_id" Type="int4" Nullable="false" />
           <Property Name="contact_type_id" Type="int4" Nullable="false" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="roles">
           <Key>
@@ -507,6 +537,8 @@
           <Property Name="material" Type="varchar" MaxLength="100" />
           <Property Name="notes" Type="varchar" MaxLength="200" />
           <Property Name="amount" Type="float8" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="sites">
           <Key>
@@ -539,6 +571,8 @@
           <Property Name="access_granted" Type="varchar" MaxLength="20" />
           <Property Name="member_id" Type="int4" />
           <Property Name="sensor_not_appropriate" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="sources">
           <Key>
@@ -547,6 +581,8 @@
           <Property Name="source_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="source_name" Type="varchar" MaxLength="100" />
           <Property Name="agency_id" Type="int4" />
+          <Property Name="last_updated" Type="timestamp" />
+          <Property Name="last_updated_by" Type="int4" />
         </EntityType>
         <EntityType Name="states">
           <Key>
@@ -993,6 +1029,8 @@
           <Property Name="alt_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.contactreportmetric_contact" FromRole="contact" ToRole="reportmetric_contact" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="contact_type">
           <Key>
@@ -1023,6 +1061,8 @@
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberdata_file" FromRole="data_file" ToRole="member" />
           <NavigationProperty Name="approval" Relationship="STNNEWModel.approvaldata_file" FromRole="data_file" ToRole="approval" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.data_filefile" FromRole="data_file" ToRole="file" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="deployment_priority">
           <Key>
@@ -1074,6 +1114,8 @@
           <NavigationProperty Name="event_status" Relationship="STNNEWModel.event_statusevents" FromRole="events" ToRole="event_status" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberevents" FromRole="event" ToRole="member" />
           <NavigationProperty Name="event_type" Relationship="STNNEWModel.event_typeevents" FromRole="events" ToRole="event_type" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="file_type">
           <Key>
@@ -1112,6 +1154,8 @@
           <NavigationProperty Name="hwm" Relationship="STNNEWModel.hwmfile" FromRole="file" ToRole="hwm" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitefile" FromRole="file" ToRole="site" />
           <Property Name="script_parent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="horizontal_collect_methods">
           <Key>
@@ -1187,6 +1231,8 @@
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitehwm" FromRole="hwm" ToRole="site" />
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumshwm" FromRole="hwm" ToRole="vertical_datums" />
           <NavigationProperty Name="flag_member" Relationship="STNNEWModel.memberhwm1" FromRole="hwm" ToRole="member" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="hwm_qualities">
           <Key>
@@ -1241,6 +1287,8 @@
           <NavigationProperty Name="files" Relationship="STNNEWModel.instrumentfile" FromRole="instrument" ToRole="file" />
           <NavigationProperty Name="event" Relationship="STNNEWModel.eventinstrument" FromRole="instrument" ToRole="event" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.siteinstrument" FromRole="instrument" ToRole="site" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="instrument_status">
           <Key>
@@ -1261,6 +1309,8 @@
           <NavigationProperty Name="instrument" Relationship="STNNEWModel.instrumentinstrument_status" FromRole="instrument_status" ToRole="instrument" />
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsinstrument_status" FromRole="instrument_status" ToRole="vertical_datums" />
           <NavigationProperty Name="member" Relationship="STNNEWModel.memberinstrument_status" FromRole="instrument_status" ToRole="member" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="landownercontact">
           <Key>
@@ -1278,6 +1328,8 @@
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="sites" Relationship="STNNEWModel.landownercontactsite" FromRole="landownercontact" ToRole="site" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="marker">
           <Key>
@@ -1314,6 +1366,8 @@
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.memberdata_file" FromRole="member" ToRole="data_file" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.memberhwm" FromRole="member" ToRole="hwm" />
           <NavigationProperty Name="hwms1" Relationship="STNNEWModel.memberhwm1" FromRole="member" ToRole="hwm" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="network_name">
           <Key>
@@ -1381,6 +1435,8 @@
           <NavigationProperty Name="op_control_identifier" Relationship="STNNEWModel.objective_pointop_control_identifier" FromRole="objective_point" ToRole="op_control_identifier" />
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumsobjective_point" FromRole="objective_point" ToRole="vertical_datums" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.objective_pointfile" FromRole="objective_point" ToRole="file" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="objective_point_type">
           <Key>
@@ -1399,6 +1455,8 @@
           <Property Name="identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="identifier_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_pointop_control_identifier" FromRole="op_control_identifier" ToRole="objective_point" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="op_measurements">
           <Key>
@@ -1411,6 +1469,8 @@
           <Property Name="ground_surface" Type="Double" />
           <Property Name="offset_correction" Type="Double" />
           <NavigationProperty Name="objective_point" Relationship="STNNEWModel.objective_pointop_measurements" FromRole="op_measurements" ToRole="objective_point" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="op_quality">
           <Key>
@@ -1446,6 +1506,8 @@
           <NavigationProperty Name="data_file" Relationship="STNNEWModel.peak_summarydata_file" FromRole="peak_summary" ToRole="data_file" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.peak_summaryhwm" FromRole="peak_summary" ToRole="hwm" />
           <NavigationProperty Name="vertical_datums" Relationship="STNNEWModel.vertical_datumspeak_summary" FromRole="peak_summary" ToRole="vertical_datums" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="reporting_metrics">
           <Key>
@@ -1498,6 +1560,8 @@
           <Property Name="tod_officepers" Type="Double" />
           <Property Name="tmw_officepers" Type="Double" />
           <NavigationProperty Name="reportmetric_contact" Relationship="STNNEWModel.reporting_metricsreportmetric_contact" FromRole="reporting_metrics" ToRole="reportmetric_contact" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="reportmetric_contact">
           <Key>
@@ -1510,6 +1574,8 @@
           <NavigationProperty Name="contact_type" Relationship="STNNEWModel.contact_typereportmetric_contact" FromRole="reportmetric_contact" ToRole="contact_type" />
           <NavigationProperty Name="contact" Relationship="STNNEWModel.contactreportmetric_contact" FromRole="reportmetric_contact" ToRole="contact" />
           <NavigationProperty Name="reporting_metrics" Relationship="STNNEWModel.reporting_metricsreportmetric_contact" FromRole="reportmetric_contact" ToRole="reporting_metrics" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="role">
           <Key>
@@ -1559,6 +1625,8 @@
           <Property Name="notes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="amount" Type="Double" />
           <NavigationProperty Name="site" Relationship="STNNEWModel.sitesite_housing" FromRole="site_housing" ToRole="site" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="site">
           <Key>
@@ -1603,6 +1671,8 @@
           <NavigationProperty Name="files" Relationship="STNNEWModel.sitefile" FromRole="site" ToRole="file" />
           <NavigationProperty Name="site_housing" Relationship="STNNEWModel.sitesite_housing" FromRole="site" ToRole="site_housing" />
           <NavigationProperty Name="hwms" Relationship="STNNEWModel.sitehwm" FromRole="site" ToRole="hwm" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="source">
           <Key>
@@ -1613,6 +1683,8 @@
           <Property Name="agency_id" Type="Int32" />
           <NavigationProperty Name="agency" Relationship="STNNEWModel.agencysource" FromRole="source" ToRole="agency" />
           <NavigationProperty Name="files" Relationship="STNNEWModel.sourcefile" FromRole="source" ToRole="file" />
+          <Property Name="last_updated" Type="DateTime" Precision="6" />
+          <Property Name="last_updated_by" Type="Int32" />
         </EntityType>
         <EntityType Name="state">
           <Key>
@@ -2495,6 +2567,8 @@
           <EntitySetMapping Name="contacts">
             <EntityTypeMapping TypeName="STNNEWModel.contact">
               <MappingFragment StoreEntitySet="contact">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="alt_phone" ColumnName="alt_phone" />
                 <ScalarProperty Name="phone" ColumnName="phone" />
@@ -2515,6 +2589,8 @@
           <EntitySetMapping Name="data_file">
             <EntityTypeMapping TypeName="STNNEWModel.data_file">
               <MappingFragment StoreEntitySet="data_file">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="time_zone" ColumnName="time_zone" />
                 <ScalarProperty Name="elevation_status" ColumnName="elevation_status" />
                 <ScalarProperty Name="peak_summary_id" ColumnName="peak_summary_id" />
@@ -2565,6 +2641,8 @@
           <EntitySetMapping Name="events">
             <EntityTypeMapping TypeName="STNNEWModel.events">
               <MappingFragment StoreEntitySet="events">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="event_coordinator" ColumnName="event_coordinator" />
                 <ScalarProperty Name="event_status_id" ColumnName="event_status_id" />
                 <ScalarProperty Name="event_type_id" ColumnName="event_type_id" />
@@ -2587,6 +2665,8 @@
           <EntitySetMapping Name="files">
             <EntityTypeMapping TypeName="STNNEWModel.file">
               <MappingFragment StoreEntitySet="files">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="script_parent" ColumnName="script_parent" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
                 <ScalarProperty Name="is_nwis" ColumnName="is_nwis" />
@@ -2636,6 +2716,8 @@
           <EntitySetMapping Name="hwms">
             <EntityTypeMapping TypeName="STNNEWModel.hwm">
               <MappingFragment StoreEntitySet="hwm">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="hwm_label" ColumnName="hwm_label" />
                 <ScalarProperty Name="hwm_uncertainty" ColumnName="hwm_uncertainty" />
                 <ScalarProperty Name="uncertainty" ColumnName="uncertainty" />
@@ -2697,6 +2779,8 @@
           <EntitySetMapping Name="instruments">
             <EntityTypeMapping TypeName="STNNEWModel.instrument">
               <MappingFragment StoreEntitySet="instrument">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="vented" ColumnName="vented" />
                 <ScalarProperty Name="sensor_brand_id" ColumnName="sensor_brand_id" />
                 <ScalarProperty Name="housing_type_id" ColumnName="housing_type_id" />
@@ -2716,6 +2800,8 @@
           <EntitySetMapping Name="instrument_status">
             <EntityTypeMapping TypeName="STNNEWModel.instrument_status">
               <MappingFragment StoreEntitySet="instrument_status">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="vdatum_id" ColumnName="vdatum_id" />
                 <ScalarProperty Name="gs_elevation" ColumnName="gs_elevation" />
                 <ScalarProperty Name="ws_elevation" ColumnName="ws_elevation" />
@@ -2733,6 +2819,8 @@
           <EntitySetMapping Name="landownercontacts">
             <EntityTypeMapping TypeName="STNNEWModel.landownercontact">
               <MappingFragment StoreEntitySet="landownercontact">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="secondaryphone" ColumnName="secondaryphone" />
@@ -2758,6 +2846,8 @@
           <EntitySetMapping Name="members">
             <EntityTypeMapping TypeName="STNNEWModel.member">
               <MappingFragment StoreEntitySet="members">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="resetFlag" ColumnName="resetFlag" />
                 <ScalarProperty Name="salt" ColumnName="salt" />
                 <ScalarProperty Name="password" ColumnName="password" />
@@ -2811,6 +2901,8 @@
           <EntitySetMapping Name="objective_point">
             <EntityTypeMapping TypeName="STNNEWModel.objective_point">
               <MappingFragment StoreEntitySet="objective_point">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="op_quality_id" ColumnName="op_quality_id" />
                 <ScalarProperty Name="unquantified" ColumnName="unquantified" />
                 <ScalarProperty Name="uncertainty" ColumnName="uncertainty" />
@@ -2844,6 +2936,8 @@
           <EntitySetMapping Name="op_control_identifier">
             <EntityTypeMapping TypeName="STNNEWModel.op_control_identifier">
               <MappingFragment StoreEntitySet="op_control_identifier">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="identifier_type" ColumnName="identifier_type" />
                 <ScalarProperty Name="identifier" ColumnName="identifier" />
                 <ScalarProperty Name="objective_point_id" ColumnName="objective_point_id" />
@@ -2854,6 +2948,8 @@
           <EntitySetMapping Name="op_measurements">
             <EntityTypeMapping TypeName="STNNEWModel.op_measurements">
               <MappingFragment StoreEntitySet="op_measurements">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="offset_correction" ColumnName="offset_correction" />
                 <ScalarProperty Name="ground_surface" ColumnName="ground_surface" />
                 <ScalarProperty Name="water_surface" ColumnName="water_surface" />
@@ -2874,6 +2970,8 @@
           <EntitySetMapping Name="peak_summary">
             <EntityTypeMapping TypeName="STNNEWModel.peak_summary">
               <MappingFragment StoreEntitySet="peak_summary">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="calc_notes" ColumnName="calc_notes" />
                 <ScalarProperty Name="aep_range" ColumnName="aep_range" />
                 <ScalarProperty Name="aep_upperci" ColumnName="aep_upperci" />
@@ -2898,6 +2996,8 @@
           <EntitySetMapping Name="reporting_metrics">
             <EntityTypeMapping TypeName="STNNEWModel.reporting_metrics">
               <MappingFragment StoreEntitySet="reporting_metrics">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="tmw_officepers" ColumnName="tmw_officepers" />
                 <ScalarProperty Name="tod_officepers" ColumnName="tod_officepers" />
                 <ScalarProperty Name="yest_officepers" ColumnName="yest_officepers" />
@@ -2950,6 +3050,8 @@
           <EntitySetMapping Name="reportmetric_contact">
             <EntityTypeMapping TypeName="STNNEWModel.reportmetric_contact">
               <MappingFragment StoreEntitySet="reportmetric_contact">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="contact_type_id" ColumnName="contact_type_id" />
                 <ScalarProperty Name="contact_id" ColumnName="contact_id" />
                 <ScalarProperty Name="reporting_metrics_id" ColumnName="reporting_metrics_id" />
@@ -2994,6 +3096,8 @@
           <EntitySetMapping Name="site_housing">
             <EntityTypeMapping TypeName="STNNEWModel.site_housing">
               <MappingFragment StoreEntitySet="site_housing">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="amount" ColumnName="amount" />
                 <ScalarProperty Name="notes" ColumnName="notes" />
                 <ScalarProperty Name="material" ColumnName="material" />
@@ -3007,6 +3111,8 @@
           <EntitySetMapping Name="sites">
             <EntityTypeMapping TypeName="STNNEWModel.site">
               <MappingFragment StoreEntitySet="sites">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="sensor_not_appropriate" ColumnName="sensor_not_appropriate" />
                 <ScalarProperty Name="member_id" ColumnName="member_id" />
                 <ScalarProperty Name="access_granted" ColumnName="access_granted" />
@@ -3040,6 +3146,8 @@
           <EntitySetMapping Name="sources">
             <EntityTypeMapping TypeName="STNNEWModel.source">
               <MappingFragment StoreEntitySet="sources">
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
                 <ScalarProperty Name="agency_id" ColumnName="agency_id" />
                 <ScalarProperty Name="source_name" ColumnName="source_name" />
                 <ScalarProperty Name="source_id" ColumnName="source_id" />

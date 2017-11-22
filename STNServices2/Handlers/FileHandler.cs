@@ -180,7 +180,6 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
 
-        
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByDateRange")]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
@@ -521,6 +520,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(file anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             { 
                 if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0)
@@ -530,6 +530,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<file>(anEntity);
                         sm(sa.Messages);
                     }//end using
@@ -611,12 +617,19 @@ namespace STNServices2.Handlers
                     using (EasySecureString securedPassword = GetSecuredPassword())
                     {
                         using (STNAgent sa = new STNAgent(username, securedPassword, true))
-                        {
+                        {                            
                             //now remove existing fileItem for this file
                             if (uploadFile.file_id > 0)
                                 sa.RemoveFileItem(uploadFile);
-                            
+                         
+                            //last updated parts
+                            List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                            Int32 loggedInUserId = MemberList.First<member>().member_id;
+                            uploadFile.last_updated = DateTime.Now;
+                            uploadFile.last_updated_by = loggedInUserId;
+
                             uploadFile.name = filename;
+                            
                             //are they 'reuploading lost fileItem to existing file or posting new fileItem with new file
                             if (uploadFile.file_id > 0)
                                 sa.PutFileItem(uploadFile, memoryStream);
@@ -716,7 +729,8 @@ namespace STNServices2.Handlers
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, file anEntity)
-        {            
+        {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0) throw new BadRequestException("Invalid input parameters");
@@ -725,6 +739,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<file>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

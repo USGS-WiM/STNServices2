@@ -249,6 +249,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult POST(events anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (string.IsNullOrEmpty(anEntity.event_name)|| anEntity.event_type_id <=0 || 
@@ -259,6 +260,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<events>(anEntity);
                         sm(sa.Messages);
 
@@ -280,6 +287,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, events anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (entityId <=0||string.IsNullOrEmpty(anEntity.event_name) || anEntity.event_id <= 0 ||
@@ -289,6 +297,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<events>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

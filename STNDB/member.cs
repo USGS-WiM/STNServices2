@@ -40,6 +40,8 @@ namespace STNDB
         public string password { get; set; }
         public string salt { get; set; }
         public Nullable<int> resetFlag { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual agency agency { get; set; }
         public virtual role role { get; set; }

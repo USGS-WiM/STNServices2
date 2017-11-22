@@ -97,19 +97,7 @@
         <AssociationConnector Association="STNNEWModel.instrumentfile" />
         <AssociationConnector Association="STNNEWModel.eventinstrument" />
         <AssociationConnector Association="STNNEWModel.siteinstrument" />
-        <AssociationConnector Association="STNNEWModel.eventhwm" ManuallyRouted="true" >
-          <ConnectorPoint PointX="5.625" PointY="5.375" />
-          <ConnectorPoint PointX="5.625" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="7.729166666666667" PointY="4.7731481627972085" />
-          <ConnectorPoint PointX="7.9739555833333329" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="8.7916666666666661" PointY="4.7731481627972085" />
-          <ConnectorPoint PointX="8.9895833333333339" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="9.6354166666666661" PointY="4.7731481627972085" />
-          <ConnectorPoint PointX="9.8020833333333339" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="10.643229416666665" PointY="4.7731481627972085" />
-          <ConnectorPoint PointX="10.809896083333333" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="10.953125499999999" PointY="4.7731481627972094" />
-          <ConnectorPoint PointX="10.953125499999999" PointY="8.125" />
+        <AssociationConnector Association="STNNEWModel.eventhwm" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="STNNEWModel.event_statusevents" />
         <AssociationConnector Association="STNNEWModel.memberevents" />

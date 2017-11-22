@@ -41,6 +41,8 @@ namespace STNDB
         public Nullable<double> uncertainty { get; set; }
         public string unquantified { get; set; }
         public Nullable<int> op_quality_id { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual objective_point_type objective_point_type { get; set; }
         public virtual op_quality op_quality { get; set; }

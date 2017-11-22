@@ -53,6 +53,8 @@ namespace STNDB
         public string access_granted { get; set; }
         public Nullable<int> member_id { get; set; }
         public Nullable<int> sensor_not_appropriate { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<network_name_site> network_name_site { get; set; }

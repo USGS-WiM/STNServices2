@@ -39,6 +39,8 @@ namespace STNDB
         public Nullable<double> aep_upperci { get; set; }
         public Nullable<double> aep_range { get; set; }
         public string calc_notes { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual member member { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

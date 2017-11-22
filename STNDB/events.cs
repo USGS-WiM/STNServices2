@@ -29,6 +29,8 @@ namespace STNDB
         public Nullable<int> event_type_id { get; set; }
         public Nullable<int> event_status_id { get; set; }
         public Nullable<int> event_coordinator { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<instrument> instruments { get; set; }

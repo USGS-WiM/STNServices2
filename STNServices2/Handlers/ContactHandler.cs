@@ -166,6 +166,7 @@ namespace STNServices2.Handlers
         {
             reportmetric_contact newRepContact = null;
             contact thisContact = null;
+            Int32 loggedInUserId = 0;
             try
             {
                 if (contactTypeId <= 0 || reportId <= 0 || string.IsNullOrEmpty(anEntity.fname) || 
@@ -177,10 +178,15 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        
                         //check if valid Contact Type
                         if (sa.Select<contact_type>().First(s => s.contact_type_id == contactTypeId) == null) throw new NotFoundRequestException();                        
                         if (sa.Select<reporting_metrics>().First(rm => rm.reporting_metrics_id == reportId) == null) throw new NotFoundRequestException();
-
+                        // last_updated parts
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
                         //save the contact (if already exists, will return it
                         thisContact = sa.Add<contact>(anEntity);
 
@@ -192,6 +198,9 @@ namespace STNServices2.Handlers
                             newRepContact.reporting_metrics_id = reportId;
                             newRepContact.contact_type_id = contactTypeId;
                             newRepContact.contact_id = thisContact.contact_id;
+                            // last_updated parts
+                            newRepContact.last_updated = DateTime.Now;
+                            newRepContact.last_updated_by = loggedInUserId;
                             newRepContact = sa.Add<reportmetric_contact>(newRepContact);
                             sm(sa.Messages);
                         }//end if
@@ -206,13 +215,11 @@ namespace STNServices2.Handlers
         #endregion
         #region PutMethods
 
-        /// 
-        /// Force the user to provide authentication and authorization 
-        ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, contact anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
@@ -222,6 +229,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<contact>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

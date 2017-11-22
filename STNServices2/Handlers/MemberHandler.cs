@@ -360,6 +360,13 @@ namespace STNServices2.Handlers
                         if (anEntity.role_id <= 0) anEntity.role_id = sa.Select<role>().SingleOrDefault(r => r.role_name == FieldRole).role_id;
                         anEntity.salt =  Cryptography.CreateSalt();
                         anEntity.password = Cryptography.GenerateSHA256Hash(anEntity.password, anEntity.salt);
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<member>(anEntity);
                         sm(sa.Messages);
                         
@@ -424,7 +431,13 @@ namespace STNServices2.Handlers
                             ObjectToBeUpdated.emergency_contact_name : anEntity.emergency_contact_name);
                         ObjectToBeUpdated.emergency_contact_phone = (string.IsNullOrEmpty(anEntity.emergency_contact_phone) ?
                             ObjectToBeUpdated.emergency_contact_phone : anEntity.emergency_contact_phone);
-                        
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        ObjectToBeUpdated.last_updated = DateTime.Now;
+                        ObjectToBeUpdated.last_updated_by = loggedInUserId;
+
                         //admin can only change role
                         if (IsAuthorized(AdminRole) && anEntity.role_id > 0)
                             ObjectToBeUpdated.role_id = anEntity.role_id;

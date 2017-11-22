@@ -105,6 +105,8 @@ namespace STNServices2.Utilities.ServiceAgent
                         newFile.site_id = seaDataFile.files.FirstOrDefault().site_id;
                         newFile.name = f.Name;
                         newFile.instrument_id = seaDataFile.instrument_id;
+                        newFile.last_updated = DateTime.Now;
+                        newFile.last_updated_by = scriptMember.member_id;
                         newFile.script_parent = seaDataFile.files.FirstOrDefault().file_id.ToString() + "_" + airDataFile.files.FirstOrDefault().file_id.ToString();
                         // if photo
                         if (f.Extension == ".png")
@@ -116,6 +118,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             source createdSource = new source();
                             createdSource.source_name = scriptMember.fname + " " + scriptMember.lname;
                             createdSource.agency_id = scriptMember.agency_id;
+                            createdSource.last_updated = DateTime.Now;
+                            createdSource.last_updated_by = scriptMember.member_id;
                             createdSource = sa.Add<source>(createdSource);
                             newFile.source_id = createdSource.source_id;                                
                         }
@@ -128,6 +132,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             source createdSource = new source();
                             createdSource.source_name = scriptMember.fname + " " + scriptMember.lname;
                             createdSource.agency_id = scriptMember.agency_id;
+                            createdSource.last_updated = DateTime.Now;
+                            createdSource.last_updated_by = scriptMember.member_id;
                             createdSource = sa.Add<source>(createdSource);
                             newFile.source_id = createdSource.source_id;
                         }
@@ -145,6 +151,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             newDF.instrument_id = seaDataFile.instrument_id;
                             newDF.collect_date = DateTime.Now;
                             newDF.time_zone = "UTC";
+                            newDF.last_updated = DateTime.Now;
+                            newDF.last_updated_by = scriptMember.member_id;
                             newDF = sa.Add<data_file>(newDF);
                             newFile.data_file_id = newDF.data_file_id;
                         }
@@ -177,6 +185,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 }
                 if (isValidOutput)
                 {
+                    parentFile.last_updated = DateTime.Now;
+                    parentFile.last_updated_by = scriptMember.member_id;
                     parentFile.script_parent = "true";
                     sa.Update<file>(parentFile.file_id, parentFile);
                 }
@@ -217,6 +227,8 @@ namespace STNServices2.Utilities.ServiceAgent
                         newFile.site_id = pressureDataFile.files.FirstOrDefault().site_id;
                         newFile.name = f.Name;
                         newFile.instrument_id = pressureDataFile.instrument_id;
+                        newFile.last_updated = DateTime.Now;
+                        newFile.last_updated_by = pressureScriptMember.member_id;
                         newFile.script_parent = pressureDataFile.files.FirstOrDefault().file_id.ToString();
                         // if photo
                         if (f.Extension == ".png")
@@ -228,6 +240,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             source createdSource = new source();
                             createdSource.source_name = pressureScriptMember.fname + " " + pressureScriptMember.lname;
                             createdSource.agency_id = pressureScriptMember.agency_id;
+                            createdSource.last_updated = DateTime.Now;
+                            createdSource.last_updated_by = pressureScriptMember.member_id;
                             createdSource = sa.Add<source>(createdSource);
                             newFile.source_id = createdSource.source_id;
                         }
@@ -240,6 +254,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             source createdSource = new source();
                             createdSource.source_name = pressureScriptMember.fname + " " + pressureScriptMember.lname;
                             createdSource.agency_id = pressureScriptMember.agency_id;
+                            createdSource.last_updated = DateTime.Now;
+                            createdSource.last_updated_by = pressureScriptMember.member_id;
                             createdSource = sa.Add<source>(createdSource);
                             newFile.source_id = createdSource.source_id;
                         }
@@ -256,6 +272,8 @@ namespace STNServices2.Utilities.ServiceAgent
                             newDF.instrument_id = pressureDataFile.instrument_id;
                             newDF.collect_date = DateTime.Now;
                             newDF.time_zone = "UTC";
+                            newDF.last_updated = DateTime.Now;
+                            newDF.last_updated_by = pressureScriptMember.member_id;
                             newDF = sa.Add<data_file>(newDF);
                             newFile.data_file_id = newDF.data_file_id;
                         }
@@ -287,6 +305,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 if (isValidOutput)
                 {
                     parentFile.script_parent = "true";
+                    parentFile.last_updated = DateTime.Now;
+                    parentFile.last_updated_by = pressureScriptMember.member_id;
                     sa.Update<file>(parentFile.file_id, parentFile);
                 }
 
@@ -306,7 +326,8 @@ namespace STNServices2.Utilities.ServiceAgent
         public dynamic RunChopperScript()
         {
             dynamic jsonfile = null;
-            Boolean isValidOutput = true;
+            Boolean isValidOutput = false;
+            string error = "";
             try
             {
                 // execute the stn_script
@@ -330,8 +351,15 @@ namespace STNServices2.Utilities.ServiceAgent
                             String line;                                                        
                             while ((line = r.ReadLine()) != null)
                             {
-                                if (line.Contains("complete with no errors"))
+                                if (line.Split(',').ToList<string>()[6] == "failed")
+                                {
+                                    error = line.Split(',').ToList<string>()[1];
+                                    isValidOutput = false;
+                                }
+                                else
+                                {
                                     isValidOutput = true;
+                                }
                             }
                         }//end "csv"
                     }//end streamreader
@@ -340,8 +368,8 @@ namespace STNServices2.Utilities.ServiceAgent
                 // if the output is valid return the jsonfile else return invalid json result for handler to handle
                 if (!isValidOutput)
                 {
-                    string error = "{Error: Invalid}";
-                    jsonfile = JsonConvert.DeserializeObject(error);
+                    error = "{'Error': '" + error + "'}";
+                    jsonfile = JsonConvert.DeserializeObject<dynamic>(error);
                 }
                 return jsonfile;
             }

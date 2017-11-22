@@ -49,6 +49,8 @@ namespace STNDB
         public Nullable<double> uncertainty { get; set; }
         public Nullable<double> hwm_uncertainty { get; set; }
         public string hwm_label { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual horizontal_datums horizontal_datums { get; set; }
         public virtual vertical_collect_methods vertical_collect_methods { get; set; }

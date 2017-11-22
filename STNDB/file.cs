@@ -32,6 +32,8 @@ namespace STNDB
         public Nullable<int> is_nwis { get; set; }
         public Nullable<int> objective_point_id { get; set; }
         public string script_parent { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual source source { get; set; }
         public virtual objective_point objective_point { get; set; }

@@ -18,6 +18,8 @@ namespace STNDB
         public int reporting_metrics_id { get; set; }
         public int contact_id { get; set; }
         public int contact_type_id { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual contact_type contact_type { get; set; }
         public virtual contact contact { get; set; }

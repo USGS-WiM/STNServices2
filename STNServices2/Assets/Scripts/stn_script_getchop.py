@@ -39,7 +39,7 @@ def convert_to_netcdf(inputs, csv_dict):
     try:
         instrument.read()
     except:
-        csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
+        csv_dict['Exceptions'].append('Trouble reading csv file. Check for correct type')
         csv_dict['Status'] = 'fFailed'
         return 1
    

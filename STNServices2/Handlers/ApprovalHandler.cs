@@ -170,6 +170,13 @@ namespace STNServices2.Handlers
                         
                         //set HWM approvalID
                         aHWM.approval_id = anEntity.approval_id;
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        aHWM.last_updated = DateTime.Now;
+                        aHWM.last_updated_by = loggedInUserId;
+
                         sa.Update<hwm>(aHWM);
                         sm(sa.Messages);
                 
@@ -191,6 +198,7 @@ namespace STNServices2.Handlers
         {
             data_file aDataFile = null;
             approval anEntity = null;
+            Int32 loggedInUserId = 0;
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -202,6 +210,9 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
                         if (aDataFile == null) throw new BadRequestException("invalid HWMID");
 
@@ -215,8 +226,12 @@ namespace STNServices2.Handlers
 
                         anEntity = sa.Add<approval>(anEntity);
 
-                        //set HWM approvalID
+                        //set datafile approvalID
                         aDataFile.approval_id = anEntity.approval_id;
+                        // last_update parts
+                        aDataFile.last_updated = DateTime.Now;
+                        aDataFile.last_updated_by = loggedInUserId;
+
                         sa.Update<data_file>(aDataFile);
                         sm(sa.Messages);
                     }//end using
@@ -235,6 +250,7 @@ namespace STNServices2.Handlers
         {
             data_file aDataFile = null;
             approval anEntity = null;
+            Int32 loggedInUserId = 0;
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -246,6 +262,9 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword,true))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
                         if (aDataFile == null) throw new BadRequestException("invalid datafileId");
 
@@ -261,6 +280,9 @@ namespace STNServices2.Handlers
 
                         //set datafile approvalID
                         aDataFile.approval_id = anEntity.approval_id;
+                        aDataFile.last_updated = DateTime.Now;
+                        aDataFile.last_updated_by = loggedInUserId;
+
                         sa.Update<data_file>(aDataFile);
                         sm(sa.Messages);
                     }//end using
@@ -284,6 +306,8 @@ namespace STNServices2.Handlers
         public OperationResult Delete(Int32 approvalId)
         {
             approval anEntity = null;
+            Int32 loggedInUserId = 0;
+
             try
             {
                 if (approvalId <= 0) throw new BadRequestException("Invalid input parameters");
@@ -293,13 +317,29 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword,true))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+
                         //fetch the object to be updated (assuming that it exists)
                         anEntity = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
-
+                        
                         //remove id from HWM or DF
-                        if (anEntity.hwms.Count > 0) anEntity.hwms.ToList().ForEach(x => { x.approval_id = null; sa.Update<hwm>(x); });
-                        if (anEntity.data_file.Count > 0) anEntity.data_file.ToList().ForEach(x => { x.approval_id = null; sa.Update<data_file>(x); });
+                        if (anEntity.hwms.Count > 0) anEntity.hwms.ToList().ForEach(x => 
+                            {
+                                x.approval_id = null;
+                                // last updated parts                               
+                                x.last_updated = DateTime.Now;
+                                x.last_updated_by = loggedInUserId;
+                                sa.Update<hwm>(x);
+                            });
+                        if (anEntity.data_file.Count > 0) anEntity.data_file.ToList().ForEach(x => 
+                            {
+                                x.approval_id = null;
+                                x.last_updated = DateTime.Now;
+                                x.last_updated_by = loggedInUserId;
+                                sa.Update<data_file>(x);
+                            });
 
                         //delete it
                         sa.Delete<approval>(anEntity);
@@ -339,9 +379,18 @@ namespace STNServices2.Handlers
                         if (aHWM == null) throw new WiM.Exceptions.NotFoundRequestException();
 
                         Int32 apprId = aHWM.approval_id.HasValue ? aHWM.approval_id.Value : 0;
+                        
                         //remove id from hwm
                         aHWM.approval_id = null;
+                        
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        aHWM.last_updated = DateTime.Now;
+                        aHWM.last_updated_by = loggedInUserId;
+
                         sa.Update<hwm>(aHWM);
+
                         approval anApproval = sa.Select<approval>().FirstOrDefault(a => a.approval_id == apprId);
                         //remove approval     
                         sa.Delete<approval>(anApproval);
@@ -364,6 +413,7 @@ namespace STNServices2.Handlers
         public OperationResult UnApproveDataFile(Int32 dataFileId)
         {
             data_file aDataFile = null;
+            Int32 loggedInUserId = 0;
             try
             {
                 //Return BadRequest if missing required fields
@@ -374,6 +424,9 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+
                         //fetch the object to be updated (assuming that it exists)
                         aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
                         if (aDataFile == null) throw new WiM.Exceptions.NotFoundRequestException();
@@ -381,6 +434,8 @@ namespace STNServices2.Handlers
                         Int32 apprId = aDataFile.approval_id.HasValue ? aDataFile.approval_id.Value : 0;
                         //remove id from hwm
                         aDataFile.approval_id = null;
+                        aDataFile.last_updated = DateTime.Now;
+                        aDataFile.last_updated_by = loggedInUserId;
                         sa.Update<data_file>(aDataFile);
                         
                         approval anApproval = sa.Select<approval>().FirstOrDefault(a => a.approval_id == apprId);

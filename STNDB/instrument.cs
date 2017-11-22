@@ -35,6 +35,8 @@ namespace STNDB
         public Nullable<int> housing_type_id { get; set; }
         public Nullable<int> sensor_brand_id { get; set; }
         public string vented { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual instr_collection_conditions instr_collection_conditions { get; set; }
         public virtual sensor_brand sensor_brand { get; set; }

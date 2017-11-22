@@ -601,6 +601,12 @@ namespace STNServices2.Handlers
                             throw new BadRequestException("Lat/Long already exists");
 
                         //aSite.STATE = this.GetStateByName(aSite.STATE).ToString();
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<site>(anEntity);                       
 
                         anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
@@ -681,7 +687,13 @@ namespace STNServices2.Handlers
                         updatedSite.access_granted = anEntity.access_granted;
                         updatedSite.member_id = anEntity.member_id;
                         updatedSite.sensor_not_appropriate = anEntity.sensor_not_appropriate;
-          
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        updatedSite.last_updated = DateTime.Now;
+                        updatedSite.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<site>(entityId, updatedSite);
                         sm(sa.Messages);                         
                     }//end using

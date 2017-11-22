@@ -567,6 +567,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(reporting_metrics anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (anEntity.report_date == null || anEntity.event_id <= 0 || anEntity.state == null || anEntity.member_id <= 0)
@@ -576,7 +577,13 @@ namespace STNServices2.Handlers
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
-                    { 
+                    {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        // update parts
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<reporting_metrics>(anEntity);
                         sm(sa.Messages);
 
@@ -595,7 +602,8 @@ namespace STNServices2.Handlers
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, reporting_metrics anEntity)
-        {          
+        {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (anEntity.report_date == null || anEntity.event_id <= 0 || anEntity.state == null || anEntity.member_id <= 0)
@@ -606,6 +614,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        // update parts
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<reporting_metrics>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

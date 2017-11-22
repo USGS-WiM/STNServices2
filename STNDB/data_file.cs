@@ -32,6 +32,8 @@ namespace STNDB
         public Nullable<int> peak_summary_id { get; set; }
         public string elevation_status { get; set; }
         public string time_zone { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual instrument instrument { get; set; }
         public virtual peak_summary peak_summary { get; set; }
