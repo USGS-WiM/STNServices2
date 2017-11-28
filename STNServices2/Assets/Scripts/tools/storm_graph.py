@@ -126,18 +126,6 @@ class StormGraph(object):
               
             self.figure = plt.figure(figsize=(16,10))
         
-        first_date = unit_conversion.convert_ms_to_date(1475789400000, pytz.UTC)
-        last_date = unit_conversion.convert_ms_to_date(1476197399500, pytz.UTC)
-        new_dates = unit_conversion.adjust_from_gmt([first_date,last_date], \
-                                         so.timezone,so.daylight_savings)
-        
-        first_date = mdates.date2num(new_dates[0])
-        last_date = mdates.date2num(new_dates[1])
-       
-        time = so.sea_time
-        self.time_nums = np.linspace(first_date, last_date, len(time))
-        
-        
         first_date = unit_conversion.convert_ms_to_date(so.sea_time[0], pytz.UTC)
         last_date = unit_conversion.convert_ms_to_date(so.sea_time[-1], pytz.UTC)
         new_dates = unit_conversion.adjust_from_gmt([first_date,last_date], \
@@ -147,6 +135,7 @@ class StormGraph(object):
         last_date = mdates.date2num(new_dates[1])
        
         time = so.sea_time
+        self.time_nums = np.linspace(first_date, last_date, len(time))
         self.time_nums2 = np.linspace(first_date, last_date, len(time))
         
         if self.int_units == True:

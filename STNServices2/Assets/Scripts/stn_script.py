@@ -43,14 +43,14 @@ def convert_to_netcdf(inputs):
     try:
         instrument.read()
     except:
-        csv_dict['Exceptions'].append('Trouble reading csv file, check for correct type')
+        csv_dict['Exceptions'].append('Trouble reading csv file. Check for correct type')
         return None   
    
     try:
         instrument.write(pressure_type=translated['pressure_type'])
         csv_dict['File Created'].append(instrument.out_filename)
     except:
-        csv_dict['Exceptions'].append('Trouble writing netCDF file, check that all inputs are valid')
+        csv_dict['Exceptions'].append('Trouble writing netCDF file. Check that all inputs are valid')
   
     return instrument.bad_data
 

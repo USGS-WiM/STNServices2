@@ -593,9 +593,9 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_instrument_name
                 body.Add('"' + airDataFile.instrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
                 // -sea_stn_station_number
-                body.Add(seaDataFile.instrument.site.site_id.ToString());
+                body.Add(seaDataFile.instrument.site.site_name.ToString());
                 // -air_stn_station_number
-                body.Add(airDataFile.instrument.site.site_id.ToString());
+                body.Add(airDataFile.instrument.site.site_name.ToString());
                 // -sea_stn_instrument_id
                 body.Add(seaDataFile.instrument.instrument_id.ToString());
                 // -air_stn_instrument_id 
@@ -621,22 +621,22 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -sea_initial_sensor_orifice_elevation
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
                     body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -air_initial_sensor_orifice_elevation 
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
                     body.Add(airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -sea_final_sensor_orifice_elevation 
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
                     body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -air_final_sensor_orifice_elevation
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
                     body.Add(airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -salinity 
                 body.Add('"' + seaDataFile.instrument.instr_collection_conditions.condition + '"');
@@ -644,12 +644,12 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -initial_land_surface_elevation
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation != null)
                     body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).gs_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -final_land_surface_elevation
                 if (seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation != null)
                     body.Add(seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).gs_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 string depTime = seaDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).time_stamp.Value.ToString("yyyyMMdd HHmm");                
                 // -deployment_time
@@ -709,7 +709,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_stn_instrument_id 
                 body.Add(pressureDataFile.instrument.instrument_id.ToString());
                 // -air_stn_station_number
-                body.Add(pressureDataFile.instrument.site.site_id.ToString());
+                body.Add(pressureDataFile.instrument.site.site_name.ToString());
                 // -air_latitude 
                 body.Add(pressureDataFile.instrument.site.latitude_dd.ToString());
                 // -air_longitude
@@ -727,12 +727,12 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_initial_sensor_orifice_elevation 
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
                     body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 // -air_final_sensor_orifice_elevation
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
                     body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
-                else body.Add("1");
+                else body.Add("0");
 
                 string airGoodStart = pressureDataFile.good_start.Value.ToString("yyyyMMdd HHmm");
                 // -air_good_start_date 
