@@ -101,9 +101,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument>().FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
+                    anEntity = sa.Select<instrument>().Include(i=>i.deployment_type).FirstOrDefault(i => i.instrument_id == instrumentId).deployment_type;
                     sm(sa.Messages);
                 }//end using
 
@@ -120,9 +120,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    deployment_typeList = sa.Select<sensor_deployment>().Where(sd => sd.sensor_type_id == sensorTypeId).Select(s => s.deployment_type).ToList();
+                    deployment_typeList = sa.Select<sensor_deployment>().Include(sd=> sd.deployment_type).Where(sd => sd.sensor_type_id == sensorTypeId).Select(s => s.deployment_type).ToList();
                     sm(MessageType.info, "Count: " + deployment_typeList.Count);
                     sm(sa.Messages);
                 }//end using

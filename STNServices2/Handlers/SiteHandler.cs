@@ -442,10 +442,11 @@ namespace STNServices2.Handlers
                 Boolean sensorOnly = (!string.IsNullOrEmpty(sensorOnlySites) && Convert.ToInt32(sensorOnlySites) > 0) ? true : false;
                 Boolean rdgOnly = (!string.IsNullOrEmpty(rdgOnlySites) && Convert.ToInt32(rdgOnlySites) > 0) ? true : false;
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Include(s => s.objective_points).Include("network_name_site.network_name").Include(s => s.site_housing)
-                        .Include("hwms.event").Include("instruments.event");
+                    IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include("instruments.event")
+                        .Include(s => s.hwms).Include("hwms.event").Include(s => s.objective_points)
+                        .Include(s=>s.network_name_site).Include("network_name_site.network_name").Include(s => s.site_housing);
 
                     if (filterEvent > 0)
                         query = query.Where(s => s.instruments.Any(i =>i.event_id == filterEvent) || s.hwms.Any(h => h.event_id == filterEvent));
@@ -522,7 +523,7 @@ namespace STNServices2.Handlers
                                 other_sid = s.other_sid,
                                 noaa_sid = s.noaa_sid,
                                 hcollect_method_id = s.hcollect_method_id,
-                                site_notes = s.site_notes, // should this be removed?? (Internal)
+                               // site_notes = s.site_notes,  should this be removed?? (Internal)
                                 safety_notes = s.safety_notes,
                                 access_granted = s.access_granted,
                                 member_id = s.member_id,

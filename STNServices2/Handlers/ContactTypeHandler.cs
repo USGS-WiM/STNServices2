@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -94,9 +95,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<reportmetric_contact>().FirstOrDefault(i => i.contact_id == contactId).contact_type;
+                    anEntity = sa.Select<reportmetric_contact>().Include(i=> i.contact_type).FirstOrDefault(i => i.contact_id == contactId).contact_type;
                     if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
 
                     sm(sa.Messages);

@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -103,9 +104,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).deployment_priority;
+                    anEntity = sa.Select<site>().Include(i => i.deployment_priority).FirstOrDefault(i => i.site_id == siteId).deployment_priority;
                     sm(sa.Messages);
                 }//end using
 

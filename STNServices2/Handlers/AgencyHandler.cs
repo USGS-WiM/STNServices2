@@ -103,9 +103,9 @@ namespace STNServices2.Handlers
                 //Return BadRequest if there is no ID
                 if (memberId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<member>().FirstOrDefault(m => m.member_id == memberId).agency;
+                    anEntity = sa.Select<member>().Include(m=>m.agency).FirstOrDefault(m => m.member_id == memberId).agency;
                     if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -126,9 +126,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<source>().FirstOrDefault(s => s.source_id == sourceId).agency;
+                    anEntity = sa.Select<source>().Include(s=> s.agency).FirstOrDefault(s => s.source_id == sourceId).agency;
                     if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using

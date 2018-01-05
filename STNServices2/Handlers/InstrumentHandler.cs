@@ -107,9 +107,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument_status>().FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).instrument;
+                    anEntity = sa.Select<instrument_status>().Include(i=>i.instrument).FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).instrument;
                     if (anEntity == null) throw new NotFoundRequestException(); 
                     sm(sa.Messages);
                 }//end using
@@ -126,9 +126,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<data_file>().FirstOrDefault(f => f.data_file_id == dataFileId).instrument;
+                    anEntity = sa.Select<data_file>().Include(df=>df.instrument).FirstOrDefault(df => df.data_file_id == dataFileId).instrument;
                     sm(sa.Messages);
                 }//end using
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -164,9 +164,9 @@ namespace STNServices2.Handlers
             {
                 if (sensorTypeId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<sensor_type>().FirstOrDefault(s => s.sensor_type_id == sensorTypeId).instruments.ToList();
+                    entities = sa.Select<instrument>().Where(s => s.sensor_type_id == sensorTypeId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
@@ -183,9 +183,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (sensorBrandId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<sensor_brand>().FirstOrDefault(s => s.sensor_brand_id == sensorBrandId).instruments.ToList();
+                    entities = sa.Select<instrument>().Where(s => s.sensor_brand_id == sensorBrandId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
@@ -202,9 +202,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (deploymentTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<deployment_type>().FirstOrDefault(s => s.deployment_type_id == deploymentTypeId).instruments.ToList();
+                    entities = sa.Select<instrument>().Where(s => s.deployment_type_id == deploymentTypeId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
@@ -221,9 +221,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<events>().FirstOrDefault(e => e.event_id == eventId).instruments.ToList();
+                    entities = sa.Select<instrument>().Where(e => e.event_id == eventId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using

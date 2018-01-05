@@ -110,12 +110,12 @@ namespace STNServices2.Handlers
             try
             {
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //general public..only approved ones
-                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        anEntity = sa.Select<file>().Include(f=>f.data_file).FirstOrDefault(f => f.file_id == fileId).data_file;
                         anEntity = anEntity.approval_id > 0 ? anEntity : null;
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
@@ -180,13 +180,13 @@ namespace STNServices2.Handlers
                 List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     IQueryable<data_file> query;
                     if (isApprovedStatus)
-                        query = sa.Select<data_file>().Include(d => d.instrument).Where(d => d.approval_id > 0);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Include("instrument.site").Where(d => d.approval_id > 0);
                     else
-                        query = sa.Select<data_file>().Include(d => d.instrument).Where(d => d.approval_id <= 0 || !d.approval_id.HasValue);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Include("instrument.site").Where(d => d.approval_id <= 0 || !d.approval_id.HasValue);
 
                     if (filterEvent > 0)
                         query = query.Where(d => d.instrument.event_id.Value == filterEvent);

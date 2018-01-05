@@ -101,9 +101,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(h => h.hwm_id == hwmId).approval;
+                    anEntity = sa.Select<hwm>().Include(h=>h.approval).FirstOrDefault(h => h.hwm_id == hwmId).approval;
                     sm(sa.Messages);
                 }//end using
 
@@ -124,9 +124,9 @@ namespace STNServices2.Handlers
 
             try
             {
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<data_file>().FirstOrDefault(df => df.data_file_id == datafileId).approval;
+                    anEntity = sa.Select<data_file>().Include(df=>df.approval).FirstOrDefault(df => df.data_file_id == datafileId).approval;
                     sm(sa.Messages);
                 }//end using
 

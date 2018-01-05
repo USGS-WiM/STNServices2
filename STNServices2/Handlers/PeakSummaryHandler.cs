@@ -132,16 +132,16 @@ namespace STNServices2.Handlers
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         // return only approved list
-                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId && df.approval_id > 0).peak_summary;
+                        anEntity = sa.Select<data_file>().Include(df=>df.peak_summary).SingleOrDefault(df => df.data_file_id == dataFileId && df.approval_id > 0).peak_summary;
                     }
                     else
                     {
-                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId).peak_summary;
+                        anEntity = sa.Select<data_file>().Include(df => df.peak_summary).SingleOrDefault(df => df.data_file_id == dataFileId).peak_summary;
                     }
                     sm(sa.Messages);
                 }//end using
@@ -187,9 +187,9 @@ namespace STNServices2.Handlers
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<peak_summary>().Include(ps => ps.hwms).Include("data_file.instrument")
+                    entities = sa.Select<peak_summary>().Include(ps => ps.hwms).Include(ps=>ps.data_file).Include("data_file.instrument")
                         .Where(ps => ps.hwms.Any(hwm => hwm.site_id == siteId) || ps.data_file.Any(d => d.instrument.site_id == siteId)).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);

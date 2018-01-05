@@ -104,9 +104,9 @@ namespace STNServices2.Handlers
             try
             { 
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<events>().Where(e => e.hwms.Any(h => h.site_id == siteId) || e.instruments.Any(inst => inst.site_id == siteId)).ToList();
+                    entities = sa.Select<events>().Include(e=> e.hwms).Include(e=> e.instruments).Where(e => e.hwms.Any(h => h.site_id == siteId) || e.instruments.Any(inst => inst.site_id == siteId)).ToList();
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
@@ -125,9 +125,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<event_type>().FirstOrDefault(e => e.event_type_id == eventTypeId).events.ToList();
+                    entities = sa.Select<events>().Where(e => e.event_type_id == eventTypeId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
@@ -147,9 +147,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventStatusId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<event_status>().FirstOrDefault(e => e.event_status_id == eventStatusId).events.ToList();
+                    entities = sa.Select<events>().Where(e => e.event_status_id == eventStatusId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
@@ -168,9 +168,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(e => e.hwm_id == hwmId).@event;
+                    anEntity = sa.Select<hwm>().Include(h=>h.@event).FirstOrDefault(h => h.hwm_id == hwmId).@event;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -190,9 +190,9 @@ namespace STNServices2.Handlers
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument>().FirstOrDefault(e => e.instrument_id == instrumentId).@event;
+                    anEntity = sa.Select<instrument>().Include(i => i.@event).FirstOrDefault(i => i.instrument_id == instrumentId).@event;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
