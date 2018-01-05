@@ -140,7 +140,7 @@ namespace STNServices2.Handlers
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         if (sa.Select<site>().First(s => s.site_id == siteId) == null)
                             throw new NotFoundRequestException();
@@ -157,7 +157,7 @@ namespace STNServices2.Handlers
                             sm(sa.Messages);
                         }
                         //return list of network types
-                        networkNameList = sa.Select<network_name>().Where(nn => nn.network_name_site.Any(nns => nns.site_id == siteId)).ToList();
+                        networkNameList = sa.Select<network_name>().Include(nn => nn.network_name_site).Where(nn => nn.network_name_site.Any(nns => nns.site_id == siteId)).ToList();
                         
                     }//end using
                 }//end using

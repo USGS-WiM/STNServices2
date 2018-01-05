@@ -126,7 +126,6 @@ namespace STNServices2
         public static string verticalCollectMethodResource = "VerticalMethods";
         public static string verticalDatumResource = "VerticalDatums";
         #endregion
-
         public void Configure()
         {
             using (OpenRastaConfiguration.Manual)
@@ -141,7 +140,7 @@ namespace STNServices2
                 ResourceSpace.Uses.PipelineContributor<CrossDomainPipelineContributor>();
                 ResourceSpace.Uses.PipelineContributor<MessagePipelineContributor>();
                 ResourceSpace.Uses.PipelineContributor<STNHyperMediaPipelineContributor>();
-
+                #region ResourcesNames
                 AddAGENCY_Resources();
                 AddAPPROVAL_Resources();
                 AddCONTACT_Resources();
@@ -187,6 +186,7 @@ namespace STNServices2
                 AddVERTICAL_COLLECTION_METHOD_Resources();
                 AddVERTICAL_DATUM_Resources();
                 AddGEOCODER_Resources();
+                #endregion
             } //End using OpenRastaConfiguration.Manual
         }
         
@@ -201,7 +201,6 @@ namespace STNServices2
             .HandledBy<GeocoderHandler>()
             .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }
-
         private void AddAGENCY_Resources()
         {
             //GET "Agencies"
@@ -262,7 +261,6 @@ namespace STNServices2
                 .AtUri(contactResource + "/{entityId}")
              .And.AtUri(contactResource + "?ReportMetric={reportMetricsId}&ContactType={contactTypeId}").Named("GetReportMetricContactsByType")
              .And.AtUri(contactResource + "/{contactId}/removeReportContact?ReportId={reportMetricsId}").Named("RemoveReportContact")
-             //.And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={reportId}&ContactTypeId={contactTypeId}").Named("AddReportContact")
              .And.AtUri(reportMetricResource + "/{reportId}/addContactType/{contactTypeId}").Named("AddReportContact")
             .HandledBy<ContactHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -781,7 +779,7 @@ namespace STNServices2
             .And.AtUri(roleResource+"/{roleId}/" + memberResource).Named("GetRoleMembers")
             .HandledBy<MemberHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")            
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<member>()

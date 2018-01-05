@@ -616,7 +616,7 @@ namespace STNServices2.Handlers
                     //Get basic authentication password
                     using (EasySecureString securedPassword = GetSecuredPassword())
                     {
-                        using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                        using (STNAgent sa = new STNAgent(username, securedPassword))
                         {                            
                             //now remove existing fileItem for this file
                             if (uploadFile.file_id > 0)

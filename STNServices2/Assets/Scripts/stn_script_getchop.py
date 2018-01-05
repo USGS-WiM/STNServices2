@@ -205,7 +205,7 @@ if __name__ == '__main__':
         csv_dict['Exceptions'] = []
         csv_dict['Warnings'] = []
         csv_dict['Script start date'] = datetime.strftime(datetime.now(), '%m-%d-%Y %H:%M:%S')
-        csv_dict['Script Version'] = 'V 1.1'
+        csv_dict['Script Version'] = 'V 1.2'
         
         return csv_dict
         

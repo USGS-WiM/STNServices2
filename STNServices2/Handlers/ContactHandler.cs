@@ -103,9 +103,9 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        var rcontact = sa.Select<reportmetric_contact>().FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_type_id == contactTypeId);
+                        var rcontact = sa.Select<reportmetric_contact>().Include(rmc=> rmc.contact).FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_type_id == contactTypeId);
                         anEntity = rcontact != null ? rcontact.contact : null;
                         if (anEntity == null) throw new NotFoundRequestException(); 
                     }//end using
@@ -213,6 +213,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
         #endregion
+     
         #region PutMethods
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]

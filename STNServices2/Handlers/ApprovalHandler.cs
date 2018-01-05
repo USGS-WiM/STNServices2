@@ -260,16 +260,16 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
                         loggedInUserId = MemberList.First<member>().member_id;
 
-                        aDataFile = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId);
+                        aDataFile = sa.Select<data_file>().Include(df=> df.instrument).SingleOrDefault(df => df.data_file_id == dataFileId);
                         if (aDataFile == null) throw new BadRequestException("invalid datafileId");
 
                         //get event coordinator to set as approver for NWIS datafile
-                        member eventCoor = sa.Select<member>().FirstOrDefault(m => m.events.Any(e => e.event_id == aDataFile.instrument.event_id));
+                        member eventCoor = sa.Select<member>().Include(m => m.events).FirstOrDefault(m => m.events.Any(e => e.event_id == aDataFile.instrument.event_id));
                         if (eventCoor == null) throw new BadRequestException("invalid event coordinator");
 
                         //set time and user of approval
@@ -315,13 +315,13 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
                         loggedInUserId = MemberList.First<member>().member_id;
 
                         //fetch the object to be updated (assuming that it exists)
-                        anEntity = sa.Select<approval>().SingleOrDefault(appr => appr.approval_id == approvalId);
+                        anEntity = sa.Select<approval>().Include(a=> a.hwms).Include(a=> a.data_file).SingleOrDefault(appr => appr.approval_id == approvalId);
                         if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         
                         //remove id from HWM or DF

@@ -163,9 +163,9 @@ namespace STNServices2.Handlers
                 if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        entities = sa.Select<agency>().FirstOrDefault(a => a.agency_id == agencyId).members.ToList();
+                        entities = sa.Select<member>().Where(a => a.agency_id == agencyId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
@@ -187,9 +187,9 @@ namespace STNServices2.Handlers
                 if (roleId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        entities = sa.Select<role>().FirstOrDefault(a => a.role_id == roleId).members.ToList();
+                        entities = sa.Select<member>().Where(m => m.role_id == roleId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
@@ -238,9 +238,9 @@ namespace STNServices2.Handlers
                 if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<approval>().FirstOrDefault(e => e.approval_id == ApprovalId).member;
+                        anEntity = sa.Select<approval>().Include(a=> a.member).FirstOrDefault(e => e.approval_id == ApprovalId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
@@ -264,9 +264,9 @@ namespace STNServices2.Handlers
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<data_file>().FirstOrDefault(e => e.data_file_id == dataFileId).member;
+                        anEntity = sa.Select<data_file>().Include(e=> e.member).FirstOrDefault(e => e.data_file_id == dataFileId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
@@ -290,9 +290,9 @@ namespace STNServices2.Handlers
                 if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<peak_summary>().FirstOrDefault(e => e.peak_summary_id == peakSummaryId).member;
+                        anEntity = sa.Select<peak_summary>().Include(e=> e.member).FirstOrDefault(e => e.peak_summary_id == peakSummaryId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using

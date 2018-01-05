@@ -285,7 +285,7 @@ if __name__ == '__main__':
     csv_dict['Warnings'] = []
     csv_dict['Status'] = 'pending'
     csv_dict['Script start date'] = datetime.strftime(datetime.now(), '%m-%d-%Y %H:%M:%S')
-    csv_dict['Script Version'] = 'v 1.1'
+    csv_dict['Script Version'] = 'v 1.2'
     
     
     csv_dict['Data Start Date/time'] = datetime.strftime(datetime.strptime(args['good_start_date'],'%Y%m%d %H%M'), '%m-%d-%Y %H:%M:%S')

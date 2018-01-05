@@ -32,6 +32,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -109,9 +110,9 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
+                        mlandownercontact = sa.Select<site>().Include(s=> s.landownercontact).FirstOrDefault(i => i.site_id == siteId).landownercontact;
                         if (mlandownercontact == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }

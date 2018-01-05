@@ -102,9 +102,9 @@ namespace STNServices2.Handlers
                 if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        entities = sa.Select<agency>().FirstOrDefault(i => i.agency_id == agencyId).sources.ToList();
+                        entities = sa.Select<source>().Where(i => i.agency_id == agencyId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count()); 
                         sm(sa.Messages);
                     }//end using

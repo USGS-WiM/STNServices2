@@ -124,6 +124,7 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
         #endregion
+     
         #region PostMethods
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST)]
@@ -131,7 +132,8 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || 
+                    !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
