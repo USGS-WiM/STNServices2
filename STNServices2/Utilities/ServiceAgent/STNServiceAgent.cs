@@ -192,7 +192,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 }
 
                 //delete directory
-                Directory.Delete(combinedPath, true);
+          //      Directory.Delete(combinedPath, true);
 
                 return true;
             }
@@ -200,6 +200,11 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 Directory.Delete(combinedPath, true); // delete the directory either way since output.csv should specify errors and client needs to know when complete
                 throw new Exception(ex.Message);
+            }
+            finally
+            {
+                //delete directory
+                Directory.Delete(combinedPath, true);
             }
         }
         
@@ -311,7 +316,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 }
 
                 //delete directory
-                Directory.Delete(combinedPath, true);
+           //     Directory.Delete(combinedPath, true);
 
                 return true;
             }
@@ -319,6 +324,11 @@ namespace STNServices2.Utilities.ServiceAgent
             {
                 Directory.Delete(combinedPath, true); // delete the directory either way since output.csv should specify errors and client needs to know when complete
                 throw new Exception(ex.Message);
+            }
+            finally
+            {
+                //delete directory
+                Directory.Delete(combinedPath, true);
             }
         }
         
