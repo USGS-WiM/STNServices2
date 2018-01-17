@@ -17,16 +17,16 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public deployment_type()
         {
-            this.instruments = new HashSet<instrument>();
             this.sensor_deployment = new HashSet<sensor_deployment>();
+            this.instruments = new HashSet<instrument>();
         }
     
         public int deployment_type_id { get; set; }
         public string method { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<instrument> instruments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<sensor_deployment> sensor_deployment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<instrument> instruments { get; set; }
     }
 }

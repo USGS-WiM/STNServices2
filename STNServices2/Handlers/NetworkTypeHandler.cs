@@ -37,6 +37,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -88,9 +89,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<network_type_site>().Where(nt => nt.site_id == siteId).Select(nt => nt.network_type).ToList();
+                    entities = sa.Select<network_type_site>().Include(n => n.network_type).Include(n => n.site).Where(nt => nt.site_id == siteId).Select(nt => nt.network_type).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
@@ -136,7 +137,7 @@ namespace STNServices2.Handlers
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         if (sa.Select<site>().First(s => s.site_id == siteId) == null)
                             throw new NotFoundRequestException();
@@ -153,7 +154,7 @@ namespace STNServices2.Handlers
                             sm(sa.Messages);
                         }
                         //return list of network types
-                        networkTypeList = sa.Select<network_type>().Where(nn => nn.network_type_site.Any(nns => nns.site_id == siteId)).ToList();
+                        networkTypeList = sa.Select<network_type>().Include(nn=> nn.network_type_site).Where(nn => nn.network_type_site.Any(nns => nns.site_id == siteId)).ToList();
                         
                     }//end using
                 }//end using

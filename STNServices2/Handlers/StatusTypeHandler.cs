@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -50,7 +51,6 @@ namespace STNServices2.Handlers
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
-
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
@@ -59,10 +59,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -86,10 +82,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetInstrumentStatusStatus")]
@@ -100,9 +92,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (instrumentStatusId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument_status>().FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).status_type;
+                    anEntity = sa.Select<instrument_status>().Include(i=>i.status_type).FirstOrDefault(i => i.instrument_status_id == instrumentStatusId).status_type;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using

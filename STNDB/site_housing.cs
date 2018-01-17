@@ -21,6 +21,8 @@ namespace STNDB
         public string material { get; set; }
         public string notes { get; set; }
         public Nullable<double> amount { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual site site { get; set; }
     }

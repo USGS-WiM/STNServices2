@@ -60,6 +60,7 @@ using STNServices2.Utilities.ServiceAgent;
 using WiM.Exceptions;
 using WiM.Resources;
 using WiM.Security;
+using System.Drawing;
 
 namespace STNServices2.Handlers
 {
@@ -67,7 +68,6 @@ namespace STNServices2.Handlers
     public class FileHandler : STNHandlerBase
     {
         #region GetMethods
-
         [HttpOperation(HttpMethod.GET)]
         public OperationResult Get()
         {
@@ -127,6 +127,33 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetTESTdataFile")]
+        public OperationResult GetTESTdataFile()
+        {
+            InMemoryFile fileItem;
+            dynamic files;
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    fileItem = sa.GetTESTdataItem();
+                    using (var fileStream = fileItem.OpenStream())
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        string json = reader.ReadToEnd();
+                        files = JsonConvert.DeserializeObject(json);
+                    }
+
+                    sm(sa.Messages);
+                }//end using
+                return new OperationResult.OK { ResponseResource = files, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }
+
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFileItem")]
         public OperationResult GetFileItem(Int32 fileId)
         {
@@ -143,6 +170,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new BadRequestException("No file exists for given parameter");
 
                     fileItem = sa.GetFileItem(anEntity);
+                    
                     sm(sa.Messages);
                 }//end using
 
@@ -151,7 +179,7 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }
-    
+
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilesByDateRange")]
         public OperationResult Get(string fromDate, [Optional] string toDate)
         {
@@ -301,6 +329,7 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
                 }//end using
 
+                // this will always only contain 1 file file:datafile relationship is 1:1
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
@@ -465,7 +494,7 @@ namespace STNServices2.Handlers
             try
             {
                 if (string.IsNullOrEmpty(stateName)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     entities = sa.Select<file>().Include("hwm.site").Include("instrument.site").Include("data_file.instrument.site").Where(
                                     f => f.hwm.site.state.ToUpper() == stateName.ToUpper() || 
@@ -491,6 +520,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(file anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             { 
                 if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0)
@@ -500,6 +530,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<file>(anEntity);
                         sm(sa.Messages);
                     }//end using
@@ -580,13 +616,20 @@ namespace STNServices2.Handlers
                     //Get basic authentication password
                     using (EasySecureString securedPassword = GetSecuredPassword())
                     {
-                        using (STNAgent sa = new STNAgent(username, securedPassword, true))
-                        {
+                        using (STNAgent sa = new STNAgent(username, securedPassword))
+                        {                            
                             //now remove existing fileItem for this file
                             if (uploadFile.file_id > 0)
                                 sa.RemoveFileItem(uploadFile);
-                            
+                         
+                            //last updated parts
+                            List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                            Int32 loggedInUserId = MemberList.First<member>().member_id;
+                            uploadFile.last_updated = DateTime.Now;
+                            uploadFile.last_updated_by = loggedInUserId;
+
                             uploadFile.name = filename;
+                            
                             //are they 'reuploading lost fileItem to existing file or posting new fileItem with new file
                             if (uploadFile.file_id > 0)
                                 sa.PutFileItem(uploadFile, memoryStream);
@@ -603,6 +646,79 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }//end catch
         }//end HttpMethod.POST
         
+        
+        [HttpOperation(HttpMethod.POST, ForUriName = "RunChopperScript")]
+        public OperationResult RunChopperScript(IEnumerable<IMultipartHttpEntity> entities)
+        {
+            dynamic responseJson = null;           
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    String filename = "";
+                    XmlSerializer serializer;
+                    file uploadFile = null;
+
+                    foreach (var entity in entities)
+                    {
+                        //Process Stream
+                        if (!entity.Headers.ContentDisposition.Disposition.ToLower().Equals("form-data"))
+                            return new OperationResult.BadRequest { ResponseResource = "Sent a field that is not declared as form-data, cannot process" };
+
+                        if (entity.Stream != null && entity.ContentType != null)
+                        {
+                            //Process Stream
+                            if (entity.Headers.ContentDisposition.Name.Equals("File"))
+                            {
+                                entity.Stream.CopyTo(memoryStream);
+                                filename = entity.Headers.ContentDisposition.FileName;
+                            }
+                        }
+                        else
+                        {
+                            //Process Variables
+                            if (entity.Headers.ContentDisposition.Name.Equals("FileEntity"))
+                            {
+                                var mem = new MemoryStream();
+                                entity.Stream.CopyTo(mem);
+                                mem.Position = 0;
+                                try
+                                {
+                                    serializer = new XmlSerializer(typeof(file));
+                                    uploadFile = (file)serializer.Deserialize(mem);
+                                }
+                                catch
+                                {
+                                    mem.Position = 0;
+                                    JsonSerializer jsonSerializer = new JsonSerializer();
+                                    using (StreamReader streamReader = new StreamReader(mem, new UTF8Encoding(false, true)))
+                                    {
+                                        using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                                        {
+                                            uploadFile = (file)jsonSerializer.Deserialize(jsonTextReader, typeof(file));
+                                        }
+                                    }//end using
+                                } //end catch
+                            } //end if FileEntity
+                        }//end else
+                    }//next
+
+                    //Return BadRequest if missing required fields
+                    if (uploadFile.instrument_id <= 0 || uploadFile.site_id <= 0)
+                        throw new BadRequestException("Invalid input parameters");
+
+                    STNServiceAgent stnsa = new STNServiceAgent(uploadFile.instrument_id.Value, memoryStream, filename);
+                    if (stnsa.chopperInitialized)
+                        responseJson = stnsa.RunChopperScript();
+                    else
+                        throw new BadRequestException("Error initializing python script.");
+                } //end using memoryStream
+                return new OperationResult.OK { ResponseResource = responseJson };
+            }//end try
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+    
         #endregion
 
         #region PutMethods
@@ -613,7 +729,8 @@ namespace STNServices2.Handlers
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, file anEntity)
-        {            
+        {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (anEntity.filetype_id <= 0 || !anEntity.file_date.HasValue || anEntity.site_id <= 0) throw new BadRequestException("Invalid input parameters");
@@ -622,6 +739,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<file>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using
@@ -678,5 +801,8 @@ namespace STNServices2.Handlers
         }//end HTTP.DELETE
         #endregion
 
+        #region helpers
+       
+        #endregion
     }//end class FileHandler
 }//end namespace

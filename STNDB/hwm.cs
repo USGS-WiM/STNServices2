@@ -49,21 +49,23 @@ namespace STNDB
         public Nullable<double> uncertainty { get; set; }
         public Nullable<double> hwm_uncertainty { get; set; }
         public string hwm_label { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
+        public virtual horizontal_datums horizontal_datums { get; set; }
+        public virtual vertical_collect_methods vertical_collect_methods { get; set; }
+        public virtual horizontal_collect_methods horizontal_collect_methods { get; set; }
         public virtual hwm_types hwm_types { get; set; }
         public virtual hwm_qualities hwm_qualities { get; set; }
-        public virtual marker marker { get; set; }
-        public virtual vertical_datums vertical_datums { get; set; }
-        public virtual approval approval { get; set; }
         public virtual events @event { get; set; }
-        public virtual site site { get; set; }
         public virtual peak_summary peak_summary { get; set; }
+        public virtual member survey_member { get; set; }
+        public virtual marker marker { get; set; }
+        public virtual approval approval { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<file> files { get; set; }
-        public virtual horizontal_datums horizontal_datums { get; set; }
-        public virtual horizontal_collect_methods horizontal_collect_methods { get; set; }
-        public virtual vertical_collect_methods vertical_collect_methods { get; set; }
-        public virtual member survey_member { get; set; }
+        public virtual site site { get; set; }
+        public virtual vertical_datums vertical_datums { get; set; }
         public virtual member flag_member { get; set; }
     }
 }

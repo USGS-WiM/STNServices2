@@ -32,6 +32,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -109,9 +110,9 @@ namespace STNServices2.Handlers
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword,true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        mlandownercontact = sa.Select<site>().FirstOrDefault(i => i.site_id == siteId).landownercontact;
+                        mlandownercontact = sa.Select<site>().Include(s=> s.landownercontact).FirstOrDefault(i => i.site_id == siteId).landownercontact;
                         if (mlandownercontact == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }
@@ -139,6 +140,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<landownercontact>(anEntity);
                         sm(sa.Messages);
 
@@ -169,6 +176,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<landownercontact>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

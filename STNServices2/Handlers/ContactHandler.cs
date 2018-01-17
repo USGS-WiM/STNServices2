@@ -77,7 +77,8 @@ namespace STNServices2.Handlers
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         anEntity = sa.Select<contact>().SingleOrDefault(rp => rp.contact_id == entityId);
-                        if (anEntity == null) throw new NotFoundRequestException(); 
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                         sm(sa.Messages);
                     }//end using
                 }
@@ -102,9 +103,9 @@ namespace STNServices2.Handlers
                 //Get basic authentication password
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        var rcontact = sa.Select<reportmetric_contact>().FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_type_id == contactTypeId);
+                        var rcontact = sa.Select<reportmetric_contact>().Include(rmc=> rmc.contact).FirstOrDefault(rmc => rmc.reporting_metrics_id == reportMetricsId && rmc.contact_type_id == contactTypeId);
                         anEntity = rcontact != null ? rcontact.contact : null;
                         if (anEntity == null) throw new NotFoundRequestException(); 
                     }//end using
@@ -154,70 +155,18 @@ namespace STNServices2.Handlers
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
-        
-        // not finding this in config file anywhere .. even previous version
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.GET, ForUriName = "GetContactTypeContact")]
-        //public OperationResult GetContactTypeContacts(Int32 contactTypeId)
-        //{
-        //    List<contact> entities = new List<contact>();
 
-        //    //Get basic authentication password
-        //    try
-        //    {
-        //        //Get basic authentication password
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNAgent sa = new STNAgent(username, securedPassword))
-        //            {
-        //                entities = sa.Select<contact_type>().FirstOrDefault(ct => ct.contact_type_id == contactTypeId)
-        //                                                        .reportmetric_contact.Select(c=>c.contact).ToList();
-        //                sm(sa.Messages);
-        //            }//end using
-        //        }
-
-        //        return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
-        //    }
-        //    catch (Exception ex)
-        //    { return HandleException(ex); }
-
-        //}//end HttpMethod.GET
         #endregion
-       
+
         #region PostMethods
-
-        //[STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
-        //[HttpOperation(HttpMethod.POST)]
-        //public OperationResult Post(contact anEntity)
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
-        //            throw new BadRequestException("Invalid input parameters");
-        //        using (EasySecureString securedPassword = GetSecuredPassword())
-        //        {
-        //            using (STNAgent sa = new STNAgent(username, securedPassword))
-        //            {
-        //                anEntity = sa.Add<contact>(anEntity);
-        //                sm(sa.Messages);
-
-        //            }//end using
-        //        }//end using
-
-        //        return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
-        //    }
-        //    catch (Exception ex)
-        //    { return HandleException(ex); }
-
-        //}//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST, ForUriName = "AddReportContact")]
         public OperationResult AddReportContact(contact anEntity, Int32 contactTypeId, Int32 reportId)
         {
-
             reportmetric_contact newRepContact = null;
             contact thisContact = null;
+            Int32 loggedInUserId = 0;
             try
             {
                 if (contactTypeId <= 0 || reportId <= 0 || string.IsNullOrEmpty(anEntity.fname) || 
@@ -229,10 +178,15 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        
                         //check if valid Contact Type
                         if (sa.Select<contact_type>().First(s => s.contact_type_id == contactTypeId) == null) throw new NotFoundRequestException();                        
                         if (sa.Select<reporting_metrics>().First(rm => rm.reporting_metrics_id == reportId) == null) throw new NotFoundRequestException();
-
+                        // last_updated parts
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
                         //save the contact (if already exists, will return it
                         thisContact = sa.Add<contact>(anEntity);
 
@@ -244,10 +198,13 @@ namespace STNServices2.Handlers
                             newRepContact.reporting_metrics_id = reportId;
                             newRepContact.contact_type_id = contactTypeId;
                             newRepContact.contact_id = thisContact.contact_id;
+                            // last_updated parts
+                            newRepContact.last_updated = DateTime.Now;
+                            newRepContact.last_updated_by = loggedInUserId;
                             newRepContact = sa.Add<reportmetric_contact>(newRepContact);
                             sm(sa.Messages);
                         }//end if
-                        //thisContact = sa.Select<contact>().FirstOrDefault(c => c.contact_id == contactId);
+                        
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = thisContact, Description = this.MessageString };
@@ -256,25 +213,29 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }
         #endregion
+     
         #region PutMethods
 
-        /// 
-        /// Force the user to provide authentication and authorization 
-        ///
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, contact anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
-                if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || 
-                    string.IsNullOrEmpty(anEntity.phone))
+                if (entityId <=0 || string.IsNullOrEmpty(anEntity.fname) || string.IsNullOrEmpty(anEntity.lname) || string.IsNullOrEmpty(anEntity.phone))
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<contact>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

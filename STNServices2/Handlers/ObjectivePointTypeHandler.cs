@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -50,19 +51,13 @@ namespace STNServices2.Handlers
 
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
-
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -79,17 +74,12 @@ namespace STNServices2.Handlers
                     sm(sa.Messages);
 
                 }//end using
-
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetObjectivePointOPType")]
@@ -100,9 +90,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<objective_point>().FirstOrDefault(i => i.objective_point_id == objectivePointId).objective_point_type;
+                    anEntity = sa.Select<objective_point>().Include(o=> o.objective_point_type).FirstOrDefault(o => o.objective_point_id == objectivePointId).objective_point_type;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using

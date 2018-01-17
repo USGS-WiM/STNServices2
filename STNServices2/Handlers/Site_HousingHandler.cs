@@ -123,6 +123,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<site_housing>(anEntity);
                         sm(sa.Messages);
 
@@ -153,6 +159,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<site_housing>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

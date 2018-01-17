@@ -26,6 +26,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Data.Entity;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -36,6 +37,7 @@ using STNDB;
 using WiM.Exceptions;
 using WiM.Resources;
 using WiM.Security;
+using System.Configuration;
 
 namespace STNServices2.Handlers
 {
@@ -77,12 +79,8 @@ namespace STNServices2.Handlers
                 {              
                     
                     anEntity = sa.Select<site>().FirstOrDefault(e => e.site_id == entityId);
-
-                    if (anEntity == null)
-                        throw new NotFoundRequestException();
-                    
+                    if (anEntity == null) throw new NotFoundRequestException();                    
                     sm(sa.Messages);
-
                 }//end using
 
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
@@ -227,7 +225,38 @@ namespace STNServices2.Handlers
                 return HandleException(ex);
             }
         }
- 
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetSitesWithoutPeaks")]
+        public OperationResult GetPeaklessSites(Int32 eventId)
+        {
+            List<site> entities = null;
+
+            try
+            {
+                if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {                
+                    // all sites with hwms but none of them have a peak for this eventId
+                    IQueryable<site> hwmSList = sa.Select<site>().Include(s => s.hwms)
+                        .Where(s => s.hwms.Any(h => (h.peak_summary_id <= 0 || !h.peak_summary_id.HasValue) && h.event_id == eventId));
+
+                    // all sites with sensors that have data files but none of them have a peak for this event
+                    IQueryable<site> dfSList = sa.Select<site>().Include(s => s.instruments).Include("instruments.data_files")
+                        .Where(s => s.instruments.Any(i => i.data_files.Any(d => (d.peak_summary_id <= 0 || !d.peak_summary_id.HasValue) && i.event_id == eventId)));
+
+                    // join them and remove duplicates
+                    entities = hwmSList.Union(dfSList).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         [HttpOperation(HttpMethod.GET, ForUriName = "GetEventSites")]
         public OperationResult GetEventSites(Int32 eventId)
         {
@@ -238,7 +267,7 @@ namespace STNServices2.Handlers
                 if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {                
-                    entities = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Where(s => s.instruments.Any(i => i.event_id == eventId) || s.hwms.Any(h => h.event_id == eventId)).ToList();
+                    entities = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Where(s => s.instruments.Any(i => i.event_id == eventId) || s.hwms.Any(h => h.event_id == eventId)).ToList();                    
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }
@@ -413,10 +442,11 @@ namespace STNServices2.Handlers
                 Boolean sensorOnly = (!string.IsNullOrEmpty(sensorOnlySites) && Convert.ToInt32(sensorOnlySites) > 0) ? true : false;
                 Boolean rdgOnly = (!string.IsNullOrEmpty(rdgOnlySites) && Convert.ToInt32(rdgOnlySites) > 0) ? true : false;
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include(s => s.hwms).Include(s => s.objective_points).Include("network_name_site.network_name").Include(s => s.site_housing)
-                        .Include("hwms.event").Include("instruments.event");
+                    IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include("instruments.event")
+                        .Include(s => s.hwms).Include("hwms.event").Include(s => s.objective_points)
+                        .Include(s=>s.network_name_site).Include("network_name_site.network_name").Include(s => s.site_housing);
 
                     if (filterEvent > 0)
                         query = query.Where(s => s.instruments.Any(i =>i.event_id == filterEvent) || s.hwms.Any(h => h.event_id == filterEvent));
@@ -493,12 +523,12 @@ namespace STNServices2.Handlers
                                 other_sid = s.other_sid,
                                 noaa_sid = s.noaa_sid,
                                 hcollect_method_id = s.hcollect_method_id,
-                                site_notes = s.site_notes,
+                               // site_notes = s.site_notes,  should this be removed?? (Internal)
                                 safety_notes = s.safety_notes,
                                 access_granted = s.access_granted,
                                 member_id = s.member_id,
                                 networkNames = s.network_name_site.Count > 0 ? s.network_name_site.Where(ns => ns.site_id == s.site_id).Select(x => x.network_name.name).Distinct().ToList() : new List<string>(),
-                                RecentOP = getRecentOP(s),// s.objective_points.Count > 0 ? s.objective_points.OrderByDescending(x => x.date_established).FirstOrDefault() : null,
+                                RecentOP = getRecentOP(s),
                                 Events = getSiteEvents(s)
                             }).ToList();
                 }//end using
@@ -512,6 +542,37 @@ namespace STNServices2.Handlers
 
         }//end HttpMethod.Get
        
+        [HttpOperation(HttpMethod.GET, ForUriName="GetDataFileScript")]
+        public OperationResult GetDataFileScript(Int32 entityId)
+        {
+            string isRunning = "false";
+            try
+            {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
+                using (STNAgent sa = new STNAgent())
+                {
+                    string path1 = ConfigurationManager.AppSettings["STNRepository"].ToString(); 
+                    string path2 = entityId.ToString();
+                    string combinedPath = System.IO.Path.Combine(path1);
+                    
+                    string[] subdirs = Directory.GetDirectories(combinedPath, path2+"*");
+
+                    if (subdirs.Length > 0)
+                        isRunning = "true";
+                    else
+                        isRunning = "false";
+
+                    sm(sa.Messages);
+
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = isRunning, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
         #endregion
 
         #region PostMethods
@@ -541,6 +602,12 @@ namespace STNServices2.Handlers
                             throw new BadRequestException("Lat/Long already exists");
 
                         //aSite.STATE = this.GetStateByName(aSite.STATE).ToString();
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<site>(anEntity);                       
 
                         anEntity.site_no = buildSiteNO(sa, anEntity.state, anEntity.county, Convert.ToInt32(anEntity.site_id), anEntity.site_name);
@@ -584,7 +651,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        //no duplicate lat/longs allowed
+                        //no duplicate lat/longs allowed (just this one)
                         List<site> query = sa.Select<site>().Where(s => s.latitude_dd == anEntity.latitude_dd && s.longitude_dd == anEntity.longitude_dd).ToList();
                         if (query.Count > 1)
                             throw new BadRequestException("Lat/Long already exists");
@@ -621,7 +688,13 @@ namespace STNServices2.Handlers
                         updatedSite.access_granted = anEntity.access_granted;
                         updatedSite.member_id = anEntity.member_id;
                         updatedSite.sensor_not_appropriate = anEntity.sensor_not_appropriate;
-          
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        updatedSite.last_updated = DateTime.Now;
+                        updatedSite.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<site>(entityId, updatedSite);
                         sm(sa.Messages);                         
                     }//end using

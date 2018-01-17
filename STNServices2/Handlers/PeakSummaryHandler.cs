@@ -114,7 +114,6 @@ namespace STNServices2.Handlers
                     {
                         anEntity = sa.Select<hwm>().Include(i => i.peak_summary).FirstOrDefault(i => i.hwm_id == hwmId).peak_summary;
                     }
-                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
@@ -133,18 +132,17 @@ namespace STNServices2.Handlers
             {
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         // return only approved list
-                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId && df.approval_id > 0).peak_summary;
+                        anEntity = sa.Select<data_file>().Include(df=>df.peak_summary).SingleOrDefault(df => df.data_file_id == dataFileId && df.approval_id > 0).peak_summary;
                     }
                     else
                     {
-                        anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == dataFileId).peak_summary;
+                        anEntity = sa.Select<data_file>().Include(df => df.peak_summary).SingleOrDefault(df => df.data_file_id == dataFileId).peak_summary;
                     }
-                    if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
 
@@ -189,9 +187,9 @@ namespace STNServices2.Handlers
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<peak_summary>().Include(ps => ps.hwms).Include("data_file.instrument")
+                    entities = sa.Select<peak_summary>().Include(ps => ps.hwms).Include(ps=>ps.data_file).Include("data_file.instrument")
                         .Where(ps => ps.hwms.Any(hwm => hwm.site_id == siteId) || ps.data_file.Any(d => d.instrument.site_id == siteId)).ToList();
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
@@ -314,7 +312,6 @@ namespace STNServices2.Handlers
                             zone = globalPeakSite.zone,
                             horizontal_collection_method = globalPeakSite.horizontal_collect_methods != null ? globalPeakSite.horizontal_collect_methods.hcollect_method : "",
                             perm_housing_installed = globalPeakSite.is_permanent_housing_installed == null || globalPeakSite.is_permanent_housing_installed == "No" ? "No" : "Yes"
-                         //   site_notes = globalPeakSite.site_notes
                         }).ToList<peak_summary>();
 
                     sm(MessageType.info, "Count: " + entities.Count());
@@ -348,6 +345,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<peak_summary>(anEntity);
                         sm(sa.Messages);
 
@@ -377,6 +380,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<peak_summary>(anEntity);
                         sm(sa.Messages);
                     }//end using

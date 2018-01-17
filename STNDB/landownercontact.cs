@@ -31,6 +31,8 @@ namespace STNDB
         public string secondaryphone { get; set; }
         public string email { get; set; }
         public string title { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<site> sites { get; set; }

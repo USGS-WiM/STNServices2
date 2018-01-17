@@ -32,12 +32,14 @@ namespace STNDB
         public Nullable<int> peak_summary_id { get; set; }
         public string elevation_status { get; set; }
         public string time_zone { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         public virtual instrument instrument { get; set; }
-        public virtual approval approval { get; set; }
         public virtual peak_summary peak_summary { get; set; }
+        public virtual member member { get; set; }
+        public virtual approval approval { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<file> files { get; set; }
-        public virtual member member { get; set; }
     }
 }

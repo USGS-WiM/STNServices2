@@ -86,10 +86,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName="GetHWMMarker")]
@@ -99,10 +95,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().Include(e=>e.marker).FirstOrDefault(e => e.hwm_id == hwmId).marker;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    anEntity = sa.Select<hwm>().Include(h=>h.marker).FirstOrDefault(h => h.hwm_id == hwmId).marker;
                     sm(sa.Messages);
 
                 }//end using

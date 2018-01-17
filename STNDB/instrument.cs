@@ -35,19 +35,21 @@ namespace STNDB
         public Nullable<int> housing_type_id { get; set; }
         public Nullable<int> sensor_brand_id { get; set; }
         public string vented { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
-        public virtual site site { get; set; }
+        public virtual instr_collection_conditions instr_collection_conditions { get; set; }
+        public virtual sensor_brand sensor_brand { get; set; }
         public virtual sensor_type sensor_type { get; set; }
+        public virtual housing_type housing_type { get; set; }
         public virtual deployment_type deployment_type { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<instrument_status> instrument_status { get; set; }
-        public virtual events @event { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<data_file> data_files { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<file> files { get; set; }
-        public virtual instr_collection_conditions instr_collection_conditions { get; set; }
-        public virtual housing_type housing_type { get; set; }
-        public virtual sensor_brand sensor_brand { get; set; }
+        public virtual events @event { get; set; }
+        public virtual site site { get; set; }
     }
 }

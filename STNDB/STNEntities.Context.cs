@@ -25,11 +25,11 @@ namespace STNDB
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<county> counties { get; set; }
         public virtual DbSet<agency> agencies { get; set; }
         public virtual DbSet<approval> approvals { get; set; }
         public virtual DbSet<contact> contacts { get; set; }
         public virtual DbSet<contact_type> contact_type { get; set; }
-        public virtual DbSet<county> counties { get; set; }
         public virtual DbSet<data_file> data_file { get; set; }
         public virtual DbSet<deployment_priority> deployment_priority { get; set; }
         public virtual DbSet<deployment_type> deployment_type { get; set; }
@@ -49,6 +49,7 @@ namespace STNDB
         public virtual DbSet<instrument_status> instrument_status { get; set; }
         public virtual DbSet<landownercontact> landownercontacts { get; set; }
         public virtual DbSet<marker> markers { get; set; }
+        public virtual DbSet<member> members { get; set; }
         public virtual DbSet<network_name> network_name { get; set; }
         public virtual DbSet<network_name_site> network_name_site { get; set; }
         public virtual DbSet<network_type> network_type { get; set; }
@@ -61,7 +62,7 @@ namespace STNDB
         public virtual DbSet<peak_summary> peak_summary { get; set; }
         public virtual DbSet<reporting_metrics> reporting_metrics { get; set; }
         public virtual DbSet<reportmetric_contact> reportmetric_contact { get; set; }
-        public virtual DbSet<role> roles { get; set; }
+        public virtual DbSet<role> role { get; set; }
         public virtual DbSet<sensor_brand> sensor_brand { get; set; }
         public virtual DbSet<sensor_deployment> sensor_deployment { get; set; }
         public virtual DbSet<sensor_type> sensor_type { get; set; }
@@ -72,6 +73,5 @@ namespace STNDB
         public virtual DbSet<status_type> status_type { get; set; }
         public virtual DbSet<vertical_collect_methods> vertical_collect_methods { get; set; }
         public virtual DbSet<vertical_datums> vertical_datums { get; set; }
-        public virtual DbSet<member> members { get; set; }
     }
 }

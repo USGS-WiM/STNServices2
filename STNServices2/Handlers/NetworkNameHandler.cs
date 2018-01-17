@@ -39,6 +39,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -90,9 +91,10 @@ namespace STNServices2.Handlers
             try
             {
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<network_name_site>().Where(nns => nns.site_id == siteId).Select(nn => nn.network_name).ToList();
+
+                    entities = sa.Select<network_name_site>().Include(n => n.network_name).Include(n => n.site).Where(nns => nns.site_id == siteId).Select(nn => nn.network_name).ToList();
                     sm(MessageType.info, "Count: " + entities.Count()); 
                     sm(sa.Messages);
                 }//end using
@@ -138,7 +140,7 @@ namespace STNServices2.Handlers
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
                         if (sa.Select<site>().First(s => s.site_id == siteId) == null)
                             throw new NotFoundRequestException();
@@ -155,7 +157,7 @@ namespace STNServices2.Handlers
                             sm(sa.Messages);
                         }
                         //return list of network types
-                        networkNameList = sa.Select<network_name>().Where(nn => nn.network_name_site.Any(nns => nns.site_id == siteId)).ToList();
+                        networkNameList = sa.Select<network_name>().Include(nn => nn.network_name_site).Where(nn => nn.network_name_site.Any(nns => nns.site_id == siteId)).ToList();
                         
                     }//end using
                 }//end using
@@ -196,6 +198,7 @@ namespace STNServices2.Handlers
         {
             try
             {
+                if (entityId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))

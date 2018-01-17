@@ -75,11 +75,11 @@ namespace STNServices2.Handlers
                 if (string.IsNullOrEmpty(entityId)) throw new BadRequestException("Invalid input parameters");
                 using (STNAgent sa = new STNAgent())
                 {
-
+                    // why is this get so complicated, instead of just passing in Int32 eventId and getting it based on that??
                     anEntity = sa.Select<events>().FirstOrDefault(e => String.Equals(e.event_id.ToString().Trim().ToLower(), entityId.Trim().ToLower()) || 
                         String.Equals(e.event_name.Trim().Replace(" ", "").ToLower(), entityId.Trim().ToLower()));
 
-                    if (anEntity == null) throw new NotFoundRequestException();
+                    if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                     sm(sa.Messages);
 
                 }//end using
@@ -104,9 +104,9 @@ namespace STNServices2.Handlers
             try
             { 
                 if (siteId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<events>().Where(e => e.hwms.Any(h => h.site_id == siteId) || e.instruments.Any(inst => inst.site_id == siteId)).ToList();
+                    entities = sa.Select<events>().Include(e=> e.hwms).Include(e=> e.instruments).Where(e => e.hwms.Any(h => h.site_id == siteId) || e.instruments.Any(inst => inst.site_id == siteId)).ToList();
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
@@ -125,9 +125,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventTypeId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<event_type>().FirstOrDefault(e => e.event_type_id == eventTypeId).events.ToList();
+                    entities = sa.Select<events>().Where(e => e.event_type_id == eventTypeId).ToList();
 
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
@@ -147,9 +147,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (eventStatusId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<event_status>().FirstOrDefault(e => e.event_status_id == eventStatusId).events.ToList();
+                    entities = sa.Select<events>().Where(e => e.event_status_id == eventStatusId).ToList();
                     sm(MessageType.info, "Count: " + entities.Count);
                     sm(sa.Messages);
                 }//end using
@@ -168,9 +168,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (hwmId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<hwm>().FirstOrDefault(e => e.hwm_id == hwmId).@event;
+                    anEntity = sa.Select<hwm>().Include(h=>h.@event).FirstOrDefault(h => h.hwm_id == hwmId).@event;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -190,9 +190,9 @@ namespace STNServices2.Handlers
             {
                 if (instrumentId <= 0) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<instrument>().FirstOrDefault(e => e.instrument_id == instrumentId).@event;
+                    anEntity = sa.Select<instrument>().Include(i => i.@event).FirstOrDefault(i => i.instrument_id == instrumentId).@event;
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
@@ -231,9 +231,7 @@ namespace STNServices2.Handlers
                     //in this state only
                     if (!string.IsNullOrEmpty(stateName))
                     {
-                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));
-                    //    query = query.Where(e => e.instruments.Any(i => i.site.state == stateName));
-                    //    query = query.Where(e => e.hwms.Any(h => h.site.state == stateName));
+                        query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));                    
                     }
                     entities = query.Distinct().ToList();
                 }
@@ -251,6 +249,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult POST(events anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (string.IsNullOrEmpty(anEntity.event_name)|| anEntity.event_type_id <=0 || 
@@ -261,6 +260,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<events>(anEntity);
                         sm(sa.Messages);
 
@@ -282,6 +287,7 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, events anEntity)
         {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (entityId <=0||string.IsNullOrEmpty(anEntity.event_name) || anEntity.event_id <= 0 ||
@@ -291,6 +297,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last_updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<events>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

@@ -63,6 +63,7 @@ using STNServices2.Handlers;
 using STNServices2.PipeLineContributors;
 using STNServices2.Security;
 using STNServices2.Resources;
+using STNServices2.Codecs.xml;
 using STNServices2.Codecs.json;
 
 using OpenRasta.Configuration;
@@ -125,7 +126,6 @@ namespace STNServices2
         public static string verticalCollectMethodResource = "VerticalMethods";
         public static string verticalDatumResource = "VerticalDatums";
         #endregion
-
         public void Configure()
         {
             using (OpenRastaConfiguration.Manual)
@@ -140,7 +140,7 @@ namespace STNServices2
                 ResourceSpace.Uses.PipelineContributor<CrossDomainPipelineContributor>();
                 ResourceSpace.Uses.PipelineContributor<MessagePipelineContributor>();
                 ResourceSpace.Uses.PipelineContributor<STNHyperMediaPipelineContributor>();
-
+                #region ResourcesNames
                 AddAGENCY_Resources();
                 AddAPPROVAL_Resources();
                 AddCONTACT_Resources();
@@ -186,6 +186,7 @@ namespace STNServices2
                 AddVERTICAL_COLLECTION_METHOD_Resources();
                 AddVERTICAL_DATUM_Resources();
                 AddGEOCODER_Resources();
+                #endregion
             } //End using OpenRastaConfiguration.Manual
         }
         
@@ -200,10 +201,9 @@ namespace STNServices2
             .HandledBy<GeocoderHandler>()
             .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }
-
         private void AddAGENCY_Resources()
         {
-            //GET
+            //GET "Agencies"
             ResourceSpace.Has.ResourcesOfType<List<agency>>()
             .AtUri(agencyResource)
             .HandledBy<AgencyHandler>()
@@ -261,7 +261,6 @@ namespace STNServices2
                 .AtUri(contactResource + "/{entityId}")
              .And.AtUri(contactResource + "?ReportMetric={reportMetricsId}&ContactType={contactTypeId}").Named("GetReportMetricContactsByType")
              .And.AtUri(contactResource + "/{contactId}/removeReportContact?ReportId={reportMetricsId}").Named("RemoveReportContact")
-             //.And.AtUri(contactResource + "/{contactId}/addReportContact?ReportId={reportId}&ContactTypeId={contactTypeId}").Named("AddReportContact")
              .And.AtUri(reportMetricResource + "/{reportId}/addContactType/{contactTypeId}").Named("AddReportContact")
             .HandledBy<ContactHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
@@ -317,20 +316,34 @@ namespace STNServices2
            .And.AtUri(instrumentsResource+"/{instrumentId}/"+datafileResource).Named("GetInstrumentDataFiles")
            .And.AtUri(peakSummaryResource+"/{peakSummaryId}/" + datafileResource).Named("GetPeakSummaryDatafiles")
            .And.AtUri(approvalResource+"/{ApprovalId}/" + datafileResource).Named("GetApprovedDataFiles")
-           .And.AtUri(datafileResource+"?IsApproved={approved}&Event={eventId}&Processor={memberId}&State={state}").Named("GetFilteredDataFiles")
+           .And.AtUri(datafileResource + "?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}").Named("GetFilteredDataFiles")
            .HandledBy<DataFileHandler>()
            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
-           .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
+           .And.TranscodedBy<CsvDotNetCodec1>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<data_file>()
             .AtUri(datafileResource+"/{entityId}")
+            .And.AtUri(datafileResource + "/RunStormScript?SeaDataFileID={seaDataFileId}&AirDataFileID={airDataFileId}&Hertz={hertz}&Username={username}").Named("RunStormDataFileScript")
+            .And.AtUri(datafileResource + "/RunAirScript?AirDataFileID={airDataFileId}&Username={username}").Named("RunAirDataFileScript")
             .And.AtUri(fileResource+"/{fileId}/DataFile").Named("GetFileDataFile")
             .HandledBy<DataFileHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
+            ResourceSpace.Has.ResourcesOfType<dataFile_view>()
+                .AtUri("/DataFileView?EventId={eventId}").Named("GetEventDataFileView")
+                .HandledBy<DataFileHandler>()
+                .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+                .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
+           .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
+
+            ResourceSpace.Has.ResourcesOfType<object>()
+            .AtUri(datafileResource + "/RunChopperScript?DataFileID={dataFileId}").Named("RunChopperScript")
+            .HandledBy<DataFileHandler>()
+            .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }//end AddDATA_FILE_Resources (6)
         private void AddDEPLOYMENT_PRIORITY_Resources()
         {
@@ -445,6 +458,7 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<file>()
            .AtUri(fileResource+"/{entityId}")           
            .And.AtUri(fileResource+"/bytes").Named("UploadFile")
+           .And.AtUri(fileResource + "/RunChopperScript").Named("RunChopperScript")
            .HandledBy<FileHandler>()
            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
            .And.TranscodedBy<MultipartFormDataObjectCodec>()
@@ -471,8 +485,10 @@ namespace STNServices2
             ResourceSpace.Has.ResourcesOfType<IFile>()
             .AtUri(fileResource+"/{fileId}/Item").Named("GetFileItem")
             .And.AtUri(hwmResource + "/historicHWMspreadsheet").Named("GetHistoricHWMspreadsheet")
+            .And.AtUri(fileResource + "/testDataFile").Named("GetTESTdataFile")
             .And.AtUri(eventsResource + "/{eventId}/EventFileItems?FromDate={fromDate}&ToDate={toDate}&State={stateName}&County={county}&FilesFor={filesFor}&HWMFileType={hwmFileTypes}&SensorFileTypes={sensorFileTypes}").Named("GetEventFileItems")
             .HandledBy<FileHandler>();
+       
         }//end AddFILE_Resources (12)
         private void AddFILE_TYPE_Resources()
         {
@@ -557,7 +573,7 @@ namespace STNServices2
             .And.AtUri(eventsResource+"/{eventId}/"+hwmResource).Named("GetEventHWMs")
             .And.AtUri(eventsResource + "/{eventId}/stateHWMs?State={state}").Named("GetEventStateHWMs")
             .And.AtUri(siteResource+"/{siteId}/EventHWMs?Event={eventId}").Named("GetSiteEventHWMs")
-            .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}").Named("GetApprovalHWMs")
+            .And.AtUri(hwmResource+"?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}").Named("GetApprovalHWMs")
             .And.AtUri(approvalResource+"/{ApprovalId}/"+hwmResource).Named("GetApprovedHWMs")
             .And.AtUri(memberResource+"/{memberId}/"+hwmResource).Named("GetMemberHWMs")
             .And.AtUri(hwmqualityResource+"/{hwmQualityId}/" + hwmResource).Named("GetHWMQualityHWMs")
@@ -572,7 +588,7 @@ namespace STNServices2
                             &States={states}&County={counties}&HWMType={hwmTypeIDs}&HWMQuality={hwmQualIDs}
                             &HWMEnvironment={hwmEnvironment}&SurveyComplete={surveyComplete}&StillWater={stillWater}").Named("FilteredHWMs")
             .HandledBy<HWMHandler>()
-            .TranscodedBy<UTF8XmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
@@ -763,7 +779,7 @@ namespace STNServices2
             .And.AtUri(roleResource+"/{roleId}/" + memberResource).Named("GetRoleMembers")
             .HandledBy<MemberHandler>()
             .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
-            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")            
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
 
             ResourceSpace.Has.ResourcesOfType<member>()
@@ -1057,6 +1073,7 @@ namespace STNServices2
             .And.AtUri(networkNameResource+"/{networkNameId}/" + siteResource).Named("getNetworkNameSites")
             .And.AtUri(stateResource + "/{stateAbbrev}/" + siteResource).Named("GetSitesByStateName") //was "/sites?State={stateName}"
             .And.AtUri(siteResource+"?Latitude={latitude}&Longitude={longitude}&Buffer={buffer}").Named("GetSitesByLatLong")
+            .And.AtUri(eventsResource + "/{eventId}/PeaklessSites").Named("GetSitesWithoutPeaks")
             .And.AtUri(horizontaldatumResource+"/{hdatumId}/"+siteResource).Named("GetHDatumSites")
             .And.AtUri(landOwnerResource+"/{landOwnerId}/"+siteResource).Named("GetLandOwnserSites")
             .HandledBy<SiteHandler>()
@@ -1064,8 +1081,7 @@ namespace STNServices2
             .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
             .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
             .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
-
-            
+                        
             ResourceSpace.Has.ResourcesOfType<site>()
             .AtUri(siteResource+"/{entityId}")
             .And.AtUri(siteResource+"/Search?bySiteNo={siteNo}&bySiteName={siteName}&bySiteId={siteId}").Named("GetSiteBySearch")
@@ -1087,7 +1103,13 @@ namespace STNServices2
            .And.TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv")
            .And.TranscodedBy<STNGeoJsonDotNetCodec>().ForMediaType("application/geojson;q=0.5").ForExtension("geojson");
-            
+
+            ResourceSpace.Has.ResourcesOfType<string>()
+            .AtUri(siteResource + "/{entityId}/GetDataFileScript").Named("GetDataFileScript")
+            .HandledBy<SiteHandler>()
+            .TranscodedBy<UTF8EntityXmlSerializerCodec>(null).ForMediaType("application/xml;q=1").ForExtension("xml")
+            .And.TranscodedBy<JsonEntityDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json")
+            .And.TranscodedBy<CsvDotNetCodec>(null).ForMediaType("text/csv").ForExtension("csv");
            
         }//end AddSITE_Resources                  (38)
         private void AddSITE_HOUSING_Resources()

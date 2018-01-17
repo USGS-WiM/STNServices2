@@ -25,10 +25,12 @@ namespace STNDB
         public Nullable<double> ws_elevation { get; set; }
         public Nullable<double> gs_elevation { get; set; }
         public Nullable<int> vdatum_id { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
-        public virtual instrument instrument { get; set; }
         public virtual status_type status_type { get; set; }
-        public virtual member member { get; set; }
+        public virtual instrument instrument { get; set; }
         public virtual vertical_datums vertical_datums { get; set; }
+        public virtual member member { get; set; }
     }
 }

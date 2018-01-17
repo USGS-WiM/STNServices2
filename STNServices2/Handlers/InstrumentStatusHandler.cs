@@ -56,7 +56,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -75,7 +75,7 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new NotFoundRequestException();
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -96,7 +96,7 @@ namespace STNServices2.Handlers
                     sm(MessageType.info, "Count: " + entities.Count());
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -118,12 +118,13 @@ namespace STNServices2.Handlers
                     if (anEntity == null) throw new NotFoundRequestException();                    
                     sm(sa.Messages);
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
         }//end HttpMethod.GET
         #endregion
+     
         #region PostMethods
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.POST)]
@@ -131,13 +132,20 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
+                if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue || 
+                    !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
                     throw new BadRequestException("Invalid input parameters");
                 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<instrument_status>(anEntity);                        
                         sm(sa.Messages);
 
@@ -165,31 +173,17 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                       // try
-                       // {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<instrument_status>(entityId, anEntity);
-                        sm(sa.Messages);
-                       // }
-                       //  catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
-                         //{
-                         //    Exception raise = dbEx;
-                         //    foreach (var validationErrors in dbEx.EntityValidationErrors)
-                         //    {
-                         //        foreach (var validationError in validationErrors.ValidationErrors)
-                         //        {
-                         //            string message = string.Format("{0}:{1}",
-                         //                validationErrors.Entry.Entity.ToString(),
-                         //                validationError.ErrorMessage);
-                         //            // raise a new exception nesting
-                         //            // the current instance as InnerException
-                         //            raise = new InvalidOperationException(message, raise);
-                         //        }
-                         //    }
-                         //    throw raise;
-                         //}                   
+                        sm(sa.Messages);                                        
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = anEntity, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }

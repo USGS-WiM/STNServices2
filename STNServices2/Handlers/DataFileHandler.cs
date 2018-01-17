@@ -23,6 +23,7 @@ using OpenRasta.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.InteropServices;
 using STNServices2.Utilities.ServiceAgent;
 using STNDB;
@@ -30,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using STNServices2.Security;
+using STNServices2.Resources;
 using WiM.Security;
 
 
@@ -83,13 +85,13 @@ namespace STNServices2.Handlers
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId && df.approval_id > 0);
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     else
                     {
                         anEntity = sa.Select<data_file>().SingleOrDefault(df => df.data_file_id == entityId);
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     
@@ -108,21 +110,21 @@ namespace STNServices2.Handlers
             try
             {
                 if (fileId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
                     {
                         //general public..only approved ones
-                        anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
+                        anEntity = sa.Select<file>().Include(f=>f.data_file).FirstOrDefault(f => f.file_id == fileId).data_file;
                         anEntity = anEntity.approval_id > 0 ? anEntity : null;
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     else
                     {
                         //they are logged in, give them all
                         anEntity = sa.Select<file>().FirstOrDefault(f => f.file_id == fileId).data_file;
-                        if (anEntity == null) throw new NotFoundRequestException();
+                        if (anEntity == null) throw new WiM.Exceptions.NotFoundRequestException();
                         sm(sa.Messages);
                     }
                     sm(sa.Messages);
@@ -161,50 +163,64 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [HttpOperation(HttpMethod.GET, ForUriName = "GetFilteredDataFiles")]
-        public OperationResult GetFilteredDataFiles(string approved, [Optional] string eventId, [Optional] string memberId, [Optional] string state)
+        public OperationResult GetFilteredDataFiles(string approved, [Optional] string eventId, [Optional] string state, [Optional] string counties)
         {
             List<data_file> entities;
+            List<data_file> refreshedVersion;
+            
             try
             {
                 if (string.IsNullOrEmpty(approved)) throw new BadRequestException("Invalid input parameters");
                
                 //set defaults
+                char[] countydelimiterChars = { ';', ',' };
                 bool isApprovedStatus = false;
                 Boolean.TryParse(approved, out isApprovedStatus);
                 string filterState = GetStateByName(state).ToString();
-                Int32 filterMember = (!string.IsNullOrEmpty(memberId)) ? Convert.ToInt32(memberId) : -1;
+                List<String> countyList = !string.IsNullOrEmpty(counties) ? counties.ToUpper().Split(countydelimiterChars, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     IQueryable<data_file> query;
                     if (isApprovedStatus)
-                        query = sa.Select<data_file>().Where(h => h.approval_id > 0);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Include("instrument.site").Where(d => d.approval_id > 0);
                     else
-                        query = sa.Select<data_file>().Where(h => h.approval_id <= 0 || !h.approval_id.HasValue);
+                        query = sa.Select<data_file>().Include(d => d.instrument).Include("instrument.site").Where(d => d.approval_id <= 0 || !d.approval_id.HasValue);
 
                     if (filterEvent > 0)
-                        query = query.Where(d => d.instrument.event_id == filterEvent);
+                        query = query.Where(d => d.instrument.event_id.Value == filterEvent);
 
                     if (filterState != State.UNSPECIFIED.ToString())
                         query = query.Where(d => d.instrument.site.state == filterState);
 
-                    if (filterMember > 0)
-                        query = query.Where(d => d.processor_id == filterMember);
-
+                    if (countyList != null && countyList.Count > 0)
+                        query = query.Where(d => countyList.Contains(d.instrument.site.county.ToUpper()));                    
 
                     entities = query.ToList();
-
-                    if (Context.User == null || Context.User.Identity.IsAuthenticated == false)
+                   
+                    // do this for serialization for csv
+                    refreshedVersion = entities.Select(d => new data_file()
                     {
-                        //they are the general public..only approved ones
-                        entities = entities.Where(d => d.approval_id > 0).ToList();
-                    }
-                    sm(MessageType.info, "Count: " + entities.Count());
+                        approval_id = d.approval_id,
+                        collect_date = d.collect_date,
+                        data_file_id = d.data_file_id,
+                        elevation_status = d.elevation_status,
+                        end = d.end,
+                        good_end = d.good_end,
+                        good_start = d.good_start,
+                        instrument_id = d.instrument_id,
+                        peak_summary_id = d.peak_summary_id,
+                        processor_id = d.processor_id,
+                        start = d.start,
+                        time_zone = d.time_zone
+                    }).ToList();
+
+                    sm(MessageType.info, "Count: " + refreshedVersion.Count());
                     sm(sa.Messages);
                 }//end using
 
-                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = refreshedVersion, Description = this.MessageString };
             }
             catch( Exception ex)
             { return HandleException(ex); }
@@ -272,6 +288,73 @@ namespace STNServices2.Handlers
             { return HandleException(ex); }
         }//end HttpMethod.GET
 
+        [HttpOperation(HttpMethod.GET, ForUriName = "RunStormDataFileScript")]
+        public OperationResult RunStormScript(Int32 seaDataFileId, Int32 airDataFileId, string hertz, string username)
+        {            
+            try
+            {
+                //Return BadRequest if there is no ID
+                bool isHertz = false;
+                Boolean.TryParse(hertz, out isHertz);
+                if (airDataFileId <= 0 || seaDataFileId <= 0 || string.IsNullOrEmpty(username))
+                    throw new BadRequestException("Invalid input parameters");
+                
+                STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, seaDataFileId, username);
+                if (stnsa.initialized)
+                    stnsa.RunStormScript(isHertz);
+                else
+                    throw new BadRequestException("Error initializing python script.");
+                
+                return new OperationResult.OK {  };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "RunAirDataFileScript")]
+        public OperationResult RunAirDataFileScript(Int32 airDataFileId, string username)
+        {
+            try
+            {
+                if (airDataFileId <= 0 || string.IsNullOrEmpty(username))
+                    throw new BadRequestException("Invalid input parameters");
+
+                STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, username);
+                if (stnsa.pressureInitialized)
+                    stnsa.RunAirScript();
+                else
+                    throw new BadRequestException("Error initializing python script.");
+                
+                return new OperationResult.OK { };
+            }
+            catch (Exception ex)
+            { return HandleException(ex); }
+        }//end HttpMethod.GET
+
+        [HttpOperation(HttpMethod.GET, ForUriName = "GetEventDataFileView")]
+        public OperationResult GetEventDataFileView(Int32 eventId)
+        {
+            List<dataFile_view> entities;
+
+            //Return BadRequest if there is no ID
+            if (eventId <= 0) throw new BadRequestException("Invalid input parameters");
+            try
+            {
+                using (STNAgent sa = new STNAgent())
+                {
+                    entities = sa.getTable<dataFile_view>(new Object[1] { null }).Where(e => e.event_id == eventId).ToList();
+                    sm(MessageType.info, "Count: " + entities.Count());
+                    sm(sa.Messages);
+                }//end using
+
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }//end HttpMethod.GET
+       
         #endregion
 
         #region PostMethods
@@ -282,6 +365,8 @@ namespace STNServices2.Handlers
         [HttpOperation(HttpMethod.POST)]
         public OperationResult Post(data_file anEntity)
         {
+            Int32 loggedInUserId = 0;
+
             try
             {
                 if (!anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue || 
@@ -293,6 +378,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username,securedPassword))
                     {
+                        //updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         sa.Add<data_file>(anEntity);
                         sm(sa.Messages);
                     }//end using
@@ -318,7 +409,8 @@ namespace STNServices2.Handlers
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
         [HttpOperation(HttpMethod.PUT)]
         public OperationResult Put(Int32 entityId, data_file anEntity)
-        {            
+        {
+            Int32 loggedInUserId = 0;
             try
             {
                 if (entityId <= 0 || !anEntity.good_start.HasValue || !anEntity.good_end.HasValue || !anEntity.collect_date.HasValue ||
@@ -330,6 +422,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        //updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<data_file>(entityId, anEntity);
                         sm(sa.Messages);                       
 

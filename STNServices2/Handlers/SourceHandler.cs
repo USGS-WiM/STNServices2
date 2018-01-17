@@ -65,10 +65,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET)]
@@ -93,10 +89,6 @@ namespace STNServices2.Handlers
             {
                 return HandleException(ex);
             }
-            finally
-            {
-
-            }//end try
         }//end HttpMethod.GET
 
         [STNRequiresRole(new string[] { AdminRole, ManagerRole, FieldRole })]
@@ -110,9 +102,9 @@ namespace STNServices2.Handlers
                 if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        entities = sa.Select<agency>().FirstOrDefault(i => i.agency_id == agencyId).sources.ToList();
+                        entities = sa.Select<source>().Where(i => i.agency_id == agencyId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count()); 
                         sm(sa.Messages);
                     }//end using
@@ -139,8 +131,7 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<file>().Include(i=>i.source).FirstOrDefault(i => i.file_id == fileId).source;
-                        if (anEntity == null) throw new NotFoundRequestException(); 
+                        anEntity = sa.Select<file>().Include(i=>i.source).FirstOrDefault(i => i.file_id == fileId).source;                        
                         sm(sa.Messages);
                     }//end using
                 }//end using
@@ -169,6 +160,12 @@ namespace STNServices2.Handlers
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<source>(anEntity);
                         sm(sa.Messages);
 
@@ -192,13 +189,19 @@ namespace STNServices2.Handlers
         {
             try
             {
-                if (string.IsNullOrEmpty(anEntity.source_name) || anEntity.agency_id <= 0)
+                if (entityId <= 0 || string.IsNullOrEmpty(anEntity.source_name) || anEntity.agency_id <= 0)
                     throw new BadRequestException("Invalid input parameters");
 
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
                     using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Update<source>(entityId, anEntity);
                         sm(sa.Messages);
                     }//end using

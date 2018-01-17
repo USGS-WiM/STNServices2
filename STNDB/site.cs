@@ -17,13 +17,13 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public site()
         {
-            this.hwms = new HashSet<hwm>();
-            this.files = new HashSet<file>();
-            this.instruments = new HashSet<instrument>();
-            this.objective_points = new HashSet<objective_point>();
-            this.site_housing = new HashSet<site_housing>();
-            this.network_type_site = new HashSet<network_type_site>();
             this.network_name_site = new HashSet<network_name_site>();
+            this.network_type_site = new HashSet<network_type_site>();
+            this.objective_points = new HashSet<objective_point>();
+            this.instruments = new HashSet<instrument>();
+            this.files = new HashSet<file>();
+            this.site_housing = new HashSet<site_housing>();
+            this.hwms = new HashSet<hwm>();
         }
     
         public int site_id { get; set; }
@@ -53,25 +53,27 @@ namespace STNDB
         public string access_granted { get; set; }
         public Nullable<int> member_id { get; set; }
         public Nullable<int> sensor_not_appropriate { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hwm> hwms { get; set; }
+        public virtual ICollection<network_name_site> network_name_site { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<network_type_site> network_type_site { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<objective_point> objective_points { get; set; }
         public virtual horizontal_datums horizontal_datums { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<file> files { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<instrument> instruments { get; set; }
         public virtual deployment_priority deployment_priority { get; set; }
         public virtual landownercontact landownercontact { get; set; }
         public virtual horizontal_collect_methods horizontal_collect_methods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<objective_point> objective_points { get; set; }
+        public virtual ICollection<instrument> instruments { get; set; }
+        public virtual member member { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<file> files { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<site_housing> site_housing { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<network_type_site> network_type_site { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<network_name_site> network_name_site { get; set; }
-        public virtual member member { get; set; }
+        public virtual ICollection<hwm> hwms { get; set; }
     }
 }

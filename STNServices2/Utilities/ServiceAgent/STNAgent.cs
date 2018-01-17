@@ -195,6 +195,31 @@ namespace STNServices2.Utilities.ServiceAgent
                 throw;
             }
         }
+        internal InMemoryFile GetTESTdataItem()
+        {
+            S3Bucket aBucket = null;
+            InMemoryFile fileItem = null;
+            try
+            {
+                string directoryName = string.Empty;
+                aBucket = new S3Bucket(ConfigurationManager.AppSettings["AWSBucket"], ConfigurationManager.AppSettings["AWSAccessKey"],
+                                        ConfigurationManager.AppSettings["AWSSecretKey"]);
+                directoryName = "data.json";
+                var fileStream = aBucket.GetObject(directoryName);
+
+                fileItem = new InMemoryFile(fileStream);
+                fileItem.ContentType = GetContentType(".json");
+                // fileItem.Length = fileStream != null ? fileStream.Length : 0;
+                fileItem.FileName = "data.json";
+                return fileItem;
+
+            }
+            catch (Exception ex)
+            {
+                sm(WiM.Resources.MessageType.error, "Failed to include item: data.json exception: " + ex.Message);
+                throw;
+            }
+        }
         internal InMemoryFile GetFileItem(file afile)
         {
             //file aFile = null;
@@ -213,7 +238,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 fileItem = new InMemoryFile(fileStream);
                 fileItem.ContentType = GetContentType(afile.name);
                 fileItem.Length = fileStream != null ? fileStream.Length : 0;
-                fileItem.FileName = afile.name;
+                fileItem.FileName = afile.name;                
                 return fileItem;
                     
             }
@@ -326,8 +351,7 @@ namespace STNServices2.Utilities.ServiceAgent
                                 WHERE df.instrument_id = sv.instrument_id AND NOT df.peak_summary_id IS NULL) df_v ON pk.peak_summary_id = df_v.peak_summary_id
                     LEFT JOIN ( SELECT hwm.peak_summary_id, hwm.latitude_dd, hwm.longitude_dd, hwm.site_id, e.event_name
                                 FROM hwm hwm, events e
-                                WHERE hwm.event_id = e.event_id AND NOT hwm.peak_summary_id IS NULL) hwm_v ON pk.peak_summary_id = hwm_v.peak_summary_id;";
-                    //return @"SELECT * FROM peak_view;";
+                                WHERE hwm.event_id = e.event_id AND NOT hwm.peak_summary_id IS NULL) hwm_v ON pk.peak_summary_id = hwm_v.peak_summary_id;";                    
                 case "baro_view":
                     return @"SELECT * FROM barometric_view;";
                 case "met_view":
@@ -346,6 +370,17 @@ namespace STNServices2.Utilities.ServiceAgent
                     return @"SELECT * FROM webcam_view;";
                 case "raingage_view":
                     return @"SELECT * FROM raingage_view;";
+                case "dataFile_view":
+                    return @"SELECT s.site_id, s.site_no, s.latitude_dd, s.longitude_dd, s.county, s.state, s.waterbody, i.instrument_id, i.event_id, i.sensor_type_id, st.sensor, i.deployment_type_id, dt.method,
+                                i.location_description, i.sensor_brand_id, sb.brand_name, f.file_id, f.name, f.file_date, f.script_parent, f.data_file_id, df.good_start, df.good_end, df.collect_date
+                            FROM sites s
+                            LEFT JOIN instrument i ON s.site_id = i.site_id
+                            LEFT JOIN files f ON i.instrument_id = f.instrument_id
+                            LEFT JOIN sensor_type st ON i.sensor_type_id = st.sensor_type_id
+                            LEFT JOIN deployment_type dt ON i.deployment_type_id = dt.deployment_type_id
+                            LEFT JOIN sensor_brand sb ON i.sensor_brand_id = sb.sensor_brand_id
+                            LEFT JOIN data_file df ON f.data_file_id = df.data_file_id
+                            WHERE i.sensor_type_id = 1 AND i.deployment_type_id = 3 AND f.filetype_id = 2;";
                 default:
                     throw new Exception("No sql for table " + type);
             }//end switch;

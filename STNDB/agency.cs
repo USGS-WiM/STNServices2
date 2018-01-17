@@ -17,8 +17,8 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public agency()
         {
-            this.sources = new HashSet<source>();
             this.members = new HashSet<member>();
+            this.sources = new HashSet<source>();
         }
     
         public int agency_id { get; set; }
@@ -30,8 +30,8 @@ namespace STNDB
         public string phone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<source> sources { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<member> members { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<source> sources { get; set; }
     }
 }

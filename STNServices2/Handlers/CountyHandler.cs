@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -77,6 +78,8 @@ namespace STNServices2.Handlers
                 using (STNAgent sa = new STNAgent())
                 {
                     anentity = sa.Select<county>().SingleOrDefault(rp => rp.county_id == entityId);
+                    if (anentity == null) throw new WiM.Exceptions.NotFoundRequestException();
+
                     sm(sa.Messages);
                 }//end using
 
@@ -95,9 +98,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (stateId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<state>().FirstOrDefault(i => i.state_id == stateId).counties.ToList();
+                    entities = sa.Select<county>().Where(i => i.state_id == stateId).ToList();
                     sm(sa.Messages);
                 }//end using
 
@@ -115,9 +118,9 @@ namespace STNServices2.Handlers
             {
                 //Return BadRequest if there is no ID
                 if (string.IsNullOrEmpty(stateAbbrev)) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    entities = sa.Select<state>().FirstOrDefault(i => i.state_abbrev == stateAbbrev).counties.ToList();
+                    entities = sa.Select<state>().Include(i=>i.counties).FirstOrDefault(i => i.state_abbrev == stateAbbrev).counties.ToList();
                     sm(sa.Messages);
 
                 }//end using
@@ -137,7 +140,7 @@ namespace STNServices2.Handlers
             {
                 if (stateAbbrev == null) throw new BadRequestException("Invalid input parameters");
 
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
                     thisState = sa.Select<state>().FirstOrDefault(st => st.state_abbrev == stateAbbrev);
                     List<site> allSitesInThisState = sa.Select<site>().Where(p => p.state == stateAbbrev).ToList();

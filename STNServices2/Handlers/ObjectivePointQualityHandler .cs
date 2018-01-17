@@ -31,6 +31,7 @@ using WiM.Exceptions;
 using WiM.Resources;
 
 using WiM.Security;
+using System.Data.Entity;
 
 namespace STNServices2.Handlers
 {
@@ -91,10 +92,9 @@ namespace STNServices2.Handlers
             try
             {
                 if (objectivePointId <= 0) throw new BadRequestException("Invalid input parameters");
-                using (STNAgent sa = new STNAgent(true))
+                using (STNAgent sa = new STNAgent())
                 {
-                    anEntity = sa.Select<objective_point>().FirstOrDefault(h => h.objective_point_id == objectivePointId).op_quality;
-                    if (anEntity == null) throw new NotFoundRequestException(); 
+                    anEntity = sa.Select<objective_point>().Include(o=>o.op_quality).FirstOrDefault(o => o.objective_point_id == objectivePointId).op_quality;
                     sm(sa.Messages);
                 }//end using
 

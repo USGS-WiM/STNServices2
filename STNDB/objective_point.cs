@@ -17,9 +17,9 @@ namespace STNDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public objective_point()
         {
-            this.files = new HashSet<file>();
-            this.op_control_identifier = new HashSet<op_control_identifier>();
             this.op_measurements = new HashSet<op_measurements>();
+            this.op_control_identifier = new HashSet<op_control_identifier>();
+            this.files = new HashSet<file>();
         }
     
         public int objective_point_id { get; set; }
@@ -41,16 +41,18 @@ namespace STNDB
         public Nullable<double> uncertainty { get; set; }
         public string unquantified { get; set; }
         public Nullable<int> op_quality_id { get; set; }
+        public Nullable<System.DateTime> last_updated { get; set; }
+        public Nullable<int> last_updated_by { get; set; }
     
-        public virtual site site { get; set; }
         public virtual objective_point_type objective_point_type { get; set; }
         public virtual op_quality op_quality { get; set; }
+        public virtual site site { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<op_measurements> op_measurements { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<op_control_identifier> op_control_identifier { get; set; }
         public virtual vertical_datums vertical_datums { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<file> files { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<op_control_identifier> op_control_identifier { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<op_measurements> op_measurements { get; set; }
     }
 }

@@ -260,6 +260,13 @@ namespace STNServices2.Test
         [TestMethod]
         public void DataFileRequest()
         {
+            // run data file scripts
+            data_file requestAirDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunAirScript?AirDataFileID=3720&Username=fradmin");
+            Assert.IsNotNull(requestAirDF);
+
+            data_file requestStormDF = this.GETRequest<data_file>(host + Configuration.datafileResource + "/RunScript?SeaDataFileID=3481&AirDataFileID=2840&Hertz=True");
+            Assert.IsNotNull(requestStormDF);
+
             //GET LIST
             List<data_file> RequestList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource);
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
@@ -282,7 +289,7 @@ namespace STNServices2.Test
             Assert.IsNotNull(instrDFList, instrDFList.Count.ToString());
 
             //GET Filtered Datafile
-            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "/?IsApproved=false&Event=135&State=NC", basicAuth);//optional props: eventId, memberId, stateAbb
+            List<data_file> filteredDFList = this.GETRequest<List<data_file>>(host + Configuration.datafileResource + "?IsApproved=false&Event=7", basicAuth);//optional props: eventId, memberId, stateAbb
             Assert.IsNotNull(filteredDFList, filteredDFList.Count.ToString());
 
             //POST
@@ -656,8 +663,8 @@ namespace STNServices2.Test
             List<hwm> SEventHWMList = this.GETRequest<List<hwm>>(host + Configuration.siteResource + "/" + siteId + "/EventHWMs?Event=35", basicAuth);
             Assert.IsNotNull(SEventHWMList, SEventHWMList.Count.ToString());
 
-            //GET ApprovalHWMs "/HWMs?IsApproved={approved}&Event={eventId}&Member={memberId}&State={state}"
-            List<hwm> approvalHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "?IsApproved=true&Event=35", basicAuth);
+            //GET ApprovalHWMs "/HWMs?IsApproved={approved}&Event={eventId}&State={state}&Counties={counties}"
+            List<hwm> approvalHWMList = this.GETRequest<List<hwm>>(host + Configuration.hwmResource + "?IsApproved=false&Event=10&State=PA&Counties=Jefferson County,Clearfield County", basicAuth);
             Assert.IsNotNull(approvalHWMList, approvalHWMList.Count.ToString());
 
             //GET ApprovEDHWMs "/Approvals/{ApprovalId}/HWMs"           
@@ -1493,8 +1500,12 @@ namespace STNServices2.Test
             Assert.IsNotNull(RequestList, RequestList.Count.ToString());
 
             //GET GetEventSites
-            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/135/" + Configuration.siteResource);
+            List<site> eventSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/7/" + Configuration.siteResource);
             Assert.IsNotNull(eventSites, eventSites.Count.ToString());
+
+            //GET GetEventSitesWithoutPeaks
+            List<site> peaklessSites = this.GETRequest<List<site>>(host + Configuration.eventsResource + "/7/PeaklessSites");
+            Assert.IsNotNull(peaklessSites, peaklessSites.Count.ToString());
 
             //GET getNetworkTypeSites
             List<site> ntSites = this.GETRequest<List<site>>(host + Configuration.networkTypeResource + "/1/" + Configuration.siteResource);
@@ -1559,9 +1570,11 @@ namespace STNServices2.Test
             Assert.IsNotNull(instSite);
 
             //PUT POSTed item
-            postObj.site_description = "site_put2"; postObj.latitude_dd = 42.3; postObj.longitude_dd = -90.3; postObj.hdatum_id = 2;
-            postObj.hcollect_method_id = 2; postObj.state = "WI"; postObj.county = "Dane County"; postObj.waterbody = "test2"; postObj.member_id = 1;
-            site putObj = this.PUTRequest<site>(host + Configuration.siteResource + "/" + postObj.site_id, postObj, basicAuth);
+            site aSite = new site();
+            aSite.access_granted = "Yes"; aSite.county = "Calhoun County"; aSite.hcollect_method_id = 1; aSite.hdatum_id = 2; aSite.is_permanent_housing_installed = "No";
+            aSite.latitude_dd = 28.41061; aSite.longitude_dd = -96.48467; aSite.member_id = 1762; aSite.site_description = "Gated community"; aSite.site_id = 20825;
+            aSite.site_name = "TXCAL20825"; aSite.site_no = "TXCAL20825"; aSite.state = "TX"; aSite.waterbody = "unknown";
+            site putObj = this.PUTRequest<site>(host + Configuration.siteResource + "/" + aSite.site_id, aSite, basicAuth);
             Assert.IsNotNull(putObj);
 
             //Delete POSTed item

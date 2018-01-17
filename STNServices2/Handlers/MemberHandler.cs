@@ -69,7 +69,7 @@ namespace STNServices2.Handlers
                         sm(sa.Messages);
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -90,7 +90,7 @@ namespace STNServices2.Handlers
                         List<member> MemberList = sa.Select<member>()
                                         .Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
                         aMember = MemberList.First<member>();
-
+                        if (aMember == null) throw new NotFoundRequestException();
                     }//end using
                 }//end using
                 return new OperationResult.OK { ResponseResource = aMember };
@@ -160,18 +160,18 @@ namespace STNServices2.Handlers
             List<member> entities = null;
             try
             {
+                if (agencyId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-
-                        entities = sa.Select<agency>().FirstOrDefault(a => a.agency_id == agencyId).members.ToList();
+                        entities = sa.Select<member>().Where(a => a.agency_id == agencyId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -184,18 +184,18 @@ namespace STNServices2.Handlers
             List<member> entities = null;
             try
             {
+                if (roleId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-
-                        entities = sa.Select<role>().FirstOrDefault(a => a.role_id == roleId).members.ToList();
+                        entities = sa.Select<member>().Where(m => m.role_id == roleId).ToList();
                         sm(MessageType.info, "Count: " + entities.Count());
                         sm(sa.Messages);
 
                     }//end using
                 }//end using
-                return new OperationResult.Created { ResponseResource = entities, Description = this.MessageString };
+                return new OperationResult.OK { ResponseResource = entities, Description = this.MessageString };
             }
             catch (Exception ex)
             { return HandleException(ex); }
@@ -238,9 +238,9 @@ namespace STNServices2.Handlers
                 if (ApprovalId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<approval>().FirstOrDefault(e => e.approval_id == ApprovalId).member;
+                        anEntity = sa.Select<approval>().Include(a=> a.member).FirstOrDefault(e => e.approval_id == ApprovalId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
@@ -264,9 +264,9 @@ namespace STNServices2.Handlers
                 if (dataFileId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<data_file>().FirstOrDefault(e => e.data_file_id == dataFileId).member;
+                        anEntity = sa.Select<data_file>().Include(e=> e.member).FirstOrDefault(e => e.data_file_id == dataFileId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
@@ -290,9 +290,9 @@ namespace STNServices2.Handlers
                 if (peakSummaryId <= 0) throw new BadRequestException("Invalid input parameters");
                 using (EasySecureString securedPassword = GetSecuredPassword())
                 {
-                    using (STNAgent sa = new STNAgent(username, securedPassword, true))
+                    using (STNAgent sa = new STNAgent(username, securedPassword))
                     {
-                        anEntity = sa.Select<peak_summary>().FirstOrDefault(e => e.peak_summary_id == peakSummaryId).member;
+                        anEntity = sa.Select<peak_summary>().Include(e=> e.member).FirstOrDefault(e => e.peak_summary_id == peakSummaryId).member;
                         if (anEntity == null) throw new NotFoundRequestException();
                         sm(sa.Messages);
                     }//end using
@@ -360,6 +360,13 @@ namespace STNServices2.Handlers
                         if (anEntity.role_id <= 0) anEntity.role_id = sa.Select<role>().SingleOrDefault(r => r.role_name == FieldRole).role_id;
                         anEntity.salt =  Cryptography.CreateSalt();
                         anEntity.password = Cryptography.GenerateSHA256Hash(anEntity.password, anEntity.salt);
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        anEntity.last_updated = DateTime.Now;
+                        anEntity.last_updated_by = loggedInUserId;
+
                         anEntity = sa.Add<member>(anEntity);
                         sm(sa.Messages);
                         
@@ -424,7 +431,13 @@ namespace STNServices2.Handlers
                             ObjectToBeUpdated.emergency_contact_name : anEntity.emergency_contact_name);
                         ObjectToBeUpdated.emergency_contact_phone = (string.IsNullOrEmpty(anEntity.emergency_contact_phone) ?
                             ObjectToBeUpdated.emergency_contact_phone : anEntity.emergency_contact_phone);
-                        
+
+                        // last updated parts
+                        List<member> MemberList = sa.Select<member>().Where(m => m.username.ToUpper() == username.ToUpper()).ToList();
+                        Int32 loggedInUserId = MemberList.First<member>().member_id;
+                        ObjectToBeUpdated.last_updated = DateTime.Now;
+                        ObjectToBeUpdated.last_updated_by = loggedInUserId;
+
                         //admin can only change role
                         if (IsAuthorized(AdminRole) && anEntity.role_id > 0)
                             ObjectToBeUpdated.role_id = anEntity.role_id;
