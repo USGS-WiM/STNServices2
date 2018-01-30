@@ -535,9 +535,9 @@ namespace STNServices2.Handlers
 
                 return new OperationResult.OK { ResponseResource = sites };
             }
-            catch
+            catch (Exception ex)
             {
-                return new OperationResult.BadRequest();
+                return HandleException(ex);
             }
 
         }//end HttpMethod.Get
@@ -807,7 +807,8 @@ namespace STNServices2.Handlers
             }
             if (se.instruments.Count >= 1)
             {
-                eventNames.AddRange(se.instruments.Where(i => i.event_id != null).Select(i => i.@event.event_name).ToList());
+                // make sure this isn't just a proposed sensor with no event
+                eventNames.AddRange(se.instruments.Where(i => i.event_id != null && i.event_id > 0).Select(i => i.@event.event_name).ToList());
             }
 
             return eventNames.Distinct().ToList();
