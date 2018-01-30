@@ -255,6 +255,10 @@ if __name__ == '__main__':
                         help='if time zone is in daylight savings')
     parser.add_argument('datum', 
                         help='geospatial vertical reference point')
+    parser.add_argument('air_initial_sensor_orifice_elevation', type=float,
+                        help='tape down to sensor at deployment time')
+    parser.add_argument('air_final_sensor_orifice_elevation', type=float,
+                        help='tape down to sensor at retrieval time')
     parser.add_argument('air_good_start_date',
                         help='first date for chopping the time series')
     parser.add_argument('air_good_end_date',
@@ -274,8 +278,8 @@ if __name__ == '__main__':
     args['stn_instrument_id'] = args['air_stn_instrument_id']
     args['latitude'] = args['air_latitude']
     args['longitude'] = args['air_longitude']
-    args['initial_sensor_orifice_elevation'] = 0
-    args['final_sensor_orifice_elevation'] = 0
+    args['initial_sensor_orifice_elevation'] = args['air_initial_sensor_orifice_elevation']
+    args['final_sensor_orifice_elevation'] = args['air_final_sensor_orifice_elevation']
     args['good_start_date'] = args['air_good_start_date']
     args['good_end_date'] = args['air_good_end_date']
     
@@ -306,10 +310,7 @@ if __name__ == '__main__':
         csv_dict[x] = pd.Series(csv_dict[x])
     df = pd.DataFrame(csv_dict)
     df.to_csv(path_or_buf=''.join([output, '.csv']))
-    
-    outfile = open(''.join([output, '.csv']), 'wb')
-    outfile.close()    
-    
+     
     sys.exit()
         
     

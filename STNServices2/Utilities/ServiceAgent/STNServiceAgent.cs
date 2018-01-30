@@ -156,11 +156,15 @@ namespace STNServices2.Utilities.ServiceAgent
                             newDF = sa.Add<data_file>(newDF);
                             newFile.data_file_id = newDF.data_file_id;
                         }
-                                     
+
                         // create new memory stream, copy the f to it, and then save it in s3
-                        f.OpenRead().CopyTo(memoryStream);
+                        using (FileStream fs = File.OpenRead(f.FullName)) {
+                            fs.CopyTo(memoryStream);
+                        }
+//                        f.OpenRead().CopyTo(memoryStream);
                         memoryStream.Position = 0;
                         sa.AddFile(newFile, memoryStream);
+                        
                     } // end using MemoryStream
                 }// end foreach file
                                 
@@ -174,13 +178,15 @@ namespace STNServices2.Utilities.ServiceAgent
                 InMemoryFile fileItem = sa.GetFileItem(outputFileCSV);
                 Boolean isValidOutput = false;
                 using (var fileStream = fileItem.OpenStream())
-                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
                 {
-                    String line;
-                    while ((line = streamReader.ReadLine()) != null)
+                    using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
                     {
-                        if (line.Contains("complete with no errors"))
-                            isValidOutput = true;
+                        String line;
+                        while ((line = streamReader.ReadLine()) != null)
+                        {
+                            if (line.Contains("complete with no errors"))
+                                isValidOutput = true;
+                        }
                     }
                 }
                 if (isValidOutput)
@@ -190,7 +196,7 @@ namespace STNServices2.Utilities.ServiceAgent
                     parentFile.script_parent = "true";
                     sa.Update<file>(parentFile.file_id, parentFile);
                 }
-
+                
                 //delete directory
           //      Directory.Delete(combinedPath, true);
 
@@ -284,7 +290,11 @@ namespace STNServices2.Utilities.ServiceAgent
                         }
 
                         // create new memory stream, copy the f to it, and then save it in s3
-                        f.OpenRead().CopyTo(memoryStream);
+                        using (FileStream fs = File.OpenRead(f.FullName))
+                        {
+                            fs.CopyTo(memoryStream);
+                        }
+//                        f.OpenRead().CopyTo(memoryStream);
                         memoryStream.Position = 0;
                         sa.AddFile(newFile, memoryStream);
                     } // end using MemoryStream
@@ -298,15 +308,18 @@ namespace STNServices2.Utilities.ServiceAgent
                 InMemoryFile fileItem = sa.GetFileItem(outputFileCSV);
                 Boolean isValidOutput = false;
                 using (var fileStream = fileItem.OpenStream())
-                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
                 {
-                    String line;
-                    while ((line = streamReader.ReadLine()) != null)
+                    using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
                     {
-                        if (line.Contains("complete with no errors"))
-                            isValidOutput = true;
+                        String line;
+                        while ((line = streamReader.ReadLine()) != null)
+                        {
+                            if (line.Contains("complete with no errors"))
+                                isValidOutput = true;
+                        }
                     }
                 }
+
                 if (isValidOutput)
                 {
                     parentFile.script_parent = "true";
@@ -734,16 +747,16 @@ namespace STNServices2.Utilities.ServiceAgent
                     body.Add('"' + pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vertical_datums.datum_abbreviation + '"');
                 else body.Add("NAVD88");
 
-                // -air_initial_sensor_orifice_elevation 
+                // -air_initial_sensor_orifice_elevation  (NOT NEEDED FOR AIR)
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation != null)
                     body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).sensor_elevation.ToString());
                 else body.Add("0");
 
-                // -air_final_sensor_orifice_elevation
+                // -air_final_sensor_orifice_elevation   (NOT NEEDED FOR AIR)
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation != null)
                     body.Add(pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 2).sensor_elevation.ToString());
                 else body.Add("0");
-
+                
                 string airGoodStart = pressureDataFile.good_start.Value.ToString("yyyyMMdd HHmm");
                 // -air_good_start_date 
                 body.Add('"' + airGoodStart + '"');
