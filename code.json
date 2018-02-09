@@ -1,0 +1,47 @@
+[
+  {
+    "name": "STNServices2",
+    "organization": "U.S. Geological Survey",
+    "description": "Services used by the Short-Term Network (STN) database",
+    "version": "v2.1.0",
+    "status": "Production"
+
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain",
+          "URL": "https://github.com/USGS-WiM/STNServices2/blob/master/LICENSE.md"
+        }
+      ]
+    },
+
+    "homepageURL": "https://stn.wim.usgs.gov/STNServices/",
+    "downloadURL": "https://github.com/USGS-WiM/STNServices2/archive/master.zip",
+    "disclaimerURL": "https://github.com/USGS-WiM/STNServices2/blob/master/LICENSE.md",
+    "repositoryUrl": "https://github.com/USGS-WiM/STNServices2",
+    "vcs": "git",
+
+    "laborHours": null,
+
+    "tags": [
+      "services",
+      "stn",
+      "short-term network"
+    ],
+
+    "languages": [
+      "C#",
+      "python"
+    ],
+
+    "contact": {
+      "name": "Tonia Roddick",
+      "email": "troddick@usgs.gov"
+    },
+
+    "date": {
+      "metadataLastUpdated": "2018-02-09"
+    }
+  }
+]
