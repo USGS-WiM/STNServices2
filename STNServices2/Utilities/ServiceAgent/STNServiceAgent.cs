@@ -616,9 +616,9 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_instrument_name
                 body.Add('"' + airDataFile.instrument.sensor_brand.brand_name + '"'); // only "Measurement Specialties", "Level Troll", or "Hobo"
                 // -sea_stn_station_number
-                body.Add(seaDataFile.instrument.site.site_name.ToString());
+                body.Add('"' + seaDataFile.instrument.site.site_no.ToString() + '"');
                 // -air_stn_station_number
-                body.Add(airDataFile.instrument.site.site_name.ToString());
+                body.Add('"' + airDataFile.instrument.site.site_no.ToString() + '"');
                 // -sea_stn_instrument_id
                 body.Add(seaDataFile.instrument.instrument_id.ToString());
                 // -air_stn_instrument_id 
@@ -732,7 +732,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -air_stn_instrument_id 
                 body.Add(pressureDataFile.instrument.instrument_id.ToString());
                 // -air_stn_station_number
-                body.Add(pressureDataFile.instrument.site.site_name.ToString());
+                body.Add('"' + pressureDataFile.instrument.site.site_no.ToString() + '"');
                 // -air_latitude 
                 body.Add(pressureDataFile.instrument.site.latitude_dd.ToString());
                 // -air_longitude
