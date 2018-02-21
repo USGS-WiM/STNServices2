@@ -7,11 +7,7 @@ Servies for the USGS Short-Term Network (STN)
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+[Visual Studio 2017](https://www.visualstudio.com/)
 
 ## Getting Started
 
@@ -19,36 +15,24 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
+https://help.github.com/articles/cloning-a-repository/
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
+Open the solution file (.sln) using perfered IDE.
 
 ## Building and testing
 
-Explain how to run the debugging 'watch' script for this repo, if applicable
+No testing files are currently available for this repository
 
-Explain how to run unit tests, if applicable
+## Deployment on IIS
 
-## Deployment
+see [link](https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x)  for detailed instructions for deploying to windows server.
 
-Add additional notes about how to deploy this on a live system. **Do not include any credentials, IP addresses, or other sensitive information**
+* Download and install [windows server hosting bundle](https://www.microsoft.com/net/download/core#/runtime) on the server.
+* Create new application pool specifying the .netCLR version property to "No Managed Code".
 
 ## Built With
 
-* [Angular](https://angular.io/) - The main web framework used
-* [Clarity UI](https://vmware.github.io/clarity/) - Top-level UI framework if you have one 
-* [NPM](https://www.npmjs.com/) - Dependency Management
-* [Others](https://www.npmjs.com/) - Any other high-level dependencies
+* [.Net Framework](https://docs.microsoft.com/en-us/dotnet/framework/) - ASP.NET Framework
 
 ## Contributing
 
@@ -67,6 +51,7 @@ To push tags to remote origin: `git push origin --tags`
 ## Authors
 
 * **[Tonia Roddick](https://www.usgs.gov/staff-profiles/tonia-m-roddick)**  - *Lead Developer* - [USGS Web Informatics & Mapping](https://wim.usgs.gov/)
+* **[Jeremy Newson](https://www.usgs.gov/staff-profiles/jeremy-k-newson)**  - *Developer* - [USGS Web Informatics & Mapping](https://wim.usgs.gov/)
 
 See also the list of [contributors](../../graphs/contributors) who participated in this project.
 
