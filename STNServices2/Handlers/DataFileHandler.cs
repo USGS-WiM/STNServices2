@@ -289,19 +289,22 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "RunStormDataFileScript")]
-        public OperationResult RunStormScript(Int32 seaDataFileId, Int32 airDataFileId, string hertz, string username)
+        public OperationResult RunStormScript(Int32 seaDataFileId, Int32 airDataFileId, string daylightSavings, string hertz, string username)
         {            
             try
             {
                 //Return BadRequest if there is no ID
                 bool isHertz = false;
+                bool dayLight = false;
                 Boolean.TryParse(hertz, out isHertz);
+                Boolean.TryParse(daylightSavings, out dayLight);
+
                 if (airDataFileId <= 0 || seaDataFileId <= 0 || string.IsNullOrEmpty(username))
                     throw new BadRequestException("Invalid input parameters");
                 
                 STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, seaDataFileId, username);
                 if (stnsa.initialized)
-                    stnsa.RunStormScript(isHertz);
+                    stnsa.RunStormScript(isHertz, dayLight);
                 else
                     throw new BadRequestException("Error initializing python script.");
                 
@@ -312,16 +315,19 @@ namespace STNServices2.Handlers
         }//end HttpMethod.GET
 
         [HttpOperation(HttpMethod.GET, ForUriName = "RunAirDataFileScript")]
-        public OperationResult RunAirDataFileScript(Int32 airDataFileId, string username)
+        public OperationResult RunAirDataFileScript(Int32 airDataFileId, string daylightSavings, string username)
         {
             try
             {
                 if (airDataFileId <= 0 || string.IsNullOrEmpty(username))
                     throw new BadRequestException("Invalid input parameters");
 
+                bool dayLight = false;
+                Boolean.TryParse(daylightSavings, out dayLight);
+
                 STNServiceAgent stnsa = new STNServiceAgent(airDataFileId, username);
                 if (stnsa.pressureInitialized)
-                    stnsa.RunAirScript();
+                    stnsa.RunAirScript(dayLight);
                 else
                     throw new BadRequestException("Error initializing python script.");
                 

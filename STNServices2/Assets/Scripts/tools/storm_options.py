@@ -325,8 +325,8 @@ class StormOptions(StormData):
             query2 = np.where(self.raw_water_level < self.sensor_orifice_elevation + clip_scale)
             self.clip_query = np.union1d(query1[0], query2[0])
     
-            self.surge_water_level[query1[0]] = np.NaN
-            self.raw_water_level[query2[0]] = np.NaN
+            self.surge_water_level[query1[0]] = np.nan
+            self.raw_water_level[query2[0]] = np.nan
             
             self.elev_test = True
         

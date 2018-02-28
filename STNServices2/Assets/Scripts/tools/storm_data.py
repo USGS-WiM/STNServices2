@@ -35,10 +35,10 @@ class StormData(object):
     def extract_salinity(self, fname):
         salinity = nc.get_global_attribute(fname, 'salinity')
         
-        if salinity == "Salt Water (> 30 ppt)":
+        if salinity == "Saline Water":
             return "salt"
         
-        if salinity == "Brackish Water (.5 - 30 ppt)":
+        if salinity == "Brackish Water":
             return "brackish"
         
         return "fresh"

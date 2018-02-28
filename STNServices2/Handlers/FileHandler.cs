@@ -653,6 +653,9 @@ namespace STNServices2.Handlers
             dynamic responseJson = null;           
             try
             {
+                bool dayLight = false;
+//                Boolean.TryParse(daylightSavings, out dayLight);
+
                 using (var memoryStream = new MemoryStream())
                 {
                     String filename = "";
@@ -709,7 +712,7 @@ namespace STNServices2.Handlers
 
                     STNServiceAgent stnsa = new STNServiceAgent(uploadFile.instrument_id.Value, memoryStream, filename);
                     if (stnsa.chopperInitialized)
-                        responseJson = stnsa.RunChopperScript();
+                        responseJson = stnsa.RunChopperScript(uploadFile.description); // uploadFile.description actually contains the true/false of daylightsavings
                     else
                         throw new BadRequestException("Error initializing python script.");
                 } //end using memoryStream

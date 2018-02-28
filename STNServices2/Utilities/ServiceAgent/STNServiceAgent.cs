@@ -81,12 +81,12 @@ namespace STNServices2.Utilities.ServiceAgent
 
         #region Methods
         // air and sea together
-        public Boolean RunStormScript(bool hz)
+        public Boolean RunStormScript(bool hz, bool dls)
         {                     
             try
             {
                 // execute the stn_script
-                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Script"], getBody(hz)));
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Script"], getBody(hz, dls)));
              
                 // remove temp air/sea files
                 File.Delete(airDFName);
@@ -215,12 +215,12 @@ namespace STNServices2.Utilities.ServiceAgent
         }
         
         //air only
-        public Boolean RunAirScript()
+        public Boolean RunAirScript(bool dls)
         {
             try
             {
                 // execute the stn_script
-                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Air_Script"], getAirBody()));
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Air_Script"], getAirBody(dls)));
 
                 // remove temp air/sea files
                 File.Delete(pressureDFName);
@@ -346,7 +346,7 @@ namespace STNServices2.Utilities.ServiceAgent
         }
         
         // chopper
-        public dynamic RunChopperScript()
+        public dynamic RunChopperScript(string dls)
         {
             dynamic jsonfile = null;
             Boolean isValidOutput = false;
@@ -354,7 +354,7 @@ namespace STNServices2.Utilities.ServiceAgent
             try
             {
                 // execute the stn_script
-                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Chopper_Script"], getChopperBody()));
+                Execute(getProcessRequest(ConfigurationManager.AppSettings["STN_Chopper_Script"], getChopperBody(dls)));
                 File.Delete(chopperDFName);
 
                 DirectoryInfo di = new DirectoryInfo(combinedPath);
@@ -594,7 +594,7 @@ namespace STNServices2.Utilities.ServiceAgent
         }
 
         // for air and see script (stn_script.py)
-        private string getBody(Boolean hertz)
+        private string getBody(Boolean hertz, Boolean daylight)
         {
             List<string> body = new List<string>();
             try
@@ -634,7 +634,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -tz_info
                 body.Add("UTC");
                 // -daylight_savings
-                body.Add("False");
+                body.Add(daylight.ToString());
 
                 // -datum
                 if (airDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
@@ -712,7 +712,7 @@ namespace STNServices2.Utilities.ServiceAgent
         }//end getParameterList   
         
         // for air only (stn_script_air.py)
-        private string getAirBody()
+        private string getAirBody(Boolean daylight)
         {
             List<string> body = new List<string>();
             try
@@ -740,7 +740,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -tz_info
                 body.Add("UTC");
                 // -daylight_savings
-                body.Add("False");
+                body.Add(daylight.ToString());
 
                 // -datum
                 if (pressureDataFile.instrument.instrument_status.FirstOrDefault(inst => inst.status_type_id == 1).vdatum_id != null)
@@ -774,7 +774,7 @@ namespace STNServices2.Utilities.ServiceAgent
             }
         }//end getParameterList   
 
-        private string getChopperBody()
+        private string getChopperBody(string daylight)
         {
             List<string> body = new List<string>();
             try
@@ -786,7 +786,7 @@ namespace STNServices2.Utilities.ServiceAgent
                 // -pressure_type
                 body.Add('"' + chopperPressureType + '"');
                 // -daylight_savings
-                body.Add("False");
+                body.Add(daylight.ToString());
                 // -tz_info
                 body.Add("UTC");                                
                 // -datum
