@@ -346,7 +346,7 @@ namespace STNServices2.Utilities.ServiceAgent
         }
         
         // chopper
-        public dynamic RunChopperScript(string dls)
+        public dynamic RunChopperScript(Boolean dls)
         {
             dynamic jsonfile = null;
             Boolean isValidOutput = false;
@@ -774,7 +774,7 @@ namespace STNServices2.Utilities.ServiceAgent
             }
         }//end getParameterList   
 
-        private string getChopperBody(string daylight)
+        private string getChopperBody(Boolean daylight)
         {
             List<string> body = new List<string>();
             try

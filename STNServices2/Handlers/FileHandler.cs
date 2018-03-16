@@ -712,7 +712,7 @@ namespace STNServices2.Handlers
 
                     STNServiceAgent stnsa = new STNServiceAgent(uploadFile.instrument_id.Value, memoryStream, filename);
                     if (stnsa.chopperInitialized)
-                        responseJson = stnsa.RunChopperScript(uploadFile.description); // uploadFile.description actually contains the true/false of daylightsavings
+                        responseJson = stnsa.RunChopperScript(Convert.ToBoolean(uploadFile.description)); // uploadFile.description actually contains the true/false of daylightsavings
                     else
                         throw new BadRequestException("Error initializing python script.");
                 } //end using memoryStream
