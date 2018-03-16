@@ -86,8 +86,8 @@
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>E:\TMRData\WIMprojects\STNServices2\STNServices2\bin\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.5.0.2\lib\net45\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -137,11 +137,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Codecs\testCodec.cs" />
     <Compile Include="Codecs\UTF8XmlSerializerCodec1.cs" />
     <Compile Include="Codecs\UTF8XmlCodec1.cs" />
     <Compile Include="Codecs\UTF8EntityXmlSerializerCodec1.cs" />
     <Compile Include="Codecs\STNGeoJsonDotNetCodec.cs" />
-    <Compile Include="Codecs\testCodec.cs" />
     <Compile Include="Handlers\GeocoderHandler.cs" />
     <Compile Include="Handlers\LandOwnerContactHandler.cs" />
     <Compile Include="Handlers\InstrumentHandler.cs" />
