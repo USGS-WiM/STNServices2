@@ -342,7 +342,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<object>()
             .AtUri(datafileResource + "/RunChopperScript?DataFileID={dataFileId}").Named("RunChopperScript")
-            .HandledBy<DataFileHandler>()
+            .HandledBy<FileHandler>()
             .TranscodedBy<JsonDotNetCodec>(null).ForMediaType("application/json;q=0.9").ForExtension("json");
         }//end AddDATA_FILE_Resources (6)
         private void AddDEPLOYMENT_PRIORITY_Resources()
