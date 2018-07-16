@@ -746,41 +746,41 @@ namespace STNDB
             return (this.quality).GetHashCode();
         }
     }
-    public partial class peak_summary : IEquatable<peak_summary>
-    {
-        public bool Equals(peak_summary other)
-        {
-            return (this.member_id == other.member_id) && !other.peak_date.HasValue || !this.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
-                (other.is_peak_estimated <= 0 || this.is_peak_estimated == other.is_peak_estimated || other.is_peak_estimated <= 0 ) &&
-                (other.is_peak_time_estimated <= 0 || this.is_peak_time_estimated == other.is_peak_time_estimated || other.is_peak_time_estimated <= 0) &&
-                (!other.peak_stage.HasValue || !this.peak_stage.HasValue || this.peak_stage == other.peak_stage || other.peak_stage <= 0) &&
-                (other.is_peak_stage_estimated <= 0 || this.is_peak_stage_estimated == other.is_peak_stage_estimated || other.is_peak_stage_estimated <= 0) &&
-                (!other.peak_discharge.HasValue || !this.peak_discharge.HasValue || this.peak_discharge == other.peak_discharge || other.peak_discharge <= 0) &&
-                (other.is_peak_discharge_estimated <= 0 || this.is_peak_discharge_estimated == other.is_peak_discharge_estimated || (other.is_peak_discharge_estimated <= 0)) &&
-                (!other.vdatum_id.HasValue || !this.vdatum_id.HasValue || this.vdatum_id == other.vdatum_id || other.vdatum_id <= 0) &&
-                (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd == other.height_above_gnd || other.height_above_gnd <= 0) &&
-                (!other.is_hag_estimated.HasValue || !this.is_hag_estimated.HasValue || this.is_hag_estimated == other.is_hag_estimated || other.is_hag_estimated <= 0) &&
-                (!string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone)) &&
-                (!other.aep.HasValue || !this.aep.HasValue || this.aep == other.aep || other.aep <= 0) &&
-                (!other.aep_lowci.HasValue || !this.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci || other.aep_lowci <= 0) &&
-                (!other.aep_upperci.HasValue || !this.aep_upperci.HasValue || this.aep_upperci == other.aep_upperci || other.aep_upperci <= 0) &&
-                (!other.aep_range.HasValue || !this.aep_range.HasValue || this.aep_range == other.aep_range || other.aep_range <= 0) &&
-                (string.Equals(this.calc_notes, other.calc_notes, StringComparison.OrdinalIgnoreCase));
-        }
+    //public partial class peak_summary : IEquatable<peak_summary>
+    //{
+    //    public bool Equals(peak_summary other)
+    //    {
+    //        return (this.member_id == other.member_id) && !other.peak_date.HasValue || !this.peak_date.HasValue || (DateTime.Equals(this.peak_date.Value, other.peak_date.Value)) &&
+    //            (other.is_peak_estimated <= 0 || this.is_peak_estimated == other.is_peak_estimated || other.is_peak_estimated <= 0 ) &&
+    //            (other.is_peak_time_estimated <= 0 || this.is_peak_time_estimated == other.is_peak_time_estimated || other.is_peak_time_estimated <= 0) &&
+    //            (!other.peak_stage.HasValue || !this.peak_stage.HasValue || this.peak_stage == other.peak_stage || other.peak_stage <= 0) &&
+    //            (other.is_peak_stage_estimated <= 0 || this.is_peak_stage_estimated == other.is_peak_stage_estimated || other.is_peak_stage_estimated <= 0) &&
+    //            (!other.peak_discharge.HasValue || !this.peak_discharge.HasValue || this.peak_discharge == other.peak_discharge || other.peak_discharge <= 0) &&
+    //            (other.is_peak_discharge_estimated <= 0 || this.is_peak_discharge_estimated == other.is_peak_discharge_estimated || (other.is_peak_discharge_estimated <= 0)) &&
+    //            (!other.vdatum_id.HasValue || !this.vdatum_id.HasValue || this.vdatum_id == other.vdatum_id || other.vdatum_id <= 0) &&
+    //            (!other.height_above_gnd.HasValue || !this.height_above_gnd.HasValue || this.height_above_gnd == other.height_above_gnd || other.height_above_gnd <= 0) &&
+    //            (!other.is_hag_estimated.HasValue || !this.is_hag_estimated.HasValue || this.is_hag_estimated == other.is_hag_estimated || other.is_hag_estimated <= 0) &&
+    //            (!string.IsNullOrEmpty(other.time_zone) || string.Equals(this.time_zone, other.time_zone)) &&
+    //            (!other.aep.HasValue || !this.aep.HasValue || this.aep == other.aep || other.aep <= 0) &&
+    //            (!other.aep_lowci.HasValue || !this.aep_lowci.HasValue || this.aep_lowci.Value == other.aep_lowci || other.aep_lowci <= 0) &&
+    //            (!other.aep_upperci.HasValue || !this.aep_upperci.HasValue || this.aep_upperci == other.aep_upperci || other.aep_upperci <= 0) &&
+    //            (!other.aep_range.HasValue || !this.aep_range.HasValue || this.aep_range == other.aep_range || other.aep_range <= 0) &&
+    //            (string.Equals(this.calc_notes, other.calc_notes, StringComparison.OrdinalIgnoreCase));
+    //    }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as peak_summary);
-        }
+    //    public override bool Equals(object obj)
+    //    {
+    //        if (ReferenceEquals(null, obj)) return false;
+    //        if (ReferenceEquals(this, obj)) return true;
+    //        if (obj.GetType() != GetType()) return false;
+    //        return Equals(obj as peak_summary);
+    //    }
 
-        public override int GetHashCode()
-        {
-            return (this.member_id.Value.ToString() + this.peak_date.Value.ToString() + this.time_zone).GetHashCode();
-        }
-    }
+    //    public override int GetHashCode()
+    //    {
+    //        return (this.member_id.Value.ToString() + this.peak_date.Value.ToString() + this.time_zone).GetHashCode();
+    //    }
+    //}
     public partial class reporting_metrics : IEquatable<reporting_metrics>
     {
         public bool Equals(reporting_metrics other)
