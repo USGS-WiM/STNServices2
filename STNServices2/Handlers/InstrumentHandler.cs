@@ -508,7 +508,7 @@ namespace STNServices2.Handlers
                 {
                     IQueryable<instrument> instrumentList = sa.Select<instrument>().Include(i => i.sensor_type).Include(i => i.deployment_type).Include(i => i.instr_collection_conditions)
                         .Include(i => i.housing_type).Include(i => i.sensor_brand).Include(i => i.instrument_status).Include("instrument_status.status_type").Include("instrument_status.vertical_datums")
-                        .Where(instr => instr.site_id == siteId);
+                        .Where(instr => instr.site_id == siteId && instr.event_id > 0);
 
                     entities = instrumentList.AsEnumerable().Select(
                         inst => new FullInstrument
