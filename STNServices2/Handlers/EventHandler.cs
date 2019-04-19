@@ -234,6 +234,18 @@ namespace STNServices2.Handlers
                         query = query.Where(e => e.instruments.Any(i => i.site.state == stateName.ToUpper()) || e.hwms.Any(h => h.site.state == stateName.ToUpper()));                    
                     }
                     entities = query.Distinct().ToList();
+
+                    entities = entities.Select(ev => new events
+                    {
+                        event_id = ev.event_id,
+                        event_name = ev.event_name,
+                        event_start_date = ev.event_start_date,
+                        event_end_date = ev.event_end_date,
+                        event_description = ev.event_description,
+                        event_type_id = ev.event_type_id,
+                        event_status_id = ev.event_status_id,
+                        event_coordinator = ev.event_coordinator
+                    }).ToList();
                 }
 
                 return new OperationResult.OK { ResponseResource = entities };

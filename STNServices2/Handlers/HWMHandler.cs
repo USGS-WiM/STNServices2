@@ -497,7 +497,7 @@ namespace STNServices2.Handlers
 
                     if (!string.IsNullOrEmpty(surveyComplete))
                     {
-                        if (surveyComplete == "True")
+                        if (surveyComplete == "True" || surveyComplete == "true")
                             query = query.Where(i => i.survey_date.HasValue);
                         else
                             query = query.Where(i => !i.survey_date.HasValue);
@@ -505,7 +505,7 @@ namespace STNServices2.Handlers
 
                     //1 = yes, 0 = no
                     if (!string.IsNullOrEmpty(stillWater))
-                        if (stillWater == "True")
+                        if (stillWater == "True" || stillWater == "true")
                             query = query.Where(i => i.stillwater.HasValue && i.stillwater.Value == 1);
                         else
                             query = query.Where(i => !i.stillwater.HasValue || i.stillwater.Value == 0);

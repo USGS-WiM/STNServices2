@@ -165,6 +165,9 @@ namespace STNServices2.Handlers
         {
             try
             {
+                //anEntity.member = null; 
+                anEntity.member = null; // Doing this because member keeps showing up unexpectedldy on edits in STNWeb
+
                 if (!anEntity.instrument_id.HasValue || !anEntity.time_stamp.HasValue || !anEntity.status_type_id.HasValue ||
                     !anEntity.member_id.HasValue || string.IsNullOrEmpty(anEntity.time_zone)) 
                     throw new BadRequestException("Invalid input parameters");
@@ -186,7 +189,9 @@ namespace STNServices2.Handlers
                 return new OperationResult.OK { ResponseResource = anEntity, Description = this.MessageString };
             }
             catch (Exception ex)
-            { return HandleException(ex); }
+            {
+                return HandleException(ex);
+            }
         }//end HttpMethod.PUT
 
         #endregion
