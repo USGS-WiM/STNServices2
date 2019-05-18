@@ -323,7 +323,7 @@ namespace STNServices2.Utilities.ServiceAgent
             switch (type)
             {
                 case "peak_view":
-                    return @"SELECT DISTINCT ON (pk.peak_summary_id) pk.peak_summary_id, pk.peak_stage, pk.peak_date, vd.datum_name, 
+                    return @"SELECT DISTINCT pk.peak_summary_id, pk.peak_stage, pk.peak_date, vd.datum_name, 
                         CASE
                             WHEN NOT hwm_v.peak_summary_id IS NULL THEN hwm_v.latitude_dd
                             WHEN NOT df_v.peak_summary_id IS NULL THEN df_v.latitude_dd
