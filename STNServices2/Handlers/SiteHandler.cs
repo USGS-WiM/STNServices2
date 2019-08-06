@@ -420,7 +420,7 @@ namespace STNServices2.Handlers
 
         [HttpOperation(HttpMethod.GET, ForUriName = "FilteredSites")]
         public OperationResult GetFilteredSites([Optional] string eventId, [Optional] string stateNames, [Optional] string sensorTypeId, [Optional] string opDefined, [Optional] string networkNameId, 
-                                                    [Optional] string hwmOnlySites, [Optional] string housingTypeOneSites, [Optional] string surveyedHWMs, [Optional] string sensorOnlySites, [Optional] string rdgOnlySites)
+                                                    [Optional] string hwmOnlySites, [Optional] string housingTypeOneSites, [Optional] string housingTypeSevenSites, [Optional] string surveyedHWMs, [Optional] string sensorOnlySites, [Optional] string rdgOnlySites)
         {
             try
             {
@@ -440,6 +440,7 @@ namespace STNServices2.Handlers
                 Boolean OPhasBeenDefined = (!string.IsNullOrEmpty(opDefined) && Convert.ToInt32(opDefined) > 0) ? true : false;  
                 Boolean hwmOnly = (!string.IsNullOrEmpty(hwmOnlySites) && Convert.ToInt32(hwmOnlySites) > 0) ? true : false;
                 Boolean housingTypeOne = (!string.IsNullOrEmpty(housingTypeOneSites) && Convert.ToInt32(housingTypeOneSites) > 0) ? true : false;//this is the problem.. if false, it doesn't remove those with hwms
+                Boolean housingTypeSeven = (!string.IsNullOrEmpty(housingTypeSevenSites) && Convert.ToInt32(housingTypeSevenSites) > 0) ? true : false;//this is the problem.. if false, it doesn't remove those with hwms
                 Boolean sensorOnly = (!string.IsNullOrEmpty(sensorOnlySites) && Convert.ToInt32(sensorOnlySites) > 0) ? true : false;
                 Boolean rdgOnly = (!string.IsNullOrEmpty(rdgOnlySites) && Convert.ToInt32(rdgOnlySites) > 0) ? true : false;
 
@@ -492,6 +493,12 @@ namespace STNServices2.Handlers
                         //query = query.Where(s => s.instruments.Any(inst => inst.sensor_type_id == 5) || s.site_housing.Any(h => h.housing_type_id == 1));
                         query = query.Where(s => s.site_housing.Any(h => h.housing_type_id == 1));
                     }
+
+                    if (housingTypeSeven)
+                    {
+                        //query = query.Where(s => s.instruments.Any(inst => inst.sensor_type_id == 5) || s.site_housing.Any(h => h.housing_type_id == 1));
+                        query = query.Where(s => s.site_housing.Any(h => h.housing_type_id == 7));
+                    }           
 
                     if (sensorOnly)
                     {

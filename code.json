@@ -3,7 +3,7 @@
     "name": "STNServices2",
     "organization": "U.S. Geological Survey",
     "description": "Services used by the Short-Term Network (STN) database",
-    "version": "v2.2.2",
+    "version": "v2.2.3",
     "status": "Production",
 
     "permissions": {
