@@ -427,16 +427,26 @@ namespace STNServices2.Handlers
                 List<SiteLocationQuery> sites = null;
 
                 List<string> states = new List<string>();
+                int [] networkList = new int[0];
+                string networks = networkNameId;
+                
+
                 char[] delimiter = { ',' };
                 //stateNames will be a list that is comma separated. Need to parse out
                 if (!string.IsNullOrEmpty(stateNames))
                 {
                     states = stateNames.Split(delimiter, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
+                //networks will be a list that is comma separated. Need to parse out
+                if (!string.IsNullOrEmpty(networkNameId))
+                {
+                    string[] tempNetList = networks.Split(',');
+                    networkList = Array.ConvertAll(tempNetList, int.Parse);
+                }
 
                 Int32 filterEvent = (!string.IsNullOrEmpty(eventId)) ? Convert.ToInt32(eventId) : -1;
                 Int32 filterSensorType = (!string.IsNullOrEmpty(sensorTypeId)) ? Convert.ToInt32(sensorTypeId) : -1;
-                Int32 filternetworkname = (!string.IsNullOrEmpty(networkNameId)) ? Convert.ToInt32(networkNameId) : -1;
+                //Int32 filternetworkname = (!string.IsNullOrEmpty(networkNameId)) ? Convert.ToInt32(networkNameId) : -1;
                 Boolean OPhasBeenDefined = (!string.IsNullOrEmpty(opDefined) && Convert.ToInt32(opDefined) > 0) ? true : false;  
                 Boolean hwmOnly = (!string.IsNullOrEmpty(hwmOnlySites) && Convert.ToInt32(hwmOnlySites) > 0) ? true : false;
                 Boolean housingTypeOne = (!string.IsNullOrEmpty(housingTypeOneSites) && Convert.ToInt32(housingTypeOneSites) > 0) ? true : false;//this is the problem.. if false, it doesn't remove those with hwms
@@ -448,7 +458,7 @@ namespace STNServices2.Handlers
                 {
                     IQueryable<site> query = sa.Select<site>().Include(s => s.instruments).Include("instruments.event")
                         .Include(s => s.hwms).Include("hwms.event").Include(s => s.objective_points)
-                        .Include(s=>s.network_name_site).Include("network_name_site.network_name").Include(s => s.site_housing);
+                        .Include("network_name_site.network_name").Include(s => s.site_housing);
 
                     if (filterEvent > 0)
                         query = query.Where(s => s.instruments.Any(i =>i.event_id == filterEvent) || s.hwms.Any(h => h.event_id == filterEvent));
@@ -464,14 +474,24 @@ namespace STNServices2.Handlers
                         thisState = GetStateByName(thisState).ToString();
                         query = query.Where(r => r.state.Equals(thisState, StringComparison.OrdinalIgnoreCase));
                     }
+                    if (networkList.Length >= 2)
+                    {
+                        //multiple Networks
+                        query = from q in query where networkList.Any(s => q.network_name_site.Any(i => i.network_name_id.Equals(s))) select q;
+                    }
+                    if (networkList.Length == 1)
+                    {
+                        int networkid = networkList[0];
+                        query = query.Where(s => s.network_name_site.Any(i => i.network_name_id == networkid));
+                    }
                     if (OPhasBeenDefined)
                         query = query.Where(s => s.objective_points.Any());                    
 
                     if (filterSensorType > 0)
                         query = query.Where(s => s.instruments.Any(i => i != null && i.sensor_type_id == filterSensorType));
 
-                    if (filternetworkname > 0)
-                        query = query.Where(s => s.network_name_site.Any(i => i.network_name_id == filternetworkname));
+                    //if (filternetworkname > 0)
+                        //query = query.Where(s => s.network_name_site.Any(i => i.network_name_id == filternetworkname));
 
 
                     if (hwmOnly)
