@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //----- MemberHandler -----------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -76,8 +76,8 @@ namespace STNServices2.Handlers
         }// end HttpMethod.Get
 
         [RequiresAuthentication]
-        [HttpOperation(HttpMethod.GET, ForUriName = "GetLoggedUser")]
-        public OperationResult GetLoggedUser()
+        [HttpOperation(HttpMethod.POST, ForUriName = "PostLoggedUser")]
+        public OperationResult PostLoggedUser()
         {
             member aMember = null;
             try
