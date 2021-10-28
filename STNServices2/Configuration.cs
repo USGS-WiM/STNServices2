@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //----- Configuration ----------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -784,7 +784,7 @@ namespace STNServices2
 
             ResourceSpace.Has.ResourcesOfType<member>()
             .AtUri(memberResource + "/{entityId}")            
-            .And.AtUri("/login").Named("GetLoggedUser")
+            .And.AtUri("/login").Named("PostLoggedUser")
             .And.AtUri(eventsResource+"/{eventId}/EventCoordinator").Named("GetEventCoordinator")
             .And.AtUri(approvalResource+"/{ApprovalId}/ApprovingOfficial").Named("GetApprovingOfficial")
             .And.AtUri(datafileResource+"/{dataFileId}/Processor").Named("GetDataFileProcessor")
