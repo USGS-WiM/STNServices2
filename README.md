@@ -29,6 +29,8 @@ No testing files are currently available for this repository
 * ![image](https://user-images.githubusercontent.com/12737515/165164637-97ecabf2-bd1f-4691-91ff-b0fb78427b8d.png)
 * Create new application pool specifying the .netCLR version property to 4.0
 * Install Npgsql 3.2.5 [link](https://github.com/npgsql/npgsql/releases?page=6)
+* Use URL Rewrite to add a RedirectToHTTPS inbound rule and an EnableHSTS outbound rool ![image](https://user-images.githubusercontent.com/23640741/165165303-1cfc2814-9207-4576-9a34-ffe2cfc3061c.png)
+
 
 ## Built With
 
