@@ -25,10 +25,10 @@ No testing files are currently available for this repository
 
 ## Deployment on IIS
 
-see [link](https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x)  for detailed instructions for deploying to windows server.
-
-* Download and install [windows server hosting bundle](https://www.microsoft.com/net/download/core#/runtime) on the server.
-* Create new application pool specifying the .netCLR version property to "No Managed Code".
+* Enable .Net Extensibility 4.7 in "Add/Remove Windows Features":
+* ![image](https://user-images.githubusercontent.com/12737515/165164637-97ecabf2-bd1f-4691-91ff-b0fb78427b8d.png)
+* Create new application pool specifying the .netCLR version property to 4.0
+* Install Npgsql 3.2.5 [link](https://github.com/npgsql/npgsql/releases?page=6)
 
 ## Built With
 
